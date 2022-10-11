@@ -102,7 +102,11 @@ void gd32_spi_dma_begin() {
 	}
 # endif
 #else
-    gpio_af_set(SPI_GPIOx, GPIO_AF_5, SPI_SCK_PIN | SPI_MISO_PIN | SPI_MOSI_PIN);
+	if (SPI_PERIPH == SPI2) {
+		gpio_af_set(SPI_GPIOx, GPIO_AF_6, SPI_SCK_PIN | SPI_MISO_PIN | SPI_MOSI_PIN);
+	} else {
+		gpio_af_set(SPI_GPIOx, GPIO_AF_5, SPI_SCK_PIN | SPI_MISO_PIN | SPI_MOSI_PIN);
+	}
     gpio_mode_set(SPI_GPIOx, GPIO_MODE_AF, GPIO_PUPD_NONE, SPI_SCK_PIN | SPI_MISO_PIN | SPI_MOSI_PIN);
     gpio_output_options_set(SPI_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, SPI_SCK_PIN | SPI_MISO_PIN | SPI_MOSI_PIN);
 

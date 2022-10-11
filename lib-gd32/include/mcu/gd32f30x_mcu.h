@@ -38,6 +38,8 @@
 #define TIMER_PSC_1MHZ		(uint16_t)(119)
 #define TIMER_PSC_10KHZ		(uint16_t)(11999)
 
+#include "gd32f30x_libopt.h"
+
 /**
  * U(S)ART
  */

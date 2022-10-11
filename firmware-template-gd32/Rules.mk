@@ -7,7 +7,7 @@ LD	 = $(PREFIX)ld
 AR	 = $(PREFIX)ar
 
 FAMILY?=gd32f30x
-BOARD?=BOARD_GD32F303R
+BOARD?=BOARD_GD32F303RC
 
 FAMILY:=$(shell echo $(FAMILY) | tr A-Z a-z)
 FAMILY_UC=$(shell echo $(FAMILY) | tr a-w A-W)
@@ -53,7 +53,7 @@ LIBDEP=$(addprefix ../lib-,$(LIBS))
 $(info $$LIBDEP [${LIBDEP}])
 
 COPS=-DBARE_METAL -DGD32 -DGD32F30X_HD -D$(BOARD)
-COPS+=-DDISABLE_PRINTF_FLOAT
+#COPS+=-DDISABLE_PRINTF_FLOAT
 COPS+=$(DEFINES) $(MAKE_FLAGS) $(INCLUDES)
 COPS+=$(LIBINCDIRS)
 COPS+=-Os -mcpu=cortex-m4 -mthumb -g -mfloat-abi=hard -fsingle-precision-constant -mfpu=fpv4-sp-d16

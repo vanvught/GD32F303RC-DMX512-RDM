@@ -24,6 +24,7 @@
  */
 
 #include <cstdint>
+#include <cstdio>
 #include <cassert>
 
 #include "gd32_spi.h"
@@ -56,8 +57,6 @@ static uint8_t _send_byte(uint8_t byte) {
 }
 
 void gd32_spi_begin()  {
-	spi_parameter_struct spi_init_struct;
-
 	rcu_periph_clock_enable(SPI_RCU_GPIOx);
 	rcu_periph_clock_enable(SPI_NSS_RCU_GPIOx);
 	rcu_periph_clock_enable(SPI_RCU_CLK);
@@ -70,21 +69,30 @@ void gd32_spi_begin()  {
 
 # if defined (SPI_REMAP)
 	gpio_pin_remap_config(SPI_REMAP, ENABLE);
+# else
+	if (SPI_PERIPH == SPI2) {
+		gpio_pin_remap_config(GPIO_SWJ_DISABLE_REMAP, ENABLE);
+	}
 # endif
 #else
-    gpio_af_set(SPI_GPIOx, GPIO_AF_5, SPI_SCK_PIN | SPI_MISO_PIN | SPI_MOSI_PIN);
-    gpio_mode_set(SPI_GPIOx, GPIO_MODE_AF, GPIO_PUPD_NONE, SPI_SCK_PIN | SPI_MISO_PIN | SPI_MOSI_PIN);
+	if (SPI_PERIPH == SPI2) {
+		gpio_af_set(SPI_GPIOx, GPIO_AF_6, SPI_SCK_PIN | SPI_MISO_PIN | SPI_MOSI_PIN);
+	} else {
+		gpio_af_set(SPI_GPIOx, GPIO_AF_5, SPI_SCK_PIN | SPI_MISO_PIN | SPI_MOSI_PIN);
+	}
+	gpio_mode_set(SPI_GPIOx, GPIO_MODE_AF, GPIO_PUPD_NONE, SPI_SCK_PIN | SPI_MISO_PIN | SPI_MOSI_PIN);
     gpio_output_options_set(SPI_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, SPI_SCK_PIN | SPI_MISO_PIN | SPI_MOSI_PIN);
 
-    gpio_mode_set(SPI_NSS_GPIOx, GPIO_MODE_OUTPUT,GPIO_PUPD_NONE, SPI_NSS_GPIO_PINx);
+    gpio_mode_set(SPI_NSS_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, SPI_NSS_GPIO_PINx);
     gpio_output_options_set(SPI_NSS_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, SPI_NSS_GPIO_PINx);
 #endif
 
 	_cs_high();
 
 	spi_disable(SPI_PERIPH);
-
 	spi_i2s_deinit(SPI_PERIPH);
+
+	spi_parameter_struct spi_init_struct;
 	spi_init_struct.trans_mode = SPI_TRANSMODE_FULLDUPLEX;
 	spi_init_struct.device_mode = SPI_MASTER;
 	spi_init_struct.frame_size = SPI_FRAMESIZE_8BIT;
@@ -103,6 +111,10 @@ void gd32_spi_end() {
 	gpio_init(SPI_GPIOx, GPIO_MODE_IPD, GPIO_OSPEED_50MHZ, SPI_SCK_PIN | SPI_MISO_PIN | SPI_MOSI_PIN);
 	gpio_init(SPI_NSS_GPIOx, GPIO_MODE_IPD, GPIO_OSPEED_50MHZ, SPI_NSS_GPIO_PINx);
 #else
+	gpio_af_set(SPI_GPIOx, GPIO_AF_0, SPI_SCK_PIN | SPI_MISO_PIN | SPI_MOSI_PIN);
+	gpio_mode_set(SPI_GPIOx, GPIO_MODE_INPUT, GPIO_PUPD_NONE, SPI_SCK_PIN | SPI_MISO_PIN | SPI_MOSI_PIN);
+
+    gpio_mode_set(SPI_NSS_GPIOx, GPIO_MODE_INPUT, GPIO_PUPD_NONE, SPI_NSS_GPIO_PINx);
 #endif
 }
 
@@ -138,14 +150,19 @@ void gd32_spi_set_speed_hz(uint32_t nSpeedHz) {
 		nCTL0 |= SPI_PSC_256;
 	}
 
+	spi_disable(SPI_PERIPH);
 	SPI_CTL0(SPI_PERIPH) = nCTL0;
+	spi_enable(SPI_PERIPH);
 }
 
 void gd32_spi_setDataMode(uint8_t nMode) {
     uint32_t nCTL0 = SPI_CTL0(SPI_PERIPH);
     nCTL0 &= ~0x3;
     nCTL0 |= (nMode & 0x3);
+
+    spi_disable(SPI_PERIPH);
     SPI_CTL0(SPI_PERIPH) = nCTL0;
+    spi_enable(SPI_PERIPH);
 }
 
 void gd32_spi_chipSelect(uint8_t nChipSelect) {

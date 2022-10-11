@@ -15,7 +15,7 @@ if [ $retVal -ne 0 ]; then
  	echo "Error : " "$f"
 	exit $retVal
 fi
-cp gd32f10x.bin /tmp/Board-tester.bin
+cp gd32f30x.bin /tmp/Board-tester.bin
 cd -
 cd ..
 

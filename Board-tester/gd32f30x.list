@@ -2012,8 +2012,8 @@ Disassembly of section .text:
  800140a:	481a      	ldr	r0, [pc, #104]	; (8001474 <Hardware::Hardware()+0x13c>)
  800140c:	f000 fcb6 	bl	8001d7c <timer_enable>
  8001410:	f000 fd5e 	bl	8001ed0 <gd32_adc_init()>
- 8001414:	220b      	movs	r2, #11
- 8001416:	2309      	movs	r3, #9
+ 8001414:	2211      	movs	r2, #17
+ 8001416:	230b      	movs	r3, #11
  8001418:	e9cd 230e 	strd	r2, r3, [sp, #56]	; 0x38
  800141c:	2400      	movs	r4, #0
  800141e:	237a      	movs	r3, #122	; 0x7a

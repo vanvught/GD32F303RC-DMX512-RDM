@@ -1,8 +1,8 @@
 /**
- * @file dmxconfigudp.cpp
+ * @file strlen.c
  *
  */
-/* Copyright (C) 2021-2022 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,15 @@
  * THE SOFTWARE.
  */
 
-#include <cstdint>
 
-#include  "dmxconfigudp.h"
+#include <stddef.h>
 
-int32_t DmxConfigUdp::s_nHandle = -1;
-char *DmxConfigUdp::s_pUdpBuffer = nullptr;
+size_t strlen(const char *s) {
+	const char *p = s;
+
+	while (*s != (char) 0) {
+		++s;
+	}
+
+	return (size_t) (s - p);
+}

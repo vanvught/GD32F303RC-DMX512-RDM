@@ -1,9 +1,8 @@
-#if defined(BARE_METAL)
 /**
- * @file debug_exception.c
+ * @file port.cpp
  *
  */
-/* Copyright (C) 2018 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2023 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,42 +22,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+/**
+ * https://github.com/torvalds/linux/blob/master/drivers/net/dsa/mv88e6xxx/port.c
+ */
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Marvell 88E6xxx Switch Port Registers support
+ *
+ * Copyright (c) 2008 Marvell Semiconductor
+ *
+ * Copyright (c) 2016-2017 Savoir-faire Linux Inc.
+ *	Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+ */
 
-#include <stdio.h>
+#include <cstdint>
 
-#include "console.h"
+#include "port.h"
+#include "chip.h"
 
-#if defined (H3)
-	void h3_watchdog_disable(void);
-#else
-	void bcm2835_watchdog_stop(void);
-#endif
+#include "debug.h"
 
-void debug_exception(unsigned int type, unsigned int address) {
-    __sync_synchronize();
+/*
+ * Public interface
+ */
 
-	console_set_fg_color(CONSOLE_RED);
+int mv88e6xxx_port_read(const uint32_t nPortNumber, const uint32_t nRegister, uint16_t& nValue) {
+	DEBUG_ENTRY
+	DEBUG_PRINTF("nPortNumber=%u nRegister=0x%.4x", nPortNumber, nRegister);
 
-	if (type == 0) {
-		printf("\nUndefined exception at address: %p\n",address);
-	} else if (type == 1) {
-		printf("\nPrefetch abort at address: %p\n",address);
-	} else if (type == 2) {
-		printf("\nData abort at address: %p\n", address);
-	} else {
-		printf("\nUnknown exception! [%d]\n", type);
-	}
+	const auto nAddress = MV88E6XXX_PORT_BASE_ADDRESS + nPortNumber;
 
-	console_set_fg_color(CONSOLE_WHITE);
-
-#if defined (H3)
-	h3_watchdog_disable();
-#else
-	bcm2835_watchdog_stop();
-#endif
-
-	for(;;);
+	DEBUG_EXIT
+	return mv88e6xxx_read(nAddress, nRegister, nValue);
 }
-#else
- typedef int ISO_C_forbids_an_empty_translation_unit;
-#endif

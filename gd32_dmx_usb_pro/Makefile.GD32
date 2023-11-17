@@ -9,7 +9,7 @@ DEFINES+=DISABLE_FS
 
 DEFINES+=NDEBUG
 
-LIBS=widget dmx usb
+LIBS=widget usb
 
 SRCDIR=firmware
 

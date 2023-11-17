@@ -2,7 +2,7 @@
  * @file gd32f303rc.h
  *
  */
-/* Copyright (C) 2022 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2022-2023 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -66,18 +66,12 @@
 #define KEY2_GPIOx				GPIOB
 #define KEY2_RCU_GPIOx			RCU_GPIOB
 
-#define KEY3_PINx				GPIO_PIN_11
-#define KEY3_GPIOx				GPIOA
-#define KEY3_RCU_GPIOx			RCU_GPIOA
-
 /**
  * I2C
  */
 
 #define I2C0_REMAP
-#if defined (I2C0_REMAP)
-# define I2C_REMAP				GPIO_I2C0_REMAP
-#endif
+#define I2C_REMAP				GPIO_I2C0_REMAP
 #define I2C_PERIPH				I2C0_PERIPH
 #define I2C_RCU_CLK				I2C0_RCU_CLK
 #define I2C_GPIO_SCL_PORT		I2C0_SCL_GPIOx
@@ -91,10 +85,6 @@
  * SPI
  */
 
-// #define SPI2_REMAP
-#if defined (SPI2_REMAP)
-# define SPI_REMAP				SPI2_REMAP_GPIO
-#endif
 #define SPI_PERIPH				SPI2_PERIPH
 #define SPI_NSS_GPIOx			SPI2_NSS_GPIOx
 #define SPI_NSS_RCU_GPIOx		SPI2_NSS_RCU_GPIOx
@@ -113,10 +103,7 @@
  */
 
 #define USART0_REMAP
-// #define USART1_REMAP
-// #define USART2_FULL_REMAP
 #define USART2_PARTIAL_REMAP
-// #define UART3_REMAP
 
 /**
  * Panel LEDs

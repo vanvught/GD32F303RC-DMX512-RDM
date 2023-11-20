@@ -28,15 +28,16 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <cassert>
 
 #include "configstore.h"
 #include "pixeldmxparams.h"
 #include "pixeldmxstore.h"
+#include "pixeltype.h"
 
 class StorePixelDmx final: public PixelDmxParamsStore, public PixelDmxStore {
 public:
-	StorePixelDmx();
+	StorePixelDmx(StorePixelDmx &other) = delete;
+	void operator=(const StorePixelDmx &) = delete;
 
 	void Update(const struct pixeldmxparams::Params *pWS28xxDmxParams) override {
 		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, pWS28xxDmxParams, sizeof(struct pixeldmxparams::Params));
@@ -48,6 +49,10 @@ public:
 
 	void SaveType(uint8_t nType) override {
 		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, __builtin_offsetof(struct pixeldmxparams::Params, nType), &nType, sizeof(uint8_t), pixeldmxparams::Mask::TYPE);
+	}
+
+	void SaveType(pixel::Type type) override {
+		SaveType(static_cast<uint8_t>(type));
 	}
 
 	void SaveCount(uint16_t nCount) override {
@@ -70,12 +75,10 @@ public:
 		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, offsetof(struct pixeldmxparams::Params, nDmxStartAddress), &nDmxStartAddress, sizeof(uint16_t), pixeldmxparams::Mask::DMX_START_ADDRESS);
 	}
 
-	static StorePixelDmx *Get() {
-		return s_pThis;
-	}
+	static StorePixelDmx *Get();
 
-private:
-	static StorePixelDmx *s_pThis;
+protected:
+	StorePixelDmx() {};
 };
 
 #endif /* STOREPIXELDMX_H_ */

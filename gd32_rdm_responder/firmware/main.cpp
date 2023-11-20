@@ -23,6 +23,7 @@
  * THE SOFTWARE.
  */
 
+#include <stddef.h>
 #include <cstdio>
 #include <cstdint>
 
@@ -42,6 +43,7 @@
 #if defined (ENABLE_RDM_SUBDEVICES)
 # include "rdmsubdevicesparams.h"
 #endif
+#include "personalities.h"
 
 #include "pixeldmxparams.h"
 #include "ws28xxdmx.h"
@@ -97,8 +99,8 @@ void main() {
 
 	PixelDmxConfiguration pixelDmxConfiguration;
 
-	StorePixelDmx storePixelDmx;
-	PixelDmxParams pixelDmxParams(&storePixelDmx);
+	auto storePixelDmx = StorePixelDmx::Get();
+	PixelDmxParams pixelDmxParams(storePixelDmx);
 
 	if (pixelDmxParams.Load()) {
 		pixelDmxParams.Dump();
@@ -126,7 +128,7 @@ void main() {
 	}
 
 	WS28xxDmx pixelDmx(pixelDmxConfiguration);
-	pixelDmx.SetWS28xxDmxStore(&storePixelDmx);
+	pixelDmx.SetWS28xxDmxStore(storePixelDmx);
 
 	PixelDmxStartStop pixelDmxStartStop;
 	pixelDmx.SetPixelDmxHandler(&pixelDmxStartStop);
@@ -134,8 +136,19 @@ void main() {
 	const auto nTestPattern = static_cast<pixelpatterns::Pattern>(pixelDmxParams.GetTestPattern());
 	PixelTestPattern pixelTestPattern(nTestPattern, 1);
 
-	PixelDmxParamsRdm pixelDmxParamsRdm(&storePixelDmx);
+	PixelDmxParamsRdm pixelDmxParamsRdm(storePixelDmx);
 
+	RDMPersonality *personalities[PERSONALITY_COUNT];
+#if defined(ENABLE_CONFIG_PIDS)
+	static_assert(
+			PERSONALITY_COUNT == static_cast<size_t>(pixel::Type::UNDEFINED),
+			"Personality Count != Pixel Type Count");
+	for (auto n = 0; n < PERSONALITY_COUNT; ++n)
+	{
+		const auto description = PixelType::GetType(static_cast<pixel::Type>(n));
+		personalities[n] = new RDMPersonality(description, &pixelDmx);
+	}
+#else
 	char aDescription[rdm::personality::DESCRIPTION_MAX_LENGTH];
 	snprintf(aDescription, sizeof(aDescription) - 1U, "%s:%u G%u [%s]",
 			PixelType::GetType(pixelDmxConfiguration.GetType()),
@@ -143,9 +156,10 @@ void main() {
 			pixelDmxConfiguration.GetGroupingCount(),
 			PixelType::GetMap(pixelDmxConfiguration.GetMap()));
 
-	RDMPersonality *personalities[2] = { new RDMPersonality(aDescription, &pixelDmx), new RDMPersonality("Config mode", &pixelDmxParamsRdm) };
-
-	RDMResponder rdmResponder(personalities, 2);
+	personalities[static_cast<uint8_t>(Personalities::DEFAULT)] = new RDMPersonality(aDescription, &pixelDmx);
+	personalities[static_cast<uint8_t>(Personalities::CONFIG_MODE)] = new RDMPersonality("Config mode", &pixelDmxParamsRdm)
+#endif
+	RDMResponder rdmResponder(personalities, PERSONALITY_COUNT);
 
 	rdmResponder.SetProductCategory(E120_PRODUCT_CATEGORY_FIXTURE);
 	rdmResponder.SetProductDetail(E120_PRODUCT_DETAIL_LED);
@@ -182,6 +196,11 @@ void main() {
 	rdmResponder.Start();
 	rdmResponder.DmxDisableOutput(!isConfigMode && (nTestPattern != pixelpatterns::Pattern::NONE));
 	rdmResponder.Print();
+
+#if defined(ENABLE_CONFIG_PIDS)
+	const auto nPersonality = Personalities::toPersonalityIdx(Personalities::fromPixelType(pixelDmx.GetType()));
+	rdmResponder.SetPersonalityCurrent(RDM_ROOT_DEVICE, nPersonality);
+#endif
 
 	if (isConfigMode) {
 		pixelDmxParamsRdm.Print();

@@ -23,19 +23,26 @@
  * THE SOFTWARE.
  */
 
+#include <cassert>
 #include <cstdint>
 
-#include "rdmresponder.h"
-
-#include "ws28xxdmx.h"
-#include "pixeltestpattern.h"
-#include "pixelpatterns.h"
 #include "displayudf.h"
+#include "personalities.h"
+#include "pixelpatterns.h"
+#include "pixeltestpattern.h"
+#include "rdmresponder.h"
+#include "storepixeldmx.h"
+#include "ws28xxdmx.h"
 
 #include "debug.h"
 
 void RDMResponder::PersonalityUpdate(uint32_t nPersonality)  {
 	DEBUG_PRINTF("nPersonality=%u", nPersonality);
+
+#if defined(ENABLE_CONFIG_PIDS)
+	const auto type = Personalities::toPixelType(Personalities::fromPersonalityIdx(nPersonality));
+	StorePixelDmx::Get()->SaveType(type);
+#endif
 
 	DisplayUdf::Get()->ClearLine(7);
 	DisplayUdf::Get()->Printf(7, "%s:%d G%d %s",
@@ -45,18 +52,29 @@ void RDMResponder::PersonalityUpdate(uint32_t nPersonality)  {
 					PixelType::GetMap(WS28xxDmx::Get()->GetMap()));
 	DisplayUdf::Get()->Show();
 
-	if (nPersonality == 1) {
-		const auto nTestPattern = PixelTestPattern::GetPattern();
+	assert(nPersonality < PERSONALITY_COUNT);
+	switch (nPersonality)
+	{
+		default:
+		{
+			const auto nTestPattern = PixelTestPattern::GetPattern();
 
-		if (nTestPattern == pixelpatterns::Pattern::NONE) {
-		} else {
-			DisplayUdf::Get()->ClearLine(6);
-			DisplayUdf::Get()->Printf(6, "%s:%u", PixelPatterns::GetName(nTestPattern), static_cast<uint32_t>(nTestPattern));
+			if (nTestPattern == pixelpatterns::Pattern::NONE) {
+			} else {
+				DisplayUdf::Get()->ClearLine(6);
+				DisplayUdf::Get()->Printf(6, "%s:%u", PixelPatterns::GetName(nTestPattern), static_cast<uint32_t>(nTestPattern));
+			}
+			break;
 		}
-	} else if (nPersonality == 2) {
-		DisplayUdf::Get()->ClearLine(3);
-		DisplayUdf::Get()->ClearLine(4);
-		DisplayUdf::Get()->Write(4, "Config Mode");
-		DisplayUdf::Get()->ClearLine(5);
+#if !defined(ENABLE_CONFIG_PIDS)
+		case Personalities::CONFIG_MODE:
+		{
+			DisplayUdf::Get()->ClearLine(3);
+			DisplayUdf::Get()->ClearLine(4);
+			DisplayUdf::Get()->Write(4, "Config Mode");
+			DisplayUdf::Get()->ClearLine(5);
+			break;
+		}
+#endif
 	}
 }

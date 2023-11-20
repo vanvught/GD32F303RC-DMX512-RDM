@@ -14,7 +14,6 @@ BOARD?=BOARD_GD32F303RC
 TARGET=$(FAMILY).bin
 LIST=$(FAMILY).list
 MAP=$(FAMILY).map
-SIZE=$(FAMILY).size
 BUILD=build_gd32/
 
 # Input
@@ -105,8 +104,6 @@ clean: $(LIBDEP)
 	rm -f $(TARGET)
 	rm -f $(MAP)
 	rm -f $(LIST)
-	rm -f $(SIZE)
-	rm -f include/sofware_version_id.h
 
 #
 # Libraries

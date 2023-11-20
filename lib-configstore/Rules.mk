@@ -156,6 +156,9 @@ ifneq ($(MAKE_FLAGS),)
 		EXTRA_INCLUDES+=../lib-widget/include
 	endif
 else
+	ifeq (, $(wildcard $('../lib-network/src/noemac')))
+		DEFINES+=NO_EMAC
+	endif
 	EXTRA_SRCDIR+=src/artnet
 	EXTRA_INCLUDES+=../lib-artnet/include
 	EXTRA_SRCDIR+=src/e131

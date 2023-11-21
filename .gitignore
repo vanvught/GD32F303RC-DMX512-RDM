@@ -31,6 +31,9 @@
 *.out
 *.app
 
+#Eclipse user settings
+/.metadata/
+
 .DS_Store
 
 lib_gd32
@@ -63,3 +66,4 @@ lib-network/src/net/*
 *.bin
 do-tftp.sh
 udp_send
+

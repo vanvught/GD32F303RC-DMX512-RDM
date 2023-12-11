@@ -147,8 +147,6 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="gd32f30x|gd32f30x|device|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry excluding="emac" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="device/emac"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="gd32f30x"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>

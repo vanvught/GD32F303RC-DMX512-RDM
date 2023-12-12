@@ -109,6 +109,9 @@ private:
 	void GetHostName(uint16_t nSubDevice);
 	void GetDomainName(uint16_t nSubDevice);
 	// Set
+#if defined (ENABLE_RDM_MANUFACTURER_PIDS)
+	void SetManufacturerPid(bool IsBroadcast, uint16_t nSubDevice);
+#endif
 	void SetDeviceLabel(bool IsBroadcast, uint16_t nSubDevice);
 	void SetFactoryDefaults(bool IsBroadcast, uint16_t nSubDevice);
 	void SetLanguage(bool IsBroadcast, uint16_t nSubDevice);

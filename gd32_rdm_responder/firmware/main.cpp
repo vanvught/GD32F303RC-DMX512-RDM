@@ -127,7 +127,7 @@ void main() {
 		pixelDmxConfiguration.SetCount(nCount);
 	}
 
-	WS28xxDmx pixelDmx(pixelDmxConfiguration);
+	WS28xxDmx pixelDmx(pixelDmxConfiguration, storePixelDmx);
 	pixelDmx.SetWS28xxDmxStore(storePixelDmx);
 
 	PixelDmxStartStop pixelDmxStartStop;

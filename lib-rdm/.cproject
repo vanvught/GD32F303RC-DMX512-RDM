@@ -124,6 +124,7 @@
 									<listOptionValue builtIn="false" value="GD32F30X_HD"/>
 									<listOptionValue builtIn="false" value="DISABLE_FS"/>
 									<listOptionValue builtIn="false" value="DISABLE_TFTP"/>
+									<listOptionValue builtIn="false" value="ENABLE_RDM_MANUFACTURER_PIDS"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1206397029" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -155,6 +156,7 @@
 									<listOptionValue builtIn="false" value="DISABLE_FS"/>
 									<listOptionValue builtIn="false" value="DISABLE_TFTP"/>
 									<listOptionValue builtIn="false" value="ENABLE_RDM_SELF_TEST"/>
+									<listOptionValue builtIn="false" value="ENABLE_RDM_MANUFACTURER_PIDS"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.1187827429" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
 							</tool>

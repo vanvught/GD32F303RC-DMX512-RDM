@@ -84,8 +84,12 @@ const rdm::ParameterDescription RDMHandler::PARAMETER_DESCRIPTIONS[] = {
 		  },
 		  { rdm::E120_MANUFACTURER_PIXEL_COUNT::code,
 			2,
-			E120_DS_UNSIGNED_DWORD,
+			E120_DS_UNSIGNED_WORD,
+#if defined(ENABLE_CONFIG_PIDS)
+			E120_CC_GET_SET,
+#else
 			E120_CC_GET,
+#endif
 			0,
 			E120_UNITS_NONE,
 			E120_PREFIX_NONE,
@@ -97,8 +101,12 @@ const rdm::ParameterDescription RDMHandler::PARAMETER_DESCRIPTIONS[] = {
 		  },
 		  { rdm::E120_MANUFACTURER_PIXEL_GROUPING_COUNT::code,
 			2,
-			E120_DS_UNSIGNED_DWORD,
+			E120_DS_UNSIGNED_WORD,
+#if defined(ENABLE_CONFIG_PIDS)
+			E120_CC_GET_SET,
+#else
 			E120_CC_GET,
+#endif
 			0,
 			E120_UNITS_NONE,
 			E120_PREFIX_NONE,
@@ -111,7 +119,11 @@ const rdm::ParameterDescription RDMHandler::PARAMETER_DESCRIPTIONS[] = {
 		  { rdm::E120_MANUFACTURER_PIXEL_MAP::code,
 			rdm::DEVICE_DESCRIPTION_MAX_LENGTH,
 			E120_DS_ASCII,
+#if defined(ENABLE_CONFIG_PIDS)
+			E120_CC_GET_SET,
+#else
 			E120_CC_GET,
+#endif
 			0,
 			E120_UNITS_NONE,
 			E120_PREFIX_NONE,
@@ -140,20 +152,16 @@ bool handle_manufactureer_pid_get(const uint16_t nPid, __attribute__((unused)) c
 	}
 	case rdm::E120_MANUFACTURER_PIXEL_COUNT::code: {
 		const auto nCount = WS28xxDmx::Get()->GetCount();
-		pOut->nPdl = 4;
-		pOut->pParamData[0] = static_cast<uint8_t>(nCount >> 24);
-		pOut->pParamData[1] = static_cast<uint8_t>(nCount >> 16);
-		pOut->pParamData[2] = static_cast<uint8_t>(nCount >> 8);
-		pOut->pParamData[3] = static_cast<uint8_t>(nCount);
+		pOut->nPdl = 2;
+		pOut->pParamData[0] = static_cast<uint8_t>(nCount >> 8);
+		pOut->pParamData[1] = static_cast<uint8_t>(nCount);
 		return true;
 	}
 	case rdm::E120_MANUFACTURER_PIXEL_GROUPING_COUNT::code: {
 		const auto nGroupingCount = WS28xxDmx::Get()->GetGroupingCount();
-		pOut->nPdl = 4;
-		pOut->pParamData[0] = static_cast<uint8_t>(nGroupingCount >> 24);
-		pOut->pParamData[1] = static_cast<uint8_t>(nGroupingCount >> 16);
-		pOut->pParamData[2] = static_cast<uint8_t>(nGroupingCount >> 8);
-		pOut->pParamData[3] = static_cast<uint8_t>(nGroupingCount);
+		pOut->nPdl = 2;
+		pOut->pParamData[0] = static_cast<uint8_t>(nGroupingCount >> 8);
+		pOut->pParamData[1] = static_cast<uint8_t>(nGroupingCount);
 		return true;
 	}
 	case rdm::E120_MANUFACTURER_PIXEL_MAP::code: {
@@ -169,4 +177,86 @@ bool handle_manufactureer_pid_get(const uint16_t nPid, __attribute__((unused)) c
 	nReason = E120_NR_UNKNOWN_PID;
 	return false;
 }
+
+#if defined(ENABLE_CONFIG_PIDS)
+bool handle_manufactureer_pid_set(
+		bool isBroadcast,
+		const uint16_t nPid,
+		const rdm::ParameterDescription &parameterDescription,
+		const ManufacturerParamData *pIn,
+		[[maybe_unused]] ManufacturerParamData *pOut,
+		uint16_t& nReason)
+{
+	if (isBroadcast)
+	{
+		return false;
+	}
+
+	switch (nPid)
+	{
+		case rdm::E120_MANUFACTURER_PIXEL_COUNT::code: {
+			if (pIn->nPdl == 2)
+			{
+				uint16_t nCount = pIn->pParamData[1];
+				nCount |= pIn->pParamData[0] << 8;
+				if ((nCount < parameterDescription.min_value)
+						|| (nCount > parameterDescription.max_value))
+				{
+					nReason = E120_NR_DATA_OUT_OF_RANGE;
+					return false;
+				}
+
+				nReason = E120_NR_HARDWARE_FAULT; // Only used if the below fails
+				return WS28xxDmx::Get()->SetCount(nCount);
+			}
+
+			nReason = E120_NR_FORMAT_ERROR;
+			return false;
+		}
+
+		case rdm::E120_MANUFACTURER_PIXEL_GROUPING_COUNT::code: {
+			if (pIn->nPdl == 2)
+			{
+				uint16_t nGroupingCount = pIn->pParamData[1];
+				nGroupingCount |= pIn->pParamData[0] << 8;
+				if ((nGroupingCount < parameterDescription.min_value)
+						|| (nGroupingCount > parameterDescription.max_value))
+				{
+					nReason = E120_NR_DATA_OUT_OF_RANGE;
+					return false;
+				}
+
+				nReason = E120_NR_HARDWARE_FAULT; // Only used if the below fails
+				return WS28xxDmx::Get()->SetGroupingCount(nGroupingCount);
+			}
+
+			nReason = E120_NR_FORMAT_ERROR;
+			return false;
+		}
+
+		case rdm::E120_MANUFACTURER_PIXEL_MAP::code: {
+			if (pIn->nPdl == 3)
+			{
+				const auto map = ::PixelType::GetMap(reinterpret_cast<const char *>(pIn->pParamData));
+				if (map != pixel::Map::UNDEFINED)
+				{
+					nReason = E120_NR_HARDWARE_FAULT; // Only used if the below fails
+					return WS28xxDmx::Get()->SetMap(map);
+				}
+
+				nReason = E120_NR_DATA_OUT_OF_RANGE;
+				return false;
+			}
+
+			nReason = E120_NR_FORMAT_ERROR;
+			return false;
+		}
+
+		default:
+			nReason = E120_NR_UNKNOWN_PID;
+			return false;
+	}
+}
+#endif
+
 }  // namespace rdm

@@ -43,7 +43,9 @@
 
 WS28xxDmx *WS28xxDmx::s_pThis;
 
-WS28xxDmx::WS28xxDmx(PixelDmxConfiguration& pixelDmxConfiguration): m_pixelDmxConfiguration(pixelDmxConfiguration) {
+WS28xxDmx::WS28xxDmx(PixelDmxConfiguration& pixelDmxConfiguration, StorePixelDmx* storePixelDmx)
+	: m_pixelDmxConfiguration(pixelDmxConfiguration), m_pStorePixelDmx(storePixelDmx)
+{
 	DEBUG_ENTRY
 
 	assert(s_pThis == nullptr);

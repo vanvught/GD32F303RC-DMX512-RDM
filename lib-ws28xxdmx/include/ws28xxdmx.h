@@ -36,10 +36,11 @@
 #include "pixelpatterns.h"
 #include "pixeldmxstore.h"
 #include "pixeldmxhandler.h"
+#include "storepixeldmx.h"
 
 class WS28xxDmx final: public LightSet {
 public:
-	WS28xxDmx(PixelDmxConfiguration& pixelDmxConfiguration);
+	WS28xxDmx(PixelDmxConfiguration& pixelDmxConfiguration, StorePixelDmx* storePixelDmx = nullptr);
 	~WS28xxDmx() override;
 
 	void Start(const uint32_t nPortIndex) override;
@@ -84,16 +85,46 @@ public:
 		return m_pixelDmxConfiguration.GetMap();
 	}
 
-	uint32_t GetCount() const {
+	bool SetMap(pixel::Map tMap) {
+		m_pixelDmxConfiguration.SetMap(tMap);
+		if (m_pStorePixelDmx)
+		{
+			m_pStorePixelDmx->SaveMap(static_cast<uint8_t>(tMap));
+			return true;
+		}
+		return false;
+	}
+
+	uint16_t GetCount() const {
 		return m_pixelDmxConfiguration.GetCount();
+	}
+
+	bool SetCount(uint16_t nCount) {
+		m_pixelDmxConfiguration.SetCount(nCount);
+		if (m_pStorePixelDmx)
+		{
+			m_pStorePixelDmx->SaveCount(nCount);
+			return true;
+		}
+		return false;
 	}
 
 	uint32_t GetGroups() const {
 		return m_pixelDmxConfiguration.GetGroups();
 	}
 
-	uint32_t GetGroupingCount() const {
+	uint16_t GetGroupingCount() const {
 		return m_pixelDmxConfiguration.GetGroupingCount();
+	}
+
+	bool SetGroupingCount(uint16_t nGroupingCount) {
+		m_pixelDmxConfiguration.SetGroupingCount(nGroupingCount);
+		if (m_pStorePixelDmx)
+		{
+			m_pStorePixelDmx->SaveGroupingCount(nGroupingCount);
+			return true;
+		}
+		return false;
 	}
 
 	uint32_t GetUniverses() const {
@@ -119,6 +150,7 @@ public:
 
 private:
 	PixelDmxConfiguration m_pixelDmxConfiguration;
+	StorePixelDmx* m_pStorePixelDmx;
 	pixeldmxconfiguration::PortInfo m_PortInfo;
 	uint32_t m_nChannelsPerPixel;
 

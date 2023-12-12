@@ -119,6 +119,7 @@
 									<listOptionValue builtIn="false" value="DISABLE_FS"/>
 									<listOptionValue builtIn="false" value="DISABLE_TFTP"/>
 									<listOptionValue builtIn="false" value="ENABLE_CONFIG_PIDS"/>
+									<listOptionValue builtIn="false" value="ENABLE_RDM_MANUFACTURER_PIDS"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.33349665" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -156,6 +157,7 @@
 									<listOptionValue builtIn="false" value="NO_EMAC"/>
 									<listOptionValue builtIn="false" value="OUTPUT_DMX_PIXEL"/>
 									<listOptionValue builtIn="false" value="ENABLE_CONFIG_PIDS"/>
+									<listOptionValue builtIn="false" value="ENABLE_RDM_MANUFACTURER_PIDS"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input.1276402743" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.input"/>
 							</tool>

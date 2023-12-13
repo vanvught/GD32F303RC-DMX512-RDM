@@ -26,6 +26,7 @@
 #ifndef STORERDMDEVICE_H_
 #define STORERDMDEVICE_H_
 
+#include <cstddef>
 #include <cstdint>
 
 #include "rdmdeviceparams.h"
@@ -46,8 +47,8 @@ public:
 	}
 
 	void SaveLabel(const char *pLabel, uint8_t nLength) override {
-		ConfigStore::Get()->Update(configstore::Store::RDMDEVICE, __builtin_offsetof(struct rdm::deviceparams::Params, aDeviceRootLabel), pLabel, nLength, rdm::deviceparams::Mask::LABEL);
-		ConfigStore::Get()->Update(configstore::Store::RDMDEVICE, __builtin_offsetof(struct rdm::deviceparams::Params, nDeviceRootLabelLength), &nLength, sizeof(uint8_t), rdm::deviceparams::Mask::LABEL);
+		ConfigStore::Get()->Update(configstore::Store::RDMDEVICE, offsetof(struct rdm::deviceparams::Params, aDeviceRootLabel), pLabel, nLength, rdm::deviceparams::Mask::LABEL);
+		ConfigStore::Get()->Update(configstore::Store::RDMDEVICE, offsetof(struct rdm::deviceparams::Params, nDeviceRootLabelLength), &nLength, sizeof(uint8_t), rdm::deviceparams::Mask::LABEL);
 	}
 
 	static StoreRDMDevice *Get() {

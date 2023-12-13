@@ -26,6 +26,8 @@
 #ifndef STOREWIDGET_H_
 #define STOREWIDGET_H_
 
+#include <cstddef>
+
 #include "widgetparams.h"
 #include "widgetstore.h"
 
@@ -44,15 +46,15 @@ public:
 	}
 
 	void UpdateBreakTime(uint8_t nBreakTime) {
-		ConfigStore::Get()->Update(configstore::Store::WIDGET, __builtin_offsetof(struct TWidgetParams, nBreakTime), &nBreakTime, sizeof(uint8_t), WidgetParamsMask::BREAK_TIME);
+		ConfigStore::Get()->Update(configstore::Store::WIDGET, offsetof(struct TWidgetParams, nBreakTime), &nBreakTime, sizeof(uint8_t), WidgetParamsMask::BREAK_TIME);
 	}
 
 	void UpdateMabTime(uint8_t nMabTime) {
-		ConfigStore::Get()->Update(configstore::Store::WIDGET, __builtin_offsetof(struct TWidgetParams, nMabTime), &nMabTime, sizeof(uint8_t), WidgetParamsMask::MAB_TIME);
+		ConfigStore::Get()->Update(configstore::Store::WIDGET, offsetof(struct TWidgetParams, nMabTime), &nMabTime, sizeof(uint8_t), WidgetParamsMask::MAB_TIME);
 	}
 
 	void UpdateRefreshRate(uint8_t nRefreshRate) {
-		ConfigStore::Get()->Update(configstore::Store::WIDGET, __builtin_offsetof(struct TWidgetParams, nRefreshRate), &nRefreshRate, sizeof(uint8_t), WidgetParamsMask::REFRESH_RATE);
+		ConfigStore::Get()->Update(configstore::Store::WIDGET, offsetof(struct TWidgetParams, nRefreshRate), &nRefreshRate, sizeof(uint8_t), WidgetParamsMask::REFRESH_RATE);
 	}
 
 	static StoreWidget* Get() {

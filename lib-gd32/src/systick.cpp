@@ -1,5 +1,5 @@
 /**
- * @file gd32_uart0.c
+ * @file  systick.c
  *
  */
 /* Copyright (C) 2021 by Arjan van Vught mailto:info@gd32-dmx.org
@@ -23,25 +23,25 @@
  * THE SOFTWARE.
  */
 
-#include <stdint.h>
-#include <stdio.h>
+#include <cstdint>
 
 #include "gd32.h"
-#include "gd32_uart.h"
 
-void uart0_init(void) {
-	gd32_uart_begin(USART0, 115200U, GD32_UART_BITS_8, GD32_UART_PARITY_NONE, GD32_UART_STOP_1BIT);
+volatile uint32_t s_nSysTickMillis;
+
+extern "C" {
+void systick_config(void) {
+	/* setup systick timer for 1000Hz interrupts */
+	if (SysTick_Config(SystemCoreClock / 1000U)) {
+		/* capture error */
+		while (1) {
+		}
+	}
+	/* configure the systick handler priority */
+	NVIC_SetPriority(SysTick_IRQn, 0x00U);
 }
 
-void uart0_putc(int c) {
-	if (c == '\n') {
-		while (RESET == usart_flag_get(USART0, USART_FLAG_TBE))
-			;
-		USART_DATA(USART0) = ((uint16_t) USART_DATA_DATA & (uint8_t) '\r');
-	}
-
-	while (RESET == usart_flag_get(USART0, USART_FLAG_TBE))
-		;
-
-	USART_DATA(USART0) = ((uint16_t) USART_DATA_DATA & (uint8_t) c);
+void SysTick_Handler(void) {
+	s_nSysTickMillis++;
+}
 }

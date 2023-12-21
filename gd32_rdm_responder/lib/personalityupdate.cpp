@@ -2,7 +2,7 @@
  * @file personalityupdate.cpp
  *
  */
-/* Copyright (C) 2021 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2021-2023 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,45 +36,43 @@
 
 #include "debug.h"
 
-void RDMResponder::PersonalityUpdate(uint32_t nPersonality)  {
+void RDMResponder::PersonalityUpdate(uint32_t nPersonality) {
 	DEBUG_PRINTF("nPersonality=%u", nPersonality);
 
 #if defined(ENABLE_CONFIG_PIDS)
 	const auto type = Personalities::toPixelType(Personalities::fromPersonalityIdx(nPersonality));
-	StorePixelDmx::Get()->SaveType(type);
+	StorePixelDmx::Get()->SaveType(static_cast<uint8_t>(type));
 #endif
 
 	DisplayUdf::Get()->ClearLine(7);
 	DisplayUdf::Get()->Printf(7, "%s:%d G%d %s",
-					PixelType::GetType(WS28xxDmx::Get()->GetType()),
-					WS28xxDmx::Get()->GetCount(),
-					WS28xxDmx::Get()->GetGroupingCount(),
-					PixelType::GetMap(WS28xxDmx::Get()->GetMap()));
+			PixelType::GetType(WS28xxDmx::Get()->GetType()),
+			WS28xxDmx::Get()->GetCount(), WS28xxDmx::Get()->GetGroupingCount(),
+			PixelType::GetMap(WS28xxDmx::Get()->GetMap()));
 	DisplayUdf::Get()->Show();
 
 	assert(nPersonality < PERSONALITY_COUNT);
-	switch (nPersonality)
-	{
-		default:
-		{
-			const auto nTestPattern = PixelTestPattern::GetPattern();
-
-			if (nTestPattern == pixelpatterns::Pattern::NONE) {
-			} else {
-				DisplayUdf::Get()->ClearLine(6);
-				DisplayUdf::Get()->Printf(6, "%s:%u", PixelPatterns::GetName(nTestPattern), static_cast<uint32_t>(nTestPattern));
-			}
-			break;
-		}
+	switch (nPersonality) {
 #if !defined(ENABLE_CONFIG_PIDS)
-		case Personalities::CONFIG_MODE:
-		{
-			DisplayUdf::Get()->ClearLine(3);
-			DisplayUdf::Get()->ClearLine(4);
-			DisplayUdf::Get()->Write(4, "Config Mode");
-			DisplayUdf::Get()->ClearLine(5);
-			break;
-		}
+	case Personalities::CONFIG_MODE: {
+		DisplayUdf::Get()->ClearLine(3);
+		DisplayUdf::Get()->ClearLine(4);
+		DisplayUdf::Get()->Write(4, "Config Mode");
+		DisplayUdf::Get()->ClearLine(5);
+		break;
+	}
 #endif
+	default: {
+		const auto nTestPattern = PixelTestPattern::GetPattern();
+
+		if (nTestPattern == pixelpatterns::Pattern::NONE) {
+		} else {
+			DisplayUdf::Get()->ClearLine(6);
+			DisplayUdf::Get()->Printf(6, "%s:%u",
+					PixelPatterns::GetName(nTestPattern),
+					static_cast<uint32_t>(nTestPattern));
+		}
+		break;
+	}
 	}
 }

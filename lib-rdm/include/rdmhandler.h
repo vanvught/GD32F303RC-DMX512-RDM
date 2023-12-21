@@ -109,9 +109,6 @@ private:
 	void GetHostName(uint16_t nSubDevice);
 	void GetDomainName(uint16_t nSubDevice);
 	// Set
-#if defined (ENABLE_RDM_MANUFACTURER_PIDS)
-	void SetManufacturerPid(bool IsBroadcast, uint16_t nSubDevice);
-#endif
 	void SetDeviceLabel(bool IsBroadcast, uint16_t nSubDevice);
 	void SetFactoryDefaults(bool IsBroadcast, uint16_t nSubDevice);
 	void SetLanguage(bool IsBroadcast, uint16_t nSubDevice);
@@ -131,6 +128,9 @@ private:
 #endif
 #if defined (ENABLE_RDM_PRESET_PLAYBACK)
 	void SetPresetPlayback(bool IsBroadcast, uint16_t nSubDevice);
+#endif
+#if defined (ENABLE_RDM_MANUFACTURER_PIDS)
+	void SetManufacturerPid(bool IsBroadcast, uint16_t nSubDevice);
 #endif
 	// ANSI E1.37-1
 	void SetIdentifyMode(bool IsBroadcast, uint16_t nSubDevice);

@@ -140,11 +140,8 @@ void main() {
 
 	RDMPersonality *personalities[PERSONALITY_COUNT];
 #if defined(ENABLE_CONFIG_PIDS)
-	static_assert(
-			PERSONALITY_COUNT == static_cast<size_t>(pixel::Type::UNDEFINED),
-			"Personality Count != Pixel Type Count");
-	for (auto n = 0; n < PERSONALITY_COUNT; ++n)
-	{
+	static_assert(PERSONALITY_COUNT == static_cast<size_t>(pixel::Type::UNDEFINED),	"Personality Count != Pixel Type Count");
+	for (auto n = 0; n < PERSONALITY_COUNT; ++n) {
 		const auto description = PixelType::GetType(static_cast<pixel::Type>(n));
 		personalities[n] = new RDMPersonality(description, &pixelDmx);
 	}
@@ -164,35 +161,29 @@ void main() {
 	rdmResponder.SetProductCategory(E120_PRODUCT_CATEGORY_FIXTURE);
 	rdmResponder.SetProductDetail(E120_PRODUCT_DETAIL_LED);
 
-	StoreRDMSensors storeRdmSensors;
-	RDMSensorsParams rdmSensorsParams(&storeRdmSensors);
+	RDMSensorsParams rdmSensorsParams;
 
-	if (rdmSensorsParams.Load()) {
-		rdmSensorsParams.Dump();
-		rdmSensorsParams.Set();
-	}
+	rdmSensorsParams.Load();
+	rdmSensorsParams.Dump();
+	rdmSensorsParams.Set();
 
 #if defined (ENABLE_RDM_SUBDEVICES)
-	StoreRDMSubDevices storeRdmSubDevices;
-	RDMSubDevicesParams rdmSubDevicesParams(&storeRdmSubDevices);
 
-	if (rdmSubDevicesParams.Load()) {
-		rdmSubDevicesParams.Dump();
-		rdmSubDevicesParams.Set();
-	}
+	RDMSubDevicesParams rdmSubDevicesParams;
+
+	rdmSubDevicesParams.Load();
+	rdmSubDevicesParams.Dump();
+	rdmSubDevicesParams.Set();
 #endif
 
 	rdmResponder.Init();
 
-	StoreRDMDevice storeRdmDevice;
-	RDMDeviceParams rdmDeviceParams(&storeRdmDevice);
+	RDMDeviceParams rdmDeviceParams;
 
-	if (rdmDeviceParams.Load()) {
-		rdmDeviceParams.Dump();
-		rdmDeviceParams.Set(&rdmResponder);
-	}
+	rdmDeviceParams.Load();
+	rdmDeviceParams.Dump();
+	rdmDeviceParams.Set(&rdmResponder);
 
-	rdmResponder.SetRDMDeviceStore(&storeRdmDevice);
 	rdmResponder.Start();
 	rdmResponder.DmxDisableOutput(!isConfigMode && (nTestPattern != pixelpatterns::Pattern::NONE));
 	rdmResponder.Print();

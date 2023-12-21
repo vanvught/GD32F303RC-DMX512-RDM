@@ -26,16 +26,18 @@
 #ifndef STOREPIXELDMX_H_
 #define STOREPIXELDMX_H_
 
-#include <pixeldmxparams.h>
+#include <cstddef>
 #include <cstdint>
-#include <cassert>
 
-#include "pixeldmxstore.h"
 #include "configstore.h"
+#include "pixeldmxparams.h"
+#include "pixeldmxstore.h"
+#include "pixeltype.h"
 
 class StorePixelDmx final: public PixelDmxParamsStore, public PixelDmxStore {
 public:
-	StorePixelDmx();
+	StorePixelDmx(StorePixelDmx &other) = delete;
+	void operator=(const StorePixelDmx &) = delete;
 
 	void Update(const struct pixeldmxparams::Params *pWS28xxDmxParams) override {
 		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, pWS28xxDmxParams, sizeof(struct pixeldmxparams::Params));
@@ -49,32 +51,34 @@ public:
 		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, __builtin_offsetof(struct pixeldmxparams::Params, nType), &nType, sizeof(uint8_t), pixeldmxparams::Mask::TYPE);
 	}
 
+	void SaveType(pixel::Type type) override {
+		SaveType(static_cast<uint8_t>(type));
+	}
+
 	void SaveCount(uint16_t nCount) override {
-		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, __builtin_offsetof(struct pixeldmxparams::Params, nCount), &nCount, sizeof(uint16_t), pixeldmxparams::Mask::COUNT);
+		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, offsetof(struct pixeldmxparams::Params, nCount), &nCount, sizeof(uint16_t), pixeldmxparams::Mask::COUNT);
 	}
 
 	void SaveGroupingCount(uint16_t nGroupingCount) override {
-		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, __builtin_offsetof(struct pixeldmxparams::Params, nGroupingCount), &nGroupingCount, sizeof(uint16_t), pixeldmxparams::Mask::GROUPING_COUNT);
+		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, offsetof(struct pixeldmxparams::Params, nGroupingCount), &nGroupingCount, sizeof(uint16_t), pixeldmxparams::Mask::GROUPING_COUNT);
 	}
 
 	void SaveMap(uint8_t nMap) override {
-		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, __builtin_offsetof(struct pixeldmxparams::Params, nMap), &nMap, sizeof(uint8_t), pixeldmxparams::Mask::MAP);
+		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, offsetof(struct pixeldmxparams::Params, nMap), &nMap, sizeof(uint8_t), pixeldmxparams::Mask::MAP);
 	}
 
 	void SaveTestPattern(uint8_t nTestPattern) override {
-		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, __builtin_offsetof(struct pixeldmxparams::Params, nTestPattern), &nTestPattern, sizeof(uint8_t), pixeldmxparams::Mask::TEST_PATTERN);
+		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, offsetof(struct pixeldmxparams::Params, nTestPattern), &nTestPattern, sizeof(uint8_t), pixeldmxparams::Mask::TEST_PATTERN);
 	}
 
 	void SaveDmxStartAddress(uint16_t nDmxStartAddress) override {
-		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, __builtin_offsetof(struct pixeldmxparams::Params, nDmxStartAddress), &nDmxStartAddress, sizeof(uint16_t), pixeldmxparams::Mask::DMX_START_ADDRESS);
+		ConfigStore::Get()->Update(configstore::Store::WS28XXDMX, offsetof(struct pixeldmxparams::Params, nDmxStartAddress), &nDmxStartAddress, sizeof(uint16_t), pixeldmxparams::Mask::DMX_START_ADDRESS);
 	}
 
-	static StorePixelDmx *Get() {
-		return s_pThis;
-	}
+	static StorePixelDmx *Get();
 
-private:
-	static StorePixelDmx *s_pThis;
+protected:
+	StorePixelDmx() {};
 };
 
 #endif /* STOREPIXELDMX_H_ */

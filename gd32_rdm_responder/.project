@@ -3,6 +3,29 @@
 	<name>gd32_rdm_responder</name>
 	<comment></comment>
 	<projects>
+		<project>lib-c</project>
+		<project>lib-c++</project>
+		<project>lib-configstore</project>
+		<project>lib-debug</project>
+		<project>lib-device</project>
+		<project>lib-display</project>
+		<project>lib-displayudf</project>
+		<project>lib-dmx</project>
+		<project>lib-dmxreceiver</project>
+		<project>lib-flashcode</project>
+		<project>lib-gd32</project>
+		<project>lib-hal</project>
+		<project>lib-lightset</project>
+		<project>lib-network</project>
+		<project>lib-properties</project>
+		<project>lib-rdm</project>
+		<project>lib-rdmresponder</project>
+		<project>lib-rdmsensor</project>
+		<project>lib-rdmsubdevice</project>
+		<project>lib-usb</project>
+		<project>lib-widget</project>
+		<project>lib-ws28xx</project>
+		<project>lib-ws28xxdmx</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

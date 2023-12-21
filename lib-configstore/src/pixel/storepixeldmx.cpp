@@ -22,21 +22,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#include <cassert>
-
 #include "storepixeldmx.h"
 
-#include "debug.h"
-
-StorePixelDmx *StorePixelDmx::s_pThis;
-
-StorePixelDmx::StorePixelDmx() {
-	DEBUG_ENTRY
-
-	assert(s_pThis == nullptr);
-	s_pThis = this;
-
-	DEBUG_PRINTF("%p", reinterpret_cast<void *>(s_pThis));
-	DEBUG_EXIT
+StorePixelDmx *StorePixelDmx::Get()
+{
+	static StorePixelDmx instance;
+	return &instance;
 }

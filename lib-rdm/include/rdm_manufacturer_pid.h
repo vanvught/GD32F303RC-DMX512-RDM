@@ -6,6 +6,7 @@
 #define RDM_MANUFACTURER_PID_H_
 
 #include <cstddef>
+#include <cstdint>
 
 #if  ! defined (PACKED)
 #define PACKED __attribute__((packed))
@@ -54,6 +55,13 @@ struct ManufacturerParamData {
 };
 
 bool handle_manufactureer_pid_get(const uint16_t nPid, const ManufacturerParamData *pIn, ManufacturerParamData *pOut, uint16_t& nReason);
+bool handle_manufactureer_pid_set(
+		bool isBroadcast,
+		const uint16_t nPid,
+		const rdm::ParameterDescription &parameterDescription,
+		const ManufacturerParamData *pIn,
+		ManufacturerParamData *pOut,
+		uint16_t& nReason);
 
 }  // namespace rdm
 

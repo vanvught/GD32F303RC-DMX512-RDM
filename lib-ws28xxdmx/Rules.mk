@@ -1,6 +1,8 @@
 EXTRA_INCLUDES+=../lib-ws28xx/include
 EXTRA_INCLUDES+=../lib-lightset/include
-EXTRA_INCLUDES+=../lib-properties/include 
+EXTRA_INCLUDES+=../lib-properties/include
+EXTRA_INCLUDES+=../lib-configstore/include
+EXTRA_INCLUDES+=../lib-flashcode/include  
 
 EXTRA_SRCDIR+=src/params
 

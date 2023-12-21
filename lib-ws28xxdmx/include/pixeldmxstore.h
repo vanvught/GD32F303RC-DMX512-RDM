@@ -28,11 +28,16 @@
 
 #include <cstdint>
 
+namespace pixel {
+	enum class Type;
+}
+
 class PixelDmxStore {
 public:
 	virtual ~PixelDmxStore() = default;
 
 	virtual void SaveType(uint8_t nType)=0;
+	virtual void SaveType(pixel::Type type)=0;
 	virtual void SaveCount(uint16_t nCount)=0;
 	virtual void SaveGroupingCount(uint16_t nGroupingCount)=0;
 	virtual void SaveMap(uint8_t nMap)=0;

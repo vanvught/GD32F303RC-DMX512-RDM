@@ -26,6 +26,7 @@
 #ifndef STORERDMSENSORS_H_
 #define STORERDMSENSORS_H_
 
+#include <cstddef>
 #include <cstdint>
 #include <cassert>
 
@@ -53,7 +54,7 @@ public:
 		 assert(nSensor < rdm::sensors::MAX);
 		 DEBUG_PRINTF("nSensor=%u, nCalibration=%d", nSensor, nCalibration);
 		 auto c = static_cast<int16_t>(nCalibration);
-		 ConfigStore::Get()->Update(configstore::Store::RDMSENSORS, (nSensor * sizeof(int16_t)) + __builtin_offsetof(struct rdm::sensorsparams::Params, nCalibrate), &c, sizeof(int16_t));
+		 ConfigStore::Get()->Update(configstore::Store::RDMSENSORS, (nSensor * sizeof(int16_t)) + offsetof(struct rdm::sensorsparams::Params, nCalibrate), &c, sizeof(int16_t));
 	 }
 
 	static StoreRDMSensors *Get() {

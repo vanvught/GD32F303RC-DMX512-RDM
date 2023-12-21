@@ -51,7 +51,7 @@ public:
 		m_nGroupingCount = nGroupingCount;
 	}
 
-	uint32_t GetGroupingCount() const {
+	uint16_t GetGroupingCount() const {
 		return m_nGroupingCount;
 	}
 
@@ -77,7 +77,7 @@ public:
 
 private:
 	uint32_t m_nOutputPorts { 1 };
-	uint32_t m_nGroupingCount { 1 };
+	uint16_t m_nGroupingCount { 1 };
 	uint32_t m_nGroups { pixel::defaults::COUNT };
 	uint32_t m_nUniverses;
 	uint16_t m_nDmxStartAddress { 1 };

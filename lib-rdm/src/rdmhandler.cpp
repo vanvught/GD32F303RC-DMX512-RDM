@@ -135,7 +135,8 @@ const RDMHandler::PidDefinition RDMHandler::PID_DEFINITIONS_SUB_DEVICES[] {
 };
 
 #if defined (ENABLE_RDM_MANUFACTURER_PIDS)
-const RDMHandler::PidDefinition RDMHandler::PID_DEFINITION_MANUFACTURER_GENERAL { 0, &RDMHandler::GetManufacturerPid, nullptr, 0, false, true, false };
+const RDMHandler::PidDefinition RDMHandler::PID_DEFINITION_MANUFACTURER_GENERAL
+	{0,                                &RDMHandler::GetManufacturerPid,             &RDMHandler::SetManufacturerPid,    0, false, true, false };
 #endif
 
 RDMHandler::RDMHandler(bool bIsRdm): m_bIsRDM(bIsRdm) {
@@ -568,8 +569,31 @@ void RDMHandler::GetManufacturerPid(__attribute__((unused))  uint16_t nSubDevice
 
 	RespondMessageNack(nReason);
 }
-#endif
-#endif
+
+void RDMHandler::SetManufacturerPid(bool IsBroadcast, __attribute__((unused)) uint16_t nSubDevice) {
+	const auto *pRdmDataIn = reinterpret_cast<struct TRdmMessageNoSc *>(m_pRdmDataIn);
+	auto *pRdmDataOut = reinterpret_cast<struct TRdmMessage *>(m_pRdmDataOut);
+
+	const auto nPid = static_cast<uint16_t>(pRdmDataIn->param_id[0] + (pRdmDataIn->param_id[1] << 8));
+	const rdm::ManufacturerParamData pIn = { pRdmDataIn->param_data_length, const_cast<uint8_t *>(pRdmDataIn->param_data) };
+	rdm::ManufacturerParamData pOut = { 0, pRdmDataOut->param_data };
+	uint16_t nReason = E120_NR_UNKNOWN_PID;
+
+	for (uint32_t n = 0; n < GetParameterDescriptionCount(); ++n)
+	{
+		if ((PARAMETER_DESCRIPTIONS[n].pid == nPid)
+				&& (rdm::handle_manufactureer_pid_set(IsBroadcast, nPid, PARAMETER_DESCRIPTIONS[n], &pIn, &pOut, nReason)))
+		{
+			pRdmDataOut->param_data_length = pOut.nPdl;
+			RespondMessageAck();
+			return;
+		}
+	}
+
+	RespondMessageNack(nReason);
+}
+#endif // ENABLE_RDM_MANUFACTURER_PIDS
+#endif // !NODE_RDMNET_LLRP_ONLY
 
 void RDMHandler::GetDeviceInfo(uint16_t nSubDevice) {
 	const auto *pRdmDeviceInfoRequested = RDMDeviceResponder::Get()->GetDeviceInfo(nSubDevice);

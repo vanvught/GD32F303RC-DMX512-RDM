@@ -2,7 +2,7 @@
  * @file storewidget.h
  *
  */
-/* Copyright (C) 2019-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2019-2022 by Arjan van Vught mailto:info@orangepi-dmx.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,74 +26,43 @@
 #ifndef STOREWIDGET_H_
 #define STOREWIDGET_H_
 
-#include <cstdint>
 #include <cstddef>
 
 #include "widgetparams.h"
+#include "widgetstore.h"
 
-#if defined (WIDGET_HAVE_FLASHROM)
-# include "configstore.h"
-#endif
+#include "configstore.h"
 
-class StoreWidget {
+class StoreWidget final: public WidgetParamsStore, public WidgetStore {
 public:
-	static StoreWidget& Get() {
-		static StoreWidget instance;
-		return instance;
-	}
+	StoreWidget();
 
-	static void Update(const struct TWidgetParams* pWidgetParams) {
-		Get().IUpdate(pWidgetParams);
-	}
-
-	static void Copy(struct TWidgetParams* pWidgetParams) {
-		Get().ICopy(pWidgetParams);
-	}
-
-	static void UpdateBreakTime(uint8_t nBreakTime) {
-		Get().IUpdateBreakTime(nBreakTime);
-	}
-
-	static void UpdateMabTime(uint8_t nMabTime) {
-		Get().IUpdateMabTime(nMabTime);
-	}
-
-	static void UpdateRefreshRate(uint8_t nRefreshRate) {
-		Get().IUpdateRefreshRate(nRefreshRate);
-	}
-
-private:
-#if defined (WIDGET_HAVE_FLASHROM)
-	void IUpdate(const struct TWidgetParams* pWidgetParams) {
+	void Update(const struct TWidgetParams* pWidgetParams) {
 		ConfigStore::Get()->Update(configstore::Store::WIDGET, pWidgetParams, sizeof(struct TWidgetParams));
 	}
 
-	void ICopy(struct TWidgetParams* pWidgetParams) {
+	void Copy(struct TWidgetParams* pWidgetParams) {
 		ConfigStore::Get()->Copy(configstore::Store::WIDGET, pWidgetParams, sizeof(struct TWidgetParams));
 	}
 
-	void IUpdateBreakTime(uint8_t nBreakTime) {
+	void UpdateBreakTime(uint8_t nBreakTime) {
 		ConfigStore::Get()->Update(configstore::Store::WIDGET, offsetof(struct TWidgetParams, nBreakTime), &nBreakTime, sizeof(uint8_t), WidgetParamsMask::BREAK_TIME);
 	}
 
-	void IUpdateMabTime(uint8_t nMabTime) {
+	void UpdateMabTime(uint8_t nMabTime) {
 		ConfigStore::Get()->Update(configstore::Store::WIDGET, offsetof(struct TWidgetParams, nMabTime), &nMabTime, sizeof(uint8_t), WidgetParamsMask::MAB_TIME);
 	}
 
-	void IUpdateRefreshRate(uint8_t nRefreshRate) {
+	void UpdateRefreshRate(uint8_t nRefreshRate) {
 		ConfigStore::Get()->Update(configstore::Store::WIDGET, offsetof(struct TWidgetParams, nRefreshRate), &nRefreshRate, sizeof(uint8_t), WidgetParamsMask::REFRESH_RATE);
 	}
-#else
-	void IUpdate(const struct TWidgetParams* pWidgetParams) { }
 
-	void ICopy(struct TWidgetParams* pWidgetParams) { }
+	static StoreWidget* Get() {
+		return s_pThis;
+	}
 
-	void IUpdateBreakTime(uint8_t nBreakTime) { }
-
-	void IUpdateMabTime(uint8_t nMabTime) { }
-
-	void IUpdateRefreshRate(uint8_t nRefreshRate) {	}
-#endif
+private:
+	static StoreWidget *s_pThis;
 };
 
 #endif /* STOREWIDGET_H_ */

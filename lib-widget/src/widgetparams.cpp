@@ -1,7 +1,7 @@
 /**
  * @file widgetparams.cpp
  */
-/* Copyright (C) 2019-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2019-2021 by Arjan van Vught mailto:info@orangepi-dmx.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,8 +37,6 @@
 
 #include "dmx.h"
 
-#include "storewidget.h"
-
 #include "readconfigfile.h"
 #include "sscan.h"
 
@@ -46,7 +44,11 @@
 
 using namespace widget;
 
+#if defined (WIDGET_HAVE_FLASHROM)
+WidgetParams::WidgetParams(WidgetParamsStore* pWidgetParamsStore): m_pWidgetParamsStore(pWidgetParamsStore) {
+#else
 WidgetParams::WidgetParams() {
+#endif
 	m_tWidgetParams.nBreakTime = WIDGET_DEFAULT_BREAK_TIME;
 	m_tWidgetParams.nMabTime = WIDGET_DEFAULT_MAB_TIME;
 	m_tWidgetParams.nRefreshRate = WIDGET_DEFAULT_REFRESH_RATE;
@@ -62,10 +64,17 @@ bool WidgetParams::Load() {
 #if defined (WIDGET_HAVE_FLASHROM)
 # if !defined(DISABLE_FS)
 	if (configfile.Read( WidgetParamsConst::FILE_NAME)) {
-		StoreWidget::Update(&m_tWidgetParams);
+		// There is a configuration file
+		if (m_pWidgetParamsStore != nullptr) {
+			m_pWidgetParamsStore->Update(&m_tWidgetParams);
+		}
 	} else
 # endif
-	StoreWidget::Copy(&m_tWidgetParams);
+	if (m_pWidgetParamsStore != nullptr) {
+		m_pWidgetParamsStore->Copy(&m_tWidgetParams);
+	} else {
+		return false;
+	}
 
 	return true;
 #else

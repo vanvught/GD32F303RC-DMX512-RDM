@@ -1,8 +1,9 @@
+#if (defined (H3) || defined (GD32)) && defined (RDM_CONTROLLER)
 /**
- * @file storerdmsubdevices.h
+ * @file storewidget.cpp
  *
  */
-/* Copyright (C) 2020-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2019-2021 by Arjan van Vught mailto:info@orangepi-dmx.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,36 +24,22 @@
  * THE SOFTWARE.
  */
 
-#ifndef STORERDMSUBDEVICES_H_
-#define STORERDMSUBDEVICES_H_
+#include <cstdint>
+#include <cassert>
 
-#include "rdmsubdevicesparams.h"
+#include "storewidget.h"
 
-#include "configstore.h"
+#include "debug.h"
 
-class StoreRDMSubDevices {
-public:
-	static StoreRDMSubDevices& Get() {
-		static StoreRDMSubDevices instance;
-		return instance;
-	}
+StoreWidget *StoreWidget::s_pThis = nullptr;
 
-	static void Update(const rdm::subdevicesparams::Params *pParams) {
-		Get().IUpdate(pParams);
-	}
+StoreWidget::StoreWidget() {
+	DEBUG_ENTRY
 
-	static void Copy(rdm::subdevicesparams::Params *pParams) {
-		Get().ICopy(pParams);
-	}
+	assert(s_pThis == nullptr);
+	s_pThis = this;
 
-private:
-	void IUpdate(const rdm::subdevicesparams::Params *pParams)  {
-		ConfigStore::Get()->Update(configstore::Store::RDMSUBDEVICES, pParams, sizeof(struct rdm::subdevicesparams::Params));
-	}
-
-	void ICopy(rdm::subdevicesparams::Params *pParams) {
-		ConfigStore::Get()->Copy(configstore::Store::RDMSUBDEVICES, pParams, sizeof(struct rdm::subdevicesparams::Params));
-	}
-};
-
-#endif /* STORERDMSUBDEVICES_H_ */
+	DEBUG_PRINTF("%p", reinterpret_cast<void *>(s_pThis));
+	DEBUG_EXIT
+}
+#endif

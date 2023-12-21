@@ -164,28 +164,35 @@ void main() {
 	rdmResponder.SetProductCategory(E120_PRODUCT_CATEGORY_FIXTURE);
 	rdmResponder.SetProductDetail(E120_PRODUCT_DETAIL_LED);
 
-	RDMSensorsParams rdmSensorsParams;
+	StoreRDMSensors storeRdmSensors;
+	RDMSensorsParams rdmSensorsParams(&storeRdmSensors);
 
-	rdmSensorsParams.Load();
-	rdmSensorsParams.Dump();
-	rdmSensorsParams.Set();
+	if (rdmSensorsParams.Load()) {
+		rdmSensorsParams.Dump();
+		rdmSensorsParams.Set();
+	}
 
 #if defined (ENABLE_RDM_SUBDEVICES)
-	RDMSubDevicesParams rdmSubDevicesParams;
+	StoreRDMSubDevices storeRdmSubDevices;
+	RDMSubDevicesParams rdmSubDevicesParams(&storeRdmSubDevices);
 
-	rdmSubDevicesParams.Load()) {
-	rdmSubDevicesParams.Dump();
-	rdmSubDevicesParams.Set();
+	if (rdmSubDevicesParams.Load()) {
+		rdmSubDevicesParams.Dump();
+		rdmSubDevicesParams.Set();
+	}
 #endif
 
 	rdmResponder.Init();
 
-	RDMDeviceParams rdmDeviceParams;
+	StoreRDMDevice storeRdmDevice;
+	RDMDeviceParams rdmDeviceParams(&storeRdmDevice);
 
-	rdmDeviceParams.Load();
-	rdmDeviceParams.Dump();
-	rdmDeviceParams.Set(&rdmResponder);
+	if (rdmDeviceParams.Load()) {
+		rdmDeviceParams.Dump();
+		rdmDeviceParams.Set(&rdmResponder);
+	}
 
+	rdmResponder.SetRDMDeviceStore(&storeRdmDevice);
 	rdmResponder.Start();
 	rdmResponder.DmxDisableOutput(!isConfigMode && (nTestPattern != pixelpatterns::Pattern::NONE));
 	rdmResponder.Print();

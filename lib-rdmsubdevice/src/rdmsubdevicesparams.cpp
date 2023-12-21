@@ -38,8 +38,6 @@
 #include "rdmsubdevicesconst.h"
 #include "rdm _subdevices.h"
 
-#include "storerdmsubdevices.h"
-
 #include "readconfigfile.h"
 #include "sscan.h"
 #include "propertiesbuilder.h"
@@ -64,7 +62,7 @@
 
 using namespace rdm::subdevices;
 
-RDMSubDevicesParams::RDMSubDevicesParams() {
+RDMSubDevicesParams::RDMSubDevicesParams(RDMSubDevicesParamsStore *pRDMSubDevicesParamsStore): m_pRDMSubDevicesParamsStore(pRDMSubDevicesParamsStore) {
 	DEBUG_ENTRY
 
 	memset(&m_Params, 0, sizeof(struct rdm::subdevicesparams::Params));
@@ -81,14 +79,20 @@ bool RDMSubDevicesParams::Load() {
 	ReadConfigFile configfile(RDMSubDevicesParams::staticCallbackFunction, this);
 
 	if (configfile.Read(RDMSubDevicesConst::PARAMS_FILE_NAME)) {
-		StoreRDMSubDevices::Update(&m_Params);
-
+		if (m_pRDMSubDevicesParamsStore != nullptr) {
+			m_pRDMSubDevicesParamsStore->Update(&m_Params);
+		}
 	} else
 #endif
-		StoreRDMSubDevices::Copy(&m_Params);
-	// Sanity check
-	if (m_Params.nCount >= rdm::subdevices::MAX) {
-		memset(&m_Params, 0, sizeof(struct rdm::subdevicesparams::Params));
+	if (m_pRDMSubDevicesParamsStore != nullptr) {
+		m_pRDMSubDevicesParamsStore->Copy(&m_Params);
+		// Sanity check
+		if (m_Params.nCount >= rdm::subdevices::MAX) {
+			memset(&m_Params, 0, sizeof(struct rdm::subdevicesparams::Params));
+		}
+	} else {
+		DEBUG_EXIT
+		return false;
 	}
 
 	DEBUG_EXIT
@@ -100,8 +104,14 @@ void RDMSubDevicesParams::Load(const char *pBuffer, uint32_t nLength) {
 
 	assert(pBuffer != nullptr);
 	assert(nLength != 0);
+	assert(m_pRDMSubDevicesParamsStore != nullptr);
 
 	debug_dump(pBuffer, nLength);
+
+	if (m_pRDMSubDevicesParamsStore == nullptr) {
+		DEBUG_EXIT
+		return;
+	}
 
 	m_Params.nCount = 0;
 
@@ -109,7 +119,7 @@ void RDMSubDevicesParams::Load(const char *pBuffer, uint32_t nLength) {
 
 	config.Read(pBuffer, nLength);
 
-	StoreRDMSubDevices::Update(&m_Params);
+	m_pRDMSubDevicesParamsStore->Update(&m_Params);
 
 	DEBUG_EXIT
 }
@@ -122,7 +132,8 @@ void RDMSubDevicesParams::Builder(const rdm::subdevicesparams::Params *pParams, 
 	if (pParams != nullptr) {
 		memcpy(&m_Params, pParams, sizeof(struct rdm::subdevicesparams::Params));
 	} else {
-		StoreRDMSubDevices::Copy(&m_Params);
+		assert(m_pRDMSubDevicesParamsStore != nullptr);
+		m_pRDMSubDevicesParamsStore->Copy(&m_Params);
 	}
 
 	PropertiesBuilder builder(RDMSubDevicesConst::PARAMS_FILE_NAME, pBuffer, nLength);

@@ -37,22 +37,20 @@
 
 #include "rdmdeviceparams.h"
 #include "rdmdeviceparamsconst.h"
-#include "rdmdevice.h"
 
 #include "rdm_e120.h"
 
 #include "network.h"
 #include "hardware.h"
 
-#include "storerdmdevice.h"
-
 #include "readconfigfile.h"
 #include "sscan.h"
+
 #include "propertiesbuilder.h"
 
 #include "debug.h"
 
-RDMDeviceParams::RDMDeviceParams() {
+RDMDeviceParams::RDMDeviceParams(RDMDeviceParamsStore *pRDMDeviceParamsStore): m_pRDMDeviceParamsStore(pRDMDeviceParamsStore) {
 	DEBUG_ENTRY
 	
 	memset(&m_Params, 0, sizeof(struct rdm::deviceparams::Params));
@@ -72,10 +70,17 @@ bool RDMDeviceParams::Load() {
 	ReadConfigFile configfile(RDMDeviceParams::staticCallbackFunction, this);
 
 	if (configfile.Read(RDMDeviceParamsConst::FILE_NAME)) {
-		StoreRDMDevice::Update(&m_Params);
+		if (m_pRDMDeviceParamsStore != nullptr) {
+			m_pRDMDeviceParamsStore->Update(&m_Params);
+		}
 	} else
 #endif
-	StoreRDMDevice::Copy(&m_Params);
+	if (m_pRDMDeviceParamsStore != nullptr) {
+		m_pRDMDeviceParamsStore->Copy(&m_Params);
+	} else {
+		DEBUG_EXIT
+		return false;
+	}
 
 	DEBUG_EXIT
 	return true;
@@ -93,7 +98,8 @@ void RDMDeviceParams::Load(const char *pBuffer, uint32_t nLength) {
 
 	config.Read(pBuffer, nLength);
 
-	StoreRDMDevice::Update(&m_Params);
+	assert(m_pRDMDeviceParamsStore != nullptr);
+	m_pRDMDeviceParamsStore->Update(&m_Params);
 
 	DEBUG_EXIT
 }
@@ -190,7 +196,8 @@ void RDMDeviceParams::Builder(const struct rdm::deviceparams::Params *pParams, c
 	if (pParams != nullptr) {
 		memcpy(&m_Params, pParams, sizeof(struct rdm::deviceparams::Params));
 	} else {
-		StoreRDMDevice::Copy(&m_Params);
+		assert(m_pRDMDeviceParamsStore != nullptr);
+		m_pRDMDeviceParamsStore->Copy(&m_Params);
 	}
 
 	PropertiesBuilder builder(RDMDeviceParamsConst::FILE_NAME, pBuffer, nLength);

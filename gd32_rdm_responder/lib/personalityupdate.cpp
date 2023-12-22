@@ -52,9 +52,9 @@ void RDMResponder::PersonalityUpdate(uint32_t nPersonality) {
 	DisplayUdf::Get()->Show();
 
 	assert(nPersonality < PERSONALITY_COUNT);
-	switch (nPersonality) {
+	switch (static_cast<Personalities::Personality>(nPersonality)) {
 #if !defined(ENABLE_CONFIG_PIDS)
-	case Personalities::CONFIG_MODE: {
+	case Personalities::Personality::CONFIG_MODE: {
 		DisplayUdf::Get()->ClearLine(3);
 		DisplayUdf::Get()->ClearLine(4);
 		DisplayUdf::Get()->Write(4, "Config Mode");

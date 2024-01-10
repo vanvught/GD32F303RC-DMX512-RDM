@@ -2,7 +2,7 @@
  * @file gd32.h
  *
  */
-/* Copyright (C) 2021-2023 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2021-2024 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,10 @@
 #ifdef __cplusplus
 # pragma GCC diagnostic ignored "-Wold-style-cast"
 # pragma GCC diagnostic ignored "-Wuseless-cast"
+# if __cplusplus > 201402
+// error: compound assignment with 'volatile'-qualified left operand is deprecated
+#  pragma GCC diagnostic ignored "-Wvolatile"
+# endif
 extern "C" {
 #endif
 

@@ -112,10 +112,6 @@ Archive member included to satisfy reference by file (symbol)
                               ../lib-dmx/lib_gd32/libdmx.a(dmx.o) (timer_deinit)
 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
                               ../lib-dmx/lib_gd32/libdmx.a(dmx.o) (usart_dma_transmit_config)
-../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
-                              ../lib-hal/lib_gd32/libhal.a(hardware.o) (gd32_adc_init())
-../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
-                              ../lib-hal/lib_gd32/libhal.a(hardware.o) (gd32_i2c_begin)
 ../lib-gd32/lib_gd32/libgd32.a(gd32_uart.o)
                               ../lib-dmx/lib_gd32/libdmx.a(dmx.o) (gd32_uart_begin)
 ../lib-gd32/lib_gd32/libgd32.a(gd32_uart0.o)
@@ -126,6 +122,10 @@ Archive member included to satisfy reference by file (symbol)
                               ../lib-hal/lib_gd32/libhal.a(hardware.o) (systick_config)
 ../lib-gd32/lib_gd32/libgd32.a(udelay.o)
                               ../lib-hal/lib_gd32/libhal.a(hardware.o) (udelay_init())
+../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+                              ../lib-hal/lib_gd32/libhal.a(hardware.o) (gd32_adc_init())
+../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+                              ../lib-hal/lib_gd32/libhal.a(hardware.o) (gd32_i2c_begin)
 ../lib-gd32/lib_gd32/libgd32.a(gd32_uart0.o)
                               ../lib-hal/lib_gd32/libhal.a(console.o) (uart0_init)
 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
@@ -906,7 +906,7 @@ Discarded input sections
                 0x0000000000000000       0x30 ../lib-hal/lib_gd32/libhal.a(hardware.o)
  .debug_rnglists
                 0x0000000000000000       0x41 ../lib-hal/lib_gd32/libhal.a(hardware.o)
- .debug_line    0x0000000000000000      0x6d5 ../lib-hal/lib_gd32/libhal.a(hardware.o)
+ .debug_line    0x0000000000000000      0x6d1 ../lib-hal/lib_gd32/libhal.a(hardware.o)
  .debug_str     0x0000000000000000     0x10eb ../lib-hal/lib_gd32/libhal.a(hardware.o)
  .comment       0x0000000000000000       0x39 ../lib-hal/lib_gd32/libhal.a(hardware.o)
  .debug_frame   0x0000000000000000       0x64 ../lib-hal/lib_gd32/libhal.a(hardware.o)
@@ -1755,44 +1755,6 @@ Discarded input sections
  .debug_frame   0x0000000000000000      0x36c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
  .ARM.attributes
                 0x0000000000000000       0x34 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
- .text          0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .data          0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .bss           0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .text._Z16gd32_adc_gettempv
-                0x0000000000000000       0x70 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .text._Z16gd32_adc_getvrefv
-                0x0000000000000000       0x48 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .debug_info    0x0000000000000000      0x823 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .debug_abbrev  0x0000000000000000      0x1ae ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .debug_loclists
-                0x0000000000000000       0x38 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .debug_aranges
-                0x0000000000000000       0x30 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .debug_rnglists
-                0x0000000000000000       0x20 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .debug_line    0x0000000000000000      0x3fb ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .debug_str     0x0000000000000000      0x770 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .comment       0x0000000000000000       0x39 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .debug_frame   0x0000000000000000       0x80 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .ARM.attributes
-                0x0000000000000000       0x34 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
- .text          0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
- .data          0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
- .bss           0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
- .debug_info    0x0000000000000000      0xdff ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
- .debug_abbrev  0x0000000000000000      0x2f6 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
- .debug_loclists
-                0x0000000000000000      0x3f2 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
- .debug_aranges
-                0x0000000000000000       0x48 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
- .debug_rnglists
-                0x0000000000000000       0x8d ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
- .debug_line    0x0000000000000000      0x665 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
- .debug_str     0x0000000000000000      0x96c ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
- .comment       0x0000000000000000       0x39 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
- .debug_frame   0x0000000000000000       0xa8 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
- .ARM.attributes
-                0x0000000000000000       0x34 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
  .text          0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_uart.o)
  .data          0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_uart.o)
  .bss           0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_uart.o)
@@ -1888,6 +1850,44 @@ Discarded input sections
  .debug_frame   0x0000000000000000       0x3c ../lib-gd32/lib_gd32/libgd32.a(udelay.o)
  .ARM.attributes
                 0x0000000000000000       0x34 ../lib-gd32/lib_gd32/libgd32.a(udelay.o)
+ .text          0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .data          0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .bss           0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .text._Z16gd32_adc_gettempv
+                0x0000000000000000       0x70 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .text._Z16gd32_adc_getvrefv
+                0x0000000000000000       0x48 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .debug_info    0x0000000000000000      0x823 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .debug_abbrev  0x0000000000000000      0x1ae ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .debug_loclists
+                0x0000000000000000       0x38 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .debug_aranges
+                0x0000000000000000       0x30 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .debug_rnglists
+                0x0000000000000000       0x20 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .debug_line    0x0000000000000000      0x3fd ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .debug_str     0x0000000000000000      0x772 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .comment       0x0000000000000000       0x39 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .debug_frame   0x0000000000000000       0x80 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+ .text          0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+ .data          0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+ .bss           0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+ .debug_info    0x0000000000000000      0xe0a ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+ .debug_abbrev  0x0000000000000000      0x2f7 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+ .debug_loclists
+                0x0000000000000000      0x3f2 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+ .debug_aranges
+                0x0000000000000000       0x48 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+ .debug_rnglists
+                0x0000000000000000       0x99 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+ .debug_line    0x0000000000000000      0x667 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+ .debug_str     0x0000000000000000      0x971 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+ .comment       0x0000000000000000       0x39 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+ .debug_frame   0x0000000000000000       0xa8 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+ .ARM.attributes
+                0x0000000000000000       0x34 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
  .text          0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_uart0.o)
  .data          0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_uart0.o)
  .bss           0x0000000000000000        0x0 ../lib-gd32/lib_gd32/libgd32.a(gd32_uart0.o)
@@ -2550,322 +2550,321 @@ LOAD build_gd32/firmware/main.o
                 0x00000000080032b2                console_puts
  *fill*         0x00000000080032b6        0x2 
  .text._ZN8HardwareC2Ev
-                0x00000000080032b8       0xcc ../lib-hal/lib_gd32/libhal.a(hardware.o)
+                0x00000000080032b8       0xd0 ../lib-hal/lib_gd32/libhal.a(hardware.o)
                 0x00000000080032b8                Hardware::Hardware()
                 0x00000000080032b8                Hardware::Hardware()
- .text._ZdlPvj  0x0000000008003384        0x4 ../lib-c++/lib_gd32/libc++.a(delete.o)
-                0x0000000008003384                operator delete(void*, unsigned int)
- .text._Znwj    0x0000000008003388        0x4 ../lib-c++/lib_gd32/libc++.a(new.o)
-                0x0000000008003388                operator new(unsigned int)
+ .text._ZdlPvj  0x0000000008003388        0x4 ../lib-c++/lib_gd32/libc++.a(delete.o)
+                0x0000000008003388                operator delete(void*, unsigned int)
+ .text._Znwj    0x000000000800338c        0x4 ../lib-c++/lib_gd32/libc++.a(new.o)
+                0x000000000800338c                operator new(unsigned int)
  .text.__libc_init_array
-                0x000000000800338c       0x44 ../lib-c/lib_gd32/libc.a(init.o)
-                0x000000000800338c                __libc_init_array
- .text.malloc   0x00000000080033d0       0x58 ../lib-c/lib_gd32/libc.a(malloc.o)
-                0x00000000080033d0                malloc
- .text.free     0x0000000008003428       0x34 ../lib-c/lib_gd32/libc.a(malloc.o)
-                0x0000000008003428                free
- .text.memmove  0x000000000800345c       0x2e ../lib-c/lib_gd32/libc.a(memmove.o)
-                0x000000000800345c                memmove
- .text.memset   0x000000000800348a       0x44 ../lib-c/lib_gd32/libc.a(memset.o)
-                0x000000000800348a                memset
- .text.puts     0x00000000080034ce       0x10 ../lib-c/lib_gd32/libc.a(puts.o)
-                0x00000000080034ce                puts
+                0x0000000008003390       0x44 ../lib-c/lib_gd32/libc.a(init.o)
+                0x0000000008003390                __libc_init_array
+ .text.malloc   0x00000000080033d4       0x58 ../lib-c/lib_gd32/libc.a(malloc.o)
+                0x00000000080033d4                malloc
+ .text.free     0x000000000800342c       0x34 ../lib-c/lib_gd32/libc.a(malloc.o)
+                0x000000000800342c                free
+ .text.memmove  0x0000000008003460       0x2e ../lib-c/lib_gd32/libc.a(memmove.o)
+                0x0000000008003460                memmove
+ .text.memset   0x000000000800348e       0x44 ../lib-c/lib_gd32/libc.a(memset.o)
+                0x000000000800348e                memset
+ .text.puts     0x00000000080034d2       0x10 ../lib-c/lib_gd32/libc.a(puts.o)
+                0x00000000080034d2                puts
  .text.isleapyear
-                0x00000000080034de       0x2c ../lib-c/lib_gd32/libc.a(time.o)
- *fill*         0x000000000800350a        0x2 
+                0x00000000080034e2       0x2c ../lib-c/lib_gd32/libc.a(time.o)
+ *fill*         0x000000000800350e        0x2 
  .text.getdaysofmonth
-                0x000000000800350c       0x20 ../lib-c/lib_gd32/libc.a(time.o)
- .text.mktime   0x000000000800352c       0x98 ../lib-c/lib_gd32/libc.a(time.o)
-                0x000000000800352c                mktime
+                0x0000000008003510       0x20 ../lib-c/lib_gd32/libc.a(time.o)
+ .text.mktime   0x0000000008003530       0x98 ../lib-c/lib_gd32/libc.a(time.o)
+                0x0000000008003530                mktime
  .text.settimeofday
-                0x00000000080035c4       0x24 ../lib-c/lib_gd32/libc.a(time.o)
-                0x00000000080035c4                settimeofday
+                0x00000000080035c8       0x24 ../lib-c/lib_gd32/libc.a(time.o)
+                0x00000000080035c8                settimeofday
  .text.SystemInit
-                0x00000000080035e8      0x134 ../lib-gd32/lib_gd32/libgd32.a(system_gd32f30x.o)
-                0x00000000080035e8                SystemInit
+                0x00000000080035ec      0x134 ../lib-gd32/lib_gd32/libgd32.a(system_gd32f30x.o)
+                0x00000000080035ec                SystemInit
  .text.bkp_write_data
-                0x000000000800371c       0x2c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_bkp.o)
-                0x000000000800371c                bkp_write_data
+                0x0000000008003720       0x2c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_bkp.o)
+                0x0000000008003720                bkp_write_data
  .text.dma_deinit
-                0x0000000008003748       0x38 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
-                0x0000000008003748                dma_deinit
+                0x000000000800374c       0x38 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
+                0x000000000800374c                dma_deinit
  .text.dma_init
-                0x0000000008003780       0x74 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
-                0x0000000008003780                dma_init
+                0x0000000008003784       0x74 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
+                0x0000000008003784                dma_init
  .text.dma_circulation_disable
-                0x00000000080037f4       0x20 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
-                0x00000000080037f4                dma_circulation_disable
+                0x00000000080037f8       0x20 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
+                0x00000000080037f8                dma_circulation_disable
  .text.dma_memory_to_memory_disable
-                0x0000000008003814       0x20 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
-                0x0000000008003814                dma_memory_to_memory_disable
+                0x0000000008003818       0x20 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
+                0x0000000008003818                dma_memory_to_memory_disable
  .text.dma_flag_clear
-                0x0000000008003834        0xc ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
-                0x0000000008003834                dma_flag_clear
+                0x0000000008003838        0xc ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
+                0x0000000008003838                dma_flag_clear
  .text.dma_interrupt_flag_get
-                0x0000000008003840       0x5c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
-                0x0000000008003840                dma_interrupt_flag_get
+                0x0000000008003844       0x5c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
+                0x0000000008003844                dma_interrupt_flag_get
  .text.dma_interrupt_flag_clear
-                0x000000000800389c        0x4 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
-                0x000000000800389c                dma_interrupt_flag_clear
+                0x00000000080038a0        0x4 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
+                0x00000000080038a0                dma_interrupt_flag_clear
  .text.dma_interrupt_disable
-                0x00000000080038a0       0x20 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
-                0x00000000080038a0                dma_interrupt_disable
+                0x00000000080038a4       0x20 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_dma.o)
+                0x00000000080038a4                dma_interrupt_disable
  .text.fmc_bank0_unlock
-                0x00000000080038c0       0x1c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fmc.o)
-                0x00000000080038c0                fmc_bank0_unlock
+                0x00000000080038c4       0x1c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fmc.o)
+                0x00000000080038c4                fmc_bank0_unlock
  .text.fmc_bank1_unlock
-                0x00000000080038dc       0x1c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fmc.o)
-                0x00000000080038dc                fmc_bank1_unlock
+                0x00000000080038e0       0x1c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fmc.o)
+                0x00000000080038e0                fmc_bank1_unlock
  .text.fmc_bank0_lock
-                0x00000000080038f8       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fmc.o)
-                0x00000000080038f8                fmc_bank0_lock
+                0x00000000080038fc       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fmc.o)
+                0x00000000080038fc                fmc_bank0_lock
  .text.fmc_bank1_lock
-                0x0000000008003908       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fmc.o)
-                0x0000000008003908                fmc_bank1_lock
+                0x000000000800390c       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fmc.o)
+                0x000000000800390c                fmc_bank1_lock
  .text.fmc_bank0_state_get
-                0x0000000008003918       0x24 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fmc.o)
-                0x0000000008003918                fmc_bank0_state_get
+                0x000000000800391c       0x24 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fmc.o)
+                0x000000000800391c                fmc_bank0_state_get
  .text.fmc_bank1_state_get
-                0x000000000800393c       0x24 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fmc.o)
-                0x000000000800393c                fmc_bank1_state_get
+                0x0000000008003940       0x24 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fmc.o)
+                0x0000000008003940                fmc_bank1_state_get
  .text.fwdgt_enable
-                0x0000000008003960       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fwdgt.o)
-                0x0000000008003960                fwdgt_enable
+                0x0000000008003964       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fwdgt.o)
+                0x0000000008003964                fwdgt_enable
  .text.fwdgt_counter_reload
-                0x0000000008003970       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fwdgt.o)
-                0x0000000008003970                fwdgt_counter_reload
+                0x0000000008003974       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fwdgt.o)
+                0x0000000008003974                fwdgt_counter_reload
  .text.fwdgt_config
-                0x0000000008003980       0x54 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fwdgt.o)
-                0x0000000008003980                fwdgt_config
+                0x0000000008003984       0x54 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_fwdgt.o)
+                0x0000000008003984                fwdgt_config
  .text.gpio_init
-                0x00000000080039d4       0x9e ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_gpio.o)
-                0x00000000080039d4                gpio_init
+                0x00000000080039d8       0x9e ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_gpio.o)
+                0x00000000080039d8                gpio_init
  .text.gpio_input_bit_get
-                0x0000000008003a72        0xc ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_gpio.o)
-                0x0000000008003a72                gpio_input_bit_get
- *fill*         0x0000000008003a7e        0x2 
+                0x0000000008003a76        0xc ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_gpio.o)
+                0x0000000008003a76                gpio_input_bit_get
+ *fill*         0x0000000008003a82        0x2 
  .text.gpio_pin_remap_config
-                0x0000000008003a80       0x60 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_gpio.o)
-                0x0000000008003a80                gpio_pin_remap_config
+                0x0000000008003a84       0x60 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_gpio.o)
+                0x0000000008003a84                gpio_pin_remap_config
  .text.pmu_backup_write_enable
-                0x0000000008003ae0       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_pmu.o)
-                0x0000000008003ae0                pmu_backup_write_enable
+                0x0000000008003ae4       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_pmu.o)
+                0x0000000008003ae4                pmu_backup_write_enable
  .text.rcu_periph_clock_enable
-                0x0000000008003af0       0x1a ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_rcu.o)
-                0x0000000008003af0                rcu_periph_clock_enable
+                0x0000000008003af4       0x1a ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_rcu.o)
+                0x0000000008003af4                rcu_periph_clock_enable
  .text.rcu_periph_clock_disable
-                0x0000000008003b0a       0x1c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_rcu.o)
-                0x0000000008003b0a                rcu_periph_clock_disable
+                0x0000000008003b0e       0x1c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_rcu.o)
+                0x0000000008003b0e                rcu_periph_clock_disable
  .text.rcu_periph_reset_enable
-                0x0000000008003b26        0x4 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_rcu.o)
-                0x0000000008003b26                rcu_periph_reset_enable
- .text.rcu_periph_reset_disable
                 0x0000000008003b2a        0x4 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_rcu.o)
-                0x0000000008003b2a                rcu_periph_reset_disable
- *fill*         0x0000000008003b2e        0x2 
+                0x0000000008003b2a                rcu_periph_reset_enable
+ .text.rcu_periph_reset_disable
+                0x0000000008003b2e        0x4 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_rcu.o)
+                0x0000000008003b2e                rcu_periph_reset_disable
+ *fill*         0x0000000008003b32        0x2 
  .text.rcu_adc_clock_config
-                0x0000000008003b30       0x5c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_rcu.o)
-                0x0000000008003b30                rcu_adc_clock_config
+                0x0000000008003b34       0x5c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_rcu.o)
+                0x0000000008003b34                rcu_adc_clock_config
  .text.rcu_clock_freq_get
-                0x0000000008003b8c       0xf8 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_rcu.o)
-                0x0000000008003b8c                rcu_clock_freq_get
+                0x0000000008003b90       0xf8 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_rcu.o)
+                0x0000000008003b90                rcu_clock_freq_get
  .text.timer_deinit
-                0x0000000008003c84       0xc4 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
-                0x0000000008003c84                timer_deinit
+                0x0000000008003c88       0xc4 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
+                0x0000000008003c88                timer_deinit
  .text.timer_init
-                0x0000000008003d48       0x7c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
-                0x0000000008003d48                timer_init
+                0x0000000008003d4c       0x7c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
+                0x0000000008003d4c                timer_init
  .text.timer_enable
-                0x0000000008003dc4        0xa ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
-                0x0000000008003dc4                timer_enable
+                0x0000000008003dc8        0xa ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
+                0x0000000008003dc8                timer_enable
  .text.timer_interrupt_enable
-                0x0000000008003dce        0x8 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
-                0x0000000008003dce                timer_interrupt_enable
+                0x0000000008003dd2        0x8 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
+                0x0000000008003dd2                timer_interrupt_enable
  .text.timer_interrupt_flag_clear
-                0x0000000008003dd6        0x6 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
-                0x0000000008003dd6                timer_interrupt_flag_clear
+                0x0000000008003dda        0x6 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
+                0x0000000008003dda                timer_interrupt_flag_clear
  .text.timer_flag_clear
-                0x0000000008003ddc        0x6 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
-                0x0000000008003ddc                timer_flag_clear
+                0x0000000008003de0        0x6 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
+                0x0000000008003de0                timer_flag_clear
  .text.timer_channel_output_mode_config
-                0x0000000008003de2       0x4c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
-                0x0000000008003de2                timer_channel_output_mode_config
+                0x0000000008003de6       0x4c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
+                0x0000000008003de6                timer_channel_output_mode_config
  .text.timer_channel_output_pulse_value_config
-                0x0000000008003e2e       0x1c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
-                0x0000000008003e2e                timer_channel_output_pulse_value_config
- *fill*         0x0000000008003e4a        0x2 
+                0x0000000008003e32       0x1c ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_timer.o)
+                0x0000000008003e32                timer_channel_output_pulse_value_config
+ *fill*         0x0000000008003e4e        0x2 
  .text.usart_deinit
-                0x0000000008003e4c       0x80 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003e4c                usart_deinit
+                0x0000000008003e50       0x80 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003e50                usart_deinit
  .text.usart_baudrate_set
-                0x0000000008003ecc       0x50 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003ecc                usart_baudrate_set
+                0x0000000008003ed0       0x50 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003ed0                usart_baudrate_set
  .text.usart_parity_config
-                0x0000000008003f1c       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003f1c                usart_parity_config
+                0x0000000008003f20       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003f20                usart_parity_config
  .text.usart_word_length_set
-                0x0000000008003f2c       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003f2c                usart_word_length_set
+                0x0000000008003f30       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003f30                usart_word_length_set
  .text.usart_stop_bit_set
-                0x0000000008003f3c       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003f3c                usart_stop_bit_set
+                0x0000000008003f40       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003f40                usart_stop_bit_set
  .text.usart_transmit_config
-                0x0000000008003f4c       0x14 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003f4c                usart_transmit_config
+                0x0000000008003f50       0x14 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003f50                usart_transmit_config
  .text.usart_receive_config
-                0x0000000008003f60       0x14 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003f60                usart_receive_config
+                0x0000000008003f64       0x14 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003f64                usart_receive_config
  .text.usart_hardware_flow_rts_config
-                0x0000000008003f74       0x14 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003f74                usart_hardware_flow_rts_config
+                0x0000000008003f78       0x14 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003f78                usart_hardware_flow_rts_config
  .text.usart_hardware_flow_cts_config
-                0x0000000008003f88       0x14 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003f88                usart_hardware_flow_cts_config
+                0x0000000008003f8c       0x14 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003f8c                usart_hardware_flow_cts_config
  .text.usart_dma_transmit_config
-                0x0000000008003f9c       0x14 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003f9c                usart_dma_transmit_config
+                0x0000000008003fa0       0x14 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003fa0                usart_dma_transmit_config
  .text.usart_flag_get
-                0x0000000008003fb0       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003fb0                usart_flag_get
+                0x0000000008003fb4       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003fb4                usart_flag_get
  .text.usart_flag_clear
-                0x0000000008003fc0       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003fc0                usart_flag_clear
+                0x0000000008003fc4       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003fc4                usart_flag_clear
  .text.usart_interrupt_enable
-                0x0000000008003fd0       0x14 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003fd0                usart_interrupt_enable
+                0x0000000008003fd4       0x14 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003fd4                usart_interrupt_enable
  .text.usart_interrupt_disable
-                0x0000000008003fe4       0x16 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003fe4                usart_interrupt_disable
+                0x0000000008003fe8       0x16 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003fe8                usart_interrupt_disable
  .text.usart_interrupt_flag_clear
-                0x0000000008003ffa       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
-                0x0000000008003ffa                usart_interrupt_flag_clear
- *fill*         0x000000000800400a        0x2 
- .text._Z13gd32_adc_initv
-                0x000000000800400c       0x90 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
-                0x000000000800400c                gd32_adc_init()
- .text._ZL5_stopv.isra.0
-                0x000000000800409c       0x24 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
- .text.gd32_i2c_begin
-                0x00000000080040c0       0x6c ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
-                0x00000000080040c0                gd32_i2c_begin
- .text.gd32_i2c_set_baudrate
-                0x000000000800412c       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
-                0x000000000800412c                gd32_i2c_set_baudrate
- .text.gd32_i2c_set_address
-                0x000000000800413c        0xc ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
-                0x000000000800413c                gd32_i2c_set_address
- .text.gd32_i2c_write
-                0x0000000008004148       0xcc ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
-                0x0000000008004148                gd32_i2c_write
- .text.gd32_i2c_read
-                0x0000000008004214      0x14c ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
-                0x0000000008004214                gd32_i2c_read
+                0x0000000008003ffe       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_usart.o)
+                0x0000000008003ffe                usart_interrupt_flag_clear
+ *fill*         0x000000000800400e        0x2 
  .text.gd32_uart_begin
-                0x0000000008004360      0x1cc ../lib-gd32/lib_gd32/libgd32.a(gd32_uart.o)
-                0x0000000008004360                gd32_uart_begin
+                0x0000000008004010      0x1cc ../lib-gd32/lib_gd32/libgd32.a(gd32_uart.o)
+                0x0000000008004010                gd32_uart_begin
  .text.uart0_puts
-                0x000000000800452c       0x1e ../lib-gd32/lib_gd32/libgd32.a(gd32_uart0.o)
-                0x000000000800452c                uart0_puts
- *fill*         0x000000000800454a        0x2 
+                0x00000000080041dc       0x1e ../lib-gd32/lib_gd32/libgd32.a(gd32_uart0.o)
+                0x00000000080041dc                uart0_puts
+ *fill*         0x00000000080041fa        0x2 
  .text._Z15mac_address_getPh
-                0x000000000800454c       0x24 ../lib-gd32/lib_gd32/libgd32.a(mac_address.o)
-                0x000000000800454c                mac_address_get(unsigned char*)
+                0x00000000080041fc       0x24 ../lib-gd32/lib_gd32/libgd32.a(mac_address.o)
+                0x00000000080041fc                mac_address_get(unsigned char*)
  .text.systick_config
-                0x0000000008004570       0x3c ../lib-gd32/lib_gd32/libgd32.a(systick.o)
-                0x0000000008004570                systick_config
+                0x0000000008004220       0x3c ../lib-gd32/lib_gd32/libgd32.a(systick.o)
+                0x0000000008004220                systick_config
  .text.SysTick_Handler
-                0x00000000080045ac       0x10 ../lib-gd32/lib_gd32/libgd32.a(systick.o)
-                0x00000000080045ac                SysTick_Handler
+                0x000000000800425c       0x10 ../lib-gd32/lib_gd32/libgd32.a(systick.o)
+                0x000000000800425c                SysTick_Handler
  .text._Z11udelay_initv
-                0x00000000080045bc       0x28 ../lib-gd32/lib_gd32/libgd32.a(udelay.o)
-                0x00000000080045bc                udelay_init()
+                0x000000000800426c       0x28 ../lib-gd32/lib_gd32/libgd32.a(udelay.o)
+                0x000000000800426c                udelay_init()
  .text._Z6udelaymm
-                0x00000000080045e4       0x30 ../lib-gd32/lib_gd32/libgd32.a(udelay.o)
-                0x00000000080045e4                udelay(unsigned long, unsigned long)
+                0x0000000008004294       0x30 ../lib-gd32/lib_gd32/libgd32.a(udelay.o)
+                0x0000000008004294                udelay(unsigned long, unsigned long)
+ .text._Z13gd32_adc_initv
+                0x00000000080042c4       0x90 ../lib-gd32/lib_gd32/libgd32.a(gd32_adc.o)
+                0x00000000080042c4                gd32_adc_init()
+ .text._ZL9send_stopv.isra.0
+                0x0000000008004354       0x24 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+ .text.gd32_i2c_begin
+                0x0000000008004378       0x6c ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+                0x0000000008004378                gd32_i2c_begin
+ .text.gd32_i2c_set_baudrate
+                0x00000000080043e4       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+                0x00000000080043e4                gd32_i2c_set_baudrate
+ .text.gd32_i2c_set_address
+                0x00000000080043f4        0xc ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+                0x00000000080043f4                gd32_i2c_set_address
+ .text.gd32_i2c_write
+                0x0000000008004400       0xcc ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+                0x0000000008004400                gd32_i2c_write
+ .text.gd32_i2c_read
+                0x00000000080044cc      0x14c ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
+                0x00000000080044cc                gd32_i2c_read
  .text.uart0_init
-                0x0000000008004614       0x20 ../lib-gd32/lib_gd32/libgd32.a(gd32_uart0.o)
-                0x0000000008004614                uart0_init
+                0x0000000008004618       0x20 ../lib-gd32/lib_gd32/libgd32.a(gd32_uart0.o)
+                0x0000000008004618                uart0_init
  .text.uart0_putc
-                0x0000000008004634       0x40 ../lib-gd32/lib_gd32/libgd32.a(gd32_uart0.o)
-                0x0000000008004634                uart0_putc
+                0x0000000008004638       0x40 ../lib-gd32/lib_gd32/libgd32.a(gd32_uart0.o)
+                0x0000000008004638                uart0_putc
  .text.adc_enable
-                0x0000000008004674       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
-                0x0000000008004674                adc_enable
+                0x0000000008004678       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
+                0x0000000008004678                adc_enable
  .text.adc_calibration_enable
-                0x0000000008004684       0x22 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
-                0x0000000008004684                adc_calibration_enable
- *fill*         0x00000000080046a6        0x2 
+                0x0000000008004688       0x22 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
+                0x0000000008004688                adc_calibration_enable
+ *fill*         0x00000000080046aa        0x2 
  .text.adc_tempsensor_vrefint_enable
-                0x00000000080046a8       0x14 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
-                0x00000000080046a8                adc_tempsensor_vrefint_enable
+                0x00000000080046ac       0x14 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
+                0x00000000080046ac                adc_tempsensor_vrefint_enable
  .text.adc_mode_config
-                0x00000000080046bc       0x20 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
-                0x00000000080046bc                adc_mode_config
+                0x00000000080046c0       0x20 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
+                0x00000000080046c0                adc_mode_config
  .text.adc_special_function_config
-                0x00000000080046dc       0x50 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
-                0x00000000080046dc                adc_special_function_config
+                0x00000000080046e0       0x50 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
+                0x00000000080046e0                adc_special_function_config
  .text.adc_data_alignment_config
-                0x000000000800472c       0x12 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
-                0x000000000800472c                adc_data_alignment_config
+                0x0000000008004730       0x12 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
+                0x0000000008004730                adc_data_alignment_config
  .text.adc_channel_length_config
-                0x000000000800473e       0x3a ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
-                0x000000000800473e                adc_channel_length_config
+                0x0000000008004742       0x3a ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
+                0x0000000008004742                adc_channel_length_config
  .text.adc_inserted_channel_config
-                0x0000000008004778       0x5e ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
-                0x0000000008004778                adc_inserted_channel_config
+                0x000000000800477c       0x5e ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
+                0x000000000800477c                adc_inserted_channel_config
  .text.adc_external_trigger_config
-                0x00000000080047d6       0x36 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
-                0x00000000080047d6                adc_external_trigger_config
+                0x00000000080047da       0x36 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
+                0x00000000080047da                adc_external_trigger_config
  .text.adc_external_trigger_source_config
-                0x000000000800480c       0x22 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
-                0x000000000800480c                adc_external_trigger_source_config
+                0x0000000008004810       0x22 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
+                0x0000000008004810                adc_external_trigger_source_config
  .text.adc_software_trigger_enable
-                0x000000000800482e       0x1a ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
-                0x000000000800482e                adc_software_trigger_enable
+                0x0000000008004832       0x1a ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_adc.o)
+                0x0000000008004832                adc_software_trigger_enable
  .text.i2c_clock_config
-                0x0000000008004848      0x108 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
-                0x0000000008004848                i2c_clock_config
+                0x000000000800484c      0x108 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
+                0x000000000800484c                i2c_clock_config
  .text.i2c_ack_config
-                0x0000000008004950        0xc ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
-                0x0000000008004950                i2c_ack_config
+                0x0000000008004954        0xc ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
+                0x0000000008004954                i2c_ack_config
  .text.i2c_ackpos_config
-                0x000000000800495c        0xc ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
-                0x000000000800495c                i2c_ackpos_config
+                0x0000000008004960        0xc ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
+                0x0000000008004960                i2c_ackpos_config
  .text.i2c_master_addressing
-                0x0000000008004968       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
-                0x0000000008004968                i2c_master_addressing
+                0x000000000800496c       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
+                0x000000000800496c                i2c_master_addressing
  .text.i2c_enable
-                0x0000000008004978        0xa ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
-                0x0000000008004978                i2c_enable
+                0x000000000800497c        0xa ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
+                0x000000000800497c                i2c_enable
  .text.i2c_start_on_bus
-                0x0000000008004982        0xa ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
-                0x0000000008004982                i2c_start_on_bus
+                0x0000000008004986        0xa ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
+                0x0000000008004986                i2c_start_on_bus
  .text.i2c_stop_on_bus
-                0x000000000800498c        0xa ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
-                0x000000000800498c                i2c_stop_on_bus
+                0x0000000008004990        0xa ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
+                0x0000000008004990                i2c_stop_on_bus
  .text.i2c_data_transmit
-                0x0000000008004996        0x4 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
-                0x0000000008004996                i2c_data_transmit
+                0x000000000800499a        0x4 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
+                0x000000000800499a                i2c_data_transmit
  .text.i2c_data_receive
-                0x000000000800499a        0x6 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
-                0x000000000800499a                i2c_data_receive
+                0x000000000800499e        0x6 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
+                0x000000000800499e                i2c_data_receive
  .text.i2c_flag_get
-                0x00000000080049a0       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
-                0x00000000080049a0                i2c_flag_get
+                0x00000000080049a4       0x10 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
+                0x00000000080049a4                i2c_flag_get
  .text.i2c_flag_clear
-                0x00000000080049b0       0x24 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
-                0x00000000080049b0                i2c_flag_clear
+                0x00000000080049b4       0x24 ../lib-gd32/lib_gd32/libgd32.a(gd32f30x_i2c.o)
+                0x00000000080049b4                i2c_flag_clear
  *(.glue_7)
- .glue_7        0x00000000080049d4        0x0 linker stubs
+ .glue_7        0x00000000080049d8        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x00000000080049d4        0x0 linker stubs
+ .glue_7t       0x00000000080049d8        0x0 linker stubs
  *(.eh_frame)
  *(.init)
  *(.fini)
-                0x00000000080049d4                . = ALIGN (0x4)
-                0x00000000080049d4                _etext = .
+                0x00000000080049d8                . = ALIGN (0x4)
+                0x00000000080049d8                _etext = .
                 0x00000000080049d8                . = ALIGN (0x8)
- *fill*         0x00000000080049d4        0x4 
                 0x00000000080049d8                PROVIDE (__preinit_array_start = .)
  *(.preinit_array*)
                 0x00000000080049d8                PROVIDE (__preinit_array_end = .)
@@ -3132,14 +3131,14 @@ LOAD build_gd32/firmware/main.o
  .bss.s_tv      0x000000002000279c        0x8 ../lib-c/lib_gd32/libc.a(time.o)
  .bss.set_timer
                 0x00000000200027a4        0x4 ../lib-c/lib_gd32/libc.a(time.o)
- .bss._ZL10s_nAddress
-                0x00000000200027a8        0x1 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
- *fill*         0x00000000200027a9        0x3 
  .bss.s_nSysTickMillis
-                0x00000000200027ac        0x4 ../lib-gd32/lib_gd32/libgd32.a(systick.o)
-                0x00000000200027ac                s_nSysTickMillis
+                0x00000000200027a8        0x4 ../lib-gd32/lib_gd32/libgd32.a(systick.o)
+                0x00000000200027a8                s_nSysTickMillis
+ .bss._ZL10s_nAddress
+                0x00000000200027ac        0x1 ../lib-gd32/lib_gd32/libgd32.a(gd32_i2c.o)
  *(COMMON)
                 0x00000000200027b0                . = ALIGN (0x4)
+ *fill*         0x00000000200027ad        0x3 
                 0x00000000200027b0                _ebss = .
                 0x00000000200027b0                __bss_end__ = _ebss
                 0x00000000200027b0                . = ALIGN (0x8)

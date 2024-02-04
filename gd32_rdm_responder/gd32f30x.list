@@ -17,7 +17,7 @@ Disassembly of section .vectors:
  8000030:	08000a21 	stmdaeq	r0, {r0, r5, r9, fp}
  8000034:	00000000 	andeq	r0, r0, r0
  8000038:	08000a21 	stmdaeq	r0, {r0, r5, r9, fp}
- 800003c:	080097a9 	stmdaeq	r0, {r0, r3, r5, r7, r8, r9, sl, ip, pc}
+ 800003c:	08009279 	stmdaeq	r0, {r0, r3, r4, r5, r6, r9, ip, pc}
  8000040:	08000a21 	stmdaeq	r0, {r0, r5, r9, fp}
  8000044:	08000a21 	stmdaeq	r0, {r0, r5, r9, fp}
  8000048:	08000a21 	stmdaeq	r0, {r0, r5, r9, fp}
@@ -85,10 +85,10 @@ Disassembly of section .text:
  8000130:	b508      	push	{r3, lr}
  8000132:	f009 fb6d 	bl	8009810 <uart0_init>
  8000136:	4804      	ldr	r0, [pc, #16]	; (8000148 <console_init+0x18>)
- 8000138:	f009 faf6 	bl	8009728 <uart0_puts>
+ 8000138:	f009 f85e 	bl	80091f8 <uart0_puts>
  800013c:	e8bd 4008 	ldmia.w	sp!, {r3, lr}
  8000140:	4802      	ldr	r0, [pc, #8]	; (800014c <console_init+0x1c>)
- 8000142:	f009 baf1 	b.w	8009728 <uart0_puts>
+ 8000142:	f009 b859 	b.w	80091f8 <uart0_puts>
  8000146:	bf00      	nop
  8000148:	0800bc50 	stmdaeq	r0, {r4, r6, sl, fp, ip, sp, pc}
  800014c:	0800bc56 	stmdaeq	r0, {r1, r2, r4, r6, sl, fp, ip, sp, pc}
@@ -920,7 +920,7 @@ Disassembly of section .text:
  8000ac2:	681b      	ldr	r3, [r3, #0]
  8000ac4:	6063      	str	r3, [r4, #4]
  8000ac6:	bd38      	pop	{r3, r4, r5, pc}
- 8000ac8:	20008794 	mulcs	r0, r4, r7
+ 8000ac8:	20002790 	mulcs	r0, r0, r7
 
 08000acc <RDMPersonality::RDMPersonality(char const*, LightSet*)>:
  8000acc:	2300      	movs	r3, #0
@@ -1397,7 +1397,7 @@ Disassembly of section .text:
  8000f74:	08009d21 	stmdaeq	r0, {r0, r5, r8, sl, fp, ip, pc}
  8000f78:	08009d37 	stmdaeq	r0, {r0, r1, r2, r4, r5, r8, sl, fp, ip, pc}
  8000f7c:	08009d44 	stmdaeq	r0, {r2, r6, r8, sl, fp, ip, pc}
- 8000f80:	20008794 	mulcs	r0, r4, r7
+ 8000f80:	20002790 	mulcs	r0, r0, r7
  8000f84:	40011000 	andmi	r1, r1, r0
  8000f88:	2300      	movs	r3, #0
  8000f8a:	2264      	movs	r2, #100	; 0x64
@@ -1445,7 +1445,7 @@ Disassembly of section .text:
  8000ff2:	f8d8 3000 	ldr.w	r3, [r8]
  8000ff6:	429d      	cmp	r5, r3
  8000ff8:	d308      	bcc.n	800100c <main+0x3c0>
- 8000ffa:	f008 faa5 	bl	8009548 <gd32_spi_dma_tx_is_active()>
+ 8000ffa:	f008 fbff 	bl	80097fc <gd32_spi_dma_tx_is_active()>
  8000ffe:	2800      	cmp	r0, #0
  8001000:	d1fb      	bne.n	8000ffa <main+0x3ae>
  8001002:	4b2c      	ldr	r3, [pc, #176]	; (80010b4 <main+0x468>)
@@ -1789,7 +1789,7 @@ Disassembly of section .text:
  8001336:	6833      	ldr	r3, [r6, #0]
  8001338:	429c      	cmp	r4, r3
  800133a:	d308      	bcc.n	800134e <PixelTestPattern::SetPattern(pixelpatterns::Pattern)+0x92>
- 800133c:	f008 f904 	bl	8009548 <gd32_spi_dma_tx_is_active()>
+ 800133c:	f008 fa5e 	bl	80097fc <gd32_spi_dma_tx_is_active()>
  8001340:	2800      	cmp	r0, #0
  8001342:	d1fb      	bne.n	800133c <PixelTestPattern::SetPattern(pixelpatterns::Pattern)+0x80>
  8001344:	4b11      	ldr	r3, [pc, #68]	; (800138c <PixelTestPattern::SetPattern(pixelpatterns::Pattern)+0xd0>)
@@ -1946,7 +1946,7 @@ Disassembly of section .text:
  80014a4:	6833      	ldr	r3, [r6, #0]
  80014a6:	429c      	cmp	r4, r3
  80014a8:	d30a      	bcc.n	80014c0 <PixelTestPattern::SetPattern(pixelpatterns::Pattern) [clone .isra.0]+0x9c>
- 80014aa:	f008 f84d 	bl	8009548 <gd32_spi_dma_tx_is_active()>
+ 80014aa:	f008 f9a7 	bl	80097fc <gd32_spi_dma_tx_is_active()>
  80014ae:	2800      	cmp	r0, #0
  80014b0:	d1fb      	bne.n	80014aa <PixelTestPattern::SetPattern(pixelpatterns::Pattern) [clone .isra.0]+0x86>
  80014b2:	4b11      	ldr	r3, [pc, #68]	; (80014f8 <PixelTestPattern::SetPattern(pixelpatterns::Pattern) [clone .isra.0]+0xd4>)
@@ -2076,7 +2076,7 @@ Disassembly of section .text:
 080015d4 <RDMSoftwareVersion::GetVersionId()>:
  80015d4:	4800      	ldr	r0, [pc, #0]	; (80015d8 <RDMSoftwareVersion::GetVersionId()+0x4>)
  80015d6:	4770      	bx	lr
- 80015d8:	65bb9dd0 	ldrvs	r9, [fp, #3536]!	; 0xdd0
+ 80015d8:	65bfb524 	ldrvs	fp, [pc, #1316]!	; 8001b04 <_vprintf+0x308>
 
 080015dc <_itostr>:
  80015dc:	b5f0      	push	{r4, r5, r6, r7, lr}
@@ -3462,13 +3462,13 @@ Disassembly of section .text:
  800231a:	4604      	mov	r4, r0
  800231c:	7800      	ldrb	r0, [r0, #0]
  800231e:	460d      	mov	r5, r1
- 8002320:	f006 ff54 	bl	80091cc <gd32_i2c_set_address>
+ 8002320:	f007 f8ae 	bl	8009480 <gd32_i2c_set_address>
  8002324:	6860      	ldr	r0, [r4, #4]
- 8002326:	f006 ff49 	bl	80091bc <gd32_i2c_set_baudrate>
+ 8002326:	f007 f8a3 	bl	8009470 <gd32_i2c_set_baudrate>
  800232a:	2101      	movs	r1, #1
  800232c:	a801      	add	r0, sp, #4
  800232e:	f88d 5004 	strb.w	r5, [sp, #4]
- 8002332:	f006 ff51 	bl	80091d8 <gd32_i2c_write>
+ 8002332:	f007 f8ab 	bl	800948c <gd32_i2c_write>
  8002336:	b003      	add	sp, #12
  8002338:	bd30      	pop	{r4, r5, pc}
 	...
@@ -3485,9 +3485,9 @@ Disassembly of section .text:
  800234c:	7206      	strb	r6, [r0, #8]
  800234e:	4605      	mov	r5, r0
  8002350:	4620      	mov	r0, r4
- 8002352:	f006 ff3b 	bl	80091cc <gd32_i2c_set_address>
+ 8002352:	f007 f895 	bl	8009480 <gd32_i2c_set_address>
  8002356:	4638      	mov	r0, r7
- 8002358:	f006 ff30 	bl	80091bc <gd32_i2c_set_baudrate>
+ 8002358:	f007 f88a 	bl	8009470 <gd32_i2c_set_baudrate>
  800235c:	f1a4 0330 	sub.w	r3, r4, #48	; 0x30
  8002360:	2b07      	cmp	r3, #7
  8002362:	d902      	bls.n	800236a <sensor::BH170::BH170(unsigned char)+0x2e>
@@ -3496,7 +3496,7 @@ Disassembly of section .text:
  8002368:	d814      	bhi.n	8002394 <sensor::BH170::BH170(unsigned char)+0x58>
  800236a:	2101      	movs	r1, #1
  800236c:	f10d 0007 	add.w	r0, sp, #7
- 8002370:	f006 ff98 	bl	80092a4 <gd32_i2c_read>
+ 8002370:	f007 f8f2 	bl	8009558 <gd32_i2c_read>
  8002374:	fab0 f080 	clz	r0, r0
  8002378:	0940      	lsrs	r0, r0, #5
  800237a:	7228      	strb	r0, [r5, #8]
@@ -3512,7 +3512,7 @@ Disassembly of section .text:
  8002392:	bdf0      	pop	{r4, r5, r6, r7, pc}
  8002394:	4631      	mov	r1, r6
  8002396:	4630      	mov	r0, r6
- 8002398:	f006 ff1e 	bl	80091d8 <gd32_i2c_write>
+ 8002398:	f007 f878 	bl	800948c <gd32_i2c_write>
  800239c:	e7ea      	b.n	8002374 <sensor::BH170::BH170(unsigned char)+0x38>
  800239e:	bf00      	nop
  80023a0:	00061a80 	andeq	r1, r6, r0, lsl #21
@@ -3523,12 +3523,12 @@ Disassembly of section .text:
  80023a8:	2300      	movs	r3, #0
  80023aa:	7800      	ldrb	r0, [r0, #0]
  80023ac:	f8ad 3004 	strh.w	r3, [sp, #4]
- 80023b0:	f006 ff0c 	bl	80091cc <gd32_i2c_set_address>
+ 80023b0:	f007 f866 	bl	8009480 <gd32_i2c_set_address>
  80023b4:	6860      	ldr	r0, [r4, #4]
- 80023b6:	f006 ff01 	bl	80091bc <gd32_i2c_set_baudrate>
+ 80023b6:	f007 f85b 	bl	8009470 <gd32_i2c_set_baudrate>
  80023ba:	2102      	movs	r1, #2
  80023bc:	a801      	add	r0, sp, #4
- 80023be:	f006 ff71 	bl	80092a4 <gd32_i2c_read>
+ 80023be:	f007 f8cb 	bl	8009558 <gd32_i2c_read>
  80023c2:	f8bd 3004 	ldrh.w	r3, [sp, #4]
  80023c6:	eddf 6a08 	vldr	s13, [pc, #32]	; 80023e8 <sensor::BH170::Get()+0x44>
  80023ca:	ba5b      	rev16	r3, r3
@@ -3555,9 +3555,9 @@ Disassembly of section .text:
  80023fc:	7206      	strb	r6, [r0, #8]
  80023fe:	4605      	mov	r5, r0
  8002400:	4620      	mov	r0, r4
- 8002402:	f006 fee3 	bl	80091cc <gd32_i2c_set_address>
+ 8002402:	f007 f83d 	bl	8009480 <gd32_i2c_set_address>
  8002406:	4638      	mov	r0, r7
- 8002408:	f006 fed8 	bl	80091bc <gd32_i2c_set_baudrate>
+ 8002408:	f007 f832 	bl	8009470 <gd32_i2c_set_baudrate>
  800240c:	f1a4 0330 	sub.w	r3, r4, #48	; 0x30
  8002410:	2b07      	cmp	r3, #7
  8002412:	d902      	bls.n	800241a <sensor::HTU21D::HTU21D(unsigned char)+0x2e>
@@ -3566,7 +3566,7 @@ Disassembly of section .text:
  8002418:	d80b      	bhi.n	8002432 <sensor::HTU21D::HTU21D(unsigned char)+0x46>
  800241a:	2101      	movs	r1, #1
  800241c:	f10d 0007 	add.w	r0, sp, #7
- 8002420:	f006 ff40 	bl	80092a4 <gd32_i2c_read>
+ 8002420:	f007 f89a 	bl	8009558 <gd32_i2c_read>
  8002424:	fab0 f380 	clz	r3, r0
  8002428:	095b      	lsrs	r3, r3, #5
  800242a:	4628      	mov	r0, r5
@@ -3575,7 +3575,7 @@ Disassembly of section .text:
  8002430:	bdf0      	pop	{r4, r5, r6, r7, pc}
  8002432:	4631      	mov	r1, r6
  8002434:	4630      	mov	r0, r6
- 8002436:	f006 fecf 	bl	80091d8 <gd32_i2c_write>
+ 8002436:	f007 f829 	bl	800948c <gd32_i2c_write>
  800243a:	e7f3      	b.n	8002424 <sensor::HTU21D::HTU21D(unsigned char)+0x38>
  800243c:	00061a80 	andeq	r1, r6, r0, lsl #21
 
@@ -3584,13 +3584,13 @@ Disassembly of section .text:
  8002442:	4604      	mov	r4, r0
  8002444:	7800      	ldrb	r0, [r0, #0]
  8002446:	460d      	mov	r5, r1
- 8002448:	f006 fec0 	bl	80091cc <gd32_i2c_set_address>
+ 8002448:	f007 f81a 	bl	8009480 <gd32_i2c_set_address>
  800244c:	6860      	ldr	r0, [r4, #4]
- 800244e:	f006 feb5 	bl	80091bc <gd32_i2c_set_baudrate>
+ 800244e:	f007 f80f 	bl	8009470 <gd32_i2c_set_baudrate>
  8002452:	2101      	movs	r1, #1
  8002454:	a801      	add	r0, sp, #4
  8002456:	f88d 5004 	strb.w	r5, [sp, #4]
- 800245a:	f006 febd 	bl	80091d8 <gd32_i2c_write>
+ 800245a:	f007 f817 	bl	800948c <gd32_i2c_write>
  800245e:	4b13      	ldr	r3, [pc, #76]	; (80024ac <sensor::HTU21D::ReadRaw(unsigned char)+0x6c>)
  8002460:	881b      	ldrh	r3, [r3, #0]
  8002462:	f8ad 3004 	strh.w	r3, [sp, #4]
@@ -3599,14 +3599,14 @@ Disassembly of section .text:
  800246c:	2508      	movs	r5, #8
  800246e:	2100      	movs	r1, #0
  8002470:	f242 7010 	movw	r0, #10000	; 0x2710
- 8002474:	f007 f9b4 	bl	80097e0 <udelay(unsigned long, unsigned long)>
+ 8002474:	f006 ff1c 	bl	80092b0 <udelay(unsigned long, unsigned long)>
  8002478:	7820      	ldrb	r0, [r4, #0]
- 800247a:	f006 fea7 	bl	80091cc <gd32_i2c_set_address>
+ 800247a:	f007 f801 	bl	8009480 <gd32_i2c_set_address>
  800247e:	6860      	ldr	r0, [r4, #4]
- 8002480:	f006 fe9c 	bl	80091bc <gd32_i2c_set_baudrate>
+ 8002480:	f006 fff6 	bl	8009470 <gd32_i2c_set_baudrate>
  8002484:	2103      	movs	r1, #3
  8002486:	a801      	add	r0, sp, #4
- 8002488:	f006 ff0c 	bl	80092a4 <gd32_i2c_read>
+ 8002488:	f007 f866 	bl	8009558 <gd32_i2c_read>
  800248c:	f89d 3004 	ldrb.w	r3, [sp, #4]
  8002490:	f003 0303 	and.w	r3, r3, #3
  8002494:	2b02      	cmp	r3, #2
@@ -3656,12 +3656,12 @@ Disassembly of section .text:
  8002504:	f88d 1004 	strb.w	r1, [sp, #4]
  8002508:	f88d 3005 	strb.w	r3, [sp, #5]
  800250c:	f88d 2006 	strb.w	r2, [sp, #6]
- 8002510:	f006 fe5c 	bl	80091cc <gd32_i2c_set_address>
+ 8002510:	f006 ffb6 	bl	8009480 <gd32_i2c_set_address>
  8002514:	6860      	ldr	r0, [r4, #4]
- 8002516:	f006 fe51 	bl	80091bc <gd32_i2c_set_baudrate>
+ 8002516:	f006 ffab 	bl	8009470 <gd32_i2c_set_baudrate>
  800251a:	2103      	movs	r1, #3
  800251c:	a801      	add	r0, sp, #4
- 800251e:	f006 fe5b 	bl	80091d8 <gd32_i2c_write>
+ 800251e:	f006 ffb5 	bl	800948c <gd32_i2c_write>
  8002522:	b002      	add	sp, #8
  8002524:	bd10      	pop	{r4, pc}
 
@@ -3673,18 +3673,18 @@ Disassembly of section .text:
  800252e:	f8ad 6004 	strh.w	r6, [sp, #4]
  8002532:	4615      	mov	r5, r2
  8002534:	f88d 1004 	strb.w	r1, [sp, #4]
- 8002538:	f006 fe48 	bl	80091cc <gd32_i2c_set_address>
+ 8002538:	f006 ffa2 	bl	8009480 <gd32_i2c_set_address>
  800253c:	6860      	ldr	r0, [r4, #4]
- 800253e:	f006 fe3d 	bl	80091bc <gd32_i2c_set_baudrate>
+ 800253e:	f006 ff97 	bl	8009470 <gd32_i2c_set_baudrate>
  8002542:	2101      	movs	r1, #1
  8002544:	a801      	add	r0, sp, #4
- 8002546:	f006 fe47 	bl	80091d8 <gd32_i2c_write>
+ 8002546:	f006 ffa1 	bl	800948c <gd32_i2c_write>
  800254a:	4631      	mov	r1, r6
  800254c:	4628      	mov	r0, r5
- 800254e:	f007 f947 	bl	80097e0 <udelay(unsigned long, unsigned long)>
+ 800254e:	f006 feaf 	bl	80092b0 <udelay(unsigned long, unsigned long)>
  8002552:	2102      	movs	r1, #2
  8002554:	a801      	add	r0, sp, #4
- 8002556:	f006 fea5 	bl	80092a4 <gd32_i2c_read>
+ 8002556:	f006 ffff 	bl	8009558 <gd32_i2c_read>
  800255a:	f8bd 0004 	ldrh.w	r0, [sp, #4]
  800255e:	ba40      	rev16	r0, r0
  8002560:	b280      	uxth	r0, r0
@@ -3794,9 +3794,9 @@ Disassembly of section .text:
  800267e:	7206      	strb	r6, [r0, #8]
  8002680:	4605      	mov	r5, r0
  8002682:	4620      	mov	r0, r4
- 8002684:	f006 fda2 	bl	80091cc <gd32_i2c_set_address>
+ 8002684:	f006 fefc 	bl	8009480 <gd32_i2c_set_address>
  8002688:	4638      	mov	r0, r7
- 800268a:	f006 fd97 	bl	80091bc <gd32_i2c_set_baudrate>
+ 800268a:	f006 fef1 	bl	8009470 <gd32_i2c_set_baudrate>
  800268e:	f1a4 0330 	sub.w	r3, r4, #48	; 0x30
  8002692:	2b07      	cmp	r3, #7
  8002694:	d902      	bls.n	800269c <sensor::INA219::INA219(unsigned char)+0x30>
@@ -3805,7 +3805,7 @@ Disassembly of section .text:
  800269a:	d81d      	bhi.n	80026d8 <sensor::INA219::INA219(unsigned char)+0x6c>
  800269c:	2101      	movs	r1, #1
  800269e:	a801      	add	r0, sp, #4
- 80026a0:	f006 fe00 	bl	80092a4 <gd32_i2c_read>
+ 80026a0:	f006 ff5a 	bl	8009558 <gd32_i2c_read>
  80026a4:	fab0 f080 	clz	r0, r0
  80026a8:	0940      	lsrs	r0, r0, #5
  80026aa:	7228      	strb	r0, [r5, #8]
@@ -3829,7 +3829,7 @@ Disassembly of section .text:
  80026d6:	bdf0      	pop	{r4, r5, r6, r7, pc}
  80026d8:	4631      	mov	r1, r6
  80026da:	4630      	mov	r0, r6
- 80026dc:	f006 fd7c 	bl	80091d8 <gd32_i2c_write>
+ 80026dc:	f006 fed6 	bl	800948c <gd32_i2c_write>
  80026e0:	e7e0      	b.n	80026a4 <sensor::INA219::INA219(unsigned char)+0x38>
  80026e2:	bf00      	nop
  80026e4:	00061a80 	andeq	r1, r6, r0, lsl #21
@@ -3930,9 +3930,9 @@ Disassembly of section .text:
  80027e0:	7206      	strb	r6, [r0, #8]
  80027e2:	4604      	mov	r4, r0
  80027e4:	4628      	mov	r0, r5
- 80027e6:	f006 fcf1 	bl	80091cc <gd32_i2c_set_address>
+ 80027e6:	f006 fe4b 	bl	8009480 <gd32_i2c_set_address>
  80027ea:	4638      	mov	r0, r7
- 80027ec:	f006 fce6 	bl	80091bc <gd32_i2c_set_baudrate>
+ 80027ec:	f006 fe40 	bl	8009470 <gd32_i2c_set_baudrate>
  80027f0:	f1a5 0330 	sub.w	r3, r5, #48	; 0x30
  80027f4:	2b07      	cmp	r3, #7
  80027f6:	d902      	bls.n	80027fe <MCP3424::MCP3424(unsigned char)+0x2e>
@@ -3941,7 +3941,7 @@ Disassembly of section .text:
  80027fc:	d81a      	bhi.n	8002834 <MCP3424::MCP3424(unsigned char)+0x64>
  80027fe:	2101      	movs	r1, #1
  8002800:	f10d 0007 	add.w	r0, sp, #7
- 8002804:	f006 fd4e 	bl	80092a4 <gd32_i2c_read>
+ 8002804:	f006 fea8 	bl	8009558 <gd32_i2c_read>
  8002808:	fab0 f080 	clz	r0, r0
  800280c:	0940      	lsrs	r0, r0, #5
  800280e:	7220      	strb	r0, [r4, #8]
@@ -3961,7 +3961,7 @@ Disassembly of section .text:
  8002832:	bdf0      	pop	{r4, r5, r6, r7, pc}
  8002834:	4631      	mov	r1, r6
  8002836:	4630      	mov	r0, r6
- 8002838:	f006 fcce 	bl	80091d8 <gd32_i2c_write>
+ 8002838:	f006 fe28 	bl	800948c <gd32_i2c_write>
  800283c:	e7e4      	b.n	8002808 <MCP3424::MCP3424(unsigned char)+0x38>
  800283e:	bf00      	nop
  8002840:	00061a80 	andeq	r1, r6, r0, lsl #21
@@ -3985,20 +3985,20 @@ Disassembly of section .text:
  800286a:	f641 7541 	movw	r5, #8001	; 0x1f41
  800286e:	7820      	ldrb	r0, [r4, #0]
  8002870:	7a67      	ldrb	r7, [r4, #9]
- 8002872:	f006 fcab 	bl	80091cc <gd32_i2c_set_address>
+ 8002872:	f006 fe05 	bl	8009480 <gd32_i2c_set_address>
  8002876:	6860      	ldr	r0, [r4, #4]
- 8002878:	f006 fca0 	bl	80091bc <gd32_i2c_set_baudrate>
+ 8002878:	f006 fdfa 	bl	8009470 <gd32_i2c_set_baudrate>
  800287c:	2101      	movs	r1, #1
  800287e:	4668      	mov	r0, sp
  8002880:	f88d 7000 	strb.w	r7, [sp]
- 8002884:	f006 fca8 	bl	80091d8 <gd32_i2c_write>
+ 8002884:	f006 fe02 	bl	800948c <gd32_i2c_write>
  8002888:	7820      	ldrb	r0, [r4, #0]
- 800288a:	f006 fc9f 	bl	80091cc <gd32_i2c_set_address>
+ 800288a:	f006 fdf9 	bl	8009480 <gd32_i2c_set_address>
  800288e:	6860      	ldr	r0, [r4, #4]
- 8002890:	f006 fc94 	bl	80091bc <gd32_i2c_set_baudrate>
+ 8002890:	f006 fdee 	bl	8009470 <gd32_i2c_set_baudrate>
  8002894:	4631      	mov	r1, r6
  8002896:	a801      	add	r0, sp, #4
- 8002898:	f006 fd04 	bl	80092a4 <gd32_i2c_read>
+ 8002898:	f006 fe5e 	bl	8009558 <gd32_i2c_read>
  800289c:	2e04      	cmp	r6, #4
  800289e:	bf0c      	ite	eq
  80028a0:	f99d 3007 	ldrsbeq.w	r3, [sp, #7]
@@ -4054,21 +4054,21 @@ Disassembly of section .text:
  8002920:	4604      	mov	r4, r0
  8002922:	7800      	ldrb	r0, [r0, #0]
  8002924:	f88d 1000 	strb.w	r1, [sp]
- 8002928:	f006 fc50 	bl	80091cc <gd32_i2c_set_address>
+ 8002928:	f006 fdaa 	bl	8009480 <gd32_i2c_set_address>
  800292c:	6860      	ldr	r0, [r4, #4]
- 800292e:	f006 fc45 	bl	80091bc <gd32_i2c_set_baudrate>
+ 800292e:	f006 fd9f 	bl	8009470 <gd32_i2c_set_baudrate>
  8002932:	2101      	movs	r1, #1
  8002934:	4668      	mov	r0, sp
- 8002936:	f006 fc4f 	bl	80091d8 <gd32_i2c_write>
+ 8002936:	f006 fda9 	bl	800948c <gd32_i2c_write>
  800293a:	2300      	movs	r3, #0
  800293c:	7820      	ldrb	r0, [r4, #0]
  800293e:	f8ad 3004 	strh.w	r3, [sp, #4]
- 8002942:	f006 fc43 	bl	80091cc <gd32_i2c_set_address>
+ 8002942:	f006 fd9d 	bl	8009480 <gd32_i2c_set_address>
  8002946:	6860      	ldr	r0, [r4, #4]
- 8002948:	f006 fc38 	bl	80091bc <gd32_i2c_set_baudrate>
+ 8002948:	f006 fd92 	bl	8009470 <gd32_i2c_set_baudrate>
  800294c:	2102      	movs	r1, #2
  800294e:	a801      	add	r0, sp, #4
- 8002950:	f006 fca8 	bl	80092a4 <gd32_i2c_read>
+ 8002950:	f006 fe02 	bl	8009558 <gd32_i2c_read>
  8002954:	f8bd 0004 	ldrh.w	r0, [sp, #4]
  8002958:	ba40      	rev16	r0, r0
  800295a:	b280      	uxth	r0, r0
@@ -4087,9 +4087,9 @@ Disassembly of section .text:
  8002970:	7206      	strb	r6, [r0, #8]
  8002972:	4604      	mov	r4, r0
  8002974:	4628      	mov	r0, r5
- 8002976:	f006 fc29 	bl	80091cc <gd32_i2c_set_address>
+ 8002976:	f006 fd83 	bl	8009480 <gd32_i2c_set_address>
  800297a:	4638      	mov	r0, r7
- 800297c:	f006 fc1e 	bl	80091bc <gd32_i2c_set_baudrate>
+ 800297c:	f006 fd78 	bl	8009470 <gd32_i2c_set_baudrate>
  8002980:	f1a5 0330 	sub.w	r3, r5, #48	; 0x30
  8002984:	2b07      	cmp	r3, #7
  8002986:	d902      	bls.n	800298e <sensor::MCP9808::MCP9808(unsigned char)+0x2e>
@@ -4098,7 +4098,7 @@ Disassembly of section .text:
  800298c:	d81f      	bhi.n	80029ce <sensor::MCP9808::MCP9808(unsigned char)+0x6e>
  800298e:	2101      	movs	r1, #1
  8002990:	f10d 0007 	add.w	r0, sp, #7
- 8002994:	f006 fc86 	bl	80092a4 <gd32_i2c_read>
+ 8002994:	f006 fde0 	bl	8009558 <gd32_i2c_read>
  8002998:	fab0 f080 	clz	r0, r0
  800299c:	0940      	lsrs	r0, r0, #5
  800299e:	7220      	strb	r0, [r4, #8]
@@ -4124,7 +4124,7 @@ Disassembly of section .text:
  80029cc:	bdf0      	pop	{r4, r5, r6, r7, pc}
  80029ce:	4631      	mov	r1, r6
  80029d0:	4630      	mov	r0, r6
- 80029d2:	f006 fc01 	bl	80091d8 <gd32_i2c_write>
+ 80029d2:	f006 fd5b 	bl	800948c <gd32_i2c_write>
  80029d6:	e7df      	b.n	8002998 <sensor::MCP9808::MCP9808(unsigned char)+0x38>
  80029d8:	00061a80 	andeq	r1, r6, r0, lsl #21
 
@@ -4155,9 +4155,9 @@ Disassembly of section .text:
  8002a14:	7206      	strb	r6, [r0, #8]
  8002a16:	4605      	mov	r5, r0
  8002a18:	4620      	mov	r0, r4
- 8002a1a:	f006 fbd7 	bl	80091cc <gd32_i2c_set_address>
+ 8002a1a:	f006 fd31 	bl	8009480 <gd32_i2c_set_address>
  8002a1e:	4638      	mov	r0, r7
- 8002a20:	f006 fbcc 	bl	80091bc <gd32_i2c_set_baudrate>
+ 8002a20:	f006 fd26 	bl	8009470 <gd32_i2c_set_baudrate>
  8002a24:	f1a4 0330 	sub.w	r3, r4, #48	; 0x30
  8002a28:	2b07      	cmp	r3, #7
  8002a2a:	d902      	bls.n	8002a32 <sensor::SI7021::SI7021(unsigned char)+0x2e>
@@ -4166,7 +4166,7 @@ Disassembly of section .text:
  8002a30:	d80b      	bhi.n	8002a4a <sensor::SI7021::SI7021(unsigned char)+0x46>
  8002a32:	2101      	movs	r1, #1
  8002a34:	f10d 0007 	add.w	r0, sp, #7
- 8002a38:	f006 fc34 	bl	80092a4 <gd32_i2c_read>
+ 8002a38:	f006 fd8e 	bl	8009558 <gd32_i2c_read>
  8002a3c:	fab0 f380 	clz	r3, r0
  8002a40:	095b      	lsrs	r3, r3, #5
  8002a42:	4628      	mov	r0, r5
@@ -4175,7 +4175,7 @@ Disassembly of section .text:
  8002a48:	bdf0      	pop	{r4, r5, r6, r7, pc}
  8002a4a:	4631      	mov	r1, r6
  8002a4c:	4630      	mov	r0, r6
- 8002a4e:	f006 fbc3 	bl	80091d8 <gd32_i2c_write>
+ 8002a4e:	f006 fd1d 	bl	800948c <gd32_i2c_write>
  8002a52:	e7f3      	b.n	8002a3c <sensor::SI7021::SI7021(unsigned char)+0x38>
  8002a54:	00061a80 	andeq	r1, r6, r0, lsl #21
 
@@ -4184,13 +4184,13 @@ Disassembly of section .text:
  8002a5a:	4604      	mov	r4, r0
  8002a5c:	7800      	ldrb	r0, [r0, #0]
  8002a5e:	460d      	mov	r5, r1
- 8002a60:	f006 fbb4 	bl	80091cc <gd32_i2c_set_address>
+ 8002a60:	f006 fd0e 	bl	8009480 <gd32_i2c_set_address>
  8002a64:	6860      	ldr	r0, [r4, #4]
- 8002a66:	f006 fba9 	bl	80091bc <gd32_i2c_set_baudrate>
+ 8002a66:	f006 fd03 	bl	8009470 <gd32_i2c_set_baudrate>
  8002a6a:	2101      	movs	r1, #1
  8002a6c:	a801      	add	r0, sp, #4
  8002a6e:	f88d 5004 	strb.w	r5, [sp, #4]
- 8002a72:	f006 fbb1 	bl	80091d8 <gd32_i2c_write>
+ 8002a72:	f006 fd0b 	bl	800948c <gd32_i2c_write>
  8002a76:	4b13      	ldr	r3, [pc, #76]	; (8002ac4 <sensor::SI7021::ReadRaw(unsigned char)+0x6c>)
  8002a78:	881b      	ldrh	r3, [r3, #0]
  8002a7a:	f8ad 3004 	strh.w	r3, [sp, #4]
@@ -4199,14 +4199,14 @@ Disassembly of section .text:
  8002a84:	2508      	movs	r5, #8
  8002a86:	2100      	movs	r1, #0
  8002a88:	f242 7010 	movw	r0, #10000	; 0x2710
- 8002a8c:	f006 fea8 	bl	80097e0 <udelay(unsigned long, unsigned long)>
+ 8002a8c:	f006 fc10 	bl	80092b0 <udelay(unsigned long, unsigned long)>
  8002a90:	7820      	ldrb	r0, [r4, #0]
- 8002a92:	f006 fb9b 	bl	80091cc <gd32_i2c_set_address>
+ 8002a92:	f006 fcf5 	bl	8009480 <gd32_i2c_set_address>
  8002a96:	6860      	ldr	r0, [r4, #4]
- 8002a98:	f006 fb90 	bl	80091bc <gd32_i2c_set_baudrate>
+ 8002a98:	f006 fcea 	bl	8009470 <gd32_i2c_set_baudrate>
  8002a9c:	2103      	movs	r1, #3
  8002a9e:	a801      	add	r0, sp, #4
- 8002aa0:	f006 fc00 	bl	80092a4 <gd32_i2c_read>
+ 8002aa0:	f006 fd5a 	bl	8009558 <gd32_i2c_read>
  8002aa4:	f89d 3004 	ldrb.w	r3, [sp, #4]
  8002aa8:	f003 0303 	and.w	r3, r3, #3
  8002aac:	2b02      	cmp	r3, #2
@@ -4357,7 +4357,7 @@ Disassembly of section .text:
 
 08002c12 <CpuTemperature::GetValue()>:
  8002c12:	b508      	push	{r3, lr}
- 8002c14:	f006 fa52 	bl	80090bc <gd32_adc_gettemp()>
+ 8002c14:	f006 fbac 	bl	8009370 <gd32_adc_gettemp()>
  8002c18:	eebd 0ac0 	vcvt.s32.f32	s0, s0
  8002c1c:	ee10 3a10 	vmov	r3, s0
  8002c20:	b218      	sxth	r0, r3
@@ -5413,7 +5413,7 @@ Disassembly of section .text:
  8003648:	7699      	strb	r1, [r3, #26]
  800364a:	76da      	strb	r2, [r3, #27]
  800364c:	f7ff be66 	b.w	800331c <RDMHandler::RespondMessageAck()>
- 8003650:	20008794 	mulcs	r0, r4, r7
+ 8003650:	20002790 	mulcs	r0, r0, r7
  8003654:	0036ee80 	eorseq	lr, r6, r0, lsl #29
 
 08003658 <RDMHandler::GetDisplayInvert(unsigned short)>:
@@ -6991,7 +6991,7 @@ Disassembly of section .text:
  80044a2:	4e18      	ldr	r6, [pc, #96]	; (8004504 <RDMResponder::HandleResponse(unsigned char*)+0x70>)
  80044a4:	6819      	ldr	r1, [r3, #0]
  80044a6:	20c8      	movs	r0, #200	; 0xc8
- 80044a8:	f005 f99a 	bl	80097e0 <udelay(unsigned long, unsigned long)>
+ 80044a8:	f004 ff02 	bl	80092b0 <udelay(unsigned long, unsigned long)>
  80044ac:	2300      	movs	r3, #0
  80044ae:	461a      	mov	r2, r3
  80044b0:	4619      	mov	r1, r3
@@ -7005,7 +7005,7 @@ Disassembly of section .text:
  80044c2:	f000 fd8d 	bl	8004fe0 <Dmx::RdmSendRaw(unsigned long, unsigned char const*, unsigned long)>
  80044c6:	2100      	movs	r1, #0
  80044c8:	2004      	movs	r0, #4
- 80044ca:	f005 f989 	bl	80097e0 <udelay(unsigned long, unsigned long)>
+ 80044ca:	f004 fef1 	bl	80092b0 <udelay(unsigned long, unsigned long)>
  80044ce:	2301      	movs	r3, #1
  80044d0:	6830      	ldr	r0, [r6, #0]
  80044d2:	461a      	mov	r2, r3
@@ -7783,7 +7783,7 @@ Disassembly of section .text:
  8004d30:	4817      	ldr	r0, [pc, #92]	; (8004d90 <Dmx::Dmx()+0x29c>)
  8004d32:	4623      	mov	r3, r4
  8004d34:	2208      	movs	r2, #8
- 8004d36:	f004 fc11 	bl	800955c <gd32_uart_begin>
+ 8004d36:	f004 f979 	bl	800902c <gd32_uart_begin>
  8004d3a:	2480      	movs	r4, #128	; 0x80
  8004d3c:	6074      	str	r4, [r6, #4]
  8004d3e:	4628      	mov	r0, r5
@@ -8047,7 +8047,7 @@ Disassembly of section .text:
  8005008:	2100      	movs	r1, #0
  800500a:	20b0      	movs	r0, #176	; 0xb0
  800500c:	6177      	str	r7, [r6, #20]
- 800500e:	f004 fbe7 	bl	80097e0 <udelay(unsigned long, unsigned long)>
+ 800500e:	f004 f94f 	bl	80092b0 <udelay(unsigned long, unsigned long)>
  8005012:	4630      	mov	r0, r6
  8005014:	2118      	movs	r1, #24
  8005016:	463b      	mov	r3, r7
@@ -8055,7 +8055,7 @@ Disassembly of section .text:
  800501a:	f003 fc21 	bl	8008860 <gpio_init>
  800501e:	2100      	movs	r1, #0
  8005020:	200c      	movs	r0, #12
- 8005022:	f004 fbdd 	bl	80097e0 <udelay(unsigned long, unsigned long)>
+ 8005022:	f004 f945 	bl	80092b0 <udelay(unsigned long, unsigned long)>
  8005026:	b18c      	cbz	r4, 800504c <Dmx::RdmSendRaw(unsigned long, unsigned char const*, unsigned long)+0x6c>
  8005028:	1928      	adds	r0, r5, r4
  800502a:	4c0f      	ldr	r4, [pc, #60]	; (8005068 <Dmx::RdmSendRaw(unsigned long, unsigned char const*, unsigned long)+0x88>)
@@ -8094,7 +8094,7 @@ Disassembly of section .text:
  800507c:	20c8      	movs	r0, #200	; 0xc8
  800507e:	461c      	mov	r4, r3
  8005080:	4615      	mov	r5, r2
- 8005082:	f004 fbad 	bl	80097e0 <udelay(unsigned long, unsigned long)>
+ 8005082:	f004 f915 	bl	80092b0 <udelay(unsigned long, unsigned long)>
  8005086:	69b3      	ldr	r3, [r6, #24]
  8005088:	2b00      	cmp	r3, #0
  800508a:	f000 8087 	beq.w	800519c <Dmx::RdmSendDiscoveryRespondMessage(unsigned long, unsigned char const*, unsigned long)+0x12c>
@@ -8140,7 +8140,7 @@ Disassembly of section .text:
  80050f8:	d1f6      	bne.n	80050e8 <Dmx::RdmSendDiscoveryRespondMessage(unsigned long, unsigned char const*, unsigned long)+0x78>
  80050fa:	2004      	movs	r0, #4
  80050fc:	2100      	movs	r1, #0
- 80050fe:	f004 fb6f 	bl	80097e0 <udelay(unsigned long, unsigned long)>
+ 80050fe:	f004 f8d7 	bl	80092b0 <udelay(unsigned long, unsigned long)>
  8005102:	69b0      	ldr	r0, [r6, #24]
  8005104:	2801      	cmp	r0, #1
  8005106:	d058      	beq.n	80051ba <Dmx::RdmSendDiscoveryRespondMessage(unsigned long, unsigned char const*, unsigned long)+0x14a>
@@ -8705,7 +8705,7 @@ Disassembly of section .text:
  800560e:	4614      	mov	r4, r2
  8005610:	461d      	mov	r5, r3
  8005612:	9304      	str	r3, [sp, #16]
- 8005614:	f003 ff98 	bl	8009548 <gd32_spi_dma_tx_is_active()>
+ 8005614:	f004 f8f2 	bl	80097fc <gd32_spi_dma_tx_is_active()>
  8005618:	2800      	cmp	r0, #0
  800561a:	f040 8094 	bne.w	8005746 <WS28xxDmx::SetData(unsigned long, unsigned char const*, unsigned long, bool)+0x14a>
  800561e:	f007 0803 	and.w	r8, r7, #3
@@ -9433,7 +9433,7 @@ Disassembly of section .text:
 08005cec <WS28xxDmx::FullOn()>:
  8005cec:	b510      	push	{r4, lr}
  8005cee:	4604      	mov	r4, r0
- 8005cf0:	f003 fc2a 	bl	8009548 <gd32_spi_dma_tx_is_active()>
+ 8005cf0:	f003 fd84 	bl	80097fc <gd32_spi_dma_tx_is_active()>
  8005cf4:	2800      	cmp	r0, #0
  8005cf6:	d1fb      	bne.n	8005cf0 <WS28xxDmx::FullOn()+0x4>
  8005cf8:	6d20      	ldr	r0, [r4, #80]	; 0x50
@@ -9487,7 +9487,7 @@ Disassembly of section .text:
  8005d6a:	4604      	mov	r4, r0
  8005d6c:	460d      	mov	r5, r1
  8005d6e:	f880 1055 	strb.w	r1, [r0, #85]	; 0x55
- 8005d72:	f003 fbe9 	bl	8009548 <gd32_spi_dma_tx_is_active()>
+ 8005d72:	f003 fd43 	bl	80097fc <gd32_spi_dma_tx_is_active()>
  8005d76:	2800      	cmp	r0, #0
  8005d78:	d1fb      	bne.n	8005d72 <WS28xxDmx::Blackout(bool)+0xa>
  8005d7a:	6d20      	ldr	r0, [r4, #80]	; 0x50
@@ -10040,7 +10040,7 @@ Disassembly of section .text:
  80062a0:	2000161c 	andcs	r1, r0, ip, lsl r6
  80062a4:	20001618 	andcs	r1, r0, r8, lsl r6
  80062a8:	20001614 	andcs	r1, r0, r4, lsl r6
- 80062ac:	20008794 	mulcs	r0, r4, r7
+ 80062ac:	20002790 	mulcs	r0, r0, r7
  80062b0:	200015f4 	strdcs	r1, [r0], -r4
 
 080062b4 <PixelPatterns::GetName(pixelpatterns::Pattern)>:
@@ -10459,7 +10459,7 @@ Disassembly of section .text:
 080066c0 <PixelPatterns::Run()>:
  80066c0:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
  80066c4:	4606      	mov	r6, r0
- 80066c6:	f002 ff3f 	bl	8009548 <gd32_spi_dma_tx_is_active()>
+ 80066c6:	f003 f899 	bl	80097fc <gd32_spi_dma_tx_is_active()>
  80066ca:	4604      	mov	r4, r0
  80066cc:	b9b8      	cbnz	r0, 80066fe <PixelPatterns::Run()+0x3e>
  80066ce:	4b0d      	ldr	r3, [pc, #52]	; (8006704 <PixelPatterns::Run()+0x44>)
@@ -10484,7 +10484,7 @@ Disassembly of section .text:
  80066fc:	e7ec      	b.n	80066d8 <PixelPatterns::Run()+0x18>
  80066fe:	e8bd 81f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, pc}
  8006702:	bf00      	nop
- 8006704:	20008794 	mulcs	r0, r4, r7
+ 8006704:	20002790 	mulcs	r0, r0, r7
  8006708:	20001618 	andcs	r1, r0, r8, lsl r6
  800670c:	2000161c 	andcs	r1, r0, ip, lsl r6
 
@@ -10935,7 +10935,7 @@ Disassembly of section .text:
  8006b90:	b513      	push	{r0, r1, r4, lr}
  8006b92:	4604      	mov	r4, r0
  8006b94:	a801      	add	r0, sp, #4
- 8006b96:	f002 fcb5 	bl	8009504 <gd32_spi_dma_tx_prepare(unsigned long*)>
+ 8006b96:	f002 fe0f 	bl	80097b8 <gd32_spi_dma_tx_prepare(unsigned long*)>
  8006b9a:	9b01      	ldr	r3, [sp, #4]
  8006b9c:	4a07      	ldr	r2, [pc, #28]	; (8006bbc <WS28xx::SetupBuffers()+0x2c>)
  8006b9e:	6220      	str	r0, [r4, #32]
@@ -11000,9 +11000,9 @@ Disassembly of section .text:
  8006c26:	61e2      	strls	r2, [r4, #28]
  8006c28:	4620      	mov	r0, r4
  8006c2a:	f7ff ffb1 	bl	8006b90 <WS28xx::SetupBuffers()>
- 8006c2e:	f002 fbdf 	bl	80093f0 <gd32_spi_dma_begin()>
+ 8006c2e:	f002 fd39 	bl	80096a4 <gd32_spi_dma_begin()>
  8006c32:	68f8      	ldr	r0, [r7, #12]
- 8006c34:	f002 fc52 	bl	80094dc <gd32_spi_dma_set_speed_hz(unsigned long)>
+ 8006c34:	f002 fdac 	bl	8009790 <gd32_spi_dma_set_speed_hz(unsigned long)>
  8006c38:	4620      	mov	r0, r4
  8006c3a:	b003      	add	sp, #12
  8006c3c:	bdf0      	pop	{r4, r5, r6, r7, pc}
@@ -11024,7 +11024,7 @@ Disassembly of section .text:
  8006c5e:	429d      	cmp	r5, r3
  8006c60:	d105      	bne.n	8006c6e <WS28xx::Update()+0x26>
  8006c62:	bc30      	pop	{r4, r5}
- 8006c64:	f002 bc56 	b.w	8009514 <gd32_spi_dma_tx_start(unsigned char const*, unsigned long)>
+ 8006c64:	f002 bdb0 	b.w	80097c8 <gd32_spi_dma_tx_start(unsigned char const*, unsigned long)>
  8006c68:	54e2      	strb	r2, [r4, r3]
  8006c6a:	3301      	adds	r3, #1
  8006c6c:	e7f0      	b.n	8006c50 <WS28xx::Update()+0x8>
@@ -11039,7 +11039,7 @@ Disassembly of section .text:
  8006c80:	e92d 43f7 	stmdb	sp!, {r0, r1, r2, r4, r5, r6, r7, r8, r9, lr}
  8006c84:	4604      	mov	r4, r0
  8006c86:	f3bf 8f6f 	isb	sy
- 8006c8a:	f002 fc5d 	bl	8009548 <gd32_spi_dma_tx_is_active()>
+ 8006c8a:	f002 fdb7 	bl	80097fc <gd32_spi_dma_tx_is_active()>
  8006c8e:	2800      	cmp	r0, #0
  8006c90:	d1f9      	bne.n	8006c86 <WS28xx::Blackout()+0x6>
  8006c92:	e9d4 2800 	ldrd	r2, r8, [r4]
@@ -11071,7 +11071,7 @@ Disassembly of section .text:
  8006ccc:	4620      	mov	r0, r4
  8006cce:	f7ff ffbb 	bl	8006c48 <WS28xx::Update()>
  8006cd2:	f3bf 8f6f 	isb	sy
- 8006cd6:	f002 fc37 	bl	8009548 <gd32_spi_dma_tx_is_active()>
+ 8006cd6:	f002 fd91 	bl	80097fc <gd32_spi_dma_tx_is_active()>
  8006cda:	2800      	cmp	r0, #0
  8006cdc:	d1f9      	bne.n	8006cd2 <WS28xx::Blackout()+0x52>
  8006cde:	6226      	str	r6, [r4, #32]
@@ -11099,7 +11099,7 @@ Disassembly of section .text:
  8006d0e:	e92d 43f7 	stmdb	sp!, {r0, r1, r2, r4, r5, r6, r7, r8, r9, lr}
  8006d12:	4604      	mov	r4, r0
  8006d14:	f3bf 8f6f 	isb	sy
- 8006d18:	f002 fc16 	bl	8009548 <gd32_spi_dma_tx_is_active()>
+ 8006d18:	f002 fd70 	bl	80097fc <gd32_spi_dma_tx_is_active()>
  8006d1c:	2800      	cmp	r0, #0
  8006d1e:	d1f9      	bne.n	8006d14 <WS28xx::FullOn()+0x6>
  8006d20:	e9d4 2800 	ldrd	r2, r8, [r4]
@@ -11131,7 +11131,7 @@ Disassembly of section .text:
  8006d5c:	4620      	mov	r0, r4
  8006d5e:	f7ff ff73 	bl	8006c48 <WS28xx::Update()>
  8006d62:	f3bf 8f6f 	isb	sy
- 8006d66:	f002 fbef 	bl	8009548 <gd32_spi_dma_tx_is_active()>
+ 8006d66:	f002 fd49 	bl	80097fc <gd32_spi_dma_tx_is_active()>
  8006d6a:	2800      	cmp	r0, #0
  8006d6c:	d1f9      	bne.n	8006d62 <WS28xx::FullOn()+0x54>
  8006d6e:	6226      	str	r6, [r4, #32]
@@ -11174,7 +11174,7 @@ Disassembly of section .text:
 
 08006dc4 <Network::MacAddressCopyTo(unsigned char*)>:
  8006dc4:	4608      	mov	r0, r1
- 8006dc6:	f002 bcbf 	b.w	8009748 <mac_address_get(unsigned char*)>
+ 8006dc6:	f002 ba27 	b.w	8009218 <mac_address_get(unsigned char*)>
 
 08006dca <Display::Write(unsigned long, char const*) [clone .isra.0]>:
  8006dca:	b430      	push	{r4, r5}
@@ -11658,7 +11658,7 @@ Disassembly of section .text:
  8007214:	e7fb      	b.n	800720e <ConfigStore::Flash()+0x8a>
  8007216:	bf00      	nop
  8007218:	20002648 	andcs	r2, r0, r8, asr #12
- 800721c:	20008794 	mulcs	r0, r4, r7
+ 800721c:	20002790 	mulcs	r0, r0, r7
  8007220:	2000263c 	andcs	r2, r0, ip, lsr r6
  8007224:	20002644 	andcs	r2, r0, r4, asr #12
  8007228:	20002640 	andcs	r2, r0, r0, asr #12
@@ -12042,9 +12042,9 @@ Disassembly of section .text:
  800758c:	b537      	push	{r0, r1, r2, r4, r5, lr}
  800758e:	460d      	mov	r5, r1
  8007590:	4604      	mov	r4, r0
- 8007592:	f001 fe1b 	bl	80091cc <gd32_i2c_set_address>
+ 8007592:	f001 ff75 	bl	8009480 <gd32_i2c_set_address>
  8007596:	4628      	mov	r0, r5
- 8007598:	f001 fe10 	bl	80091bc <gd32_i2c_set_baudrate>
+ 8007598:	f001 ff6a 	bl	8009470 <gd32_i2c_set_baudrate>
  800759c:	f1a4 0330 	sub.w	r3, r4, #48	; 0x30
  80075a0:	2b07      	cmp	r3, #7
  80075a2:	d902      	bls.n	80075aa <HAL_I2C::IsConnected_(unsigned char, unsigned long)+0x1e>
@@ -12053,14 +12053,14 @@ Disassembly of section .text:
  80075a8:	d809      	bhi.n	80075be <HAL_I2C::IsConnected_(unsigned char, unsigned long)+0x32>
  80075aa:	2101      	movs	r1, #1
  80075ac:	f10d 0007 	add.w	r0, sp, #7
- 80075b0:	f001 fe78 	bl	80092a4 <gd32_i2c_read>
+ 80075b0:	f001 ffd2 	bl	8009558 <gd32_i2c_read>
  80075b4:	fab0 f080 	clz	r0, r0
  80075b8:	0940      	lsrs	r0, r0, #5
  80075ba:	b003      	add	sp, #12
  80075bc:	bd30      	pop	{r4, r5, pc}
  80075be:	2100      	movs	r1, #0
  80075c0:	4608      	mov	r0, r1
- 80075c2:	f001 fe09 	bl	80091d8 <gd32_i2c_write>
+ 80075c2:	f001 ff63 	bl	800948c <gd32_i2c_write>
  80075c6:	e7f5      	b.n	80075b4 <HAL_I2C::IsConnected_(unsigned char, unsigned long)+0x28>
 
 080075c8 <Display::Detect7Segment()>:
@@ -12161,7 +12161,7 @@ Disassembly of section .text:
  8007692:	4620      	mov	r0, r4
  8007694:	bd10      	pop	{r4, pc}
  8007696:	bf00      	nop
- 8007698:	20008794 	mulcs	r0, r4, r7
+ 8007698:	20002790 	mulcs	r0, r0, r7
  800769c:	000493e0 	andeq	r9, r4, r0, ror #7
  80076a0:	00061a80 	andeq	r1, r6, r0, lsl #21
  80076a4:	2000266c 	andcs	r2, r0, ip, ror #12
@@ -12200,10 +12200,10 @@ Disassembly of section .text:
  80076e2:	b510      	push	{r4, lr}
  80076e4:	4604      	mov	r4, r0
  80076e6:	7800      	ldrb	r0, [r0, #0]
- 80076e8:	f001 fd70 	bl	80091cc <gd32_i2c_set_address>
+ 80076e8:	f001 feca 	bl	8009480 <gd32_i2c_set_address>
  80076ec:	6860      	ldr	r0, [r4, #4]
  80076ee:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
- 80076f2:	f001 bd63 	b.w	80091bc <gd32_i2c_set_baudrate>
+ 80076f2:	f001 bebd 	b.w	8009470 <gd32_i2c_set_baudrate>
 	...
 
 080076f8 <Ssd1306::PutChar(int)>:
@@ -12225,7 +12225,7 @@ Disassembly of section .text:
  8007722:	4420      	add	r0, r4
  8007724:	2107      	movs	r1, #7
  8007726:	e8bd 4038 	ldmia.w	sp!, {r3, r4, r5, lr}
- 800772a:	f001 bd55 	b.w	80091d8 <gd32_i2c_write>
+ 800772a:	f001 beaf 	b.w	800948c <gd32_i2c_write>
  800772e:	bf00      	nop
  8007730:	0800b9b0 	stmdaeq	r0, {r4, r5, r7, r8, fp, ip, sp, pc}
 
@@ -12348,7 +12348,7 @@ Disassembly of section .text:
  800782a:	f7ff ff5a 	bl	80076e2 <HAL_I2C::Setup()>
  800782e:	2102      	movs	r1, #2
  8007830:	a801      	add	r0, sp, #4
- 8007832:	f001 fcd1 	bl	80091d8 <gd32_i2c_write>
+ 8007832:	f001 fe2b 	bl	800948c <gd32_i2c_write>
  8007836:	b003      	add	sp, #12
  8007838:	f85d fb04 	ldr.w	pc, [sp], #4
 
@@ -12422,7 +12422,7 @@ Disassembly of section .text:
  80078d6:	f7ff ff04 	bl	80076e2 <HAL_I2C::Setup()>
  80078da:	2181      	movs	r1, #129	; 0x81
  80078dc:	4809      	ldr	r0, [pc, #36]	; (8007904 <Ssd1306::ClearLine(unsigned long)+0x48>)
- 80078de:	f001 fc7b 	bl	80091d8 <gd32_i2c_write>
+ 80078de:	f001 fdd5 	bl	800948c <gd32_i2c_write>
  80078e2:	4622      	mov	r2, r4
  80078e4:	2100      	movs	r1, #0
  80078e6:	4628      	mov	r0, r5
@@ -12478,7 +12478,7 @@ Disassembly of section .text:
  800795a:	f7ff fec2 	bl	80076e2 <HAL_I2C::Setup()>
  800795e:	2105      	movs	r1, #5
  8007960:	a802      	add	r0, sp, #8
- 8007962:	f001 fc39 	bl	80091d8 <gd32_i2c_write>
+ 8007962:	f001 fd93 	bl	800948c <gd32_i2c_write>
  8007966:	2100      	movs	r1, #0
  8007968:	4620      	mov	r0, r4
  800796a:	f7ff ff57 	bl	800781c <Ssd1306::SendCommand(unsigned char)>
@@ -12497,12 +12497,12 @@ Disassembly of section .text:
  800798e:	2101      	movs	r1, #1
  8007990:	a801      	add	r0, sp, #4
  8007992:	f88d 3004 	strb.w	r3, [sp, #4]
- 8007996:	f001 fc1f 	bl	80091d8 <gd32_i2c_write>
+ 8007996:	f001 fd79 	bl	800948c <gd32_i2c_write>
  800799a:	4628      	mov	r0, r5
  800799c:	f7ff fea1 	bl	80076e2 <HAL_I2C::Setup()>
  80079a0:	2105      	movs	r1, #5
  80079a2:	a804      	add	r0, sp, #16
- 80079a4:	f001 fc7e 	bl	80092a4 <gd32_i2c_read>
+ 80079a4:	f001 fdd8 	bl	8009558 <gd32_i2c_read>
  80079a8:	aa02      	add	r2, sp, #8
  80079aa:	a904      	add	r1, sp, #16
  80079ac:	2304      	movs	r3, #4
@@ -12565,7 +12565,7 @@ Disassembly of section .text:
  8007a3c:	f7ff fe51 	bl	80076e2 <HAL_I2C::Setup()>
  8007a40:	f106 0181 	add.w	r1, r6, #129	; 0x81
  8007a44:	4648      	mov	r0, r9
- 8007a46:	f001 fbc7 	bl	80091d8 <gd32_i2c_write>
+ 8007a46:	f001 fd21 	bl	800948c <gd32_i2c_write>
  8007a4a:	3501      	adds	r5, #1
  8007a4c:	e7cd      	b.n	80079ea <Ssd1306::Cls()+0x16>
  8007a4e:	f803 1b01 	strb.w	r1, [r3], #1
@@ -12578,9 +12578,9 @@ Disassembly of section .text:
  8007a5c:	6946      	ldr	r6, [r0, #20]
  8007a5e:	4605      	mov	r5, r0
  8007a60:	4620      	mov	r0, r4
- 8007a62:	f001 fbb3 	bl	80091cc <gd32_i2c_set_address>
+ 8007a62:	f001 fd0d 	bl	8009480 <gd32_i2c_set_address>
  8007a66:	4630      	mov	r0, r6
- 8007a68:	f001 fba8 	bl	80091bc <gd32_i2c_set_baudrate>
+ 8007a68:	f001 fd02 	bl	8009470 <gd32_i2c_set_baudrate>
  8007a6c:	f1a4 0330 	sub.w	r3, r4, #48	; 0x30
  8007a70:	2b07      	cmp	r3, #7
  8007a72:	d902      	bls.n	8007a7a <Ssd1306::Start()+0x22>
@@ -12589,7 +12589,7 @@ Disassembly of section .text:
  8007a78:	d80f      	bhi.n	8007a9a <Ssd1306::Start()+0x42>
  8007a7a:	2101      	movs	r1, #1
  8007a7c:	f10d 0007 	add.w	r0, sp, #7
- 8007a80:	f001 fc10 	bl	80092a4 <gd32_i2c_read>
+ 8007a80:	f001 fd6a 	bl	8009558 <gd32_i2c_read>
  8007a84:	fab0 f480 	clz	r4, r0
  8007a88:	0964      	lsrs	r4, r4, #5
  8007a8a:	b34c      	cbz	r4, 8007ae0 <Ssd1306::Start()+0x88>
@@ -12602,7 +12602,7 @@ Disassembly of section .text:
  8007a98:	e022      	b.n	8007ae0 <Ssd1306::Start()+0x88>
  8007a9a:	2100      	movs	r1, #0
  8007a9c:	4608      	mov	r0, r1
- 8007a9e:	f001 fb9b 	bl	80091d8 <gd32_i2c_write>
+ 8007a9e:	f001 fcf5 	bl	800948c <gd32_i2c_write>
  8007aa2:	e7ef      	b.n	8007a84 <Ssd1306::Start()+0x2c>
  8007aa4:	4f15      	ldr	r7, [pc, #84]	; (8007afc <Ssd1306::Start()+0xa4>)
  8007aa6:	f817 1b01 	ldrb.w	r1, [r7], #1
@@ -12682,7 +12682,7 @@ Disassembly of section .text:
  8007b68:	f7ff fdbb 	bl	80076e2 <HAL_I2C::Setup()>
  8007b6c:	2107      	movs	r1, #7
  8007b6e:	4628      	mov	r0, r5
- 8007b70:	f001 fb32 	bl	80091d8 <gd32_i2c_write>
+ 8007b70:	f001 fc8c 	bl	800948c <gd32_i2c_write>
  8007b74:	f1ba 0f15 	cmp.w	sl, #21
  8007b78:	d1ea      	bne.n	8007b50 <Ssd1306::SetFlipVertically(bool)+0x48>
  8007b7a:	3601      	adds	r6, #1
@@ -12694,7 +12694,7 @@ Disassembly of section .text:
  8007b84:	f001 be54 	b.w	8009830 <uart0_putc>
 
 08007b88 <console_puts>:
- 8007b88:	f001 bdce 	b.w	8009728 <uart0_puts>
+ 8007b88:	f001 bb36 	b.w	80091f8 <uart0_puts>
 
 08007b8c <FirmwareVersion::FirmwareVersion(char const*, char const*, char const*)>:
  8007b8c:	e92d 41f0 	stmdb	sp!, {r4, r5, r6, r7, r8, lr}
@@ -12811,10 +12811,10 @@ Disassembly of section .text:
  8007c8e:	601c      	str	r4, [r3, #0]
  8007c90:	f7f8 fa4e 	bl	8000130 <console_init>
  8007c94:	f000 f9d8 	bl	8008048 <__libc_init_array>
- 8007c98:	f001 fd68 	bl	800976c <systick_config>
- 8007c9c:	f001 fd8c 	bl	80097b8 <udelay_init()>
- 8007ca0:	f001 f9c4 	bl	800902c <gd32_adc_init()>
- 8007ca4:	f001 fa54 	bl	8009150 <gd32_i2c_begin>
+ 8007c98:	f001 fad0 	bl	800923c <systick_config>
+ 8007c9c:	f001 faf4 	bl	8009288 <udelay_init()>
+ 8007ca0:	f001 fb1e 	bl	80092e0 <gd32_adc_init()>
+ 8007ca4:	f001 fbae 	bl	8009404 <gd32_i2c_begin>
  8007ca8:	f240 7004 	movw	r0, #1796	; 0x704
  8007cac:	f000 fe66 	bl	800897c <rcu_periph_clock_enable>
  8007cb0:	4630      	mov	r0, r6
@@ -12837,38 +12837,38 @@ Disassembly of section .text:
  8007ce6:	2002      	movs	r0, #2
  8007ce8:	f000 fc3a 	bl	8008560 <bkp_write_data>
  8007cec:	2601      	movs	r6, #1
- 8007cee:	237c      	movs	r3, #124	; 0x7c
- 8007cf0:	a807      	add	r0, sp, #28
- 8007cf2:	930c      	str	r3, [sp, #48]	; 0x30
- 8007cf4:	e9cd 5508 	strd	r5, r5, [sp, #32]
- 8007cf8:	9507      	str	r5, [sp, #28]
- 8007cfa:	950f      	str	r5, [sp, #60]	; 0x3c
- 8007cfc:	e9cd 660a 	strd	r6, r6, [sp, #40]	; 0x28
- 8007d00:	f000 fafa 	bl	80082f8 <mktime>
- 8007d04:	4629      	mov	r1, r5
- 8007d06:	e9cd 0501 	strd	r0, r5, [sp, #4]
- 8007d0a:	a801      	add	r0, sp, #4
- 8007d0c:	f000 fb70 	bl	80083f0 <settimeofday>
- 8007d10:	4620      	mov	r0, r4
- 8007d12:	f000 f87b 	bl	8007e0c <HwClock::RtcProbe()>
- 8007d16:	4620      	mov	r0, r4
- 8007d18:	f000 f8dc 	bl	8007ed4 <HwClock::Print()>
- 8007d1c:	f105 4580 	add.w	r5, r5, #1073741824	; 0x40000000
- 8007d20:	4620      	mov	r0, r4
- 8007d22:	f000 f90b 	bl	8007f3c <HwClock::HcToSys()>
- 8007d26:	f505 3588 	add.w	r5, r5, #69632	; 0x11000
- 8007d2a:	f240 6004 	movw	r0, #1540	; 0x604
- 8007d2e:	f000 fe25 	bl	800897c <rcu_periph_clock_enable>
- 8007d32:	4628      	mov	r0, r5
- 8007d34:	4633      	mov	r3, r6
- 8007d36:	2203      	movs	r2, #3
- 8007d38:	2110      	movs	r1, #16
- 8007d3a:	f000 fd91 	bl	8008860 <gpio_init>
- 8007d3e:	4620      	mov	r0, r4
- 8007d40:	616e      	str	r6, [r5, #20]
- 8007d42:	b010      	add	sp, #64	; 0x40
- 8007d44:	bd70      	pop	{r4, r5, r6, pc}
- 8007d46:	bf00      	nop
+ 8007cee:	2304      	movs	r3, #4
+ 8007cf0:	e9cd 360a 	strd	r3, r6, [sp, #40]	; 0x28
+ 8007cf4:	a807      	add	r0, sp, #28
+ 8007cf6:	237c      	movs	r3, #124	; 0x7c
+ 8007cf8:	930c      	str	r3, [sp, #48]	; 0x30
+ 8007cfa:	e9cd 5508 	strd	r5, r5, [sp, #32]
+ 8007cfe:	9507      	str	r5, [sp, #28]
+ 8007d00:	950f      	str	r5, [sp, #60]	; 0x3c
+ 8007d02:	f000 faf9 	bl	80082f8 <mktime>
+ 8007d06:	4629      	mov	r1, r5
+ 8007d08:	e9cd 0501 	strd	r0, r5, [sp, #4]
+ 8007d0c:	a801      	add	r0, sp, #4
+ 8007d0e:	f000 fb6f 	bl	80083f0 <settimeofday>
+ 8007d12:	4620      	mov	r0, r4
+ 8007d14:	f000 f87a 	bl	8007e0c <HwClock::RtcProbe()>
+ 8007d18:	4620      	mov	r0, r4
+ 8007d1a:	f000 f8db 	bl	8007ed4 <HwClock::Print()>
+ 8007d1e:	f105 4580 	add.w	r5, r5, #1073741824	; 0x40000000
+ 8007d22:	4620      	mov	r0, r4
+ 8007d24:	f000 f90a 	bl	8007f3c <HwClock::HcToSys()>
+ 8007d28:	f505 3588 	add.w	r5, r5, #69632	; 0x11000
+ 8007d2c:	f240 6004 	movw	r0, #1540	; 0x604
+ 8007d30:	f000 fe24 	bl	800897c <rcu_periph_clock_enable>
+ 8007d34:	4628      	mov	r0, r5
+ 8007d36:	4633      	mov	r3, r6
+ 8007d38:	2203      	movs	r2, #3
+ 8007d3a:	2110      	movs	r1, #16
+ 8007d3c:	f000 fd90 	bl	8008860 <gpio_init>
+ 8007d40:	4620      	mov	r0, r4
+ 8007d42:	616e      	str	r6, [r5, #20]
+ 8007d44:	b010      	add	sp, #64	; 0x40
+ 8007d46:	bd70      	pop	{r4, r5, r6, pc}
  8007d48:	20002758 	andcs	r2, r0, r8, asr r7
  8007d4c:	40001000 	andmi	r1, r0, r0
 
@@ -12919,7 +12919,7 @@ Disassembly of section .text:
  8007db8:	6153      	streq	r3, [r2, #20]
  8007dba:	e7ec      	b.n	8007d96 <Hardware::Reboot()+0x46>
  8007dbc:	0800bc80 	stmdaeq	r0, {r7, sl, fp, ip, sp, pc}
- 8007dc0:	20008794 	mulcs	r0, r4, r7
+ 8007dc0:	20002790 	mulcs	r0, r0, r7
  8007dc4:	40011000 	andmi	r1, r1, r0
 
 08007dc8 <rtc_configuration()>:
@@ -12976,7 +12976,7 @@ Disassembly of section .text:
  8007e52:	f000 feed 	bl	8008c30 <rtc_register_sync_wait>
  8007e56:	f000 fee3 	bl	8008c20 <rtc_lwoff_wait>
  8007e5a:	e7f2      	b.n	8007e42 <HwClock::RtcProbe()+0x36>
- 8007e5c:	20008794 	mulcs	r0, r4, r7
+ 8007e5c:	20002790 	mulcs	r0, r0, r7
 
 08007e60 <HwClock::RtcSet(tm const*)>:
  8007e60:	b508      	push	{r3, lr}
@@ -13137,7 +13137,7 @@ Disassembly of section .text:
  8007fdc:	e7ec      	b.n	8007fb8 <HwClock::HcToSys()+0x7c>
  8007fde:	bf00      	nop
  8007fe0:	20002758 	andcs	r2, r0, r8, asr r7
- 8007fe4:	20008794 	mulcs	r0, r4, r7
+ 8007fe4:	20002790 	mulcs	r0, r0, r7
 
 08007fe8 <HwClock::Set(tm const*)>:
  8007fe8:	b570      	push	{r4, r5, r6, lr}
@@ -13561,7 +13561,7 @@ Disassembly of section .text:
  80083da:	6043      	str	r3, [r0, #4]
  80083dc:	2000      	movs	r0, #0
  80083de:	bd30      	pop	{r4, r5, pc}
- 80083e0:	20008794 	mulcs	r0, r4, r7
+ 80083e0:	20002790 	mulcs	r0, r0, r7
  80083e4:	2000278c 	andcs	r2, r0, ip, lsl #15
  80083e8:	20002784 	andcs	r2, r0, r4, lsl #15
  80083ec:	000f423f 	andeq	r4, pc, pc, lsr r2	; <UNPREDICTABLE>
@@ -13579,7 +13579,7 @@ Disassembly of section .text:
  8008402:	2000      	movs	r0, #0
  8008404:	4770      	bx	lr
  8008406:	bf00      	nop
- 8008408:	20008794 	mulcs	r0, r4, r7
+ 8008408:	20002790 	mulcs	r0, r0, r7
  800840c:	2000278c 	andcs	r2, r0, ip, lsl #15
  8008410:	20002784 	andcs	r2, r0, r4, lsl #15
 
@@ -14927,758 +14927,758 @@ Disassembly of section .text:
  8009028:	4770      	bx	lr
 	...
 
-0800902c <gd32_adc_init()>:
- 800902c:	b510      	push	{r4, lr}
- 800902e:	f240 6009 	movw	r0, #1545	; 0x609
- 8009032:	4c21      	ldr	r4, [pc, #132]	; (80090b8 <gd32_adc_init()+0x8c>)
- 8009034:	f7ff fca2 	bl	800897c <rcu_periph_clock_enable>
- 8009038:	2005      	movs	r0, #5
- 800903a:	f7ff fcbf 	bl	80089bc <rcu_adc_clock_config>
- 800903e:	4620      	mov	r0, r4
- 8009040:	2201      	movs	r2, #1
- 8009042:	f44f 7180 	mov.w	r1, #256	; 0x100
- 8009046:	f000 fc47 	bl	80098d8 <adc_special_function_config>
- 800904a:	f44f 42e0 	mov.w	r2, #28672	; 0x7000
- 800904e:	4620      	mov	r0, r4
- 8009050:	2102      	movs	r1, #2
- 8009052:	f000 fcd9 	bl	8009a08 <adc_external_trigger_source_config>
- 8009056:	2100      	movs	r1, #0
- 8009058:	4620      	mov	r0, r4
- 800905a:	f000 fc65 	bl	8009928 <adc_data_alignment_config>
- 800905e:	2000      	movs	r0, #0
- 8009060:	f000 fc2a 	bl	80098b8 <adc_mode_config>
- 8009064:	2202      	movs	r2, #2
- 8009066:	4611      	mov	r1, r2
- 8009068:	4620      	mov	r0, r4
- 800906a:	f000 fc66 	bl	800993a <adc_channel_length_config>
- 800906e:	4620      	mov	r0, r4
- 8009070:	2307      	movs	r3, #7
- 8009072:	2210      	movs	r2, #16
- 8009074:	2100      	movs	r1, #0
- 8009076:	f000 fc7d 	bl	8009974 <adc_inserted_channel_config>
- 800907a:	2307      	movs	r3, #7
- 800907c:	4620      	mov	r0, r4
- 800907e:	2211      	movs	r2, #17
- 8009080:	2101      	movs	r1, #1
- 8009082:	f000 fc77 	bl	8009974 <adc_inserted_channel_config>
- 8009086:	2201      	movs	r2, #1
- 8009088:	2102      	movs	r1, #2
- 800908a:	4620      	mov	r0, r4
- 800908c:	f000 fca1 	bl	80099d2 <adc_external_trigger_config>
- 8009090:	f000 fc08 	bl	80098a4 <adc_tempsensor_vrefint_enable>
- 8009094:	4620      	mov	r0, r4
- 8009096:	f000 fbeb 	bl	8009870 <adc_enable>
- 800909a:	2100      	movs	r1, #0
- 800909c:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
- 80090a0:	f000 fb9e 	bl	80097e0 <udelay(unsigned long, unsigned long)>
- 80090a4:	4620      	mov	r0, r4
- 80090a6:	f000 fbeb 	bl	8009880 <adc_calibration_enable>
- 80090aa:	4620      	mov	r0, r4
- 80090ac:	2102      	movs	r1, #2
- 80090ae:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
- 80090b2:	f000 bcba 	b.w	8009a2a <adc_software_trigger_enable>
- 80090b6:	bf00      	nop
- 80090b8:	40012400 	andmi	r2, r1, r0, lsl #8
+0800902c <gd32_uart_begin>:
+ 800902c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 800902e:	461e      	mov	r6, r3
+ 8009030:	4b6a      	ldr	r3, [pc, #424]	; (80091dc <gd32_uart_begin+0x1b0>)
+ 8009032:	4298      	cmp	r0, r3
+ 8009034:	4604      	mov	r4, r0
+ 8009036:	460f      	mov	r7, r1
+ 8009038:	4615      	mov	r5, r2
+ 800903a:	f000 8094 	beq.w	8009166 <gd32_uart_begin+0x13a>
+ 800903e:	d820      	bhi.n	8009082 <gd32_uart_begin+0x56>
+ 8009040:	f5a3 6300 	sub.w	r3, r3, #2048	; 0x800
+ 8009044:	4298      	cmp	r0, r3
+ 8009046:	d075      	beq.n	8009134 <gd32_uart_begin+0x108>
+ 8009048:	f240 7012 	movw	r0, #1810	; 0x712
+ 800904c:	f7ff fc96 	bl	800897c <rcu_periph_clock_enable>
+ 8009050:	f240 6004 	movw	r0, #1540	; 0x604
+ 8009054:	f7ff fc92 	bl	800897c <rcu_periph_clock_enable>
+ 8009058:	f44f 60c0 	mov.w	r0, #1536	; 0x600
+ 800905c:	f7ff fc8e 	bl	800897c <rcu_periph_clock_enable>
+ 8009060:	485f      	ldr	r0, [pc, #380]	; (80091e0 <gd32_uart_begin+0x1b4>)
+ 8009062:	f44f 6380 	mov.w	r3, #1024	; 0x400
+ 8009066:	2203      	movs	r2, #3
+ 8009068:	2118      	movs	r1, #24
+ 800906a:	f7ff fbf9 	bl	8008860 <gpio_init>
+ 800906e:	485c      	ldr	r0, [pc, #368]	; (80091e0 <gd32_uart_begin+0x1b4>)
+ 8009070:	2104      	movs	r1, #4
+ 8009072:	f44f 6300 	mov.w	r3, #2048	; 0x800
+ 8009076:	2203      	movs	r2, #3
+ 8009078:	f7ff fbf2 	bl	8008860 <gpio_init>
+ 800907c:	4859      	ldr	r0, [pc, #356]	; (80091e4 <gd32_uart_begin+0x1b8>)
+ 800907e:	2101      	movs	r1, #1
+ 8009080:	e01d      	b.n	80090be <gd32_uart_begin+0x92>
+ 8009082:	4b59      	ldr	r3, [pc, #356]	; (80091e8 <gd32_uart_begin+0x1bc>)
+ 8009084:	4298      	cmp	r0, r3
+ 8009086:	f000 8087 	beq.w	8009198 <gd32_uart_begin+0x16c>
+ 800908a:	f240 600e 	movw	r0, #1550	; 0x60e
+ 800908e:	f7ff fc75 	bl	800897c <rcu_periph_clock_enable>
+ 8009092:	f240 6003 	movw	r0, #1539	; 0x603
+ 8009096:	f7ff fc71 	bl	800897c <rcu_periph_clock_enable>
+ 800909a:	f44f 60c0 	mov.w	r0, #1536	; 0x600
+ 800909e:	f7ff fc6d 	bl	800897c <rcu_periph_clock_enable>
+ 80090a2:	4852      	ldr	r0, [pc, #328]	; (80091ec <gd32_uart_begin+0x1c0>)
+ 80090a4:	2340      	movs	r3, #64	; 0x40
+ 80090a6:	2203      	movs	r2, #3
+ 80090a8:	2118      	movs	r1, #24
+ 80090aa:	f7ff fbd9 	bl	8008860 <gpio_init>
+ 80090ae:	484f      	ldr	r0, [pc, #316]	; (80091ec <gd32_uart_begin+0x1c0>)
+ 80090b0:	2104      	movs	r1, #4
+ 80090b2:	2380      	movs	r3, #128	; 0x80
+ 80090b4:	2203      	movs	r2, #3
+ 80090b6:	f7ff fbd3 	bl	8008860 <gpio_init>
+ 80090ba:	2101      	movs	r1, #1
+ 80090bc:	2004      	movs	r0, #4
+ 80090be:	f7ff fc25 	bl	800890c <gpio_pin_remap_config>
+ 80090c2:	4620      	mov	r0, r4
+ 80090c4:	f7ff fed2 	bl	8008e6c <usart_deinit>
+ 80090c8:	68e3      	ldr	r3, [r4, #12]
+ 80090ca:	f423 5300 	bic.w	r3, r3, #8192	; 0x2000
+ 80090ce:	60e3      	str	r3, [r4, #12]
+ 80090d0:	4639      	mov	r1, r7
+ 80090d2:	4620      	mov	r0, r4
+ 80090d4:	f7ff ff0a 	bl	8008eec <usart_baudrate_set>
+ 80090d8:	f1a5 0309 	sub.w	r3, r5, #9
+ 80090dc:	4259      	negs	r1, r3
+ 80090de:	4159      	adcs	r1, r3
+ 80090e0:	0309      	lsls	r1, r1, #12
+ 80090e2:	4620      	mov	r0, r4
+ 80090e4:	f7ff ff32 	bl	8008f4c <usart_word_length_set>
+ 80090e8:	9906      	ldr	r1, [sp, #24]
+ 80090ea:	1e8a      	subs	r2, r1, #2
+ 80090ec:	4251      	negs	r1, r2
+ 80090ee:	4151      	adcs	r1, r2
+ 80090f0:	0349      	lsls	r1, r1, #13
+ 80090f2:	4620      	mov	r0, r4
+ 80090f4:	f7ff ff32 	bl	8008f5c <usart_stop_bit_set>
+ 80090f8:	2e01      	cmp	r6, #1
+ 80090fa:	d069      	beq.n	80091d0 <gd32_uart_begin+0x1a4>
+ 80090fc:	2e02      	cmp	r6, #2
+ 80090fe:	d16a      	bne.n	80091d6 <gd32_uart_begin+0x1aa>
+ 8009100:	f44f 6180 	mov.w	r1, #1024	; 0x400
+ 8009104:	4620      	mov	r0, r4
+ 8009106:	f7ff ff19 	bl	8008f3c <usart_parity_config>
+ 800910a:	2100      	movs	r1, #0
+ 800910c:	4620      	mov	r0, r4
+ 800910e:	f7ff ff41 	bl	8008f94 <usart_hardware_flow_rts_config>
+ 8009112:	2100      	movs	r1, #0
+ 8009114:	4620      	mov	r0, r4
+ 8009116:	f7ff ff47 	bl	8008fa8 <usart_hardware_flow_cts_config>
+ 800911a:	2104      	movs	r1, #4
+ 800911c:	4620      	mov	r0, r4
+ 800911e:	f7ff ff2f 	bl	8008f80 <usart_receive_config>
+ 8009122:	2108      	movs	r1, #8
+ 8009124:	4620      	mov	r0, r4
+ 8009126:	f7ff ff21 	bl	8008f6c <usart_transmit_config>
+ 800912a:	68e3      	ldr	r3, [r4, #12]
+ 800912c:	f443 5300 	orr.w	r3, r3, #8192	; 0x2000
+ 8009130:	60e3      	str	r3, [r4, #12]
+ 8009132:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+ 8009134:	f240 7011 	movw	r0, #1809	; 0x711
+ 8009138:	f7ff fc20 	bl	800897c <rcu_periph_clock_enable>
+ 800913c:	f240 6002 	movw	r0, #1538	; 0x602
+ 8009140:	f7ff fc1c 	bl	800897c <rcu_periph_clock_enable>
+ 8009144:	f44f 60c0 	mov.w	r0, #1536	; 0x600
+ 8009148:	f7ff fc18 	bl	800897c <rcu_periph_clock_enable>
+ 800914c:	4828      	ldr	r0, [pc, #160]	; (80091f0 <gd32_uart_begin+0x1c4>)
+ 800914e:	2304      	movs	r3, #4
+ 8009150:	2203      	movs	r2, #3
+ 8009152:	2118      	movs	r1, #24
+ 8009154:	f7ff fb84 	bl	8008860 <gpio_init>
+ 8009158:	4825      	ldr	r0, [pc, #148]	; (80091f0 <gd32_uart_begin+0x1c4>)
+ 800915a:	2308      	movs	r3, #8
+ 800915c:	2203      	movs	r2, #3
+ 800915e:	2104      	movs	r1, #4
+ 8009160:	f7ff fb7e 	bl	8008860 <gpio_init>
+ 8009164:	e7ad      	b.n	80090c2 <gd32_uart_begin+0x96>
+ 8009166:	f240 7013 	movw	r0, #1811	; 0x713
+ 800916a:	f7ff fc07 	bl	800897c <rcu_periph_clock_enable>
+ 800916e:	f240 6004 	movw	r0, #1540	; 0x604
+ 8009172:	f7ff fc03 	bl	800897c <rcu_periph_clock_enable>
+ 8009176:	f44f 60c0 	mov.w	r0, #1536	; 0x600
+ 800917a:	f7ff fbff 	bl	800897c <rcu_periph_clock_enable>
+ 800917e:	4818      	ldr	r0, [pc, #96]	; (80091e0 <gd32_uart_begin+0x1b4>)
+ 8009180:	f44f 6380 	mov.w	r3, #1024	; 0x400
+ 8009184:	2203      	movs	r2, #3
+ 8009186:	2118      	movs	r1, #24
+ 8009188:	f7ff fb6a 	bl	8008860 <gpio_init>
+ 800918c:	4814      	ldr	r0, [pc, #80]	; (80091e0 <gd32_uart_begin+0x1b4>)
+ 800918e:	f44f 6300 	mov.w	r3, #2048	; 0x800
+ 8009192:	2203      	movs	r2, #3
+ 8009194:	2104      	movs	r1, #4
+ 8009196:	e7e3      	b.n	8009160 <gd32_uart_begin+0x134>
+ 8009198:	f240 7014 	movw	r0, #1812	; 0x714
+ 800919c:	f7ff fbee 	bl	800897c <rcu_periph_clock_enable>
+ 80091a0:	f240 6004 	movw	r0, #1540	; 0x604
+ 80091a4:	f7ff fbea 	bl	800897c <rcu_periph_clock_enable>
+ 80091a8:	f240 6005 	movw	r0, #1541	; 0x605
+ 80091ac:	f7ff fbe6 	bl	800897c <rcu_periph_clock_enable>
+ 80091b0:	f44f 60c0 	mov.w	r0, #1536	; 0x600
+ 80091b4:	f7ff fbe2 	bl	800897c <rcu_periph_clock_enable>
+ 80091b8:	4809      	ldr	r0, [pc, #36]	; (80091e0 <gd32_uart_begin+0x1b4>)
+ 80091ba:	f44f 5380 	mov.w	r3, #4096	; 0x1000
+ 80091be:	2203      	movs	r2, #3
+ 80091c0:	2118      	movs	r1, #24
+ 80091c2:	f7ff fb4d 	bl	8008860 <gpio_init>
+ 80091c6:	2304      	movs	r3, #4
+ 80091c8:	480a      	ldr	r0, [pc, #40]	; (80091f4 <gd32_uart_begin+0x1c8>)
+ 80091ca:	2203      	movs	r2, #3
+ 80091cc:	4619      	mov	r1, r3
+ 80091ce:	e7c7      	b.n	8009160 <gd32_uart_begin+0x134>
+ 80091d0:	f44f 61c0 	mov.w	r1, #1536	; 0x600
+ 80091d4:	e796      	b.n	8009104 <gd32_uart_begin+0xd8>
+ 80091d6:	2100      	movs	r1, #0
+ 80091d8:	e794      	b.n	8009104 <gd32_uart_begin+0xd8>
+ 80091da:	bf00      	nop
+ 80091dc:	40004c00 	andmi	r4, r0, r0, lsl #24
+ 80091e0:	40011000 	andmi	r1, r1, r0
+ 80091e4:	00140010 	andseq	r0, r4, r0, lsl r0
+ 80091e8:	40005000 	andmi	r5, r0, r0
+ 80091ec:	40010c00 	andmi	r0, r1, r0, lsl #24
+ 80091f0:	40010800 	andmi	r0, r1, r0, lsl #16
+ 80091f4:	40011400 	andmi	r1, r1, r0, lsl #8
 
-080090bc <gd32_adc_gettemp()>:
- 80090bc:	b508      	push	{r3, lr}
- 80090be:	4b14      	ldr	r3, [pc, #80]	; (8009110 <gd32_adc_gettemp()+0x54>)
- 80090c0:	ed9f 7a14 	vldr	s14, [pc, #80]	; 8009114 <gd32_adc_gettemp()+0x58>
- 80090c4:	eddf 6a14 	vldr	s13, [pc, #80]	; 8009118 <gd32_adc_gettemp()+0x5c>
- 80090c8:	4814      	ldr	r0, [pc, #80]	; (800911c <gd32_adc_gettemp()+0x60>)
- 80090ca:	f203 433c 	addw	r3, r3, #1084	; 0x43c
- 80090ce:	edd3 7a00 	vldr	s15, [r3]
- 80090d2:	eef8 7a67 	vcvt.f32.u32	s15, s15
- 80090d6:	ed2d 8b02 	vpush	{d8}
- 80090da:	ee27 7a67 	vnmul.f32	s14, s14, s15
- 80090de:	eddf 7a10 	vldr	s15, [pc, #64]	; 8009120 <gd32_adc_gettemp()+0x64>
- 80090e2:	eee7 7a26 	vfma.f32	s15, s14, s13
- 80090e6:	2102      	movs	r1, #2
- 80090e8:	ed9f 7a0e 	vldr	s14, [pc, #56]	; 8009124 <gd32_adc_gettemp()+0x68>
- 80090ec:	ee67 7a87 	vmul.f32	s15, s15, s14
- 80090f0:	ed9f 7a0d 	vldr	s14, [pc, #52]	; 8009128 <gd32_adc_gettemp()+0x6c>
- 80090f4:	ee87 8a87 	vdiv.f32	s16, s15, s14
- 80090f8:	eef3 7a09 	vmov.f32	s15, #57	; 0x41c80000  25.0
- 80090fc:	ee38 8a27 	vadd.f32	s16, s16, s15
- 8009100:	f000 fc93 	bl	8009a2a <adc_software_trigger_enable>
- 8009104:	eeb0 0a48 	vmov.f32	s0, s16
- 8009108:	ecbd 8b02 	vpop	{d8}
- 800910c:	bd08      	pop	{r3, pc}
- 800910e:	bf00      	nop
- 8009110:	40012000 	andmi	r2, r1, r0
- 8009114:	40533333 	subsmi	r3, r3, r3, lsr r3
- 8009118:	39800000 	stmibcc	r0, {}	; <UNPREDICTABLE>
- 800911c:	40012400 	andmi	r2, r1, r0, lsl #8
- 8009120:	3fb70a3d 	svccc	0x00b70a3d
- 8009124:	447a0000 	ldrbtmi	r0, [sl], #-0
- 8009128:	4089999a 	umullmi	r9, r9, sl, r9	; <UNPREDICTABLE>
-
-0800912c <_stop() [clone .isra.0]>:
- 800912c:	b508      	push	{r3, lr}
- 800912e:	4806      	ldr	r0, [pc, #24]	; (8009148 <_stop() [clone .isra.0]+0x1c>)
- 8009130:	f000 fd2a 	bl	8009b88 <i2c_stop_on_bus>
- 8009134:	4905      	ldr	r1, [pc, #20]	; (800914c <_stop() [clone .isra.0]+0x20>)
- 8009136:	f640 73ff 	movw	r3, #4095	; 0xfff
- 800913a:	f8d1 2400 	ldr.w	r2, [r1, #1024]	; 0x400
- 800913e:	0592      	lsls	r2, r2, #22
- 8009140:	d501      	bpl.n	8009146 <_stop() [clone .isra.0]+0x1a>
- 8009142:	3b01      	subs	r3, #1
- 8009144:	d1f9      	bne.n	800913a <_stop() [clone .isra.0]+0xe>
- 8009146:	bd08      	pop	{r3, pc}
- 8009148:	40005400 	andmi	r5, r0, r0, lsl #8
- 800914c:	40005000 	andmi	r5, r0, r0
-
-08009150 <gd32_i2c_begin>:
- 8009150:	b510      	push	{r4, lr}
- 8009152:	f240 7015 	movw	r0, #1813	; 0x715
- 8009156:	f7ff fc11 	bl	800897c <rcu_periph_clock_enable>
- 800915a:	4c16      	ldr	r4, [pc, #88]	; (80091b4 <gd32_i2c_begin+0x64>)
- 800915c:	f240 6003 	movw	r0, #1539	; 0x603
- 8009160:	f7ff fc0c 	bl	800897c <rcu_periph_clock_enable>
- 8009164:	f240 6003 	movw	r0, #1539	; 0x603
- 8009168:	f7ff fc08 	bl	800897c <rcu_periph_clock_enable>
- 800916c:	4620      	mov	r0, r4
- 800916e:	f44f 7380 	mov.w	r3, #256	; 0x100
- 8009172:	2203      	movs	r2, #3
- 8009174:	211c      	movs	r1, #28
- 8009176:	f7ff fb73 	bl	8008860 <gpio_init>
- 800917a:	f44f 7300 	mov.w	r3, #512	; 0x200
- 800917e:	2203      	movs	r2, #3
- 8009180:	4620      	mov	r0, r4
- 8009182:	211c      	movs	r1, #28
- 8009184:	f7ff fb6c 	bl	8008860 <gpio_init>
- 8009188:	f5a4 4438 	sub.w	r4, r4, #47104	; 0xb800
- 800918c:	2101      	movs	r1, #1
- 800918e:	2002      	movs	r0, #2
- 8009190:	f7ff fbbc 	bl	800890c <gpio_pin_remap_config>
- 8009194:	4908      	ldr	r1, [pc, #32]	; (80091b8 <gd32_i2c_begin+0x68>)
- 8009196:	4620      	mov	r0, r4
- 8009198:	2200      	movs	r2, #0
- 800919a:	f000 fc53 	bl	8009a44 <i2c_clock_config>
- 800919e:	4620      	mov	r0, r4
- 80091a0:	f000 fce8 	bl	8009b74 <i2c_enable>
- 80091a4:	4620      	mov	r0, r4
- 80091a6:	f44f 6180 	mov.w	r1, #1024	; 0x400
- 80091aa:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
- 80091ae:	f000 bccd 	b.w	8009b4c <i2c_ack_config>
- 80091b2:	bf00      	nop
- 80091b4:	40010c00 	andmi	r0, r1, r0, lsl #24
- 80091b8:	00061a80 	andeq	r1, r6, r0, lsl #21
-
-080091bc <gd32_i2c_set_baudrate>:
- 80091bc:	4601      	mov	r1, r0
- 80091be:	2200      	movs	r2, #0
- 80091c0:	4801      	ldr	r0, [pc, #4]	; (80091c8 <gd32_i2c_set_baudrate+0xc>)
- 80091c2:	f000 bc3f 	b.w	8009a44 <i2c_clock_config>
- 80091c6:	bf00      	nop
- 80091c8:	40005400 	andmi	r5, r0, r0, lsl #8
-
-080091cc <gd32_i2c_set_address>:
- 80091cc:	4b01      	ldr	r3, [pc, #4]	; (80091d4 <gd32_i2c_set_address+0x8>)
- 80091ce:	0040      	lsls	r0, r0, #1
- 80091d0:	7018      	strb	r0, [r3, #0]
- 80091d2:	4770      	bx	lr
- 80091d4:	20002790 	mulcs	r0, r0, r7
-
-080091d8 <gd32_i2c_write>:
- 80091d8:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 80091da:	4f30      	ldr	r7, [pc, #192]	; (800929c <gd32_i2c_write+0xc4>)
- 80091dc:	4604      	mov	r4, r0
- 80091de:	460d      	mov	r5, r1
- 80091e0:	f640 76ff 	movw	r6, #4095	; 0xfff
- 80091e4:	f240 6101 	movw	r1, #1537	; 0x601
- 80091e8:	4638      	mov	r0, r7
- 80091ea:	f000 fcd7 	bl	8009b9c <i2c_flag_get>
- 80091ee:	bb90      	cbnz	r0, 8009256 <gd32_i2c_write+0x7e>
- 80091f0:	482a      	ldr	r0, [pc, #168]	; (800929c <gd32_i2c_write+0xc4>)
- 80091f2:	4f2a      	ldr	r7, [pc, #168]	; (800929c <gd32_i2c_write+0xc4>)
- 80091f4:	f000 fcc3 	bl	8009b7e <i2c_start_on_bus>
- 80091f8:	f640 76ff 	movw	r6, #4095	; 0xfff
- 80091fc:	f44f 61a0 	mov.w	r1, #1280	; 0x500
- 8009200:	4638      	mov	r0, r7
- 8009202:	f000 fccb 	bl	8009b9c <i2c_flag_get>
- 8009206:	b370      	cbz	r0, 8009266 <gd32_i2c_write+0x8e>
- 8009208:	4b25      	ldr	r3, [pc, #148]	; (80092a0 <gd32_i2c_write+0xc8>)
- 800920a:	4824      	ldr	r0, [pc, #144]	; (800929c <gd32_i2c_write+0xc4>)
- 800920c:	7819      	ldrb	r1, [r3, #0]
- 800920e:	4f23      	ldr	r7, [pc, #140]	; (800929c <gd32_i2c_write+0xc4>)
- 8009210:	f06f 0201 	mvn.w	r2, #1
- 8009214:	f000 fca6 	bl	8009b64 <i2c_master_addressing>
- 8009218:	f640 76ff 	movw	r6, #4095	; 0xfff
- 800921c:	f240 5101 	movw	r1, #1281	; 0x501
- 8009220:	4638      	mov	r0, r7
- 8009222:	f000 fcbb 	bl	8009b9c <i2c_flag_get>
- 8009226:	b308      	cbz	r0, 800926c <gd32_i2c_write+0x94>
- 8009228:	481c      	ldr	r0, [pc, #112]	; (800929c <gd32_i2c_write+0xc4>)
- 800922a:	4f1c      	ldr	r7, [pc, #112]	; (800929c <gd32_i2c_write+0xc4>)
- 800922c:	f240 5101 	movw	r1, #1281	; 0x501
- 8009230:	f000 fcbc 	bl	8009bac <i2c_flag_clear>
- 8009234:	f640 76ff 	movw	r6, #4095	; 0xfff
- 8009238:	f240 5107 	movw	r1, #1287	; 0x507
- 800923c:	4638      	mov	r0, r7
- 800923e:	f000 fcad 	bl	8009b9c <i2c_flag_get>
- 8009242:	2801      	cmp	r0, #1
- 8009244:	d115      	bne.n	8009272 <gd32_i2c_write+0x9a>
- 8009246:	4f15      	ldr	r7, [pc, #84]	; (800929c <gd32_i2c_write+0xc4>)
- 8009248:	4425      	add	r5, r4
- 800924a:	42a5      	cmp	r5, r4
- 800924c:	d114      	bne.n	8009278 <gd32_i2c_write+0xa0>
- 800924e:	f7ff ff6d 	bl	800912c <_stop() [clone .isra.0]>
- 8009252:	2000      	movs	r0, #0
- 8009254:	e005      	b.n	8009262 <gd32_i2c_write+0x8a>
- 8009256:	3e01      	subs	r6, #1
- 8009258:	d1c4      	bne.n	80091e4 <gd32_i2c_write+0xc>
- 800925a:	f7ff ff67 	bl	800912c <_stop() [clone .isra.0]>
- 800925e:	f04f 30ff 	mov.w	r0, #4294967295	; 0xffffffff
- 8009262:	4240      	negs	r0, r0
- 8009264:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
- 8009266:	3e01      	subs	r6, #1
- 8009268:	d1c8      	bne.n	80091fc <gd32_i2c_write+0x24>
- 800926a:	e7f6      	b.n	800925a <gd32_i2c_write+0x82>
- 800926c:	3e01      	subs	r6, #1
- 800926e:	d1d5      	bne.n	800921c <gd32_i2c_write+0x44>
- 8009270:	e7f3      	b.n	800925a <gd32_i2c_write+0x82>
- 8009272:	3e01      	subs	r6, #1
- 8009274:	d1e0      	bne.n	8009238 <gd32_i2c_write+0x60>
- 8009276:	e7f0      	b.n	800925a <gd32_i2c_write+0x82>
- 8009278:	f814 1b01 	ldrb.w	r1, [r4], #1
- 800927c:	4638      	mov	r0, r7
- 800927e:	f000 fc88 	bl	8009b92 <i2c_data_transmit>
- 8009282:	f640 76ff 	movw	r6, #4095	; 0xfff
- 8009286:	f240 5102 	movw	r1, #1282	; 0x502
- 800928a:	4638      	mov	r0, r7
- 800928c:	f000 fc86 	bl	8009b9c <i2c_flag_get>
- 8009290:	2800      	cmp	r0, #0
- 8009292:	d1da      	bne.n	800924a <gd32_i2c_write+0x72>
- 8009294:	3e01      	subs	r6, #1
- 8009296:	d1f6      	bne.n	8009286 <gd32_i2c_write+0xae>
- 8009298:	e7df      	b.n	800925a <gd32_i2c_write+0x82>
- 800929a:	bf00      	nop
- 800929c:	40005400 	andmi	r5, r0, r0, lsl #8
- 80092a0:	20002790 	mulcs	r0, r0, r7
-
-080092a4 <gd32_i2c_read>:
- 80092a4:	e92d 43f8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
- 80092a8:	4f4e      	ldr	r7, [pc, #312]	; (80093e4 <gd32_i2c_read+0x140>)
- 80092aa:	4680      	mov	r8, r0
- 80092ac:	460c      	mov	r4, r1
- 80092ae:	f640 75ff 	movw	r5, #4095	; 0xfff
- 80092b2:	f240 6101 	movw	r1, #1537	; 0x601
- 80092b6:	4638      	mov	r0, r7
- 80092b8:	f000 fc70 	bl	8009b9c <i2c_flag_get>
- 80092bc:	4606      	mov	r6, r0
- 80092be:	bb10      	cbnz	r0, 8009306 <gd32_i2c_read+0x62>
- 80092c0:	2c02      	cmp	r4, #2
- 80092c2:	d104      	bne.n	80092ce <gd32_i2c_read+0x2a>
- 80092c4:	4847      	ldr	r0, [pc, #284]	; (80093e4 <gd32_i2c_read+0x140>)
- 80092c6:	f44f 6100 	mov.w	r1, #2048	; 0x800
- 80092ca:	f000 fc45 	bl	8009b58 <i2c_ackpos_config>
- 80092ce:	4845      	ldr	r0, [pc, #276]	; (80093e4 <gd32_i2c_read+0x140>)
- 80092d0:	4f44      	ldr	r7, [pc, #272]	; (80093e4 <gd32_i2c_read+0x140>)
- 80092d2:	f000 fc54 	bl	8009b7e <i2c_start_on_bus>
- 80092d6:	f640 75ff 	movw	r5, #4095	; 0xfff
- 80092da:	f44f 61a0 	mov.w	r1, #1280	; 0x500
- 80092de:	4638      	mov	r0, r7
- 80092e0:	f000 fc5c 	bl	8009b9c <i2c_flag_get>
- 80092e4:	b1b8      	cbz	r0, 8009316 <gd32_i2c_read+0x72>
- 80092e6:	4b40      	ldr	r3, [pc, #256]	; (80093e8 <gd32_i2c_read+0x144>)
- 80092e8:	483e      	ldr	r0, [pc, #248]	; (80093e4 <gd32_i2c_read+0x140>)
- 80092ea:	7819      	ldrb	r1, [r3, #0]
- 80092ec:	2201      	movs	r2, #1
- 80092ee:	f000 fc39 	bl	8009b64 <i2c_master_addressing>
- 80092f2:	2c02      	cmp	r4, #2
- 80092f4:	d803      	bhi.n	80092fe <gd32_i2c_read+0x5a>
- 80092f6:	483b      	ldr	r0, [pc, #236]	; (80093e4 <gd32_i2c_read+0x140>)
- 80092f8:	2100      	movs	r1, #0
- 80092fa:	f000 fc27 	bl	8009b4c <i2c_ack_config>
- 80092fe:	4f39      	ldr	r7, [pc, #228]	; (80093e4 <gd32_i2c_read+0x140>)
- 8009300:	f640 75ff 	movw	r5, #4095	; 0xfff
- 8009304:	e00c      	b.n	8009320 <gd32_i2c_read+0x7c>
- 8009306:	3d01      	subs	r5, #1
- 8009308:	d1d3      	bne.n	80092b2 <gd32_i2c_read+0xe>
- 800930a:	f7ff ff0f 	bl	800912c <_stop() [clone .isra.0]>
- 800930e:	2604      	movs	r6, #4
- 8009310:	4630      	mov	r0, r6
- 8009312:	e8bd 83f8 	ldmia.w	sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
- 8009316:	3d01      	subs	r5, #1
- 8009318:	d1df      	bne.n	80092da <gd32_i2c_read+0x36>
- 800931a:	e7f6      	b.n	800930a <gd32_i2c_read+0x66>
- 800931c:	3d01      	subs	r5, #1
- 800931e:	d0f4      	beq.n	800930a <gd32_i2c_read+0x66>
- 8009320:	f240 5101 	movw	r1, #1281	; 0x501
- 8009324:	4638      	mov	r0, r7
- 8009326:	f000 fc39 	bl	8009b9c <i2c_flag_get>
- 800932a:	2800      	cmp	r0, #0
- 800932c:	d0f6      	beq.n	800931c <gd32_i2c_read+0x78>
- 800932e:	482d      	ldr	r0, [pc, #180]	; (80093e4 <gd32_i2c_read+0x140>)
- 8009330:	f240 5101 	movw	r1, #1281	; 0x501
- 8009334:	f000 fc3a 	bl	8009bac <i2c_flag_clear>
- 8009338:	2c01      	cmp	r4, #1
- 800933a:	d102      	bne.n	8009342 <gd32_i2c_read+0x9e>
- 800933c:	4829      	ldr	r0, [pc, #164]	; (80093e4 <gd32_i2c_read+0x140>)
- 800933e:	f000 fc23 	bl	8009b88 <i2c_stop_on_bus>
- 8009342:	4d28      	ldr	r5, [pc, #160]	; (80093e4 <gd32_i2c_read+0x140>)
- 8009344:	f640 77ff 	movw	r7, #4095	; 0xfff
- 8009348:	e01b      	b.n	8009382 <gd32_i2c_read+0xde>
- 800934a:	f1b9 0901 	subs.w	r9, r9, #1
- 800934e:	d0dc      	beq.n	800930a <gd32_i2c_read+0x66>
- 8009350:	f240 5102 	movw	r1, #1282	; 0x502
- 8009354:	4628      	mov	r0, r5
- 8009356:	f000 fc21 	bl	8009b9c <i2c_flag_get>
- 800935a:	2800      	cmp	r0, #0
- 800935c:	d0f5      	beq.n	800934a <gd32_i2c_read+0xa6>
- 800935e:	2100      	movs	r1, #0
- 8009360:	4628      	mov	r0, r5
- 8009362:	f000 fbf3 	bl	8009b4c <i2c_ack_config>
- 8009366:	f240 5106 	movw	r1, #1286	; 0x506
- 800936a:	4628      	mov	r0, r5
- 800936c:	f000 fc16 	bl	8009b9c <i2c_flag_get>
- 8009370:	b368      	cbz	r0, 80093ce <gd32_i2c_read+0x12a>
- 8009372:	4628      	mov	r0, r5
- 8009374:	f000 fc0f 	bl	8009b96 <i2c_data_receive>
- 8009378:	f808 0b01 	strb.w	r0, [r8], #1
- 800937c:	3c01      	subs	r4, #1
- 800937e:	f640 77fe 	movw	r7, #4094	; 0xffe
- 8009382:	bb34      	cbnz	r4, 80093d2 <gd32_i2c_read+0x12e>
- 8009384:	4a19      	ldr	r2, [pc, #100]	; (80093ec <gd32_i2c_read+0x148>)
- 8009386:	f640 73ff 	movw	r3, #4095	; 0xfff
- 800938a:	f8d2 4400 	ldr.w	r4, [r2, #1024]	; 0x400
- 800938e:	f414 7400 	ands.w	r4, r4, #512	; 0x200
- 8009392:	d123      	bne.n	80093dc <gd32_i2c_read+0x138>
- 8009394:	4813      	ldr	r0, [pc, #76]	; (80093e4 <gd32_i2c_read+0x140>)
- 8009396:	f44f 6180 	mov.w	r1, #1024	; 0x400
- 800939a:	f000 fbd7 	bl	8009b4c <i2c_ack_config>
- 800939e:	4811      	ldr	r0, [pc, #68]	; (80093e4 <gd32_i2c_read+0x140>)
- 80093a0:	4621      	mov	r1, r4
- 80093a2:	f000 fbd9 	bl	8009b58 <i2c_ackpos_config>
- 80093a6:	e7b3      	b.n	8009310 <gd32_i2c_read+0x6c>
- 80093a8:	2c02      	cmp	r4, #2
- 80093aa:	d1dc      	bne.n	8009366 <gd32_i2c_read+0xc2>
- 80093ac:	f640 79ff 	movw	r9, #4095	; 0xfff
- 80093b0:	e002      	b.n	80093b8 <gd32_i2c_read+0x114>
- 80093b2:	f1b9 0901 	subs.w	r9, r9, #1
- 80093b6:	d0a8      	beq.n	800930a <gd32_i2c_read+0x66>
- 80093b8:	f240 5102 	movw	r1, #1282	; 0x502
- 80093bc:	4628      	mov	r0, r5
- 80093be:	f000 fbed 	bl	8009b9c <i2c_flag_get>
- 80093c2:	2800      	cmp	r0, #0
- 80093c4:	d0f5      	beq.n	80093b2 <gd32_i2c_read+0x10e>
- 80093c6:	4628      	mov	r0, r5
- 80093c8:	f000 fbde 	bl	8009b88 <i2c_stop_on_bus>
- 80093cc:	e7cb      	b.n	8009366 <gd32_i2c_read+0xc2>
- 80093ce:	3f01      	subs	r7, #1
- 80093d0:	d09b      	beq.n	800930a <gd32_i2c_read+0x66>
- 80093d2:	2c03      	cmp	r4, #3
- 80093d4:	d1e8      	bne.n	80093a8 <gd32_i2c_read+0x104>
- 80093d6:	f640 79ff 	movw	r9, #4095	; 0xfff
- 80093da:	e7b9      	b.n	8009350 <gd32_i2c_read+0xac>
- 80093dc:	3b01      	subs	r3, #1
- 80093de:	d1d4      	bne.n	800938a <gd32_i2c_read+0xe6>
- 80093e0:	e795      	b.n	800930e <gd32_i2c_read+0x6a>
- 80093e2:	bf00      	nop
- 80093e4:	40005400 	andmi	r5, r0, r0, lsl #8
- 80093e8:	20002790 	mulcs	r0, r0, r7
- 80093ec:	40005000 	andmi	r5, r0, r0
-
-080093f0 <gd32_spi_dma_begin()>:
- 80093f0:	b530      	push	{r4, r5, lr}
- 80093f2:	f240 6002 	movw	r0, #1538	; 0x602
- 80093f6:	b089      	sub	sp, #36	; 0x24
- 80093f8:	f7ff fac0 	bl	800897c <rcu_periph_clock_enable>
- 80093fc:	f240 6003 	movw	r0, #1539	; 0x603
- 8009400:	f7ff fabc 	bl	800897c <rcu_periph_clock_enable>
- 8009404:	f240 700f 	movw	r0, #1807	; 0x70f
- 8009408:	f7ff fab8 	bl	800897c <rcu_periph_clock_enable>
- 800940c:	f44f 60c0 	mov.w	r0, #1536	; 0x600
- 8009410:	f7ff fab4 	bl	800897c <rcu_periph_clock_enable>
- 8009414:	482a      	ldr	r0, [pc, #168]	; (80094c0 <gd32_spi_dma_begin()+0xd0>)
- 8009416:	4c2b      	ldr	r4, [pc, #172]	; (80094c4 <gd32_spi_dma_begin()+0xd4>)
- 8009418:	2338      	movs	r3, #56	; 0x38
- 800941a:	2203      	movs	r2, #3
- 800941c:	2118      	movs	r1, #24
- 800941e:	f7ff fa1f 	bl	8008860 <gpio_init>
- 8009422:	f44f 4300 	mov.w	r3, #32768	; 0x8000
- 8009426:	2203      	movs	r2, #3
- 8009428:	4827      	ldr	r0, [pc, #156]	; (80094c8 <gd32_spi_dma_begin()+0xd8>)
- 800942a:	2118      	movs	r1, #24
- 800942c:	f7ff fa18 	bl	8008860 <gpio_init>
- 8009430:	2101      	movs	r1, #1
- 8009432:	4826      	ldr	r0, [pc, #152]	; (80094cc <gd32_spi_dma_begin()+0xdc>)
- 8009434:	f7ff fa6a 	bl	800890c <gpio_pin_remap_config>
- 8009438:	4620      	mov	r0, r4
- 800943a:	f000 fc0f 	bl	8009c5c <i2s_disable>
- 800943e:	2300      	movs	r3, #0
- 8009440:	461a      	mov	r2, r3
- 8009442:	4620      	mov	r0, r4
- 8009444:	4922      	ldr	r1, [pc, #136]	; (80094d0 <gd32_spi_dma_begin()+0xe0>)
- 8009446:	f000 fbd2 	bl	8009bee <i2s_psc_config>
- 800944a:	2300      	movs	r3, #0
- 800944c:	2210      	movs	r2, #16
- 800944e:	f44f 7100 	mov.w	r1, #512	; 0x200
- 8009452:	4620      	mov	r0, r4
- 8009454:	f000 fbbc 	bl	8009bd0 <i2s_init>
- 8009458:	4620      	mov	r0, r4
- 800945a:	f000 fbfa 	bl	8009c52 <i2s_enable>
- 800945e:	f504 34e4 	add.w	r4, r4, #116736	; 0x1c800
- 8009462:	f240 5001 	movw	r0, #1281	; 0x501
- 8009466:	f7ff fa89 	bl	800897c <rcu_periph_clock_enable>
- 800946a:	2101      	movs	r1, #1
- 800946c:	4620      	mov	r0, r4
- 800946e:	f7ff f8a5 	bl	80085bc <dma_deinit>
- 8009472:	a801      	add	r0, sp, #4
- 8009474:	f7ff f8be 	bl	80085f4 <dma_struct_para_init>
- 8009478:	4916      	ldr	r1, [pc, #88]	; (80094d4 <gd32_spi_dma_begin()+0xe4>)
- 800947a:	f44f 6380 	mov.w	r3, #1024	; 0x400
- 800947e:	2501      	movs	r5, #1
- 8009480:	9304      	str	r3, [sp, #16]
- 8009482:	f44f 5200 	mov.w	r2, #8192	; 0x2000
- 8009486:	f44f 7380 	mov.w	r3, #256	; 0x100
- 800948a:	e9cd 1301 	strd	r1, r3, [sp, #4]
- 800948e:	9206      	str	r2, [sp, #24]
- 8009490:	4629      	mov	r1, r5
- 8009492:	aa01      	add	r2, sp, #4
- 8009494:	4620      	mov	r0, r4
- 8009496:	f8ad 301c 	strh.w	r3, [sp, #28]
- 800949a:	f88d 501e 	strb.w	r5, [sp, #30]
- 800949e:	f7ff f8b5 	bl	800860c <dma_init>
- 80094a2:	4629      	mov	r1, r5
- 80094a4:	4620      	mov	r0, r4
- 80094a6:	f7ff f8eb 	bl	8008680 <dma_circulation_disable>
- 80094aa:	4629      	mov	r1, r5
- 80094ac:	4620      	mov	r0, r4
- 80094ae:	f7ff f8f7 	bl	80086a0 <dma_memory_to_memory_disable>
- 80094b2:	4b09      	ldr	r3, [pc, #36]	; (80094d8 <gd32_spi_dma_begin()+0xe8>)
- 80094b4:	2200      	movs	r2, #0
- 80094b6:	f8c3 2420 	str.w	r2, [r3, #1056]	; 0x420
- 80094ba:	b009      	add	sp, #36	; 0x24
- 80094bc:	bd30      	pop	{r4, r5, pc}
- 80094be:	bf00      	nop
- 80094c0:	40010c00 	andmi	r0, r1, r0, lsl #24
- 80094c4:	40003c00 	andmi	r3, r0, r0, lsl #24
- 80094c8:	40010800 	andmi	r0, r1, r0, lsl #16
- 80094cc:	00300400 	eorseq	r0, r0, r0, lsl #8
- 80094d0:	00030d40 	andeq	r0, r3, r0, asr #26
- 80094d4:	40003c0c 	andmi	r3, r0, ip, lsl #24
- 80094d8:	40020000 	andmi	r0, r2, r0
-
-080094dc <gd32_spi_dma_set_speed_hz(unsigned long)>:
- 80094dc:	b538      	push	{r3, r4, r5, lr}
- 80094de:	4c08      	ldr	r4, [pc, #32]	; (8009500 <gd32_spi_dma_set_speed_hz(unsigned long)+0x24>)
- 80094e0:	4605      	mov	r5, r0
- 80094e2:	4620      	mov	r0, r4
- 80094e4:	f000 fbba 	bl	8009c5c <i2s_disable>
- 80094e8:	2300      	movs	r3, #0
- 80094ea:	4620      	mov	r0, r4
- 80094ec:	461a      	mov	r2, r3
- 80094ee:	0969      	lsrs	r1, r5, #5
- 80094f0:	f000 fb7d 	bl	8009bee <i2s_psc_config>
- 80094f4:	4620      	mov	r0, r4
- 80094f6:	e8bd 4038 	ldmia.w	sp!, {r3, r4, r5, lr}
- 80094fa:	f000 bbaa 	b.w	8009c52 <i2s_enable>
- 80094fe:	bf00      	nop
- 8009500:	40003c00 	andmi	r3, r0, r0, lsl #24
-
-08009504 <gd32_spi_dma_tx_prepare(unsigned long*)>:
- 8009504:	f44f 43c0 	mov.w	r3, #24576	; 0x6000
- 8009508:	6003      	str	r3, [r0, #0]
- 800950a:	4801      	ldr	r0, [pc, #4]	; (8009510 <gd32_spi_dma_tx_prepare(unsigned long*)+0xc>)
- 800950c:	4770      	bx	lr
- 800950e:	bf00      	nop
- 8009510:	20002794 	mulcs	r0, r4, r7
-
-08009514 <gd32_spi_dma_tx_start(unsigned char const*, unsigned long)>:
- 8009514:	4a0a      	ldr	r2, [pc, #40]	; (8009540 <gd32_spi_dma_tx_start(unsigned char const*, unsigned long)+0x2c>)
- 8009516:	f8d2 341c 	ldr.w	r3, [r2, #1052]	; 0x41c
- 800951a:	3101      	adds	r1, #1
- 800951c:	f023 0301 	bic.w	r3, r3, #1
- 8009520:	f8c2 341c 	str.w	r3, [r2, #1052]	; 0x41c
- 8009524:	f3c1 014f 	ubfx	r1, r1, #1, #16
- 8009528:	f043 0301 	orr.w	r3, r3, #1
- 800952c:	f8c2 0428 	str.w	r0, [r2, #1064]	; 0x428
- 8009530:	f8c2 1420 	str.w	r1, [r2, #1056]	; 0x420
- 8009534:	4803      	ldr	r0, [pc, #12]	; (8009544 <gd32_spi_dma_tx_start(unsigned char const*, unsigned long)+0x30>)
- 8009536:	f8c2 341c 	str.w	r3, [r2, #1052]	; 0x41c
- 800953a:	2100      	movs	r1, #0
- 800953c:	f000 bb93 	b.w	8009c66 <spi_dma_enable>
- 8009540:	40020000 	andmi	r0, r2, r0
- 8009544:	40003c00 	andmi	r3, r0, r0, lsl #24
-
-08009548 <gd32_spi_dma_tx_is_active()>:
- 8009548:	4b03      	ldr	r3, [pc, #12]	; (8009558 <gd32_spi_dma_tx_is_active()+0x10>)
- 800954a:	f8d3 0420 	ldr.w	r0, [r3, #1056]	; 0x420
- 800954e:	3800      	subs	r0, #0
- 8009550:	bf18      	it	ne
- 8009552:	2001      	movne	r0, #1
- 8009554:	4770      	bx	lr
- 8009556:	bf00      	nop
- 8009558:	40020000 	andmi	r0, r2, r0
-
-0800955c <gd32_uart_begin>:
- 800955c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 800955e:	461e      	mov	r6, r3
- 8009560:	4b6a      	ldr	r3, [pc, #424]	; (800970c <gd32_uart_begin+0x1b0>)
- 8009562:	4298      	cmp	r0, r3
- 8009564:	4604      	mov	r4, r0
- 8009566:	460f      	mov	r7, r1
- 8009568:	4615      	mov	r5, r2
- 800956a:	f000 8094 	beq.w	8009696 <gd32_uart_begin+0x13a>
- 800956e:	d820      	bhi.n	80095b2 <gd32_uart_begin+0x56>
- 8009570:	f5a3 6300 	sub.w	r3, r3, #2048	; 0x800
- 8009574:	4298      	cmp	r0, r3
- 8009576:	d075      	beq.n	8009664 <gd32_uart_begin+0x108>
- 8009578:	f240 7012 	movw	r0, #1810	; 0x712
- 800957c:	f7ff f9fe 	bl	800897c <rcu_periph_clock_enable>
- 8009580:	f240 6004 	movw	r0, #1540	; 0x604
- 8009584:	f7ff f9fa 	bl	800897c <rcu_periph_clock_enable>
- 8009588:	f44f 60c0 	mov.w	r0, #1536	; 0x600
- 800958c:	f7ff f9f6 	bl	800897c <rcu_periph_clock_enable>
- 8009590:	485f      	ldr	r0, [pc, #380]	; (8009710 <gd32_uart_begin+0x1b4>)
- 8009592:	f44f 6380 	mov.w	r3, #1024	; 0x400
- 8009596:	2203      	movs	r2, #3
- 8009598:	2118      	movs	r1, #24
- 800959a:	f7ff f961 	bl	8008860 <gpio_init>
- 800959e:	485c      	ldr	r0, [pc, #368]	; (8009710 <gd32_uart_begin+0x1b4>)
- 80095a0:	2104      	movs	r1, #4
- 80095a2:	f44f 6300 	mov.w	r3, #2048	; 0x800
- 80095a6:	2203      	movs	r2, #3
- 80095a8:	f7ff f95a 	bl	8008860 <gpio_init>
- 80095ac:	4859      	ldr	r0, [pc, #356]	; (8009714 <gd32_uart_begin+0x1b8>)
- 80095ae:	2101      	movs	r1, #1
- 80095b0:	e01d      	b.n	80095ee <gd32_uart_begin+0x92>
- 80095b2:	4b59      	ldr	r3, [pc, #356]	; (8009718 <gd32_uart_begin+0x1bc>)
- 80095b4:	4298      	cmp	r0, r3
- 80095b6:	f000 8087 	beq.w	80096c8 <gd32_uart_begin+0x16c>
- 80095ba:	f240 600e 	movw	r0, #1550	; 0x60e
- 80095be:	f7ff f9dd 	bl	800897c <rcu_periph_clock_enable>
- 80095c2:	f240 6003 	movw	r0, #1539	; 0x603
- 80095c6:	f7ff f9d9 	bl	800897c <rcu_periph_clock_enable>
- 80095ca:	f44f 60c0 	mov.w	r0, #1536	; 0x600
- 80095ce:	f7ff f9d5 	bl	800897c <rcu_periph_clock_enable>
- 80095d2:	4852      	ldr	r0, [pc, #328]	; (800971c <gd32_uart_begin+0x1c0>)
- 80095d4:	2340      	movs	r3, #64	; 0x40
- 80095d6:	2203      	movs	r2, #3
- 80095d8:	2118      	movs	r1, #24
- 80095da:	f7ff f941 	bl	8008860 <gpio_init>
- 80095de:	484f      	ldr	r0, [pc, #316]	; (800971c <gd32_uart_begin+0x1c0>)
- 80095e0:	2104      	movs	r1, #4
- 80095e2:	2380      	movs	r3, #128	; 0x80
- 80095e4:	2203      	movs	r2, #3
- 80095e6:	f7ff f93b 	bl	8008860 <gpio_init>
- 80095ea:	2101      	movs	r1, #1
- 80095ec:	2004      	movs	r0, #4
- 80095ee:	f7ff f98d 	bl	800890c <gpio_pin_remap_config>
- 80095f2:	4620      	mov	r0, r4
- 80095f4:	f7ff fc3a 	bl	8008e6c <usart_deinit>
- 80095f8:	68e3      	ldr	r3, [r4, #12]
- 80095fa:	f423 5300 	bic.w	r3, r3, #8192	; 0x2000
- 80095fe:	60e3      	str	r3, [r4, #12]
- 8009600:	4639      	mov	r1, r7
- 8009602:	4620      	mov	r0, r4
- 8009604:	f7ff fc72 	bl	8008eec <usart_baudrate_set>
- 8009608:	f1a5 0309 	sub.w	r3, r5, #9
- 800960c:	4259      	negs	r1, r3
- 800960e:	4159      	adcs	r1, r3
- 8009610:	0309      	lsls	r1, r1, #12
- 8009612:	4620      	mov	r0, r4
- 8009614:	f7ff fc9a 	bl	8008f4c <usart_word_length_set>
- 8009618:	9906      	ldr	r1, [sp, #24]
- 800961a:	1e8a      	subs	r2, r1, #2
- 800961c:	4251      	negs	r1, r2
- 800961e:	4151      	adcs	r1, r2
- 8009620:	0349      	lsls	r1, r1, #13
- 8009622:	4620      	mov	r0, r4
- 8009624:	f7ff fc9a 	bl	8008f5c <usart_stop_bit_set>
- 8009628:	2e01      	cmp	r6, #1
- 800962a:	d069      	beq.n	8009700 <gd32_uart_begin+0x1a4>
- 800962c:	2e02      	cmp	r6, #2
- 800962e:	d16a      	bne.n	8009706 <gd32_uart_begin+0x1aa>
- 8009630:	f44f 6180 	mov.w	r1, #1024	; 0x400
- 8009634:	4620      	mov	r0, r4
- 8009636:	f7ff fc81 	bl	8008f3c <usart_parity_config>
- 800963a:	2100      	movs	r1, #0
- 800963c:	4620      	mov	r0, r4
- 800963e:	f7ff fca9 	bl	8008f94 <usart_hardware_flow_rts_config>
- 8009642:	2100      	movs	r1, #0
- 8009644:	4620      	mov	r0, r4
- 8009646:	f7ff fcaf 	bl	8008fa8 <usart_hardware_flow_cts_config>
- 800964a:	2104      	movs	r1, #4
- 800964c:	4620      	mov	r0, r4
- 800964e:	f7ff fc97 	bl	8008f80 <usart_receive_config>
- 8009652:	2108      	movs	r1, #8
- 8009654:	4620      	mov	r0, r4
- 8009656:	f7ff fc89 	bl	8008f6c <usart_transmit_config>
- 800965a:	68e3      	ldr	r3, [r4, #12]
- 800965c:	f443 5300 	orr.w	r3, r3, #8192	; 0x2000
- 8009660:	60e3      	str	r3, [r4, #12]
- 8009662:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
- 8009664:	f240 7011 	movw	r0, #1809	; 0x711
- 8009668:	f7ff f988 	bl	800897c <rcu_periph_clock_enable>
- 800966c:	f240 6002 	movw	r0, #1538	; 0x602
- 8009670:	f7ff f984 	bl	800897c <rcu_periph_clock_enable>
- 8009674:	f44f 60c0 	mov.w	r0, #1536	; 0x600
- 8009678:	f7ff f980 	bl	800897c <rcu_periph_clock_enable>
- 800967c:	4828      	ldr	r0, [pc, #160]	; (8009720 <gd32_uart_begin+0x1c4>)
- 800967e:	2304      	movs	r3, #4
- 8009680:	2203      	movs	r2, #3
- 8009682:	2118      	movs	r1, #24
- 8009684:	f7ff f8ec 	bl	8008860 <gpio_init>
- 8009688:	4825      	ldr	r0, [pc, #148]	; (8009720 <gd32_uart_begin+0x1c4>)
- 800968a:	2308      	movs	r3, #8
- 800968c:	2203      	movs	r2, #3
- 800968e:	2104      	movs	r1, #4
- 8009690:	f7ff f8e6 	bl	8008860 <gpio_init>
- 8009694:	e7ad      	b.n	80095f2 <gd32_uart_begin+0x96>
- 8009696:	f240 7013 	movw	r0, #1811	; 0x713
- 800969a:	f7ff f96f 	bl	800897c <rcu_periph_clock_enable>
- 800969e:	f240 6004 	movw	r0, #1540	; 0x604
- 80096a2:	f7ff f96b 	bl	800897c <rcu_periph_clock_enable>
- 80096a6:	f44f 60c0 	mov.w	r0, #1536	; 0x600
- 80096aa:	f7ff f967 	bl	800897c <rcu_periph_clock_enable>
- 80096ae:	4818      	ldr	r0, [pc, #96]	; (8009710 <gd32_uart_begin+0x1b4>)
- 80096b0:	f44f 6380 	mov.w	r3, #1024	; 0x400
- 80096b4:	2203      	movs	r2, #3
- 80096b6:	2118      	movs	r1, #24
- 80096b8:	f7ff f8d2 	bl	8008860 <gpio_init>
- 80096bc:	4814      	ldr	r0, [pc, #80]	; (8009710 <gd32_uart_begin+0x1b4>)
- 80096be:	f44f 6300 	mov.w	r3, #2048	; 0x800
- 80096c2:	2203      	movs	r2, #3
- 80096c4:	2104      	movs	r1, #4
- 80096c6:	e7e3      	b.n	8009690 <gd32_uart_begin+0x134>
- 80096c8:	f240 7014 	movw	r0, #1812	; 0x714
- 80096cc:	f7ff f956 	bl	800897c <rcu_periph_clock_enable>
- 80096d0:	f240 6004 	movw	r0, #1540	; 0x604
- 80096d4:	f7ff f952 	bl	800897c <rcu_periph_clock_enable>
- 80096d8:	f240 6005 	movw	r0, #1541	; 0x605
- 80096dc:	f7ff f94e 	bl	800897c <rcu_periph_clock_enable>
- 80096e0:	f44f 60c0 	mov.w	r0, #1536	; 0x600
- 80096e4:	f7ff f94a 	bl	800897c <rcu_periph_clock_enable>
- 80096e8:	4809      	ldr	r0, [pc, #36]	; (8009710 <gd32_uart_begin+0x1b4>)
- 80096ea:	f44f 5380 	mov.w	r3, #4096	; 0x1000
- 80096ee:	2203      	movs	r2, #3
- 80096f0:	2118      	movs	r1, #24
- 80096f2:	f7ff f8b5 	bl	8008860 <gpio_init>
- 80096f6:	2304      	movs	r3, #4
- 80096f8:	480a      	ldr	r0, [pc, #40]	; (8009724 <gd32_uart_begin+0x1c8>)
- 80096fa:	2203      	movs	r2, #3
- 80096fc:	4619      	mov	r1, r3
- 80096fe:	e7c7      	b.n	8009690 <gd32_uart_begin+0x134>
- 8009700:	f44f 61c0 	mov.w	r1, #1536	; 0x600
- 8009704:	e796      	b.n	8009634 <gd32_uart_begin+0xd8>
- 8009706:	2100      	movs	r1, #0
- 8009708:	e794      	b.n	8009634 <gd32_uart_begin+0xd8>
- 800970a:	bf00      	nop
- 800970c:	40004c00 	andmi	r4, r0, r0, lsl #24
- 8009710:	40011000 	andmi	r1, r1, r0
- 8009714:	00140010 	andseq	r0, r4, r0, lsl r0
- 8009718:	40005000 	andmi	r5, r0, r0
- 800971c:	40010c00 	andmi	r0, r1, r0, lsl #24
- 8009720:	40010800 	andmi	r0, r1, r0, lsl #16
- 8009724:	40011400 	andmi	r1, r1, r0, lsl #8
-
-08009728 <uart0_puts>:
- 8009728:	b510      	push	{r4, lr}
- 800972a:	1e44      	subs	r4, r0, #1
- 800972c:	f814 3f01 	ldrb.w	r3, [r4, #1]!
- 8009730:	b903      	cbnz	r3, 8009734 <uart0_puts+0xc>
- 8009732:	bd10      	pop	{r4, pc}
- 8009734:	2b0a      	cmp	r3, #10
- 8009736:	d102      	bne.n	800973e <uart0_puts+0x16>
- 8009738:	200d      	movs	r0, #13
- 800973a:	f000 f879 	bl	8009830 <uart0_putc>
- 800973e:	7820      	ldrb	r0, [r4, #0]
- 8009740:	f000 f876 	bl	8009830 <uart0_putc>
- 8009744:	e7f2      	b.n	800972c <uart0_puts+0x4>
+080091f8 <uart0_puts>:
+ 80091f8:	b510      	push	{r4, lr}
+ 80091fa:	1e44      	subs	r4, r0, #1
+ 80091fc:	f814 3f01 	ldrb.w	r3, [r4, #1]!
+ 8009200:	b903      	cbnz	r3, 8009204 <uart0_puts+0xc>
+ 8009202:	bd10      	pop	{r4, pc}
+ 8009204:	2b0a      	cmp	r3, #10
+ 8009206:	d102      	bne.n	800920e <uart0_puts+0x16>
+ 8009208:	200d      	movs	r0, #13
+ 800920a:	f000 fb11 	bl	8009830 <uart0_putc>
+ 800920e:	7820      	ldrb	r0, [r4, #0]
+ 8009210:	f000 fb0e 	bl	8009830 <uart0_putc>
+ 8009214:	e7f2      	b.n	80091fc <uart0_puts+0x4>
 	...
 
-08009748 <mac_address_get(unsigned char*)>:
- 8009748:	4a07      	ldr	r2, [pc, #28]	; (8009768 <mac_address_get(unsigned char*)+0x20>)
- 800974a:	f8d2 37e8 	ldr.w	r3, [r2, #2024]	; 0x7e8
- 800974e:	f8d2 27ec 	ldr.w	r2, [r2, #2028]	; 0x7ec
- 8009752:	7042      	strb	r2, [r0, #1]
- 8009754:	0e1a      	lsrs	r2, r3, #24
- 8009756:	7082      	strb	r2, [r0, #2]
- 8009758:	0c1a      	lsrs	r2, r3, #16
- 800975a:	2102      	movs	r1, #2
- 800975c:	70c2      	strb	r2, [r0, #3]
- 800975e:	0a1a      	lsrs	r2, r3, #8
- 8009760:	7001      	strb	r1, [r0, #0]
- 8009762:	7102      	strb	r2, [r0, #4]
- 8009764:	7143      	strb	r3, [r0, #5]
- 8009766:	4770      	bx	lr
- 8009768:	1ffff000 	svcne	0x00fff000
+08009218 <mac_address_get(unsigned char*)>:
+ 8009218:	4a07      	ldr	r2, [pc, #28]	; (8009238 <mac_address_get(unsigned char*)+0x20>)
+ 800921a:	f8d2 37e8 	ldr.w	r3, [r2, #2024]	; 0x7e8
+ 800921e:	f8d2 27ec 	ldr.w	r2, [r2, #2028]	; 0x7ec
+ 8009222:	7042      	strb	r2, [r0, #1]
+ 8009224:	0e1a      	lsrs	r2, r3, #24
+ 8009226:	7082      	strb	r2, [r0, #2]
+ 8009228:	0c1a      	lsrs	r2, r3, #16
+ 800922a:	2102      	movs	r1, #2
+ 800922c:	70c2      	strb	r2, [r0, #3]
+ 800922e:	0a1a      	lsrs	r2, r3, #8
+ 8009230:	7001      	strb	r1, [r0, #0]
+ 8009232:	7102      	strb	r2, [r0, #4]
+ 8009234:	7143      	strb	r3, [r0, #5]
+ 8009236:	4770      	bx	lr
+ 8009238:	1ffff000 	svcne	0x00fff000
 
-0800976c <systick_config>:
- 800976c:	4b0c      	ldr	r3, [pc, #48]	; (80097a0 <systick_config+0x34>)
- 800976e:	f44f 727a 	mov.w	r2, #1000	; 0x3e8
- 8009772:	681b      	ldr	r3, [r3, #0]
- 8009774:	fbb3 f3f2 	udiv	r3, r3, r2
- 8009778:	3b01      	subs	r3, #1
- 800977a:	f1b3 7f80 	cmp.w	r3, #16777216	; 0x1000000
- 800977e:	d20d      	bcs.n	800979c <systick_config+0x30>
- 8009780:	f04f 22e0 	mov.w	r2, #3758153728	; 0xe000e000
- 8009784:	21f0      	movs	r1, #240	; 0xf0
- 8009786:	6153      	str	r3, [r2, #20]
- 8009788:	4b06      	ldr	r3, [pc, #24]	; (80097a4 <systick_config+0x38>)
- 800978a:	2007      	movs	r0, #7
- 800978c:	f883 1023 	strb.w	r1, [r3, #35]	; 0x23
- 8009790:	2100      	movs	r1, #0
- 8009792:	6191      	str	r1, [r2, #24]
- 8009794:	6110      	str	r0, [r2, #16]
- 8009796:	f883 1023 	strb.w	r1, [r3, #35]	; 0x23
- 800979a:	4770      	bx	lr
- 800979c:	e7fe      	b.n	800979c <systick_config+0x30>
- 800979e:	bf00      	nop
- 80097a0:	2000106c 	andcs	r1, r0, ip, rrx
- 80097a4:	e000ed00 	and	lr, r0, r0, lsl #26
+0800923c <systick_config>:
+ 800923c:	4b0c      	ldr	r3, [pc, #48]	; (8009270 <systick_config+0x34>)
+ 800923e:	f44f 727a 	mov.w	r2, #1000	; 0x3e8
+ 8009242:	681b      	ldr	r3, [r3, #0]
+ 8009244:	fbb3 f3f2 	udiv	r3, r3, r2
+ 8009248:	3b01      	subs	r3, #1
+ 800924a:	f1b3 7f80 	cmp.w	r3, #16777216	; 0x1000000
+ 800924e:	d20d      	bcs.n	800926c <systick_config+0x30>
+ 8009250:	f04f 22e0 	mov.w	r2, #3758153728	; 0xe000e000
+ 8009254:	21f0      	movs	r1, #240	; 0xf0
+ 8009256:	6153      	str	r3, [r2, #20]
+ 8009258:	4b06      	ldr	r3, [pc, #24]	; (8009274 <systick_config+0x38>)
+ 800925a:	2007      	movs	r0, #7
+ 800925c:	f883 1023 	strb.w	r1, [r3, #35]	; 0x23
+ 8009260:	2100      	movs	r1, #0
+ 8009262:	6191      	str	r1, [r2, #24]
+ 8009264:	6110      	str	r0, [r2, #16]
+ 8009266:	f883 1023 	strb.w	r1, [r3, #35]	; 0x23
+ 800926a:	4770      	bx	lr
+ 800926c:	e7fe      	b.n	800926c <systick_config+0x30>
+ 800926e:	bf00      	nop
+ 8009270:	2000106c 	andcs	r1, r0, ip, rrx
+ 8009274:	e000ed00 	and	lr, r0, r0, lsl #26
 
-080097a8 <SysTick_Handler>:
- 80097a8:	4a02      	ldr	r2, [pc, #8]	; (80097b4 <SysTick_Handler+0xc>)
- 80097aa:	6813      	ldr	r3, [r2, #0]
- 80097ac:	3301      	adds	r3, #1
- 80097ae:	6013      	str	r3, [r2, #0]
- 80097b0:	4770      	bx	lr
+08009278 <SysTick_Handler>:
+ 8009278:	4a02      	ldr	r2, [pc, #8]	; (8009284 <SysTick_Handler+0xc>)
+ 800927a:	6813      	ldr	r3, [r2, #0]
+ 800927c:	3301      	adds	r3, #1
+ 800927e:	6013      	str	r3, [r2, #0]
+ 8009280:	4770      	bx	lr
+ 8009282:	bf00      	nop
+ 8009284:	20002790 	mulcs	r0, r0, r7
+
+08009288 <udelay_init()>:
+ 8009288:	4a07      	ldr	r2, [pc, #28]	; (80092a8 <udelay_init()+0x20>)
+ 800928a:	f8d2 30fc 	ldr.w	r3, [r2, #252]	; 0xfc
+ 800928e:	f043 7380 	orr.w	r3, r3, #16777216	; 0x1000000
+ 8009292:	f8c2 30fc 	str.w	r3, [r2, #252]	; 0xfc
+ 8009296:	4b05      	ldr	r3, [pc, #20]	; (80092ac <udelay_init()+0x24>)
+ 8009298:	2200      	movs	r2, #0
+ 800929a:	605a      	str	r2, [r3, #4]
+ 800929c:	681a      	ldr	r2, [r3, #0]
+ 800929e:	f042 0201 	orr.w	r2, r2, #1
+ 80092a2:	601a      	str	r2, [r3, #0]
+ 80092a4:	4770      	bx	lr
+ 80092a6:	bf00      	nop
+ 80092a8:	e000ed00 	and	lr, r0, r0, lsl #26
+ 80092ac:	e0001000 	and	r1, r0, r0
+
+080092b0 <udelay(unsigned long, unsigned long)>:
+ 80092b0:	2378      	movs	r3, #120	; 0x78
+ 80092b2:	b530      	push	{r4, r5, lr}
+ 80092b4:	4358      	muls	r0, r3
+ 80092b6:	b909      	cbnz	r1, 80092bc <udelay(unsigned long, unsigned long)+0xc>
+ 80092b8:	4b08      	ldr	r3, [pc, #32]	; (80092dc <udelay(unsigned long, unsigned long)+0x2c>)
+ 80092ba:	6859      	ldr	r1, [r3, #4]
+ 80092bc:	4c07      	ldr	r4, [pc, #28]	; (80092dc <udelay(unsigned long, unsigned long)+0x2c>)
+ 80092be:	2300      	movs	r3, #0
+ 80092c0:	6862      	ldr	r2, [r4, #4]
+ 80092c2:	4291      	cmp	r1, r2
+ 80092c4:	d0fc      	beq.n	80092c0 <udelay(unsigned long, unsigned long)+0x10>
+ 80092c6:	bf2a      	itet	cs
+ 80092c8:	f102 35ff 	addcs.w	r5, r2, #4294967295	; 0xffffffff
+ 80092cc:	189b      	addcc	r3, r3, r2
+ 80092ce:	195b      	addcs	r3, r3, r5
+ 80092d0:	1a5b      	subs	r3, r3, r1
+ 80092d2:	4283      	cmp	r3, r0
+ 80092d4:	d300      	bcc.n	80092d8 <udelay(unsigned long, unsigned long)+0x28>
+ 80092d6:	bd30      	pop	{r4, r5, pc}
+ 80092d8:	4611      	mov	r1, r2
+ 80092da:	e7f1      	b.n	80092c0 <udelay(unsigned long, unsigned long)+0x10>
+ 80092dc:	e0001000 	and	r1, r0, r0
+
+080092e0 <gd32_adc_init()>:
+ 80092e0:	b510      	push	{r4, lr}
+ 80092e2:	f240 6009 	movw	r0, #1545	; 0x609
+ 80092e6:	4c21      	ldr	r4, [pc, #132]	; (800936c <gd32_adc_init()+0x8c>)
+ 80092e8:	f7ff fb48 	bl	800897c <rcu_periph_clock_enable>
+ 80092ec:	2005      	movs	r0, #5
+ 80092ee:	f7ff fb65 	bl	80089bc <rcu_adc_clock_config>
+ 80092f2:	4620      	mov	r0, r4
+ 80092f4:	2201      	movs	r2, #1
+ 80092f6:	f44f 7180 	mov.w	r1, #256	; 0x100
+ 80092fa:	f000 faed 	bl	80098d8 <adc_special_function_config>
+ 80092fe:	f44f 42e0 	mov.w	r2, #28672	; 0x7000
+ 8009302:	4620      	mov	r0, r4
+ 8009304:	2102      	movs	r1, #2
+ 8009306:	f000 fb7f 	bl	8009a08 <adc_external_trigger_source_config>
+ 800930a:	2100      	movs	r1, #0
+ 800930c:	4620      	mov	r0, r4
+ 800930e:	f000 fb0b 	bl	8009928 <adc_data_alignment_config>
+ 8009312:	2000      	movs	r0, #0
+ 8009314:	f000 fad0 	bl	80098b8 <adc_mode_config>
+ 8009318:	2202      	movs	r2, #2
+ 800931a:	4611      	mov	r1, r2
+ 800931c:	4620      	mov	r0, r4
+ 800931e:	f000 fb0c 	bl	800993a <adc_channel_length_config>
+ 8009322:	4620      	mov	r0, r4
+ 8009324:	2307      	movs	r3, #7
+ 8009326:	2210      	movs	r2, #16
+ 8009328:	2100      	movs	r1, #0
+ 800932a:	f000 fb23 	bl	8009974 <adc_inserted_channel_config>
+ 800932e:	2307      	movs	r3, #7
+ 8009330:	4620      	mov	r0, r4
+ 8009332:	2211      	movs	r2, #17
+ 8009334:	2101      	movs	r1, #1
+ 8009336:	f000 fb1d 	bl	8009974 <adc_inserted_channel_config>
+ 800933a:	2201      	movs	r2, #1
+ 800933c:	2102      	movs	r1, #2
+ 800933e:	4620      	mov	r0, r4
+ 8009340:	f000 fb47 	bl	80099d2 <adc_external_trigger_config>
+ 8009344:	f000 faae 	bl	80098a4 <adc_tempsensor_vrefint_enable>
+ 8009348:	4620      	mov	r0, r4
+ 800934a:	f000 fa91 	bl	8009870 <adc_enable>
+ 800934e:	2100      	movs	r1, #0
+ 8009350:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
+ 8009354:	f7ff ffac 	bl	80092b0 <udelay(unsigned long, unsigned long)>
+ 8009358:	4620      	mov	r0, r4
+ 800935a:	f000 fa91 	bl	8009880 <adc_calibration_enable>
+ 800935e:	4620      	mov	r0, r4
+ 8009360:	2102      	movs	r1, #2
+ 8009362:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
+ 8009366:	f000 bb60 	b.w	8009a2a <adc_software_trigger_enable>
+ 800936a:	bf00      	nop
+ 800936c:	40012400 	andmi	r2, r1, r0, lsl #8
+
+08009370 <gd32_adc_gettemp()>:
+ 8009370:	b508      	push	{r3, lr}
+ 8009372:	4b14      	ldr	r3, [pc, #80]	; (80093c4 <gd32_adc_gettemp()+0x54>)
+ 8009374:	ed9f 7a14 	vldr	s14, [pc, #80]	; 80093c8 <gd32_adc_gettemp()+0x58>
+ 8009378:	eddf 6a14 	vldr	s13, [pc, #80]	; 80093cc <gd32_adc_gettemp()+0x5c>
+ 800937c:	4814      	ldr	r0, [pc, #80]	; (80093d0 <gd32_adc_gettemp()+0x60>)
+ 800937e:	f203 433c 	addw	r3, r3, #1084	; 0x43c
+ 8009382:	edd3 7a00 	vldr	s15, [r3]
+ 8009386:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 800938a:	ed2d 8b02 	vpush	{d8}
+ 800938e:	ee27 7a67 	vnmul.f32	s14, s14, s15
+ 8009392:	eddf 7a10 	vldr	s15, [pc, #64]	; 80093d4 <gd32_adc_gettemp()+0x64>
+ 8009396:	eee7 7a26 	vfma.f32	s15, s14, s13
+ 800939a:	2102      	movs	r1, #2
+ 800939c:	ed9f 7a0e 	vldr	s14, [pc, #56]	; 80093d8 <gd32_adc_gettemp()+0x68>
+ 80093a0:	ee67 7a87 	vmul.f32	s15, s15, s14
+ 80093a4:	ed9f 7a0d 	vldr	s14, [pc, #52]	; 80093dc <gd32_adc_gettemp()+0x6c>
+ 80093a8:	ee87 8a87 	vdiv.f32	s16, s15, s14
+ 80093ac:	eef3 7a09 	vmov.f32	s15, #57	; 0x41c80000  25.0
+ 80093b0:	ee38 8a27 	vadd.f32	s16, s16, s15
+ 80093b4:	f000 fb39 	bl	8009a2a <adc_software_trigger_enable>
+ 80093b8:	eeb0 0a48 	vmov.f32	s0, s16
+ 80093bc:	ecbd 8b02 	vpop	{d8}
+ 80093c0:	bd08      	pop	{r3, pc}
+ 80093c2:	bf00      	nop
+ 80093c4:	40012000 	andmi	r2, r1, r0
+ 80093c8:	40533333 	subsmi	r3, r3, r3, lsr r3
+ 80093cc:	39800000 	stmibcc	r0, {}	; <UNPREDICTABLE>
+ 80093d0:	40012400 	andmi	r2, r1, r0, lsl #8
+ 80093d4:	3fb70a3d 	svccc	0x00b70a3d
+ 80093d8:	447a0000 	ldrbtmi	r0, [sl], #-0
+ 80093dc:	4089999a 	umullmi	r9, r9, sl, r9	; <UNPREDICTABLE>
+
+080093e0 <send_stop() [clone .isra.0]>:
+ 80093e0:	b508      	push	{r3, lr}
+ 80093e2:	4806      	ldr	r0, [pc, #24]	; (80093fc <send_stop() [clone .isra.0]+0x1c>)
+ 80093e4:	f000 fbd0 	bl	8009b88 <i2c_stop_on_bus>
+ 80093e8:	4905      	ldr	r1, [pc, #20]	; (8009400 <send_stop() [clone .isra.0]+0x20>)
+ 80093ea:	f640 73ff 	movw	r3, #4095	; 0xfff
+ 80093ee:	f8d1 2400 	ldr.w	r2, [r1, #1024]	; 0x400
+ 80093f2:	0592      	lsls	r2, r2, #22
+ 80093f4:	d501      	bpl.n	80093fa <send_stop() [clone .isra.0]+0x1a>
+ 80093f6:	3b01      	subs	r3, #1
+ 80093f8:	d1f9      	bne.n	80093ee <send_stop() [clone .isra.0]+0xe>
+ 80093fa:	bd08      	pop	{r3, pc}
+ 80093fc:	40005400 	andmi	r5, r0, r0, lsl #8
+ 8009400:	40005000 	andmi	r5, r0, r0
+
+08009404 <gd32_i2c_begin>:
+ 8009404:	b510      	push	{r4, lr}
+ 8009406:	f240 7015 	movw	r0, #1813	; 0x715
+ 800940a:	f7ff fab7 	bl	800897c <rcu_periph_clock_enable>
+ 800940e:	4c16      	ldr	r4, [pc, #88]	; (8009468 <gd32_i2c_begin+0x64>)
+ 8009410:	f240 6003 	movw	r0, #1539	; 0x603
+ 8009414:	f7ff fab2 	bl	800897c <rcu_periph_clock_enable>
+ 8009418:	f240 6003 	movw	r0, #1539	; 0x603
+ 800941c:	f7ff faae 	bl	800897c <rcu_periph_clock_enable>
+ 8009420:	4620      	mov	r0, r4
+ 8009422:	f44f 7380 	mov.w	r3, #256	; 0x100
+ 8009426:	2203      	movs	r2, #3
+ 8009428:	211c      	movs	r1, #28
+ 800942a:	f7ff fa19 	bl	8008860 <gpio_init>
+ 800942e:	f44f 7300 	mov.w	r3, #512	; 0x200
+ 8009432:	2203      	movs	r2, #3
+ 8009434:	4620      	mov	r0, r4
+ 8009436:	211c      	movs	r1, #28
+ 8009438:	f7ff fa12 	bl	8008860 <gpio_init>
+ 800943c:	f5a4 4438 	sub.w	r4, r4, #47104	; 0xb800
+ 8009440:	2101      	movs	r1, #1
+ 8009442:	2002      	movs	r0, #2
+ 8009444:	f7ff fa62 	bl	800890c <gpio_pin_remap_config>
+ 8009448:	4908      	ldr	r1, [pc, #32]	; (800946c <gd32_i2c_begin+0x68>)
+ 800944a:	4620      	mov	r0, r4
+ 800944c:	2200      	movs	r2, #0
+ 800944e:	f000 faf9 	bl	8009a44 <i2c_clock_config>
+ 8009452:	4620      	mov	r0, r4
+ 8009454:	f000 fb8e 	bl	8009b74 <i2c_enable>
+ 8009458:	4620      	mov	r0, r4
+ 800945a:	f44f 6180 	mov.w	r1, #1024	; 0x400
+ 800945e:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
+ 8009462:	f000 bb73 	b.w	8009b4c <i2c_ack_config>
+ 8009466:	bf00      	nop
+ 8009468:	40010c00 	andmi	r0, r1, r0, lsl #24
+ 800946c:	00061a80 	andeq	r1, r6, r0, lsl #21
+
+08009470 <gd32_i2c_set_baudrate>:
+ 8009470:	4601      	mov	r1, r0
+ 8009472:	2200      	movs	r2, #0
+ 8009474:	4801      	ldr	r0, [pc, #4]	; (800947c <gd32_i2c_set_baudrate+0xc>)
+ 8009476:	f000 bae5 	b.w	8009a44 <i2c_clock_config>
+ 800947a:	bf00      	nop
+ 800947c:	40005400 	andmi	r5, r0, r0, lsl #8
+
+08009480 <gd32_i2c_set_address>:
+ 8009480:	4b01      	ldr	r3, [pc, #4]	; (8009488 <gd32_i2c_set_address+0x8>)
+ 8009482:	0040      	lsls	r0, r0, #1
+ 8009484:	7018      	strb	r0, [r3, #0]
+ 8009486:	4770      	bx	lr
+ 8009488:	20002794 	mulcs	r0, r4, r7
+
+0800948c <gd32_i2c_write>:
+ 800948c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 800948e:	4f30      	ldr	r7, [pc, #192]	; (8009550 <gd32_i2c_write+0xc4>)
+ 8009490:	4604      	mov	r4, r0
+ 8009492:	460d      	mov	r5, r1
+ 8009494:	f640 76ff 	movw	r6, #4095	; 0xfff
+ 8009498:	f240 6101 	movw	r1, #1537	; 0x601
+ 800949c:	4638      	mov	r0, r7
+ 800949e:	f000 fb7d 	bl	8009b9c <i2c_flag_get>
+ 80094a2:	bb90      	cbnz	r0, 800950a <gd32_i2c_write+0x7e>
+ 80094a4:	482a      	ldr	r0, [pc, #168]	; (8009550 <gd32_i2c_write+0xc4>)
+ 80094a6:	4f2a      	ldr	r7, [pc, #168]	; (8009550 <gd32_i2c_write+0xc4>)
+ 80094a8:	f000 fb69 	bl	8009b7e <i2c_start_on_bus>
+ 80094ac:	f640 76ff 	movw	r6, #4095	; 0xfff
+ 80094b0:	f44f 61a0 	mov.w	r1, #1280	; 0x500
+ 80094b4:	4638      	mov	r0, r7
+ 80094b6:	f000 fb71 	bl	8009b9c <i2c_flag_get>
+ 80094ba:	b370      	cbz	r0, 800951a <gd32_i2c_write+0x8e>
+ 80094bc:	4b25      	ldr	r3, [pc, #148]	; (8009554 <gd32_i2c_write+0xc8>)
+ 80094be:	4824      	ldr	r0, [pc, #144]	; (8009550 <gd32_i2c_write+0xc4>)
+ 80094c0:	7819      	ldrb	r1, [r3, #0]
+ 80094c2:	4f23      	ldr	r7, [pc, #140]	; (8009550 <gd32_i2c_write+0xc4>)
+ 80094c4:	f06f 0201 	mvn.w	r2, #1
+ 80094c8:	f000 fb4c 	bl	8009b64 <i2c_master_addressing>
+ 80094cc:	f640 76ff 	movw	r6, #4095	; 0xfff
+ 80094d0:	f240 5101 	movw	r1, #1281	; 0x501
+ 80094d4:	4638      	mov	r0, r7
+ 80094d6:	f000 fb61 	bl	8009b9c <i2c_flag_get>
+ 80094da:	b308      	cbz	r0, 8009520 <gd32_i2c_write+0x94>
+ 80094dc:	481c      	ldr	r0, [pc, #112]	; (8009550 <gd32_i2c_write+0xc4>)
+ 80094de:	4f1c      	ldr	r7, [pc, #112]	; (8009550 <gd32_i2c_write+0xc4>)
+ 80094e0:	f240 5101 	movw	r1, #1281	; 0x501
+ 80094e4:	f000 fb62 	bl	8009bac <i2c_flag_clear>
+ 80094e8:	f640 76ff 	movw	r6, #4095	; 0xfff
+ 80094ec:	f240 5107 	movw	r1, #1287	; 0x507
+ 80094f0:	4638      	mov	r0, r7
+ 80094f2:	f000 fb53 	bl	8009b9c <i2c_flag_get>
+ 80094f6:	2801      	cmp	r0, #1
+ 80094f8:	d115      	bne.n	8009526 <gd32_i2c_write+0x9a>
+ 80094fa:	4f15      	ldr	r7, [pc, #84]	; (8009550 <gd32_i2c_write+0xc4>)
+ 80094fc:	4425      	add	r5, r4
+ 80094fe:	42a5      	cmp	r5, r4
+ 8009500:	d114      	bne.n	800952c <gd32_i2c_write+0xa0>
+ 8009502:	f7ff ff6d 	bl	80093e0 <send_stop() [clone .isra.0]>
+ 8009506:	2000      	movs	r0, #0
+ 8009508:	e005      	b.n	8009516 <gd32_i2c_write+0x8a>
+ 800950a:	3e01      	subs	r6, #1
+ 800950c:	d1c4      	bne.n	8009498 <gd32_i2c_write+0xc>
+ 800950e:	f7ff ff67 	bl	80093e0 <send_stop() [clone .isra.0]>
+ 8009512:	f04f 30ff 	mov.w	r0, #4294967295	; 0xffffffff
+ 8009516:	4240      	negs	r0, r0
+ 8009518:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+ 800951a:	3e01      	subs	r6, #1
+ 800951c:	d1c8      	bne.n	80094b0 <gd32_i2c_write+0x24>
+ 800951e:	e7f6      	b.n	800950e <gd32_i2c_write+0x82>
+ 8009520:	3e01      	subs	r6, #1
+ 8009522:	d1d5      	bne.n	80094d0 <gd32_i2c_write+0x44>
+ 8009524:	e7f3      	b.n	800950e <gd32_i2c_write+0x82>
+ 8009526:	3e01      	subs	r6, #1
+ 8009528:	d1e0      	bne.n	80094ec <gd32_i2c_write+0x60>
+ 800952a:	e7f0      	b.n	800950e <gd32_i2c_write+0x82>
+ 800952c:	f814 1b01 	ldrb.w	r1, [r4], #1
+ 8009530:	4638      	mov	r0, r7
+ 8009532:	f000 fb2e 	bl	8009b92 <i2c_data_transmit>
+ 8009536:	f640 76ff 	movw	r6, #4095	; 0xfff
+ 800953a:	f240 5102 	movw	r1, #1282	; 0x502
+ 800953e:	4638      	mov	r0, r7
+ 8009540:	f000 fb2c 	bl	8009b9c <i2c_flag_get>
+ 8009544:	2800      	cmp	r0, #0
+ 8009546:	d1da      	bne.n	80094fe <gd32_i2c_write+0x72>
+ 8009548:	3e01      	subs	r6, #1
+ 800954a:	d1f6      	bne.n	800953a <gd32_i2c_write+0xae>
+ 800954c:	e7df      	b.n	800950e <gd32_i2c_write+0x82>
+ 800954e:	bf00      	nop
+ 8009550:	40005400 	andmi	r5, r0, r0, lsl #8
+ 8009554:	20002794 	mulcs	r0, r4, r7
+
+08009558 <gd32_i2c_read>:
+ 8009558:	e92d 43f8 	stmdb	sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
+ 800955c:	4f4e      	ldr	r7, [pc, #312]	; (8009698 <gd32_i2c_read+0x140>)
+ 800955e:	4680      	mov	r8, r0
+ 8009560:	460c      	mov	r4, r1
+ 8009562:	f640 75ff 	movw	r5, #4095	; 0xfff
+ 8009566:	f240 6101 	movw	r1, #1537	; 0x601
+ 800956a:	4638      	mov	r0, r7
+ 800956c:	f000 fb16 	bl	8009b9c <i2c_flag_get>
+ 8009570:	4606      	mov	r6, r0
+ 8009572:	bb10      	cbnz	r0, 80095ba <gd32_i2c_read+0x62>
+ 8009574:	2c02      	cmp	r4, #2
+ 8009576:	d104      	bne.n	8009582 <gd32_i2c_read+0x2a>
+ 8009578:	4847      	ldr	r0, [pc, #284]	; (8009698 <gd32_i2c_read+0x140>)
+ 800957a:	f44f 6100 	mov.w	r1, #2048	; 0x800
+ 800957e:	f000 faeb 	bl	8009b58 <i2c_ackpos_config>
+ 8009582:	4845      	ldr	r0, [pc, #276]	; (8009698 <gd32_i2c_read+0x140>)
+ 8009584:	4f44      	ldr	r7, [pc, #272]	; (8009698 <gd32_i2c_read+0x140>)
+ 8009586:	f000 fafa 	bl	8009b7e <i2c_start_on_bus>
+ 800958a:	f640 75ff 	movw	r5, #4095	; 0xfff
+ 800958e:	f44f 61a0 	mov.w	r1, #1280	; 0x500
+ 8009592:	4638      	mov	r0, r7
+ 8009594:	f000 fb02 	bl	8009b9c <i2c_flag_get>
+ 8009598:	b1b8      	cbz	r0, 80095ca <gd32_i2c_read+0x72>
+ 800959a:	4b40      	ldr	r3, [pc, #256]	; (800969c <gd32_i2c_read+0x144>)
+ 800959c:	483e      	ldr	r0, [pc, #248]	; (8009698 <gd32_i2c_read+0x140>)
+ 800959e:	7819      	ldrb	r1, [r3, #0]
+ 80095a0:	2201      	movs	r2, #1
+ 80095a2:	f000 fadf 	bl	8009b64 <i2c_master_addressing>
+ 80095a6:	2c02      	cmp	r4, #2
+ 80095a8:	d803      	bhi.n	80095b2 <gd32_i2c_read+0x5a>
+ 80095aa:	483b      	ldr	r0, [pc, #236]	; (8009698 <gd32_i2c_read+0x140>)
+ 80095ac:	2100      	movs	r1, #0
+ 80095ae:	f000 facd 	bl	8009b4c <i2c_ack_config>
+ 80095b2:	4f39      	ldr	r7, [pc, #228]	; (8009698 <gd32_i2c_read+0x140>)
+ 80095b4:	f640 75ff 	movw	r5, #4095	; 0xfff
+ 80095b8:	e00c      	b.n	80095d4 <gd32_i2c_read+0x7c>
+ 80095ba:	3d01      	subs	r5, #1
+ 80095bc:	d1d3      	bne.n	8009566 <gd32_i2c_read+0xe>
+ 80095be:	f7ff ff0f 	bl	80093e0 <send_stop() [clone .isra.0]>
+ 80095c2:	2604      	movs	r6, #4
+ 80095c4:	4630      	mov	r0, r6
+ 80095c6:	e8bd 83f8 	ldmia.w	sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+ 80095ca:	3d01      	subs	r5, #1
+ 80095cc:	d1df      	bne.n	800958e <gd32_i2c_read+0x36>
+ 80095ce:	e7f6      	b.n	80095be <gd32_i2c_read+0x66>
+ 80095d0:	3d01      	subs	r5, #1
+ 80095d2:	d0f4      	beq.n	80095be <gd32_i2c_read+0x66>
+ 80095d4:	f240 5101 	movw	r1, #1281	; 0x501
+ 80095d8:	4638      	mov	r0, r7
+ 80095da:	f000 fadf 	bl	8009b9c <i2c_flag_get>
+ 80095de:	2800      	cmp	r0, #0
+ 80095e0:	d0f6      	beq.n	80095d0 <gd32_i2c_read+0x78>
+ 80095e2:	482d      	ldr	r0, [pc, #180]	; (8009698 <gd32_i2c_read+0x140>)
+ 80095e4:	f240 5101 	movw	r1, #1281	; 0x501
+ 80095e8:	f000 fae0 	bl	8009bac <i2c_flag_clear>
+ 80095ec:	2c01      	cmp	r4, #1
+ 80095ee:	d102      	bne.n	80095f6 <gd32_i2c_read+0x9e>
+ 80095f0:	4829      	ldr	r0, [pc, #164]	; (8009698 <gd32_i2c_read+0x140>)
+ 80095f2:	f000 fac9 	bl	8009b88 <i2c_stop_on_bus>
+ 80095f6:	4d28      	ldr	r5, [pc, #160]	; (8009698 <gd32_i2c_read+0x140>)
+ 80095f8:	f640 77ff 	movw	r7, #4095	; 0xfff
+ 80095fc:	e01b      	b.n	8009636 <gd32_i2c_read+0xde>
+ 80095fe:	f1b9 0901 	subs.w	r9, r9, #1
+ 8009602:	d0dc      	beq.n	80095be <gd32_i2c_read+0x66>
+ 8009604:	f240 5102 	movw	r1, #1282	; 0x502
+ 8009608:	4628      	mov	r0, r5
+ 800960a:	f000 fac7 	bl	8009b9c <i2c_flag_get>
+ 800960e:	2800      	cmp	r0, #0
+ 8009610:	d0f5      	beq.n	80095fe <gd32_i2c_read+0xa6>
+ 8009612:	2100      	movs	r1, #0
+ 8009614:	4628      	mov	r0, r5
+ 8009616:	f000 fa99 	bl	8009b4c <i2c_ack_config>
+ 800961a:	f240 5106 	movw	r1, #1286	; 0x506
+ 800961e:	4628      	mov	r0, r5
+ 8009620:	f000 fabc 	bl	8009b9c <i2c_flag_get>
+ 8009624:	b368      	cbz	r0, 8009682 <gd32_i2c_read+0x12a>
+ 8009626:	4628      	mov	r0, r5
+ 8009628:	f000 fab5 	bl	8009b96 <i2c_data_receive>
+ 800962c:	f808 0b01 	strb.w	r0, [r8], #1
+ 8009630:	3c01      	subs	r4, #1
+ 8009632:	f640 77fe 	movw	r7, #4094	; 0xffe
+ 8009636:	bb34      	cbnz	r4, 8009686 <gd32_i2c_read+0x12e>
+ 8009638:	4a19      	ldr	r2, [pc, #100]	; (80096a0 <gd32_i2c_read+0x148>)
+ 800963a:	f640 73ff 	movw	r3, #4095	; 0xfff
+ 800963e:	f8d2 4400 	ldr.w	r4, [r2, #1024]	; 0x400
+ 8009642:	f414 7400 	ands.w	r4, r4, #512	; 0x200
+ 8009646:	d123      	bne.n	8009690 <gd32_i2c_read+0x138>
+ 8009648:	4813      	ldr	r0, [pc, #76]	; (8009698 <gd32_i2c_read+0x140>)
+ 800964a:	f44f 6180 	mov.w	r1, #1024	; 0x400
+ 800964e:	f000 fa7d 	bl	8009b4c <i2c_ack_config>
+ 8009652:	4811      	ldr	r0, [pc, #68]	; (8009698 <gd32_i2c_read+0x140>)
+ 8009654:	4621      	mov	r1, r4
+ 8009656:	f000 fa7f 	bl	8009b58 <i2c_ackpos_config>
+ 800965a:	e7b3      	b.n	80095c4 <gd32_i2c_read+0x6c>
+ 800965c:	2c02      	cmp	r4, #2
+ 800965e:	d1dc      	bne.n	800961a <gd32_i2c_read+0xc2>
+ 8009660:	f640 79ff 	movw	r9, #4095	; 0xfff
+ 8009664:	e002      	b.n	800966c <gd32_i2c_read+0x114>
+ 8009666:	f1b9 0901 	subs.w	r9, r9, #1
+ 800966a:	d0a8      	beq.n	80095be <gd32_i2c_read+0x66>
+ 800966c:	f240 5102 	movw	r1, #1282	; 0x502
+ 8009670:	4628      	mov	r0, r5
+ 8009672:	f000 fa93 	bl	8009b9c <i2c_flag_get>
+ 8009676:	2800      	cmp	r0, #0
+ 8009678:	d0f5      	beq.n	8009666 <gd32_i2c_read+0x10e>
+ 800967a:	4628      	mov	r0, r5
+ 800967c:	f000 fa84 	bl	8009b88 <i2c_stop_on_bus>
+ 8009680:	e7cb      	b.n	800961a <gd32_i2c_read+0xc2>
+ 8009682:	3f01      	subs	r7, #1
+ 8009684:	d09b      	beq.n	80095be <gd32_i2c_read+0x66>
+ 8009686:	2c03      	cmp	r4, #3
+ 8009688:	d1e8      	bne.n	800965c <gd32_i2c_read+0x104>
+ 800968a:	f640 79ff 	movw	r9, #4095	; 0xfff
+ 800968e:	e7b9      	b.n	8009604 <gd32_i2c_read+0xac>
+ 8009690:	3b01      	subs	r3, #1
+ 8009692:	d1d4      	bne.n	800963e <gd32_i2c_read+0xe6>
+ 8009694:	e795      	b.n	80095c2 <gd32_i2c_read+0x6a>
+ 8009696:	bf00      	nop
+ 8009698:	40005400 	andmi	r5, r0, r0, lsl #8
+ 800969c:	20002794 	mulcs	r0, r4, r7
+ 80096a0:	40005000 	andmi	r5, r0, r0
+
+080096a4 <gd32_spi_dma_begin()>:
+ 80096a4:	b530      	push	{r4, r5, lr}
+ 80096a6:	f240 6002 	movw	r0, #1538	; 0x602
+ 80096aa:	b089      	sub	sp, #36	; 0x24
+ 80096ac:	f7ff f966 	bl	800897c <rcu_periph_clock_enable>
+ 80096b0:	f240 6003 	movw	r0, #1539	; 0x603
+ 80096b4:	f7ff f962 	bl	800897c <rcu_periph_clock_enable>
+ 80096b8:	f240 700f 	movw	r0, #1807	; 0x70f
+ 80096bc:	f7ff f95e 	bl	800897c <rcu_periph_clock_enable>
+ 80096c0:	f44f 60c0 	mov.w	r0, #1536	; 0x600
+ 80096c4:	f7ff f95a 	bl	800897c <rcu_periph_clock_enable>
+ 80096c8:	482a      	ldr	r0, [pc, #168]	; (8009774 <gd32_spi_dma_begin()+0xd0>)
+ 80096ca:	4c2b      	ldr	r4, [pc, #172]	; (8009778 <gd32_spi_dma_begin()+0xd4>)
+ 80096cc:	2338      	movs	r3, #56	; 0x38
+ 80096ce:	2203      	movs	r2, #3
+ 80096d0:	2118      	movs	r1, #24
+ 80096d2:	f7ff f8c5 	bl	8008860 <gpio_init>
+ 80096d6:	f44f 4300 	mov.w	r3, #32768	; 0x8000
+ 80096da:	2203      	movs	r2, #3
+ 80096dc:	4827      	ldr	r0, [pc, #156]	; (800977c <gd32_spi_dma_begin()+0xd8>)
+ 80096de:	2118      	movs	r1, #24
+ 80096e0:	f7ff f8be 	bl	8008860 <gpio_init>
+ 80096e4:	2101      	movs	r1, #1
+ 80096e6:	4826      	ldr	r0, [pc, #152]	; (8009780 <gd32_spi_dma_begin()+0xdc>)
+ 80096e8:	f7ff f910 	bl	800890c <gpio_pin_remap_config>
+ 80096ec:	4620      	mov	r0, r4
+ 80096ee:	f000 fab5 	bl	8009c5c <i2s_disable>
+ 80096f2:	2300      	movs	r3, #0
+ 80096f4:	461a      	mov	r2, r3
+ 80096f6:	4620      	mov	r0, r4
+ 80096f8:	4922      	ldr	r1, [pc, #136]	; (8009784 <gd32_spi_dma_begin()+0xe0>)
+ 80096fa:	f000 fa78 	bl	8009bee <i2s_psc_config>
+ 80096fe:	2300      	movs	r3, #0
+ 8009700:	2210      	movs	r2, #16
+ 8009702:	f44f 7100 	mov.w	r1, #512	; 0x200
+ 8009706:	4620      	mov	r0, r4
+ 8009708:	f000 fa62 	bl	8009bd0 <i2s_init>
+ 800970c:	4620      	mov	r0, r4
+ 800970e:	f000 faa0 	bl	8009c52 <i2s_enable>
+ 8009712:	f504 34e4 	add.w	r4, r4, #116736	; 0x1c800
+ 8009716:	f240 5001 	movw	r0, #1281	; 0x501
+ 800971a:	f7ff f92f 	bl	800897c <rcu_periph_clock_enable>
+ 800971e:	2101      	movs	r1, #1
+ 8009720:	4620      	mov	r0, r4
+ 8009722:	f7fe ff4b 	bl	80085bc <dma_deinit>
+ 8009726:	a801      	add	r0, sp, #4
+ 8009728:	f7fe ff64 	bl	80085f4 <dma_struct_para_init>
+ 800972c:	4916      	ldr	r1, [pc, #88]	; (8009788 <gd32_spi_dma_begin()+0xe4>)
+ 800972e:	f44f 6380 	mov.w	r3, #1024	; 0x400
+ 8009732:	2501      	movs	r5, #1
+ 8009734:	9304      	str	r3, [sp, #16]
+ 8009736:	f44f 5200 	mov.w	r2, #8192	; 0x2000
+ 800973a:	f44f 7380 	mov.w	r3, #256	; 0x100
+ 800973e:	e9cd 1301 	strd	r1, r3, [sp, #4]
+ 8009742:	9206      	str	r2, [sp, #24]
+ 8009744:	4629      	mov	r1, r5
+ 8009746:	aa01      	add	r2, sp, #4
+ 8009748:	4620      	mov	r0, r4
+ 800974a:	f8ad 301c 	strh.w	r3, [sp, #28]
+ 800974e:	f88d 501e 	strb.w	r5, [sp, #30]
+ 8009752:	f7fe ff5b 	bl	800860c <dma_init>
+ 8009756:	4629      	mov	r1, r5
+ 8009758:	4620      	mov	r0, r4
+ 800975a:	f7fe ff91 	bl	8008680 <dma_circulation_disable>
+ 800975e:	4629      	mov	r1, r5
+ 8009760:	4620      	mov	r0, r4
+ 8009762:	f7fe ff9d 	bl	80086a0 <dma_memory_to_memory_disable>
+ 8009766:	4b09      	ldr	r3, [pc, #36]	; (800978c <gd32_spi_dma_begin()+0xe8>)
+ 8009768:	2200      	movs	r2, #0
+ 800976a:	f8c3 2420 	str.w	r2, [r3, #1056]	; 0x420
+ 800976e:	b009      	add	sp, #36	; 0x24
+ 8009770:	bd30      	pop	{r4, r5, pc}
+ 8009772:	bf00      	nop
+ 8009774:	40010c00 	andmi	r0, r1, r0, lsl #24
+ 8009778:	40003c00 	andmi	r3, r0, r0, lsl #24
+ 800977c:	40010800 	andmi	r0, r1, r0, lsl #16
+ 8009780:	00300400 	eorseq	r0, r0, r0, lsl #8
+ 8009784:	00030d40 	andeq	r0, r3, r0, asr #26
+ 8009788:	40003c0c 	andmi	r3, r0, ip, lsl #24
+ 800978c:	40020000 	andmi	r0, r2, r0
+
+08009790 <gd32_spi_dma_set_speed_hz(unsigned long)>:
+ 8009790:	b538      	push	{r3, r4, r5, lr}
+ 8009792:	4c08      	ldr	r4, [pc, #32]	; (80097b4 <gd32_spi_dma_set_speed_hz(unsigned long)+0x24>)
+ 8009794:	4605      	mov	r5, r0
+ 8009796:	4620      	mov	r0, r4
+ 8009798:	f000 fa60 	bl	8009c5c <i2s_disable>
+ 800979c:	2300      	movs	r3, #0
+ 800979e:	4620      	mov	r0, r4
+ 80097a0:	461a      	mov	r2, r3
+ 80097a2:	0969      	lsrs	r1, r5, #5
+ 80097a4:	f000 fa23 	bl	8009bee <i2s_psc_config>
+ 80097a8:	4620      	mov	r0, r4
+ 80097aa:	e8bd 4038 	ldmia.w	sp!, {r3, r4, r5, lr}
+ 80097ae:	f000 ba50 	b.w	8009c52 <i2s_enable>
  80097b2:	bf00      	nop
- 80097b4:	20008794 	mulcs	r0, r4, r7
+ 80097b4:	40003c00 	andmi	r3, r0, r0, lsl #24
 
-080097b8 <udelay_init()>:
- 80097b8:	4a07      	ldr	r2, [pc, #28]	; (80097d8 <udelay_init()+0x20>)
- 80097ba:	f8d2 30fc 	ldr.w	r3, [r2, #252]	; 0xfc
- 80097be:	f043 7380 	orr.w	r3, r3, #16777216	; 0x1000000
- 80097c2:	f8c2 30fc 	str.w	r3, [r2, #252]	; 0xfc
- 80097c6:	4b05      	ldr	r3, [pc, #20]	; (80097dc <udelay_init()+0x24>)
- 80097c8:	2200      	movs	r2, #0
- 80097ca:	605a      	str	r2, [r3, #4]
- 80097cc:	681a      	ldr	r2, [r3, #0]
- 80097ce:	f042 0201 	orr.w	r2, r2, #1
- 80097d2:	601a      	str	r2, [r3, #0]
- 80097d4:	4770      	bx	lr
- 80097d6:	bf00      	nop
- 80097d8:	e000ed00 	and	lr, r0, r0, lsl #26
- 80097dc:	e0001000 	and	r1, r0, r0
+080097b8 <gd32_spi_dma_tx_prepare(unsigned long*)>:
+ 80097b8:	f44f 43c0 	mov.w	r3, #24576	; 0x6000
+ 80097bc:	6003      	str	r3, [r0, #0]
+ 80097be:	4801      	ldr	r0, [pc, #4]	; (80097c4 <gd32_spi_dma_tx_prepare(unsigned long*)+0xc>)
+ 80097c0:	4770      	bx	lr
+ 80097c2:	bf00      	nop
+ 80097c4:	20002798 	mulcs	r0, r8, r7
 
-080097e0 <udelay(unsigned long, unsigned long)>:
- 80097e0:	2378      	movs	r3, #120	; 0x78
- 80097e2:	b530      	push	{r4, r5, lr}
- 80097e4:	4358      	muls	r0, r3
- 80097e6:	b909      	cbnz	r1, 80097ec <udelay(unsigned long, unsigned long)+0xc>
- 80097e8:	4b08      	ldr	r3, [pc, #32]	; (800980c <udelay(unsigned long, unsigned long)+0x2c>)
- 80097ea:	6859      	ldr	r1, [r3, #4]
- 80097ec:	4c07      	ldr	r4, [pc, #28]	; (800980c <udelay(unsigned long, unsigned long)+0x2c>)
- 80097ee:	2300      	movs	r3, #0
- 80097f0:	6862      	ldr	r2, [r4, #4]
- 80097f2:	4291      	cmp	r1, r2
- 80097f4:	d0fc      	beq.n	80097f0 <udelay(unsigned long, unsigned long)+0x10>
- 80097f6:	bf2a      	itet	cs
- 80097f8:	f102 35ff 	addcs.w	r5, r2, #4294967295	; 0xffffffff
- 80097fc:	189b      	addcc	r3, r3, r2
- 80097fe:	195b      	addcs	r3, r3, r5
- 8009800:	1a5b      	subs	r3, r3, r1
- 8009802:	4283      	cmp	r3, r0
- 8009804:	d300      	bcc.n	8009808 <udelay(unsigned long, unsigned long)+0x28>
- 8009806:	bd30      	pop	{r4, r5, pc}
- 8009808:	4611      	mov	r1, r2
- 800980a:	e7f1      	b.n	80097f0 <udelay(unsigned long, unsigned long)+0x10>
- 800980c:	e0001000 	and	r1, r0, r0
+080097c8 <gd32_spi_dma_tx_start(unsigned char const*, unsigned long)>:
+ 80097c8:	4a0a      	ldr	r2, [pc, #40]	; (80097f4 <gd32_spi_dma_tx_start(unsigned char const*, unsigned long)+0x2c>)
+ 80097ca:	f8d2 341c 	ldr.w	r3, [r2, #1052]	; 0x41c
+ 80097ce:	3101      	adds	r1, #1
+ 80097d0:	f023 0301 	bic.w	r3, r3, #1
+ 80097d4:	f8c2 341c 	str.w	r3, [r2, #1052]	; 0x41c
+ 80097d8:	f3c1 014f 	ubfx	r1, r1, #1, #16
+ 80097dc:	f043 0301 	orr.w	r3, r3, #1
+ 80097e0:	f8c2 0428 	str.w	r0, [r2, #1064]	; 0x428
+ 80097e4:	f8c2 1420 	str.w	r1, [r2, #1056]	; 0x420
+ 80097e8:	4803      	ldr	r0, [pc, #12]	; (80097f8 <gd32_spi_dma_tx_start(unsigned char const*, unsigned long)+0x30>)
+ 80097ea:	f8c2 341c 	str.w	r3, [r2, #1052]	; 0x41c
+ 80097ee:	2100      	movs	r1, #0
+ 80097f0:	f000 ba39 	b.w	8009c66 <spi_dma_enable>
+ 80097f4:	40020000 	andmi	r0, r2, r0
+ 80097f8:	40003c00 	andmi	r3, r0, r0, lsl #24
+
+080097fc <gd32_spi_dma_tx_is_active()>:
+ 80097fc:	4b03      	ldr	r3, [pc, #12]	; (800980c <gd32_spi_dma_tx_is_active()+0x10>)
+ 80097fe:	f8d3 0420 	ldr.w	r0, [r3, #1056]	; 0x420
+ 8009802:	3800      	subs	r0, #0
+ 8009804:	bf18      	it	ne
+ 8009806:	2001      	movne	r0, #1
+ 8009808:	4770      	bx	lr
+ 800980a:	bf00      	nop
+ 800980c:	40020000 	andmi	r0, r2, r0
 
 08009810 <uart0_init>:
  8009810:	b507      	push	{r0, r1, r2, lr}
@@ -15688,7 +15688,7 @@ Disassembly of section .text:
  8009818:	2300      	movs	r3, #0
  800981a:	2208      	movs	r2, #8
  800981c:	f44f 31e1 	mov.w	r1, #115200	; 0x1c200
- 8009820:	f7ff fe9c 	bl	800955c <gd32_uart_begin>
+ 8009820:	f7ff fc04 	bl	800902c <gd32_uart_begin>
  8009824:	b003      	add	sp, #12
  8009826:	f85d fb04 	ldr.w	pc, [sp], #4
  800982a:	bf00      	nop
@@ -16205,11 +16205,11 @@ Disassembly of section .rodata:
  8009ca4:	656c6261 	strbvs	r6, [ip, #-609]!	; 0xfffffd9f
  8009ca8:	6e650064 	cdpvs	0, 6, cr0, cr5, cr4, {3}
  8009cac:	656c6261 	strbvs	r6, [ip, #-609]!	; 0xfffffd9f
- 8009cb0:	34310064 	ldrtcc	r0, [r1], #-100	; 0xffffff9c
- 8009cb4:	3a34333a 	bcc	8d169a4 <_sidata+0xd0ac80>
- 8009cb8:	46003930 			; <UNDEFINED> instruction: 0x46003930
+ 8009cb0:	37310064 	ldrcc	r0, [r1, -r4, rrx]!
+ 8009cb4:	3a32303a 	bcc	8c95da4 <_sidata+0xc8a080>
+ 8009cb8:	46003434 			; <UNDEFINED> instruction: 0x46003434
  8009cbc:	20206265 	eorcs	r6, r0, r5, ror #4
- 8009cc0:	30322031 	eorscc	r2, r2, r1, lsr r0
+ 8009cc0:	30322034 	eorscc	r2, r2, r4, lsr r0
  8009cc4:	52003432 	andpl	r3, r0, #838860800	; 0x32000000
  8009cc8:	52204d44 	eorpl	r4, r0, #68, 26	; 0x1100
  8009ccc:	6f707365 	svcvs	0x00707365
@@ -18559,14 +18559,14 @@ Disassembly of section .bss:
 2000278c <set_timer>:
 2000278c:	00000000 	andeq	r0, r0, r0
 
-20002790 <s_nAddress>:
+20002790 <s_nSysTickMillis>:
 20002790:	00000000 	andeq	r0, r0, r0
 
-20002794 <s_TxBuffer>:
-	...
+20002794 <s_nAddress>:
+20002794:	00000000 	andeq	r0, r0, r0
 
-20008794 <s_nSysTickMillis>:
-20008794:	00000000 	andeq	r0, r0, r0
+20002798 <s_TxBuffer>:
+	...
 
 Disassembly of section .heap:
 

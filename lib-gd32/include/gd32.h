@@ -52,19 +52,15 @@ extern "C" {
 #if defined  (GD32F10X_HD) || defined (GD32F10X_CL)
 # define GD32F10X
 # include "gd32f10x.h"
-# include "gd32f10x_libopt.h"
 #elif defined (GD32F20X_CL)
 # define GD32F20X
 # include "gd32f20x.h"
-# include "gd32f20x_libopt.h"
 #elif defined (GD32F30X_HD)
 # define GD32F30X
 # include "gd32f30x.h"
-# include "gd32f30x_libopt.h"
-#elif defined (GD32F407) || defined (GD32F450)
+#elif defined (GD32F407) || defined (GD32F450) || defined (GD32F470)
 # define GD32F4XX
 # include "gd32f4xx.h"
-# include "gd32f4xx_libopt.h"
 #else
 # error MCU is not supported
 #endif
@@ -78,7 +74,7 @@ extern "C" {
 # define bkp_data_read		bkp_read_data
 #endif
 
-#if defined(GD32F4XX) && defined(__cplusplus)
+#if (defined(GD32F4XX) || defined (GD32H7XX)) && defined(__cplusplus)
 typedef enum
 {
     BKP_DATA_0,
@@ -87,6 +83,34 @@ typedef enum
 void bkp_data_write(bkp_data_register_enum register_number, uint16_t data);
 uint16_t bkp_data_read(bkp_data_register_enum register_number);
 #endif
+
+#if !(defined (GD32F4XX) || defined (GD32H7XX))
+#define GPIO_INIT
+#endif
+
+#if defined (GD32H7XX)
+# define GPIO_OSPEED	GPIO_OSPEED_100_220MHZ
+#else
+# define GPIO_OSPEED	GPIO_OSPEED_50MHZ
+#endif
+
+#define GD32_PORT_TO_GPIO(p,n)	((p * 16) + n)
+#define GD32_GPIO_TO_PORT(g)	(uint8_t)(g / 16)
+#define GD32_GPIO_TO_NUMBER(g)	(uint8_t)(g - (16 * GD32_GPIO_TO_PORT(g)))
+
+typedef enum T_GD32_Port {
+	GD32_GPIO_PORTA = 0,
+	GD32_GPIO_PORTB,
+	GD32_GPIO_PORTC,
+	GD32_GPIO_PORTD,
+	GD32_GPIO_PORTE,
+	GD32_GPIO_PORTF,
+	GD32_GPIO_PORTG,
+	GD32_GPIO_PORTH,
+	GD32_GPIO_PORTI,
+	GD32_GPIO_PORTJ,
+	GD32_GPIO_PORTK
+} GD32_Port_TypeDef;
 
 #include "gd32_board.h"
 

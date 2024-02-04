@@ -2,7 +2,7 @@
  * @file rdmhandler.cpp
  *
  */
-/* Copyright (C) 2018-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2018-2024 by Arjan van Vught mailto:info@orangepi-dmx.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -135,8 +135,11 @@ const RDMHandler::PidDefinition RDMHandler::PID_DEFINITIONS_SUB_DEVICES[] {
 };
 
 #if defined (ENABLE_RDM_MANUFACTURER_PIDS)
-const RDMHandler::PidDefinition RDMHandler::PID_DEFINITION_MANUFACTURER_GENERAL
-	{0,                                &RDMHandler::GetManufacturerPid,             &RDMHandler::SetManufacturerPid,    0, false, true, false };
+# if defined (CONFIG_RDM_MANUFACTURER_PIDS_SET)
+const RDMHandler::PidDefinition RDMHandler::PID_DEFINITION_MANUFACTURER_GENERAL { 0, &RDMHandler::GetManufacturerPid, &RDMHandler::SetManufacturerPid, 0, false, true, false };
+# else
+const RDMHandler::PidDefinition RDMHandler::PID_DEFINITION_MANUFACTURER_GENERAL { 0, &RDMHandler::GetManufacturerPid, nullptr,                         0, false, true, false };
+# endif
 #endif
 
 RDMHandler::RDMHandler(bool bIsRdm): m_bIsRDM(bIsRdm) {
@@ -373,11 +376,11 @@ void RDMHandler::HandleData(const uint8_t *pRdmDataIn, uint8_t *pRdmDataOut) {
 }
 
 void RDMHandler::Handlers(bool bIsBroadcast, uint8_t nCommandClass, uint16_t nParamId, uint8_t nParamDataLength, uint16_t nSubDevice) {
-	DEBUG1_ENTRY
+	DEBUG_ENTRY
 
 	if (nCommandClass != E120_GET_COMMAND && nCommandClass != E120_SET_COMMAND) {
 		RespondMessageNack(E120_NR_UNSUPPORTED_COMMAND_CLASS);
-		DEBUG1_EXIT
+		DEBUG_EXIT
 		return;
 	}
 
@@ -385,7 +388,7 @@ void RDMHandler::Handlers(bool bIsBroadcast, uint8_t nCommandClass, uint16_t nPa
 
 	if ((nSubDevice > sub_device_count) && (nSubDevice != E120_SUB_DEVICE_ALL_CALL)) {
 		RespondMessageNack(E120_NR_SUB_DEVICE_OUT_OF_RANGE);
-		DEBUG1_EXIT
+		DEBUG_EXIT
 		return;
 	}
 
@@ -417,45 +420,45 @@ void RDMHandler::Handlers(bool bIsBroadcast, uint8_t nCommandClass, uint16_t nPa
 
 	if (!pid_handler) {
 		RespondMessageNack(E120_NR_UNKNOWN_PID);
-		DEBUG1_EXIT
+		DEBUG_EXIT
 		return;
 	}
 
 	if (m_bIsRDM) {
 		if (!bRDM) {
 			RespondMessageNack(E120_NR_UNKNOWN_PID);
-			DEBUG1_EXIT
+			DEBUG_EXIT
 			return;
 		}
 	} else {
 		if (!bRDMNet) {
 			RespondMessageNack(E120_NR_UNKNOWN_PID);
-			DEBUG1_EXIT
+			DEBUG_EXIT
 			return;
 		}
 	}
 
 	if (nCommandClass == E120_GET_COMMAND) {
 		if (bIsBroadcast) {
-			DEBUG1_EXIT
+			DEBUG_EXIT
 			return;
 		}
 
 		if (nSubDevice == E120_SUB_DEVICE_ALL_CALL) {
 			RespondMessageNack(E120_NR_SUB_DEVICE_OUT_OF_RANGE);
-			DEBUG1_EXIT
+			DEBUG_EXIT
 			return;
 		}
 
 		if (!pid_handler->pGetHandler) {
 			RespondMessageNack(E120_NR_UNSUPPORTED_COMMAND_CLASS);
-			DEBUG1_EXIT
+			DEBUG_EXIT
 			return;
 		}
 
 		if (nParamDataLength != pid_handler->nGetArgumentSize) {
 			RespondMessageNack(E120_NR_FORMAT_ERROR);
-			DEBUG1_EXIT
+			DEBUG_EXIT
 			return;
 		}
 
@@ -464,14 +467,14 @@ void RDMHandler::Handlers(bool bIsBroadcast, uint8_t nCommandClass, uint16_t nPa
 
 		if (!pid_handler->pSetHandler) {
 			RespondMessageNack(E120_NR_UNSUPPORTED_COMMAND_CLASS);
-			DEBUG1_EXIT
+			DEBUG_EXIT
 			return;
 		}
 
 		(this->*(pid_handler->pSetHandler))(bIsBroadcast, nSubDevice);
 	}
 
-	DEBUG1_EXIT
+	DEBUG_EXIT
 }
 
 #if defined (ENABLE_RDM_QUEUED_MSG)
@@ -524,7 +527,7 @@ void RDMHandler::GetSupportedParameters(uint16_t nSubDevice) {
 	RespondMessageAck();
 }
 
-#if defined (ENABLE_RDM_MANUFACTURER_PIDS)
+# if defined (ENABLE_RDM_MANUFACTURER_PIDS)
 void RDMHandler::GetParameterDescription(__attribute__((unused)) uint16_t nSubDevice) {
 	const auto *pRdmDataIn = reinterpret_cast<struct TRdmMessageNoSc *>(m_pRdmDataIn);
 	const auto nPid = static_cast<uint16_t>((pRdmDataIn->param_data[0] << 8) + pRdmDataIn->param_data[1]);
@@ -569,7 +572,7 @@ void RDMHandler::GetManufacturerPid(__attribute__((unused))  uint16_t nSubDevice
 
 	RespondMessageNack(nReason);
 }
-
+#  if defined (CONFIG_RDM_MANUFACTURER_PIDS_SET)
 void RDMHandler::SetManufacturerPid(bool IsBroadcast, __attribute__((unused)) uint16_t nSubDevice) {
 	const auto *pRdmDataIn = reinterpret_cast<struct TRdmMessageNoSc *>(m_pRdmDataIn);
 	auto *pRdmDataOut = reinterpret_cast<struct TRdmMessage *>(m_pRdmDataOut);
@@ -579,21 +582,21 @@ void RDMHandler::SetManufacturerPid(bool IsBroadcast, __attribute__((unused)) ui
 	rdm::ManufacturerParamData pOut = { 0, pRdmDataOut->param_data };
 	uint16_t nReason = E120_NR_UNKNOWN_PID;
 
-	for (uint32_t n = 0; n < GetParameterDescriptionCount(); ++n)
-	{
-		if ((PARAMETER_DESCRIPTIONS[n].pid == nPid)
-				&& (rdm::handle_manufactureer_pid_set(IsBroadcast, nPid, PARAMETER_DESCRIPTIONS[n], &pIn, &pOut, nReason)))
-		{
-			pRdmDataOut->param_data_length = pOut.nPdl;
-			RespondMessageAck();
-			return;
+	for (uint32_t nIndex = 0; nIndex < GetParameterDescriptionCount(); nIndex++) {
+		if (PARAMETER_DESCRIPTIONS[nIndex].pid == nPid) {
+			if (rdm::handle_manufactureer_pid_set(IsBroadcast, nPid, PARAMETER_DESCRIPTIONS[nIndex], &pIn, &pOut, nReason)) {
+				pRdmDataOut->param_data_length = pOut.nPdl;
+				RespondMessageAck();
+				return;
+			}
 		}
 	}
 
 	RespondMessageNack(nReason);
 }
-#endif // ENABLE_RDM_MANUFACTURER_PIDS
-#endif // !NODE_RDMNET_LLRP_ONLY
+#  endif // CONFIG_RDM_MANUFACTURER_PIDS_SET
+# endif	// ENABLE_RDM_MANUFACTURER_PIDS
+#endif
 
 void RDMHandler::GetDeviceInfo(uint16_t nSubDevice) {
 	const auto *pRdmDeviceInfoRequested = RDMDeviceResponder::Get()->GetDeviceInfo(nSubDevice);
@@ -1354,7 +1357,7 @@ void RDMHandler::GetSelfTestDescription(__attribute__((unused)) uint16_t nSubDev
 
 	RespondMessageAck();
 }
-#endif
+#endif // ENABLE_RDM_SELF_TEST
 
 #if defined (ENABLE_RDM_PRESET_PLAYBACK)
 #include "rdm_preset_playback.h"
@@ -1396,7 +1399,7 @@ void RDMHandler::SetPresetPlayback(__attribute__((unused)) bool IsBroadcast, __a
 
 	RespondMessageAck();
 }
-#endif
+#endif // ENABLE_RDM_PRESET_PLAYBACK
 
 void RDMHandler::GetSlotInfo(uint16_t nSubDevice) {
     auto *pRdmDataOut = reinterpret_cast<struct TRdmMessage *>(m_pRdmDataOut);

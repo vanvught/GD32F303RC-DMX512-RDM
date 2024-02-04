@@ -30,9 +30,7 @@
 
 #include <cstdint>
 #include <cstring>
-#ifndef NDEBUG
-# include <cstdio>
-#endif
+#include <cstdio>
 #include <cassert>
 
 #include "rdmdeviceparams.h"
@@ -43,8 +41,6 @@
 
 #include "network.h"
 #include "hardware.h"
-
-#include "storerdmdevice.h"
 
 #include "readconfigfile.h"
 #include "sscan.h"
@@ -72,11 +68,14 @@ void RDMDeviceParams::Load() {
 	ReadConfigFile configfile(RDMDeviceParams::staticCallbackFunction, this);
 
 	if (configfile.Read(RDMDeviceParamsConst::FILE_NAME)) {
-		StoreRDMDevice::Update(&m_Params);
+		RDMDeviceParamsStore::Update(&m_Params);
 	} else
 #endif
-	StoreRDMDevice::Copy(&m_Params);
+	RDMDeviceParamsStore::Copy(&m_Params);
 
+#ifndef NDEBUG
+	Dump();
+#endif
 	DEBUG_EXIT
 }
 
@@ -92,8 +91,11 @@ void RDMDeviceParams::Load(const char *pBuffer, uint32_t nLength) {
 
 	config.Read(pBuffer, nLength);
 
-	StoreRDMDevice::Update(&m_Params);
+	RDMDeviceParamsStore::Update(&m_Params);
 
+#ifndef NDEBUG
+	Dump();
+#endif
 	DEBUG_EXIT
 }
 
@@ -164,7 +166,7 @@ void RDMDeviceParams::Builder(const struct rdm::deviceparams::Params *pParams, c
 	if (pParams != nullptr) {
 		memcpy(&m_Params, pParams, sizeof(struct rdm::deviceparams::Params));
 	} else {
-		StoreRDMDevice::Copy(&m_Params);
+		RDMDeviceParamsStore::Copy(&m_Params);
 	}
 
 	PropertiesBuilder builder(RDMDeviceParamsConst::FILE_NAME, pBuffer, nLength);
@@ -186,7 +188,6 @@ void RDMDeviceParams::staticCallbackFunction(void *p, const char *s) {
 }
 
 void RDMDeviceParams::Dump() {
-#ifndef NDEBUG
 	printf("%s::%s \'%s\':\n", __FILE__, __FUNCTION__, RDMDeviceParamsConst::FILE_NAME);
 
 	if (isMaskSet(rdm::deviceparams::Mask::LABEL)) {
@@ -200,5 +201,4 @@ void RDMDeviceParams::Dump() {
 	if (isMaskSet(rdm::deviceparams::Mask::PRODUCT_DETAIL)) {
 		printf(" %s=%.4x\n", RDMDeviceParamsConst::PRODUCT_DETAIL, m_Params.nProductDetail);
 	}
-#endif
 }

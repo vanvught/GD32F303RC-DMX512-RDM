@@ -29,6 +29,7 @@
 #include <cstdint>
 
 #include "rdmconst.h"
+#include "configstore.h"
 
 namespace rdm {
 namespace deviceparams {
@@ -50,6 +51,17 @@ struct Mask {
 
 class RDMDevice;
 
+class RDMDeviceParamsStore {
+public:
+	static void Update(const struct rdm::deviceparams::Params *pParams) {
+		ConfigStore::Get()->Update(configstore::Store::RDMDEVICE, pParams, sizeof(struct rdm::deviceparams::Params));
+	}
+
+	static void Copy(struct rdm::deviceparams::Params *pParams) {
+		ConfigStore::Get()->Copy(configstore::Store::RDMDEVICE, pParams, sizeof(struct rdm::deviceparams::Params));
+	}
+};
+
 class RDMDeviceParams {
 public:
 	RDMDeviceParams();
@@ -64,12 +76,10 @@ public:
 
 	void Set(RDMDevice *pRDMDevice);
 
-	void Dump();
-
-public:
     static void staticCallbackFunction(void *p, const char *s);
 
 private:
+	void Dump();
     void callbackFunction(const char *s);
     bool isMaskSet(uint32_t nMask) const {
     	return (m_Params.nSetList & nMask) == nMask;

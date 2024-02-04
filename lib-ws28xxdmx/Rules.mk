@@ -1,8 +1,6 @@
 EXTRA_INCLUDES+=../lib-ws28xx/include
 EXTRA_INCLUDES+=../lib-lightset/include
-EXTRA_INCLUDES+=../lib-properties/include
-EXTRA_INCLUDES+=../lib-configstore/include
-EXTRA_INCLUDES+=../lib-flashcode/include  
+EXTRA_INCLUDES+=../lib-properties/include 
 
 EXTRA_SRCDIR+=src/params
 
@@ -20,8 +18,9 @@ ifneq ($(MAKE_FLAGS),)
 else
 	DEFINES+=CONFIG_PIXELDMX_MAX_PORTS=8
 	DEFINES+=LIGHTSET_PORTS=32
-	DEFINES+=ENABLE_RDM_MANUFACTURER_PIDS
+	DEFINES+=ENABLE_RDM_MANUFACTURER_PIDS CONFIG_RDM_MANUFACTURER_PIDS_SET
 	DEFINES+=OUTPUT_DMX_PIXEL
+	DEFINES+=PIXELDMXSTARTSTOP_GPIO
 	EXTRA_INCLUDES+=../lib-rdm/include
 	EXTRA_SRCDIR+=src/dmx src/dmxmulti src/rdm
 endif

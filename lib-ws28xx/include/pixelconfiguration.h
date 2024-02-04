@@ -2,7 +2,7 @@
  * @file pixelconfiguration.h
  *
  */
-/* Copyright (C) 2021-2022 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2021-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,11 +41,11 @@ public:
 		return m_type;
 	}
 
-	void SetCount(uint16_t nCount) {
+	void SetCount(uint32_t nCount) {
 		m_nCount = nCount == 0 ? pixel::defaults::COUNT : nCount;
 	}
 
-	uint16_t GetCount() const {
+	uint32_t GetCount() const {
 		return m_nCount;
 	}
 
@@ -123,7 +123,7 @@ public:
 
 private:
 	pixel::Type m_type { pixel::defaults::TYPE };
-	uint16_t m_nCount { pixel::defaults::COUNT };
+	uint32_t m_nCount { pixel::defaults::COUNT };
 	pixel::Map m_map { pixel::Map::UNDEFINED };
 	uint32_t m_nClockSpeedHz { 0 };
 	uint8_t m_nLowCode { 0 };

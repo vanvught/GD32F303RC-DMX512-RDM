@@ -29,6 +29,7 @@
 #include <cstdint>
 
 #include "rdmsensors.h"
+#include "configstore.h"
 
 namespace rdm {
 namespace sensorsparams {
@@ -47,6 +48,17 @@ static_assert(sizeof(struct Params) <= rdm::sensors::STORE, "struct Params is to
 }  // namespace sensorsparams
 }  // namespace rdm
 
+class RDMSensorsParamsStore {
+public:
+	static void Update(const rdm::sensorsparams::Params *pParams) {
+		ConfigStore::Get()->Update(configstore::Store::RDMSENSORS, pParams, sizeof(struct rdm::sensorsparams::Params));
+	}
+
+	static void Copy(rdm::sensorsparams::Params *pParams) {
+		ConfigStore::Get()->Copy(configstore::Store::RDMSENSORS, pParams, sizeof(struct rdm::sensorsparams::Params));
+	}
+};
+
 class RDMSensorsParams {
 public:
 	RDMSensorsParams();
@@ -59,13 +71,12 @@ public:
 		Builder(nullptr, pBuffer, nLength, nSize);
 	}
 
-	void Dump();
-
 	void Set();
 
     static void staticCallbackFunction(void *p, const char *s);
 
 private:
+	void Dump();
     void callbackFunction(const char *pLine);
     bool Add(RDMSensor *pRDMSensor);
 

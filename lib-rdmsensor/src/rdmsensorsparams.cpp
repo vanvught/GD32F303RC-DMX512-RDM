@@ -38,8 +38,6 @@
 #include "rdmsensorsconst.h"
 #include "rdm_sensors.h"
 
-#include "storerdmsensors.h"
-
 #include "readconfigfile.h"
 #include "sscan.h"
 #include "propertiesbuilder.h"
@@ -88,16 +86,19 @@ void RDMSensorsParams::Load() {
 	ReadConfigFile configfile(RDMSensorsParams::staticCallbackFunction, this);
 
 	if (configfile.Read(RDMSensorsConst::PARAMS_FILE_NAME)) {
-		StoreRDMSensors::Update(&m_Params);
+		RDMSensorsParamsStore::Update(&m_Params);
 	} else
 #endif
-		StoreRDMSensors::Copy(&m_Params);
+		RDMSensorsParamsStore::Copy(&m_Params);
 
 	// Sanity check
 	if (m_Params.nDevices >= rdm::sensors::devices::MAX) {
 		memset(&m_Params, 0, sizeof(struct rdm::sensorsparams::Params));
 	}
 
+#ifndef NDEBUG
+	Dump();
+#endif
 	DEBUG_EXIT
 }
 
@@ -113,8 +114,11 @@ void RDMSensorsParams::Load(const char *pBuffer, uint32_t nLength) {
 
 	config.Read(pBuffer, nLength);
 
-	StoreRDMSensors::Update(&m_Params);
+	RDMSensorsParamsStore::Update(&m_Params);
 
+#ifndef NDEBUG
+	Dump();
+#endif
 	DEBUG_EXIT
 }
 
@@ -126,7 +130,7 @@ void RDMSensorsParams::Builder(const rdm::sensorsparams::Params *pParams, char *
 	if (pParams != nullptr) {
 		memcpy(&m_Params, pParams, sizeof(struct rdm::sensorsparams::Params));
 	} else {
-		StoreRDMSensors::Copy(&m_Params);
+		RDMSensorsParamsStore::Copy(&m_Params);
 	}
 
 	PropertiesBuilder builder(RDMSensorsConst::PARAMS_FILE_NAME, pBuffer, nLength);
@@ -286,7 +290,6 @@ void RDMSensorsParams::staticCallbackFunction(void *p, const char *s) {
 }
 
 void RDMSensorsParams::Dump() {
-#ifndef NDEBUG
 	printf("%s::%s \'%s\':\n", __FILE__, __FUNCTION__, RDMSensorsConst::PARAMS_FILE_NAME);
 
 	for (uint32_t i = 0; i < m_Params.nDevices; i++) {
@@ -296,5 +299,4 @@ void RDMSensorsParams::Dump() {
 	for (uint32_t i = 0; i < rdm::sensors::MAX; i++) {
 		printf("%2d %d\n", i, m_Params.nCalibrate[i]);
 	}
-#endif
 }

@@ -1,5 +1,5 @@
 /**
- * @file storedisplayudf.cpp
+ * @file e133.h
  *
  */
 /* Copyright (C) 2019-2020 by Arjan van Vught mailto:info@orangepi-dmx.nl
@@ -23,20 +23,43 @@
  * THE SOFTWARE.
  */
 
-#include <cassert>
+#ifndef E133_H_
+#define E133_H_
 
-#include "storedisplayudf.h"
+/**
+ * A.3 Root Layer PDU Vector
+ */
 
-#include "debug.h"
+#define VECTOR_ROOT_LLRP 			0x0000000A	/* Section 5.4 */
 
-StoreDisplayUdf *StoreDisplayUdf::s_pThis = nullptr;
+/**
+ * Table A-4: Vector Defines for LLRP PDU
+ */
+#define VECTOR_LLRP_PROBE_REQUEST 0x00000001 /* Section 5.4.2.1 */
+#define VECTOR_LLRP_PROBE_REPLY   0x00000002 /* Section 5.4.2.2 */
+#define VECTOR_LLRP_RDM_CMD       0x00000003 /* Section 5.4.2.3 */
 
-StoreDisplayUdf::StoreDisplayUdf() {
-	DEBUG_ENTRY
+/**
+ * Table A-5: Vector Defines for LLRP Probe Request PDU
+ */
+#define VECTOR_PROBE_REQUEST_DATA 0x01
 
-	assert(s_pThis == nullptr);
-	s_pThis = this;
+/**
+ * Table A-6: Vector Defines for LLRP Probe Reply PDU
+ */
+#define VECTOR_PROBE_REPLY_DATA 0x01
 
-	DEBUG_PRINTF("%p", reinterpret_cast<void *>(s_pThis));
-	DEBUG_EXIT
-}
+/**
+ * Table A.12 RDM Command PDU Vector
+ */
+#define VECTOR_RDM_CMD_RDM_DATA	0xCC
+
+/**
+ * Table A-23: LLRP Component Type Codes
+ */
+#define LLRP_COMPONENT_TYPE_RPT_DEVICE     0x00	///< The LLRP Target is a Device
+#define LLRP_COMPONENT_TYPE_RPT_CONTROLLER 0x01	///< The LLRP Target is a Controller
+#define LLRP_COMPONENT_TYPE_BROKER         0x02	///< The LLRP Target is a Broker
+#define LLRP_COMPONENT_TYPE_NON_RDMNET     0xFF	///< The LLRP Target does not implement any RDMnet protocol other than LLRP
+
+#endif /* E133_H_ */

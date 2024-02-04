@@ -1,8 +1,8 @@
 /**
- * @file storewpixeldmx.cpp
+ * @file rdmsensorsstore.h
  *
  */
-/* Copyright (C) 2018-2022 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "storepixeldmx.h"
 
-StorePixelDmx *StorePixelDmx::Get()
-{
-	static StorePixelDmx instance;
-	return &instance;
-}
+#ifndef RDMSENSORSSTORE_H_
+#define RDMSENSORSSTORE_H_
+
+#include <cstdint>
+#include <cstddef>
+#include <cassert>
+
+#include "rdmsensorsparams.h"
+#include "rdmsensors.h"
+#include "configstore.h"
+
+class RDMSensorsStore {
+public:
+	static void SaveCalibration(const uint32_t nSensor, const int32_t nCalibration) {
+		assert(nSensor < rdm::sensors::MAX);
+		auto c = static_cast<int16_t>(nCalibration);
+		ConfigStore::Get()->Update(configstore::Store::RDMSENSORS, (nSensor * sizeof(int16_t)) + offsetof(struct rdm::sensorsparams::Params, nCalibrate), &c, sizeof(int16_t));
+	}
+};
+
+#endif /* RDMSENSORSSTORE_H_ */

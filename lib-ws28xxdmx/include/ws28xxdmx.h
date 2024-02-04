@@ -2,7 +2,7 @@
  * @file ws28xxdmx.h
  *
  */
-/* Copyright (C) 2016-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2016-2024 by Arjan van Vught mailto:info@orangepi-dmx.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,15 +32,13 @@
 #include "lightset.h"
 
 #include "ws28xx.h"
+
 #include "pixeldmxconfiguration.h"
 #include "pixelpatterns.h"
-#include "pixeldmxstore.h"
-#include "pixeldmxhandler.h"
-#include "storepixeldmx.h"
 
 class WS28xxDmx final: public LightSet {
 public:
-	WS28xxDmx(PixelDmxConfiguration& pixelDmxConfiguration, StorePixelDmx* storePixelDmx = nullptr);
+	WS28xxDmx(PixelDmxConfiguration& pixelDmxConfiguration);
 	~WS28xxDmx() override;
 
 	void Start(const uint32_t nPortIndex) override;
@@ -69,14 +67,6 @@ public:
 		m_pixelDmxConfiguration.Print();
 	}
 
-	void SetWS28xxDmxStore(PixelDmxStore *pWS28xxDmxStore) {
-		m_pWS28xxDmxStore = pWS28xxDmxStore;
-	}
-
-	void SetPixelDmxHandler(PixelDmxHandler *pPixelDmxHandler) {
-		m_pPixelDmxHandler = pPixelDmxHandler;
-	}
-
 	pixel::Type GetType() const {
 		return m_pixelDmxConfiguration.GetType();
 	}
@@ -85,46 +75,16 @@ public:
 		return m_pixelDmxConfiguration.GetMap();
 	}
 
-	bool SetMap(pixel::Map tMap) {
-		m_pixelDmxConfiguration.SetMap(tMap);
-		if (m_pStorePixelDmx)
-		{
-			m_pStorePixelDmx->SaveMap(static_cast<uint8_t>(tMap));
-			return true;
-		}
-		return false;
-	}
-
-	uint16_t GetCount() const {
+	uint32_t GetCount() const {
 		return m_pixelDmxConfiguration.GetCount();
-	}
-
-	bool SetCount(uint16_t nCount) {
-		m_pixelDmxConfiguration.SetCount(nCount);
-		if (m_pStorePixelDmx)
-		{
-			m_pStorePixelDmx->SaveCount(nCount);
-			return true;
-		}
-		return false;
 	}
 
 	uint32_t GetGroups() const {
 		return m_pixelDmxConfiguration.GetGroups();
 	}
 
-	uint16_t GetGroupingCount() const {
+	uint32_t GetGroupingCount() const {
 		return m_pixelDmxConfiguration.GetGroupingCount();
-	}
-
-	bool SetGroupingCount(uint16_t nGroupingCount) {
-		m_pixelDmxConfiguration.SetGroupingCount(nGroupingCount);
-		if (m_pStorePixelDmx)
-		{
-			m_pStorePixelDmx->SaveGroupingCount(nGroupingCount);
-			return true;
-		}
-		return false;
 	}
 
 	uint32_t GetUniverses() const {
@@ -150,7 +110,6 @@ public:
 
 private:
 	PixelDmxConfiguration m_pixelDmxConfiguration;
-	StorePixelDmx* m_pStorePixelDmx;
 	pixeldmxconfiguration::PortInfo m_PortInfo;
 	uint32_t m_nChannelsPerPixel;
 
@@ -158,8 +117,6 @@ private:
 	uint16_t m_nDmxFootprint;
 
 	WS28xx *m_pWS28xx { nullptr };
-	PixelDmxStore *m_pWS28xxDmxStore { nullptr };
-	PixelDmxHandler *m_pPixelDmxHandler { nullptr };
 
 	bool m_bIsStarted { false };
 	bool m_bBlackout { false };

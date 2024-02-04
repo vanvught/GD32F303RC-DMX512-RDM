@@ -2,7 +2,7 @@
  * @file main.cpp
  *
  */
-/* Copyright (C) 2021-2023 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2021-2024 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  * THE SOFTWARE.
  */
 
-#include <stddef.h>
 #include <cstdio>
 #include <cstdint>
 
@@ -34,6 +33,7 @@
 #endif
 
 #include "displayudf.h"
+#include "displayudfparams.h"
 #include "display_timeout.h"
 
 #include "rdmresponder.h"
@@ -43,29 +43,19 @@
 #if defined (ENABLE_RDM_SUBDEVICES)
 # include "rdmsubdevicesparams.h"
 #endif
-#include "personalities.h"
 
 #include "pixeldmxparams.h"
 #include "ws28xxdmx.h"
-#include "pixeldmxstartstop.h"
+
 #include "pixeldmxparamsrdm.h"
 #include "pixeltestpattern.h"
 
 #if !defined(NO_EMAC)
 # include "remoteconfig.h"
 # include "remoteconfigparams.h"
-# include "storeremoteconfig.h"
-# include "storenetwork.h"
 #endif
 
 #include "configstore.h"
-#include "storepixeldmx.h"
-#include "storerdmdevice.h"
-#include "storerdmsensors.h"
-#if defined (ENABLE_RDM_SUBDEVICES)
-# include "storerdmsubdevices.h"
-#endif
-#include "storedisplayudf.h"
 
 #include "firmwareversion.h"
 #include "software_version.h"
@@ -82,8 +72,7 @@ void main() {
 	ConfigStore configStore;
 #if !defined(NO_EMAC)
 	display.TextStatus(NetworkConst::MSG_NETWORK_INIT, Display7SegmentMessage::INFO_NETWORK_INIT, CONSOLE_YELLOW);
-	StoreNetwork storeNetwork;
-	Network nw(&storeNetwork);
+	Network nw;
 	display.TextStatus(NetworkConst::MSG_NETWORK_STARTED, Display7SegmentMessage::INFO_NONE, CONSOLE_GREEN);
 #else
 	Network nw;
@@ -99,13 +88,9 @@ void main() {
 
 	PixelDmxConfiguration pixelDmxConfiguration;
 
-	auto storePixelDmx = StorePixelDmx::Get();
-	PixelDmxParams pixelDmxParams(storePixelDmx);
-
-	if (pixelDmxParams.Load()) {
-		pixelDmxParams.Dump();
-		pixelDmxParams.Set(&pixelDmxConfiguration);
-	}
+	PixelDmxParams pixelDmxParams;
+	pixelDmxParams.Load();
+	pixelDmxParams.Set(&pixelDmxConfiguration);
 
 	/*
 	 * DMX Footprint = (Channels per Pixel * Groups) <= 512 (1 Universe)
@@ -127,25 +112,13 @@ void main() {
 		pixelDmxConfiguration.SetCount(nCount);
 	}
 
-	WS28xxDmx pixelDmx(pixelDmxConfiguration, storePixelDmx);
-	pixelDmx.SetWS28xxDmxStore(storePixelDmx);
-
-	PixelDmxStartStop pixelDmxStartStop;
-	pixelDmx.SetPixelDmxHandler(&pixelDmxStartStop);
+	WS28xxDmx pixelDmx(pixelDmxConfiguration);
 
 	const auto nTestPattern = static_cast<pixelpatterns::Pattern>(pixelDmxParams.GetTestPattern());
 	PixelTestPattern pixelTestPattern(nTestPattern, 1);
 
-	PixelDmxParamsRdm pixelDmxParamsRdm(storePixelDmx);
+	PixelDmxParamsRdm pixelDmxParamsRdm;
 
-	RDMPersonality *personalities[PERSONALITY_COUNT];
-#if defined(ENABLE_CONFIG_PIDS)
-	static_assert(PERSONALITY_COUNT == static_cast<size_t>(pixel::Type::UNDEFINED),	"Personality Count != Pixel Type Count");
-	for (auto n = 0; n < PERSONALITY_COUNT; ++n) {
-		const auto description = PixelType::GetType(static_cast<pixel::Type>(n));
-		personalities[n] = new RDMPersonality(description, &pixelDmx);
-	}
-#else
 	char aDescription[rdm::personality::DESCRIPTION_MAX_LENGTH];
 	snprintf(aDescription, sizeof(aDescription) - 1U, "%s:%u G%u [%s]",
 			PixelType::GetType(pixelDmxConfiguration.GetType()),
@@ -153,10 +126,12 @@ void main() {
 			pixelDmxConfiguration.GetGroupingCount(),
 			PixelType::GetMap(pixelDmxConfiguration.GetMap()));
 
-	personalities[static_cast<uint8_t>(Personalities::DEFAULT)] = new RDMPersonality(aDescription, &pixelDmx);
-	personalities[static_cast<uint8_t>(Personalities::CONFIG_MODE)] = new RDMPersonality("Config mode", &pixelDmxParamsRdm)
-#endif
-	RDMResponder rdmResponder(personalities, PERSONALITY_COUNT);
+	RDMPersonality *personalities[2] = {
+			new RDMPersonality(aDescription, &pixelDmx),
+			new RDMPersonality("Config mode", &pixelDmxParamsRdm)
+	};
+
+	RDMResponder rdmResponder(personalities, 2);
 
 	rdmResponder.SetProductCategory(E120_PRODUCT_CATEGORY_FIXTURE);
 	rdmResponder.SetProductDetail(E120_PRODUCT_DETAIL_LED);
@@ -164,15 +139,12 @@ void main() {
 	RDMSensorsParams rdmSensorsParams;
 
 	rdmSensorsParams.Load();
-	rdmSensorsParams.Dump();
 	rdmSensorsParams.Set();
 
 #if defined (ENABLE_RDM_SUBDEVICES)
-
 	RDMSubDevicesParams rdmSubDevicesParams;
 
 	rdmSubDevicesParams.Load();
-	rdmSubDevicesParams.Dump();
 	rdmSubDevicesParams.Set();
 #endif
 
@@ -181,17 +153,11 @@ void main() {
 	RDMDeviceParams rdmDeviceParams;
 
 	rdmDeviceParams.Load();
-	rdmDeviceParams.Dump();
 	rdmDeviceParams.Set(&rdmResponder);
 
 	rdmResponder.Start();
 	rdmResponder.DmxDisableOutput(!isConfigMode && (nTestPattern != pixelpatterns::Pattern::NONE));
 	rdmResponder.Print();
-
-#if defined(ENABLE_CONFIG_PIDS)
-	const auto nPersonality = Personalities::toPersonalityIdx(Personalities::fromPixelType(pixelDmx.GetType()));
-	rdmResponder.SetPersonalityCurrent(RDM_ROOT_DEVICE, nPersonality);
-#endif
 
 	if (isConfigMode) {
 		pixelDmxParamsRdm.Print();
@@ -207,12 +173,10 @@ void main() {
 
 #if !defined(NO_EMAC)
 	RemoteConfig remoteConfig(remoteconfig::Node::RDMRESPONDER, remoteconfig::Output::PIXEL);
-	RemoteConfigParams remoteConfigParams(new StoreRemoteConfig);
 
-	if(remoteConfigParams.Load()) {
-		remoteConfigParams.Set(&remoteConfig);
-		remoteConfigParams.Dump();
-	}
+	RemoteConfigParams remoteConfigParams;
+	remoteConfigParams.Load();
+	remoteConfigParams.Set(&remoteConfig);
 
 	while (configStore.Flash())
 		;
@@ -222,15 +186,13 @@ void main() {
 	display.Set(2, displayudf::Labels::VERSION);
 	display.Set(6, displayudf::Labels::DMX_START_ADDRESS);
 
-	StoreDisplayUdf storeDisplayUdf;
-	DisplayUdfParams displayUdfParams(&storeDisplayUdf);
+	DisplayUdfParams displayUdfParams;
 
-	if (displayUdfParams.Load()) {
-		displayUdfParams.Dump();
-		displayUdfParams.Set(&display);
-	}
+	displayUdfParams.Load();
+	displayUdfParams.Set(&display);
 
 	display.Show();
+
 	display.Printf(7, "%s:%d G%d %s",
 			PixelType::GetType(pixelDmxConfiguration.GetType()),
 			pixelDmxConfiguration.GetCount(),

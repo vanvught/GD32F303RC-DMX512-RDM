@@ -2,7 +2,7 @@
  * @file pixelconfiguration.cpp
  *
  */
-/* Copyright (C) 2021-2022 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2021-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -126,7 +126,7 @@ void PixelConfiguration::GetTxH(Type type, uint8_t &nLowCode, uint8_t &nHighCode
 #include <cstdio>
 
 void PixelConfiguration::Print() {
-	printf("Pixel configuration\n");
+	puts("Pixel configuration");
 	printf(" Type    : %s [%d]\n", PixelType::GetType(m_type), static_cast<int>(m_type));
 	printf(" Count   : %d\n", m_nCount);
 

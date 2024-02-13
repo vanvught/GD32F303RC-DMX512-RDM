@@ -14,11 +14,12 @@ BOARD?=BOARD_GD32F303RC
 TARGET=$(FAMILY).bin
 LIST=$(FAMILY).list
 MAP=$(FAMILY).map
+SIZE=$(FAMILY).size
 BUILD=build_gd32/
 
 # Input
-SOURCE = ./
-FIRMWARE_DIR = ./../firmware-template-gd32/
+SOURCE=./
+FIRMWARE_DIR=./../firmware-template-gd32/
 
 DEFINES:=$(addprefix -D,$(DEFINES))
 DEFINES+=-DCONFIG_STORE_USE_ROM
@@ -40,10 +41,10 @@ LIBINCDIRS+=$(addsuffix /include, $(LIBINCDIRS))
 LIBGD32=$(addprefix -L../lib-,$(LIBS))
 LIBGD32:=$(addsuffix /lib_gd32, $(LIBGD32))
 
-# The variable for the ld -l flag 
+# The variable for the ld -l flag
 LDLIBS:=$(addprefix -l,$(LIBS))
 
-# The variables for the dependency check 
+# The variables for the dependency check
 LIBDEP=$(addprefix ../lib-,$(LIBS))
 
 $(info $$BOARD [${BOARD}])
@@ -51,9 +52,10 @@ $(info $$DEFINES [${DEFINES}])
 $(info $$LIBS [${LIBS}])
 $(info $$LIBDEP [${LIBDEP}])
 
-COPS=-DBARE_METAL -DGD32 -DGD32F30X_HD -D$(MCU) -D$(BOARD)
+COPS=-DBARE_METAL -DGD32 -D$(FAMILY_UCA) -D$(LINE_UC) -D$(MCU) -D$(BOARD)
 COPS+=$(DEFINES) $(MAKE_FLAGS) $(INCLUDES) $(LIBINCDIRS)
-COPS+=-Os -mcpu=cortex-m4 -mthumb -g -mfloat-abi=hard -fsingle-precision-constant -mfpu=fpv4-sp-d16 -DARM_MATH_CM4 -D__FPU_PRESENT=1
+COPS+=-D__Vendor_SysTickConfig=0 -DARM_MATH_CM4 -D__FPU_PRESENT=1
+COPS+=-Os -mcpu=cortex-m4 -mthumb -g -mfloat-abi=hard -fsingle-precision-constant -mfpu=fpv4-sp-d16
 COPS+=-nostartfiles -ffreestanding -nostdlib
 COPS+=-fstack-usage
 COPS+=-ffunction-sections -fdata-sections
@@ -68,8 +70,10 @@ CPPOPS+=-fno-threadsafe-statics
 LDOPS=--gc-sections --print-gc-sections
 
 PLATFORM_LIBGCC+= -L $(shell dirname `$(CC) $(COPS) -print-libgcc-file-name`)
+PLATFORM_LIBC+= -L $(shell dirname `$(CC) $(COPS) --print-file-name=libc.a`)
 
 $(info $$PLATFORM_LIBGCC [${PLATFORM_LIBGCC}])
+$(info $$PLATFORM_LIBC [${PLATFORM_LIBC}])
 
 C_OBJECTS=$(foreach sdir,$(SRCDIR),$(patsubst $(sdir)/%.c,$(BUILD)$(sdir)/%.o,$(wildcard $(sdir)/*.c)))
 C_OBJECTS+=$(foreach sdir,$(SRCDIR),$(patsubst $(sdir)/%.cpp,$(BUILD)$(sdir)/%.o,$(wildcard $(sdir)/*.cpp)))
@@ -104,6 +108,7 @@ clean: $(LIBDEP)
 	rm -f $(TARGET)
 	rm -f $(MAP)
 	rm -f $(LIST)
+	rm -f $(SIZE)
 
 #
 # Libraries
@@ -114,24 +119,29 @@ clean: $(LIBDEP)
 lisdep: $(LIBDEP)
 
 $(LIBDEP):
-	$(MAKE) -f Makefile.GD32 $(MAKECMDGOALS) 'FAMILY=${FAMILY}' 'MCU=${MCU}' 'BOARD=${BOARD}' 'MAKE_FLAGS=$(DEFINES)' -C $@ 
+	$(MAKE) -f Makefile.GD32 $(MAKECMDGOALS) 'FAMILY=${FAMILY}' 'BOARD=${BOARD}' 'MAKE_FLAGS=$(DEFINES)' -C $@
 
+#
 # Build bin
+#
 
 $(BUILD_DIRS) :
 	mkdir -p $(BUILD_DIRS)
 
-$(BUILD)startup_$(FAMILY)_hd.o : $(FIRMWARE_DIR)/startup_$(FAMILY)_hd.S
-	$(AS) $(COPS) -D__ASSEMBLY__ -c $(FIRMWARE_DIR)/startup_$(FAMILY)_hd.S -o $(BUILD)startup_$(FAMILY)_hd.o
+$(BUILD)startup_$(LINE).o : $(FIRMWARE_DIR)/startup_$(LINE).S
+	$(AS) $(COPS) -D__ASSEMBLY__ -c $(FIRMWARE_DIR)/startup_$(LINE).S -o $(BUILD)startup_$(LINE).o
 
-$(BUILD)main.elf: Makefile.GD32 $(LINKER) $(BUILD)startup_$(FAMILY)_hd.o $(OBJECTS) $(LIBDEP)
-	$(LD) $(BUILD)startup_$(FAMILY)_hd.o $(OBJECTS) -Map $(MAP) -T $(LINKER) $(LDOPS) -o $(BUILD)main.elf $(LIBGD32) $(LDLIBS) $(PLATFORM_LIBGCC) -lgcc 
+$(BUILD)hardfault_handler.o : $(FIRMWARE_DIR)/hardfault_handler.c	
+	$(CC) $(COPS) -c $(FIRMWARE_DIR)/hardfault_handler.c -o $(BUILD)hardfault_handler.o
+
+$(BUILD)main.elf: Makefile.GD32 $(LINKER) $(BUILD)startup_$(LINE).o $(BUILD)hardfault_handler.o $(OBJECTS) $(LIBDEP)
+	$(LD) $(BUILD)startup_$(LINE).o $(BUILD)hardfault_handler.o $(OBJECTS) -Map $(MAP) -T $(LINKER) $(LDOPS) -o $(BUILD)main.elf $(LIBGD32) $(LDLIBS) $(PLATFORM_LIBGCC) -lgcc
 	$(PREFIX)objdump -D $(BUILD)main.elf | $(PREFIX)c++filt > $(LIST)
 	$(PREFIX)size -A -x $(BUILD)main.elf > $(FAMILY).size
 	$(MAKE) -f Makefile.GD32 calculate_unused_ram SIZE_FILE=$(FAMILY).size LINKER_SCRIPT=$(LINKER)
 
 $(TARGET) : $(BUILD)main.elf
-	$(PREFIX)objcopy $(BUILD)main.elf -O binary $(TARGET)
+	$(PREFIX)objcopy $(BUILD)main.elf -O binary $(TARGET) --remove-section=.tcmsram* --remove-section=.sram1* --remove-section=.sram2* --remove-section=.ramadd* --remove-section=.bkpsram*
 
 $(foreach bdir,$(SRCDIR),$(eval $(call compile-objects,$(bdir))))
 

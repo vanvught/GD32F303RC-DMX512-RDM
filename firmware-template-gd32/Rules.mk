@@ -22,12 +22,11 @@ SOURCE=./
 FIRMWARE_DIR=./../firmware-template-gd32/
 
 DEFINES:=$(addprefix -D,$(DEFINES))
-DEFINES+=-DCONFIG_STORE_USE_ROM
 
-MCU=GD32F303RC
-
+include ../firmware-template-gd32/Board.mk
 include ../firmware-template-gd32/Mcu.mk
 include ../firmware-template/libs.mk
+include ../firmware-template-gd32/Includes.mk
 
 LIBS+=c++ c gd32
 
@@ -53,14 +52,12 @@ $(info $$LIBS [${LIBS}])
 $(info $$LIBDEP [${LIBDEP}])
 
 COPS=-DBARE_METAL -DGD32 -D$(FAMILY_UCA) -D$(LINE_UC) -D$(MCU) -D$(BOARD)
-COPS+=$(DEFINES) $(MAKE_FLAGS) $(INCLUDES) $(LIBINCDIRS)
-COPS+=-D__Vendor_SysTickConfig=0 -DARM_MATH_CM4 -D__FPU_PRESENT=1
-COPS+=-Os -mcpu=cortex-m4 -mthumb -g -mfloat-abi=hard -fsingle-precision-constant -mfpu=fpv4-sp-d16
-COPS+=-nostartfiles -ffreestanding -nostdlib
+COPS+=$(strip $(DEFINES) $(MAKE_FLAGS) $(INCLUDES) $(LIBINCDIRS))
+COPS+=$(strip $(ARMOPS) $(CMSISOPS))
+COPS+=-Os -nostartfiles -ffreestanding -nostdlib
 COPS+=-fstack-usage
 COPS+=-ffunction-sections -fdata-sections
-COPS+=-Wall -Werror -Wpedantic -Wextra -Wunused -Wsign-conversion -Wconversion
-COPS+=-Wduplicated-cond -Wlogical-op
+COPS+=-Wall -Werror -Wpedantic -Wextra -Wunused -Wsign-conversion -Wconversion -Wduplicated-cond -Wlogical-op
 
 CPPOPS=-std=c++20
 CPPOPS+=-Wnon-virtual-dtor -Woverloaded-virtual -Wnull-dereference -fno-rtti -fno-exceptions -fno-unwind-tables

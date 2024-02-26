@@ -51,7 +51,7 @@ $(info $$DEFINES [${DEFINES}])
 $(info $$LIBS [${LIBS}])
 $(info $$LIBDEP [${LIBDEP}])
 
-COPS=-DBARE_METAL -DGD32 -D$(FAMILY_UCA) -D$(LINE_UC) -D$(MCU) -D$(BOARD)
+COPS=-DGD32 -D$(FAMILY_UCA) -D$(LINE_UC) -D$(MCU) -D$(BOARD)
 COPS+=$(strip $(DEFINES) $(MAKE_FLAGS) $(INCLUDES) $(LIBINCDIRS))
 COPS+=$(strip $(ARMOPS) $(CMSISOPS))
 COPS+=-Os -nostartfiles -ffreestanding -nostdlib

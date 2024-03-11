@@ -476,6 +476,7 @@ static void timer1_config() {
 	timer_deinit(TIMER1);
 
 	timer_parameter_struct timer_initpara;
+	timer_struct_para_init(&timer_initpara);
 
 	timer_initpara.prescaler = TIMER_PSC_1MHZ;
 	timer_initpara.alignedmode = TIMER_COUNTER_EDGE;
@@ -519,6 +520,7 @@ static void timer4_config() {
 	timer_deinit(TIMER4);
 
 	timer_parameter_struct timer_initpara;
+	timer_struct_para_init(&timer_initpara);
 
 	timer_initpara.prescaler = TIMER_PSC_1MHZ;
 	timer_initpara.alignedmode = TIMER_COUNTER_EDGE;
@@ -563,6 +565,7 @@ static void timer2_config() {
 	timer_deinit(TIMER2);
 
 	timer_parameter_struct timer_initpara;
+	timer_struct_para_init(&timer_initpara);
 
 	timer_initpara.prescaler = TIMER_PSC_1MHZ;
 	timer_initpara.alignedmode = TIMER_COUNTER_EDGE;
@@ -592,6 +595,7 @@ static void timer3_config() {
 	timer_deinit(TIMER3);
 
 	timer_parameter_struct timer_initpara;
+	timer_struct_para_init(&timer_initpara);
 
 	timer_initpara.prescaler = TIMER_PSC_1MHZ;
 	timer_initpara.alignedmode = TIMER_COUNTER_EDGE;
@@ -621,6 +625,8 @@ static void timer6_config() {
 	timer_deinit(TIMER6);
 
 	timer_parameter_struct timer_initpara;
+	timer_struct_para_init(&timer_initpara);
+
 	timer_initpara.prescaler = TIMER_PSC_10KHZ;
 	timer_initpara.period = 10000;		// 1 second
 	timer_init(TIMER6, &timer_initpara);
@@ -648,7 +654,7 @@ static void usart_dma_config(void) {
 	 * USART 0
 	 */
 #if defined (DMX_USE_USART0)
-	dma_deinit(USART0_DMA, USART0_TX_DMA_CH);
+	dma_deinit(USART0_DMAx, USART0_TX_DMA_CHx);
 # if defined (GD32H7XX)
 	dma_init_struct.request = DMA_REQUEST_USART0_TX;
 # endif
@@ -670,14 +676,14 @@ static void usart_dma_config(void) {
 	dma_init_struct.periph_width = DMA_PERIPHERAL_WIDTH_8BIT;
 # endif
 	dma_init_struct.priority = DMA_PRIORITY_HIGH;
-	dma_init(USART0_DMA, USART0_TX_DMA_CH, &dma_init_struct);
+	dma_init(USART0_DMAx, USART0_TX_DMA_CHx, &dma_init_struct);
 	/* configure DMA mode */
-	dma_circulation_disable(USART0_DMA, USART0_TX_DMA_CH);
-	dma_memory_to_memory_disable(USART0_DMA, USART0_TX_DMA_CH);
+	dma_circulation_disable(USART0_DMAx, USART0_TX_DMA_CHx);
+	dma_memory_to_memory_disable(USART0_DMAx, USART0_TX_DMA_CHx);
 # if defined (GD32F4XX)
-	dma_channel_subperipheral_select(USART0_DMA, USART0_TX_DMA_CH, USART0_TX_DMA_SUBPERIx);
+	dma_channel_subperipheral_select(USART0_DMAx, USART0_TX_DMA_CHx, USART0_TX_DMA_SUBPERIx);
 # endif
-	dma_interrupt_disable(USART0_DMA, USART0_TX_DMA_CH, DMA_INTERRUPT_DISABLE);
+	dma_interrupt_disable(USART0_DMAx, USART0_TX_DMA_CHx, DMA_INTERRUPT_DISABLE);
 # if !defined (GD32F4XX)
 	NVIC_SetPriority(DMA0_Channel3_IRQn, 1);
 	NVIC_EnableIRQ(DMA0_Channel3_IRQn);
@@ -690,7 +696,7 @@ static void usart_dma_config(void) {
 	 * USART 1
 	 */
 #if defined (DMX_USE_USART1)
-	dma_deinit(USART1_DMA, USART1_TX_DMA_CH);
+	dma_deinit(USART1_DMAx, USART1_TX_DMA_CHx);
 # if defined (GD32H7XX)
 	dma_init_struct.request = DMA_REQUEST_USART1_TX;
 # endif
@@ -712,14 +718,14 @@ static void usart_dma_config(void) {
 	dma_init_struct.periph_width = DMA_PERIPHERAL_WIDTH_8BIT;
 # endif
 	dma_init_struct.priority = DMA_PRIORITY_HIGH;
-	dma_init(USART1_DMA, USART1_TX_DMA_CH, &dma_init_struct);
+	dma_init(USART1_DMAx, USART1_TX_DMA_CHx, &dma_init_struct);
 	/* configure DMA mode */
-	dma_circulation_disable(USART1_DMA, USART1_TX_DMA_CH);
-	dma_memory_to_memory_disable(USART1_DMA, USART1_TX_DMA_CH);
+	dma_circulation_disable(USART1_DMAx, USART1_TX_DMA_CHx);
+	dma_memory_to_memory_disable(USART1_DMAx, USART1_TX_DMA_CHx);
 # if defined (GD32F4XX)
-	dma_channel_subperipheral_select(USART1_DMA, USART1_TX_DMA_CH, USART1_TX_DMA_SUBPERIx);
+	dma_channel_subperipheral_select(USART1_DMAx, USART1_TX_DMA_CHx, USART1_TX_DMA_SUBPERIx);
 # endif
-	dma_interrupt_disable(USART1_DMA, USART1_TX_DMA_CH, DMA_INTERRUPT_DISABLE);
+	dma_interrupt_disable(USART1_DMAx, USART1_TX_DMA_CHx, DMA_INTERRUPT_DISABLE);
 	NVIC_SetPriority(DMA0_Channel6_IRQn, 1);
 	NVIC_EnableIRQ(DMA0_Channel6_IRQn);
 #endif
@@ -727,7 +733,7 @@ static void usart_dma_config(void) {
 	 * USART 2
 	 */
 #if defined (DMX_USE_USART2)
-	dma_deinit(USART2_DMA, USART2_TX_DMA_CH);
+	dma_deinit(USART2_DMAx, USART2_TX_DMA_CHx);
 # if defined (GD32H7XX)
 	dma_init_struct.request = DMA_REQUEST_USART2_TX;
 # endif
@@ -749,14 +755,14 @@ static void usart_dma_config(void) {
 	dma_init_struct.periph_width = DMA_PERIPHERAL_WIDTH_8BIT;
 # endif
 	dma_init_struct.priority = DMA_PRIORITY_HIGH;
-	dma_init(USART2_DMA, USART2_TX_DMA_CH, &dma_init_struct);
+	dma_init(USART2_DMAx, USART2_TX_DMA_CHx, &dma_init_struct);
 	/* configure DMA mode */
-	dma_circulation_disable(USART2_DMA, USART2_TX_DMA_CH);
-	dma_memory_to_memory_disable(USART2_DMA, USART2_TX_DMA_CH);
+	dma_circulation_disable(USART2_DMAx, USART2_TX_DMA_CHx);
+	dma_memory_to_memory_disable(USART2_DMAx, USART2_TX_DMA_CHx);
 # if defined (GD32F4XX)
-	dma_channel_subperipheral_select(USART2_DMA, USART2_TX_DMA_CH, USART2_TX_DMA_SUBPERIx);
+	dma_channel_subperipheral_select(USART2_DMAx, USART2_TX_DMA_CHx, USART2_TX_DMA_SUBPERIx);
 # endif
-	dma_interrupt_disable(USART2_DMA, USART2_TX_DMA_CH, DMA_INTERRUPT_DISABLE);
+	dma_interrupt_disable(USART2_DMAx, USART2_TX_DMA_CHx, DMA_INTERRUPT_DISABLE);
 #if defined (GD32F4XX) || defined (GD32H7XX)
 	NVIC_SetPriority(DMA0_Channel3_IRQn, 1);
 	NVIC_EnableIRQ(DMA0_Channel3_IRQn);
@@ -769,7 +775,7 @@ static void usart_dma_config(void) {
 	 * UART 3
 	 */
 #if defined (DMX_USE_UART3)
-	dma_deinit(UART3_DMA, UART3_TX_DMA_CH);
+	dma_deinit(UART3_DMAx, UART3_TX_DMA_CHx);
 # if defined (GD32H7XX)
 	dma_init_struct.request = DMA_REQUEST_UART3_TX;
 # endif
@@ -791,14 +797,14 @@ static void usart_dma_config(void) {
 	dma_init_struct.periph_width = DMA_PERIPHERAL_WIDTH_8BIT;
 # endif
 	dma_init_struct.priority = DMA_PRIORITY_HIGH;
-	dma_init(UART3_DMA, UART3_TX_DMA_CH, &dma_init_struct);
+	dma_init(UART3_DMAx, UART3_TX_DMA_CHx, &dma_init_struct);
 	/* configure DMA mode */
-	dma_circulation_disable(UART3_DMA, UART3_TX_DMA_CH);
-	dma_memory_to_memory_disable(UART3_DMA, UART3_TX_DMA_CH);
+	dma_circulation_disable(UART3_DMAx, UART3_TX_DMA_CHx);
+	dma_memory_to_memory_disable(UART3_DMAx, UART3_TX_DMA_CHx);
 # if defined (GD32F4XX)
-	dma_channel_subperipheral_select(UART3_DMA, UART3_TX_DMA_CH, UART3_TX_DMA_SUBPERIx);
+	dma_channel_subperipheral_select(UART3_DMAx, UART3_TX_DMA_CHx, UART3_TX_DMA_SUBPERIx);
 # endif
-	dma_interrupt_disable(UART3_DMA, UART3_TX_DMA_CH, DMA_INTERRUPT_DISABLE);
+	dma_interrupt_disable(UART3_DMAx, UART3_TX_DMA_CHx, DMA_INTERRUPT_DISABLE);
 # if !defined (GD32F4XX)
 	NVIC_SetPriority(DMA1_Channel4_IRQn, 1);
 	NVIC_EnableIRQ(DMA1_Channel4_IRQn);
@@ -811,7 +817,7 @@ static void usart_dma_config(void) {
 	 * UART 4
 	 */
 #if defined (DMX_USE_UART4)
-	dma_deinit(UART4_DMA, UART4_TX_DMA_CH);
+	dma_deinit(UART4_DMA, UART4_TX_DMA_CHx);
 # if defined (GD32H7XX)
 	dma_init_struct.request = DMA_REQUEST_UART4_TX;
 # endif
@@ -833,14 +839,14 @@ static void usart_dma_config(void) {
 	dma_init_struct.periph_width = DMA_PERIPHERAL_WIDTH_8BIT;
 #endif
 	dma_init_struct.priority = DMA_PRIORITY_HIGH;
-	dma_init(UART4_DMA, UART4_TX_DMA_CH, &dma_init_struct);
+	dma_init(UART4_DMA, UART4_TX_DMA_CHx, &dma_init_struct);
 	/* configure DMA mode */
-	dma_circulation_disable(UART4_DMA, UART4_TX_DMA_CH);
-	dma_memory_to_memory_disable(UART4_DMA, UART4_TX_DMA_CH);
+	dma_circulation_disable(UART4_DMA, UART4_TX_DMA_CHx);
+	dma_memory_to_memory_disable(UART4_DMA, UART4_TX_DMA_CHx);
 # if defined (GD32F4XX)
-	dma_channel_subperipheral_select(UART4_DMA, UART4_TX_DMA_CH, UART4_TX_DMA_SUBPERIx);
+	dma_channel_subperipheral_select(UART4_DMA, UART4_TX_DMA_CHx, UART4_TX_DMA_SUBPERIx);
 # endif
-	dma_interrupt_disable(UART4_DMA, UART4_TX_DMA_CH, DMA_INTERRUPT_DISABLE);
+	dma_interrupt_disable(UART4_DMA, UART4_TX_DMA_CHx, DMA_INTERRUPT_DISABLE);
 # if !defined (GD32F4XX)
 	NVIC_SetPriority(DMA1_Channel3_IRQn, 1);
 	NVIC_EnableIRQ(DMA1_Channel3_IRQn);
@@ -853,7 +859,7 @@ static void usart_dma_config(void) {
 	 * USART 5
 	 */
 #if defined (DMX_USE_USART5)
-	dma_deinit(USART5_DMA, USART5_TX_DMA_CH);
+	dma_deinit(USART5_DMA, USART5_TX_DMA_CHx);
 # if defined (GD32H7XX)
 	dma_init_struct.request = DMA_REQUEST_USART5_TX;
 # endif
@@ -874,14 +880,14 @@ static void usart_dma_config(void) {
 	dma_init_struct.periph_memory_width = DMA_PERIPHERAL_WIDTH_8BIT;
 #endif
 	dma_init_struct.priority = DMA_PRIORITY_HIGH;
-	dma_init(USART5_DMA, USART5_TX_DMA_CH, &dma_init_struct);
+	dma_init(USART5_DMA, USART5_TX_DMA_CHx, &dma_init_struct);
 	/* configure DMA mode */
-	dma_circulation_disable(USART5_DMA, USART5_TX_DMA_CH);
-	dma_memory_to_memory_disable(USART5_DMA, USART5_TX_DMA_CH);
+	dma_circulation_disable(USART5_DMA, USART5_TX_DMA_CHx);
+	dma_memory_to_memory_disable(USART5_DMA, USART5_TX_DMA_CHx);
 # if defined (GD32F4XX)
-	dma_channel_subperipheral_select(USART5_DMA, USART5_TX_DMA_CH, USART5_TX_DMA_SUBPERIx);
+	dma_channel_subperipheral_select(USART5_DMA, USART5_TX_DMA_CHx, USART5_TX_DMA_SUBPERIx);
 # endif
-	dma_interrupt_disable(USART5_DMA, USART5_TX_DMA_CH, DMA_INTERRUPT_DISABLE);
+	dma_interrupt_disable(USART5_DMA, USART5_TX_DMA_CHx, DMA_INTERRUPT_DISABLE);
 	NVIC_SetPriority(DMA1_Channel6_IRQn, 1);
 	NVIC_EnableIRQ(DMA1_Channel6_IRQn);
 #endif
@@ -889,7 +895,7 @@ static void usart_dma_config(void) {
 	 * UART 6
 	 */
 #if defined (DMX_USE_UART6)
-	dma_deinit(UART6_DMA, UART6_TX_DMA_CH);
+	dma_deinit(UART6_DMA, UART6_TX_DMA_CHx);
 # if defined (GD32H7XX)
 	dma_init_struct.request = DMA_REQUEST_UART6_TX;
 # endif
@@ -910,14 +916,14 @@ static void usart_dma_config(void) {
 	dma_init_struct.periph_memory_width = DMA_PERIPHERAL_WIDTH_8BIT;
 # endif
 	dma_init_struct.priority = DMA_PRIORITY_HIGH;
-	dma_init(UART6_DMA, UART6_TX_DMA_CH, &dma_init_struct);
+	dma_init(UART6_DMA, UART6_TX_DMA_CHx, &dma_init_struct);
 	/* configure DMA mode */
-	dma_circulation_disable(UART6_DMA, UART6_TX_DMA_CH);
-	dma_memory_to_memory_disable(UART6_DMA, UART6_TX_DMA_CH);
+	dma_circulation_disable(UART6_DMA, UART6_TX_DMA_CHx);
+	dma_memory_to_memory_disable(UART6_DMA, UART6_TX_DMA_CHx);
 # if defined (GD32F4XX)
-	dma_channel_subperipheral_select(UART6_DMA, UART6_TX_DMA_CH, UART6_TX_DMA_SUBPERIx);
+	dma_channel_subperipheral_select(UART6_DMA, UART6_TX_DMA_CHx, UART6_TX_DMA_SUBPERIx);
 # endif
-	dma_interrupt_disable(UART6_DMA, UART4_TX_DMA_CH, DMA_INTERRUPT_DISABLE);
+	dma_interrupt_disable(UART6_DMA, UART4_TX_DMA_CHx, DMA_INTERRUPT_DISABLE);
 # if defined (GD32F20X)
 	NVIC_SetPriority(DMA1_Channel4_IRQn, 1);
 	NVIC_EnableIRQ(DMA1_Channel4_IRQn);
@@ -930,7 +936,7 @@ static void usart_dma_config(void) {
 	 * UART 7
 	 */
 #if defined (DMX_USE_UART7)
-	dma_deinit(UART7_DMA, UART7_TX_DMA_CH);
+	dma_deinit(UART7_DMA, UART7_TX_DMA_CHx);
 # if defined (GD32H7XX)
 	dma_init_struct.request = DMA_REQUEST_UART7_TX;
 # endif
@@ -951,12 +957,12 @@ static void usart_dma_config(void) {
 	dma_init_struct.periph_memory_width = DMA_PERIPHERAL_WIDTH_8BIT;
 # endif
 	dma_init_struct.priority = DMA_PRIORITY_HIGH;
-	dma_init(UART7_DMA, UART7_TX_DMA_CH, &dma_init_struct);
+	dma_init(UART7_DMA, UART7_TX_DMA_CHx, &dma_init_struct);
 	/* configure DMA mode */
-	dma_circulation_disable(UART7_DMA, UART7_TX_DMA_CH);
-	dma_memory_to_memory_disable(UART7_DMA, UART7_TX_DMA_CH);
+	dma_circulation_disable(UART7_DMA, UART7_TX_DMA_CHx);
+	dma_memory_to_memory_disable(UART7_DMA, UART7_TX_DMA_CHx);
 # if defined (GD32F4XX)
-	dma_channel_subperipheral_select(UART7_DMA, UART7_TX_DMA_CH, UART7_TX_DMA_SUBPERIx);
+	dma_channel_subperipheral_select(UART7_DMA, UART7_TX_DMA_CHx, UART7_TX_DMA_SUBPERIx);
 # endif
 #if defined (GD32F20X)
 	NVIC_SetPriority(DMA1_Channel3_IRQn, 1);
@@ -977,27 +983,27 @@ void TIMER1_IRQHandler() {
 	if ((TIMER_INTF(TIMER1) & TIMER_INT_FLAG_CH0) == TIMER_INT_FLAG_CH0) {
 		switch (s_TxBuffer[dmx::config::USART0_PORT].State) {
 		case TxRxState::DMXINTER:
-			_gpio_mode_output(USART0_GPIO_PORT, USART0_TX_PIN);
-			GPIO_BC(USART0_GPIO_PORT) = USART0_TX_PIN;
+			_gpio_mode_output(USART0_GPIOx, USART0_TX_GPIO_PINx);
+			GPIO_BC(USART0_GPIOx) = USART0_TX_GPIO_PINx;
 			s_TxBuffer[dmx::config::USART0_PORT].State = TxRxState::BREAK;
 			timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_0, TIMER_CNT(TIMER1) + s_nDmxTransmitBreakTime);
 			break;
 		case TxRxState::BREAK:
-			_gpio_mode_af(USART0_GPIO_PORT, USART0_TX_PIN, USART0);
+			_gpio_mode_af(USART0_GPIOx, USART0_TX_GPIO_PINx, USART0);
 			s_TxBuffer[dmx::config::USART0_PORT].State = TxRxState::MAB;
 			timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_0, TIMER_CNT(TIMER1) + s_nDmxTransmitMabTime);
 			break;
 		case TxRxState::MAB: {
-			uint32_t dmaCHCTL = DMA_CHCTL(USART0_DMA, USART0_TX_DMA_CH);
+			uint32_t dmaCHCTL = DMA_CHCTL(USART0_DMAx, USART0_TX_DMA_CHx);
 			dmaCHCTL &= ~DMA_CHXCTL_CHEN;
-			DMA_CHCTL(USART0_DMA, USART0_TX_DMA_CH) = dmaCHCTL;
-			dma_interrupt_flag_clear(USART0_DMA, USART0_TX_DMA_CH, DMA_INTF_FTFIF);
+			DMA_CHCTL(USART0_DMAx, USART0_TX_DMA_CHx) = dmaCHCTL;
+			dma_interrupt_flag_clear(USART0_DMAx, USART0_TX_DMA_CHx, DMA_INTF_FTFIF);
 			const auto *p = &s_TxBuffer[dmx::config::USART0_PORT].dmx;
-			DMA_CHMADDR(USART0_DMA, USART0_TX_DMA_CH) = (uint32_t) p->data;
-			DMA_CHCNT(USART0_DMA, USART0_TX_DMA_CH) = (p->nLength & DMA_CHXCNT_CNT);
+			DMA_CHMADDR(USART0_DMAx, USART0_TX_DMA_CHx) = (uint32_t) p->data;
+			DMA_CHCNT(USART0_DMAx, USART0_TX_DMA_CHx) = (p->nLength & DMA_CHXCNT_CNT);
 			dmaCHCTL |= DMA_CHXCTL_CHEN;
 			dmaCHCTL |= DMA_INTERRUPT_ENABLE;
-			DMA_CHCTL(USART0_DMA, USART0_TX_DMA_CH) = dmaCHCTL;
+			DMA_CHCTL(USART0_DMAx, USART0_TX_DMA_CHx) = dmaCHCTL;
 			usart_dma_transmit_config(USART0, USART_TRANSMIT_DMA_ENABLE);
 		}
 			break;
@@ -1016,27 +1022,27 @@ void TIMER1_IRQHandler() {
 	if ((TIMER_INTF(TIMER1) & TIMER_INT_FLAG_CH1) == TIMER_INT_FLAG_CH1) {
 		switch (s_TxBuffer[dmx::config::USART1_PORT].State) {
 		case TxRxState::DMXINTER:
-			_gpio_mode_output(USART1_GPIO_PORT, USART1_TX_PIN);
-			GPIO_BC(USART1_GPIO_PORT) = USART1_TX_PIN;
+			_gpio_mode_output(USART1_GPIOx, USART1_TX_GPIO_PINx);
+			GPIO_BC(USART1_GPIOx) = USART1_TX_GPIO_PINx;
 			s_TxBuffer[dmx::config::USART1_PORT].State = TxRxState::BREAK;
 			timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_1, TIMER_CNT(TIMER1) + s_nDmxTransmitBreakTime);
 			break;
 		case TxRxState::BREAK:
-			_gpio_mode_af(USART1_GPIO_PORT, USART1_TX_PIN, USART1);
+			_gpio_mode_af(USART1_GPIOx, USART1_TX_GPIO_PINx, USART1);
 			s_TxBuffer[dmx::config::USART1_PORT].State = TxRxState::MAB;
 			timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_1, TIMER_CNT(TIMER1) + s_nDmxTransmitMabTime);
 			break;
 		case TxRxState::MAB: {
-			uint32_t dmaCHCTL = DMA_CHCTL(USART1_DMA, USART1_TX_DMA_CH);
+			uint32_t dmaCHCTL = DMA_CHCTL(USART1_DMAx, USART1_TX_DMA_CHx);
 			dmaCHCTL &= ~DMA_CHXCTL_CHEN;
-			DMA_CHCTL(USART1_DMA, USART1_TX_DMA_CH) = dmaCHCTL;
-			dma_interrupt_flag_clear(USART1_DMA, USART1_TX_DMA_CH, DMA_INTF_FTFIF);
+			DMA_CHCTL(USART1_DMAx, USART1_TX_DMA_CHx) = dmaCHCTL;
+			dma_interrupt_flag_clear(USART1_DMAx, USART1_TX_DMA_CHx, DMA_INTF_FTFIF);
 			const auto *p = &s_TxBuffer[dmx::config::USART1_PORT].dmx;
-			DMA_CHMADDR(USART1_DMA, USART1_TX_DMA_CH) = (uint32_t) p->data;
-			DMA_CHCNT(USART1_DMA, USART1_TX_DMA_CH) = (p->nLength & DMA_CHXCNT_CNT);
+			DMA_CHMADDR(USART1_DMAx, USART1_TX_DMA_CHx) = (uint32_t) p->data;
+			DMA_CHCNT(USART1_DMAx, USART1_TX_DMA_CHx) = (p->nLength & DMA_CHXCNT_CNT);
 			dmaCHCTL |= DMA_CHXCTL_CHEN;
 			dmaCHCTL |= DMA_INTERRUPT_ENABLE;
-			DMA_CHCTL(USART1_DMA, USART1_TX_DMA_CH) = dmaCHCTL;
+			DMA_CHCTL(USART1_DMAx, USART1_TX_DMA_CHx) = dmaCHCTL;
 			usart_dma_transmit_config(USART1, USART_TRANSMIT_DMA_ENABLE);
 		}
 			break;
@@ -1055,27 +1061,27 @@ void TIMER1_IRQHandler() {
 	if ((TIMER_INTF(TIMER1) & TIMER_INT_FLAG_CH2) == TIMER_INT_FLAG_CH2) {
 		switch (s_TxBuffer[dmx::config::USART2_PORT].State) {
 		case TxRxState::DMXINTER:
-			_gpio_mode_output(USART2_GPIO_PORT, USART2_TX_PIN);
-			GPIO_BC(USART2_GPIO_PORT) = USART2_TX_PIN;
+			_gpio_mode_output(USART2_GPIOx, USART2_TX_GPIO_PINx);
+			GPIO_BC(USART2_GPIOx) = USART2_TX_GPIO_PINx;
 			s_TxBuffer[dmx::config::USART2_PORT].State = TxRxState::BREAK;
 			TIMER_CH2CV(TIMER1) =  TIMER_CNT(TIMER1) + s_nDmxTransmitBreakTime;
 			break;
 		case TxRxState::BREAK:
-			_gpio_mode_af(USART2_GPIO_PORT, USART2_TX_PIN, USART2);
+			_gpio_mode_af(USART2_GPIOx, USART2_TX_GPIO_PINx, USART2);
 			s_TxBuffer[dmx::config::USART2_PORT].State = TxRxState::MAB;
 			TIMER_CH2CV(TIMER1) = TIMER_CNT(TIMER1) + s_nDmxTransmitMabTime;
 			break;
 		case TxRxState::MAB: {
-			uint32_t dmaCHCTL = DMA_CHCTL(USART2_DMA, USART2_TX_DMA_CH);
+			uint32_t dmaCHCTL = DMA_CHCTL(USART2_DMAx, USART2_TX_DMA_CHx);
 			dmaCHCTL &= ~DMA_CHXCTL_CHEN;
-			DMA_CHCTL(USART2_DMA, USART2_TX_DMA_CH) = dmaCHCTL;
-			dma_interrupt_flag_clear(USART2_DMA, USART2_TX_DMA_CH, DMA_INTF_FTFIF);
+			DMA_CHCTL(USART2_DMAx, USART2_TX_DMA_CHx) = dmaCHCTL;
+			dma_interrupt_flag_clear(USART2_DMAx, USART2_TX_DMA_CHx, DMA_INTF_FTFIF);
 			const auto *p = &s_TxBuffer[dmx::config::USART2_PORT].dmx;
-			DMA_CHMADDR(USART2_DMA, USART2_TX_DMA_CH) = (uint32_t) p->data;
-			DMA_CHCNT(USART2_DMA, USART2_TX_DMA_CH) = (p->nLength & DMA_CHXCNT_CNT);
+			DMA_CHMADDR(USART2_DMAx, USART2_TX_DMA_CHx) = (uint32_t) p->data;
+			DMA_CHCNT(USART2_DMAx, USART2_TX_DMA_CHx) = (p->nLength & DMA_CHXCNT_CNT);
 			dmaCHCTL |= DMA_CHXCTL_CHEN;
 			dmaCHCTL |= DMA_INTERRUPT_ENABLE;
-			DMA_CHCTL(USART2_DMA, USART2_TX_DMA_CH) = dmaCHCTL;
+			DMA_CHCTL(USART2_DMAx, USART2_TX_DMA_CHx) = dmaCHCTL;
 			usart_dma_transmit_config(USART2, USART_TRANSMIT_DMA_ENABLE);
 		}
 			break;
@@ -1094,27 +1100,27 @@ void TIMER1_IRQHandler() {
 	if ((TIMER_INTF(TIMER1) & TIMER_INT_FLAG_CH3) == TIMER_INT_FLAG_CH3) {
 		switch (s_TxBuffer[dmx::config::UART3_PORT].State) {
 		case TxRxState::DMXINTER:
-			_gpio_mode_output(UART3_GPIO_PORT, UART3_TX_PIN);
-			GPIO_BC(UART3_GPIO_PORT) = UART3_TX_PIN;
+			_gpio_mode_output(UART3_GPIOx, UART3_TX_GPIO_PINx);
+			GPIO_BC(UART3_GPIOx) = UART3_TX_GPIO_PINx;
 			s_TxBuffer[dmx::config::UART3_PORT].State = TxRxState::BREAK;
 			timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_3, TIMER_CNT(TIMER1) + s_nDmxTransmitBreakTime);
 			break;
 		case TxRxState::BREAK:
-			_gpio_mode_af(UART3_GPIO_PORT, UART3_TX_PIN, UART3);
+			_gpio_mode_af(UART3_GPIOx, UART3_TX_GPIO_PINx, UART3);
 			s_TxBuffer[dmx::config::UART3_PORT].State = TxRxState::MAB;
 			timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_3, TIMER_CNT(TIMER1) + s_nDmxTransmitMabTime);
 			break;
 		case TxRxState::MAB: {
-			uint32_t dmaCHCTL = DMA_CHCTL(UART3_DMA, UART3_TX_DMA_CH);
+			uint32_t dmaCHCTL = DMA_CHCTL(UART3_DMAx, UART3_TX_DMA_CHx);
 			dmaCHCTL &= ~DMA_CHXCTL_CHEN;
-			DMA_CHCTL(UART3_DMA, UART3_TX_DMA_CH) = dmaCHCTL;
-			dma_interrupt_flag_clear(UART3_DMA, UART3_TX_DMA_CH, DMA_INTF_FTFIF);
+			DMA_CHCTL(UART3_DMAx, UART3_TX_DMA_CHx) = dmaCHCTL;
+			dma_interrupt_flag_clear(UART3_DMAx, UART3_TX_DMA_CHx, DMA_INTF_FTFIF);
 			const auto *p = &s_TxBuffer[dmx::config::UART3_PORT].dmx;
-			DMA_CHMADDR(UART3_DMA, UART3_TX_DMA_CH) = (uint32_t) p->data;
-			DMA_CHCNT(UART3_DMA, UART3_TX_DMA_CH) = (p->nLength & DMA_CHXCNT_CNT);
+			DMA_CHMADDR(UART3_DMAx, UART3_TX_DMA_CHx) = (uint32_t) p->data;
+			DMA_CHCNT(UART3_DMAx, UART3_TX_DMA_CHx) = (p->nLength & DMA_CHXCNT_CNT);
 			dmaCHCTL |= DMA_CHXCTL_CHEN;
 			dmaCHCTL |= DMA_INTERRUPT_ENABLE;
-			DMA_CHCTL(UART3_DMA, UART3_TX_DMA_CH) = dmaCHCTL;
+			DMA_CHCTL(UART3_DMAx, UART3_TX_DMA_CHx) = dmaCHCTL;
 			usart_dma_transmit_config(UART3, USART_TRANSMIT_DMA_ENABLE);
 		}
 			break;
@@ -1136,26 +1142,26 @@ void TIMER4_IRQHandler() {
 	if ((TIMER_INTF(TIMER4) & TIMER_INT_FLAG_CH0) == TIMER_INT_FLAG_CH0) {
 		switch (s_TxBuffer[dmx::config::UART4_PORT].State) {
 		case TxRxState::DMXINTER:
-			_gpio_mode_output(UART4_GPIO_TX_PORT, UART4_TX_PIN);
-			GPIO_BC(UART4_GPIO_TX_PORT) = UART4_TX_PIN;
+			_gpio_mode_output(UART4_TX_GPIOx, UART4_TX_GPIO_PINx);
+			GPIO_BC(UART4_TX_GPIOx) = UART4_TX_GPIO_PINx;
 			s_TxBuffer[dmx::config::UART4_PORT].State = TxRxState::BREAK;
 			timer_channel_output_pulse_value_config(TIMER4, TIMER_CH_0, TIMER_CNT(TIMER4) + s_nDmxTransmitBreakTime);
 			break;
 		case TxRxState::BREAK:
-			_gpio_mode_af(UART4_GPIO_TX_PORT, UART4_TX_PIN, UART4);
+			_gpio_mode_af(UART4_TX_GPIOx, UART4_TX_GPIO_PINx, UART4);
 			s_TxBuffer[dmx::config::UART4_PORT].State = TxRxState::MAB;
 			timer_channel_output_pulse_value_config(TIMER4, TIMER_CH_0, TIMER_CNT(TIMER4) + s_nDmxTransmitMabTime);
 			break;
 		case TxRxState::MAB: {
-			uint32_t dmaCHCTL = DMA_CHCTL(UART4_DMA, UART4_TX_DMA_CH);
+			uint32_t dmaCHCTL = DMA_CHCTL(UART4_DMA, UART4_TX_DMA_CHx);
 			dmaCHCTL &= ~DMA_CHXCTL_CHEN;
-			DMA_CHCTL(UART4_DMA, UART4_TX_DMA_CH) = dmaCHCTL;
+			DMA_CHCTL(UART4_DMA, UART4_TX_DMA_CHx) = dmaCHCTL;
 			const auto *p = &s_TxBuffer[dmx::config::UART4_PORT].dmx;
-			DMA_CHMADDR(UART4_DMA, UART4_TX_DMA_CH) = (uint32_t) p->data;
-			DMA_CHCNT(UART4_DMA, UART4_TX_DMA_CH) = (p->nLength & DMA_CHXCNT_CNT);
+			DMA_CHMADDR(UART4_DMA, UART4_TX_DMA_CHx) = (uint32_t) p->data;
+			DMA_CHCNT(UART4_DMA, UART4_TX_DMA_CHx) = (p->nLength & DMA_CHXCNT_CNT);
 			dmaCHCTL |= DMA_CHXCTL_CHEN;
 			dmaCHCTL |= DMA_INTERRUPT_ENABLE;
-			DMA_CHCTL(UART4_DMA, UART4_TX_DMA_CH) = dmaCHCTL;
+			DMA_CHCTL(UART4_DMA, UART4_TX_DMA_CHx) = dmaCHCTL;
 			usart_dma_transmit_config(UART4, USART_TRANSMIT_DMA_ENABLE);
 		}
 			break;
@@ -1174,26 +1180,26 @@ void TIMER4_IRQHandler() {
 	if ((TIMER_INTF(TIMER4) & TIMER_INT_FLAG_CH1) == TIMER_INT_FLAG_CH1) {
 		switch (s_TxBuffer[dmx::config::USART5_PORT].State) {
 		case TxRxState::DMXINTER:
-			_gpio_mode_output(USART5_GPIO_PORT, USART5_TX_PIN);
-			GPIO_BC(USART5_GPIO_PORT) = USART5_TX_PIN;
+			_gpio_mode_output(USART5_GPIOx, USART5_TX_GPIO_PINx);
+			GPIO_BC(USART5_GPIOx) = USART5_TX_GPIO_PINx;
 			s_TxBuffer[dmx::config::USART5_PORT].State = TxRxState::BREAK;
 			TIMER_CH1CV(TIMER4) = TIMER_CNT(TIMER4) + s_nDmxTransmitBreakTime;
 			break;
 		case TxRxState::BREAK:
-			_gpio_mode_af(USART5_GPIO_PORT, USART5_TX_PIN, USART5);
+			_gpio_mode_af(USART5_GPIOx, USART5_TX_GPIO_PINx, USART5);
 			s_TxBuffer[dmx::config::USART5_PORT].State = TxRxState::MAB;
 			TIMER_CH1CV(TIMER4) = TIMER_CNT(TIMER4) + s_nDmxTransmitMabTime;
 			break;
 		case TxRxState::MAB: {
-			uint32_t dmaCHCTL = DMA_CHCTL(USART5_DMA, USART5_TX_DMA_CH);
+			uint32_t dmaCHCTL = DMA_CHCTL(USART5_DMA, USART5_TX_DMA_CHx);
 			dmaCHCTL &= ~DMA_CHXCTL_CHEN;
-			DMA_CHCTL(USART5_DMA, USART5_TX_DMA_CH) = dmaCHCTL;
+			DMA_CHCTL(USART5_DMA, USART5_TX_DMA_CHx) = dmaCHCTL;
 			const auto *p = &s_TxBuffer[dmx::config::USART5_PORT].dmx;
-			DMA_CHMADDR(USART5_DMA, USART5_TX_DMA_CH) = (uint32_t) p->data;
-			DMA_CHCNT(USART5_DMA, USART5_TX_DMA_CH) = (p->nLength & DMA_CHXCNT_CNT);
+			DMA_CHMADDR(USART5_DMA, USART5_TX_DMA_CHx) = (uint32_t) p->data;
+			DMA_CHCNT(USART5_DMA, USART5_TX_DMA_CHx) = (p->nLength & DMA_CHXCNT_CNT);
 			dmaCHCTL |= DMA_CHXCTL_CHEN;
 			dmaCHCTL |= DMA_INTERRUPT_ENABLE;
-			DMA_CHCTL(USART5_DMA, USART5_TX_DMA_CH) = dmaCHCTL;
+			DMA_CHCTL(USART5_DMA, USART5_TX_DMA_CHx) = dmaCHCTL;
 			usart_dma_transmit_config(USART5, USART_TRANSMIT_DMA_ENABLE);
 		}
 			break;
@@ -1212,27 +1218,27 @@ void TIMER4_IRQHandler() {
 	if ((TIMER_INTF(TIMER4) & TIMER_INT_FLAG_CH2) == TIMER_INT_FLAG_CH2) {
 		switch (s_TxBuffer[dmx::config::UART6_PORT].State) {
 		case TxRxState::DMXINTER:
-			_gpio_mode_output(UART6_GPIO_PORT, UART6_TX_PIN);
-			GPIO_BC(UART6_GPIO_PORT) = UART6_TX_PIN;
+			_gpio_mode_output(UART6_GPIOx, UART6_TX_GPIO_PINx);
+			GPIO_BC(UART6_GPIOx) = UART6_TX_GPIO_PINx;
 			s_TxBuffer[dmx::config::UART6_PORT].State = TxRxState::BREAK;
 			timer_channel_output_pulse_value_config(TIMER4, TIMER_CH_2, TIMER_CNT(TIMER4) + s_nDmxTransmitBreakTime);
 			break;
 		case TxRxState::BREAK:
-			_gpio_mode_af(UART6_GPIO_PORT, UART6_TX_PIN, UART6);
+			_gpio_mode_af(UART6_GPIOx, UART6_TX_GPIO_PINx, UART6);
 			s_TxBuffer[dmx::config::UART6_PORT].State = TxRxState::MAB;
 			timer_channel_output_pulse_value_config(TIMER4, TIMER_CH_2, TIMER_CNT(TIMER4) + s_nDmxTransmitMabTime);
 			break;
 		case TxRxState::MAB: {
-			uint32_t dmaCHCTL = DMA_CHCTL(UART6_DMA, UART6_TX_DMA_CH);
+			uint32_t dmaCHCTL = DMA_CHCTL(UART6_DMA, UART6_TX_DMA_CHx);
 			dmaCHCTL &= ~DMA_CHXCTL_CHEN;
-			DMA_CHCTL(UART6_DMA, UART6_TX_DMA_CH)= dmaCHCTL;
-			dma_interrupt_flag_clear(UART6_DMA, UART6_TX_DMA_CH, DMA_INTF_FTFIF);
+			DMA_CHCTL(UART6_DMA, UART6_TX_DMA_CHx)= dmaCHCTL;
+			dma_interrupt_flag_clear(UART6_DMA, UART6_TX_DMA_CHx, DMA_INTF_FTFIF);
 			const auto *p = &s_TxBuffer[dmx::config::UART6_PORT].dmx;
-			DMA_CHMADDR(UART6_DMA, UART6_TX_DMA_CH) = (uint32_t) p->data;
-			DMA_CHCNT(UART6_DMA, UART6_TX_DMA_CH) = (p->nLength & DMA_CHXCNT_CNT);
+			DMA_CHMADDR(UART6_DMA, UART6_TX_DMA_CHx) = (uint32_t) p->data;
+			DMA_CHCNT(UART6_DMA, UART6_TX_DMA_CHx) = (p->nLength & DMA_CHXCNT_CNT);
 			dmaCHCTL |= DMA_CHXCTL_CHEN;
 			dmaCHCTL |= DMA_INTERRUPT_ENABLE;
-			DMA_CHCTL(UART6_DMA, UART6_TX_DMA_CH)= dmaCHCTL;
+			DMA_CHCTL(UART6_DMA, UART6_TX_DMA_CHx)= dmaCHCTL;
 			usart_dma_transmit_config(UART6, USART_TRANSMIT_DMA_ENABLE);
 		}
 			break;
@@ -1251,27 +1257,27 @@ void TIMER4_IRQHandler() {
 	if ((TIMER_INTF(TIMER4) & TIMER_INT_FLAG_CH3) == TIMER_INT_FLAG_CH3) {
 		switch (s_TxBuffer[dmx::config::UART7_PORT].State) {
 		case TxRxState::DMXINTER:
-			_gpio_mode_output(UART7_GPIO_PORT, UART7_TX_PIN);
-			GPIO_BC(UART7_GPIO_PORT) = UART7_TX_PIN;
+			_gpio_mode_output(UART7_GPIOx, UART7_TX_GPIO_PINx);
+			GPIO_BC(UART7_GPIOx) = UART7_TX_GPIO_PINx;
 			s_TxBuffer[dmx::config::UART7_PORT].State = TxRxState::BREAK;
 			timer_channel_output_pulse_value_config(TIMER4, TIMER_CH_3, TIMER_CNT(TIMER4) + s_nDmxTransmitBreakTime);
 			break;
 		case TxRxState::BREAK:
-			_gpio_mode_af(UART7_GPIO_PORT, UART7_TX_PIN, UART7);
+			_gpio_mode_af(UART7_GPIOx, UART7_TX_GPIO_PINx, UART7);
 			s_TxBuffer[dmx::config::UART7_PORT].State = TxRxState::MAB;
 			timer_channel_output_pulse_value_config(TIMER4, TIMER_CH_3, TIMER_CNT(TIMER4) + s_nDmxTransmitMabTime);
 			break;
 		case TxRxState::MAB: {
-			uint32_t dmaCHCTL = DMA_CHCTL(UART7_DMA, UART7_TX_DMA_CH);
+			uint32_t dmaCHCTL = DMA_CHCTL(UART7_DMA, UART7_TX_DMA_CHx);
 			dmaCHCTL &= ~DMA_CHXCTL_CHEN;
-			DMA_CHCTL(UART7_DMA, UART7_TX_DMA_CH) = dmaCHCTL;
-			dma_interrupt_flag_clear(UART7_DMA, UART7_TX_DMA_CH, DMA_INTF_FTFIF);
+			DMA_CHCTL(UART7_DMA, UART7_TX_DMA_CHx) = dmaCHCTL;
+			dma_interrupt_flag_clear(UART7_DMA, UART7_TX_DMA_CHx, DMA_INTF_FTFIF);
 			const auto *p = &s_TxBuffer[dmx::config::UART7_PORT].dmx;
-			DMA_CHMADDR(UART7_DMA, UART7_TX_DMA_CH) = (uint32_t) p->data;
-			DMA_CHCNT(UART7_DMA, UART7_TX_DMA_CH) = (p->nLength & DMA_CHXCNT_CNT);
+			DMA_CHMADDR(UART7_DMA, UART7_TX_DMA_CHx) = (uint32_t) p->data;
+			DMA_CHCNT(UART7_DMA, UART7_TX_DMA_CHx) = (p->nLength & DMA_CHXCNT_CNT);
 			dmaCHCTL |= DMA_CHXCTL_CHEN;
 			dmaCHCTL |= DMA_INTERRUPT_ENABLE;
-			DMA_CHCTL(UART7_DMA, UART7_TX_DMA_CH)= dmaCHCTL;
+			DMA_CHCTL(UART7_DMA, UART7_TX_DMA_CHx)= dmaCHCTL;
 			usart_dma_transmit_config(UART7, USART_TRANSMIT_DMA_ENABLE);
 		}
 			break;
@@ -1799,32 +1805,32 @@ void Dmx::StartDmxOutput(const uint32_t nPortIndex) {
 	/* TIMER 1 */
 #if defined (DMX_USE_USART0)
 	case USART0:
-		_gpio_mode_output(USART0_GPIO_PORT, USART0_TX_PIN);
-		GPIO_BC(USART0_GPIO_PORT) = USART0_TX_PIN;
+		_gpio_mode_output(USART0_GPIOx, USART0_TX_GPIO_PINx);
+		GPIO_BC(USART0_GPIOx) = USART0_TX_GPIO_PINx;
 		timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_0, TIMER_CNT(TIMER1) + s_nDmxTransmitBreakTime);
 		timer_interrupt_enable(TIMER1, TIMER_INT_CH0);
 		break;
 #endif
 #if defined (DMX_USE_USART1)
 	case USART1:
-		_gpio_mode_output(USART1_GPIO_PORT, USART1_TX_PIN);
-		GPIO_BC(USART1_GPIO_PORT) = USART1_TX_PIN;
+		_gpio_mode_output(USART1_GPIOx, USART1_TX_GPIO_PINx);
+		GPIO_BC(USART1_GPIOx) = USART1_TX_GPIO_PINx;
 		timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_1, TIMER_CNT(TIMER1) + s_nDmxTransmitBreakTime);
 		timer_interrupt_enable(TIMER1, TIMER_INT_CH1);
 		break;
 #endif
 #if defined (DMX_USE_USART2)
 	case USART2:
-		_gpio_mode_output(USART2_GPIO_PORT, USART2_TX_PIN);
-		GPIO_BC(USART2_GPIO_PORT) = USART2_TX_PIN;
+		_gpio_mode_output(USART2_GPIOx, USART2_TX_GPIO_PINx);
+		GPIO_BC(USART2_GPIOx) = USART2_TX_GPIO_PINx;
 		timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_2, TIMER_CNT(TIMER1) + s_nDmxTransmitBreakTime);
 		timer_interrupt_enable(TIMER1, TIMER_INT_CH2);
 		break;
 #endif
 #if defined (DMX_USE_UART3)
 	case UART3:
-		_gpio_mode_output(UART3_GPIO_PORT, UART3_TX_PIN);
-		GPIO_BC(UART3_GPIO_PORT) = UART3_TX_PIN;
+		_gpio_mode_output(UART3_GPIOx, UART3_TX_GPIO_PINx);
+		GPIO_BC(UART3_GPIOx) = UART3_TX_GPIO_PINx;
 		timer_channel_output_pulse_value_config(TIMER1, TIMER_CH_3, TIMER_CNT(TIMER1) + s_nDmxTransmitBreakTime);
 		timer_interrupt_enable(TIMER1, TIMER_INT_CH3);
 		break;
@@ -1832,32 +1838,32 @@ void Dmx::StartDmxOutput(const uint32_t nPortIndex) {
 		/* TIMER 4 */
 #if defined (DMX_USE_UART4)
 	case UART4:
-		_gpio_mode_output(UART4_GPIO_TX_PORT, UART4_TX_PIN);
-		GPIO_BC(UART4_GPIO_TX_PORT) = UART4_TX_PIN;
+		_gpio_mode_output(UART4_TX_GPIOx, UART4_TX_GPIO_PINx);
+		GPIO_BC(UART4_TX_GPIOx) = UART4_TX_GPIO_PINx;
 		timer_channel_output_pulse_value_config(TIMER4, TIMER_CH_0, TIMER_CNT(TIMER4) + s_nDmxTransmitBreakTime);
 		timer_interrupt_enable(TIMER4, TIMER_INT_CH0);
 		break;
 #endif
 #if defined (DMX_USE_USART5)
 	case USART5:
-		_gpio_mode_output(USART5_GPIO_PORT, USART5_TX_PIN);
-		GPIO_BC(USART5_GPIO_PORT) = USART5_TX_PIN;
+		_gpio_mode_output(USART5_GPIOx, USART5_TX_GPIO_PINx);
+		GPIO_BC(USART5_GPIOx) = USART5_TX_GPIO_PINx;
 		timer_channel_output_pulse_value_config(TIMER4, TIMER_CH_1, TIMER_CNT(TIMER4) + s_nDmxTransmitBreakTime);
 		timer_interrupt_enable(TIMER4, TIMER_INT_CH1);
 		break;
 #endif
 #if defined (DMX_USE_UART6)
 	case UART6:
-		_gpio_mode_output(UART6_GPIO_PORT, UART6_TX_PIN);
-		GPIO_BC(UART6_GPIO_PORT) = UART6_TX_PIN;
+		_gpio_mode_output(UART6_GPIOx, UART6_TX_GPIO_PINx);
+		GPIO_BC(UART6_GPIOx) = UART6_TX_GPIO_PINx;
 		timer_channel_output_pulse_value_config(TIMER4, TIMER_CH_2, TIMER_CNT(TIMER4) + s_nDmxTransmitBreakTime);
 		timer_interrupt_enable(TIMER4, TIMER_INT_CH2);
 		break;
 #endif
 #if defined (DMX_USE_UART7)
 	case UART7:
-		_gpio_mode_output(UART7_GPIO_PORT, UART7_TX_PIN);
-		GPIO_BC(UART7_GPIO_PORT) = UART7_TX_PIN;
+		_gpio_mode_output(UART7_GPIOx, UART7_TX_GPIO_PINx);
+		GPIO_BC(UART7_GPIOx) = UART7_TX_GPIO_PINx;
 		timer_channel_output_pulse_value_config(TIMER4, TIMER_CH_3, TIMER_CNT(TIMER4) + s_nDmxTransmitBreakTime);
 		timer_interrupt_enable(TIMER4, TIMER_INT_CH3);
 		break;
@@ -2289,50 +2295,50 @@ void Dmx::RdmSendRaw(const uint32_t nPortIndex, const uint8_t* pRdmData, uint32_
 	switch (nUart) {
 #if defined (DMX_USE_USART0)
 	case USART0:
-		_gpio_mode_output(USART0_GPIO_PORT, USART0_TX_PIN);
-		GPIO_BC(USART0_GPIO_PORT) = USART0_TX_PIN;
+		_gpio_mode_output(USART0_GPIOx, USART0_TX_GPIO_PINx);
+		GPIO_BC(USART0_GPIOx) = USART0_TX_GPIO_PINx;
 		break;
 #endif
 #if defined (DMX_USE_USART1)
 	case USART1:
-		_gpio_mode_output(USART1_GPIO_PORT, USART1_TX_PIN);
-		GPIO_BC(USART1_GPIO_PORT) = USART1_TX_PIN;
+		_gpio_mode_output(USART1_GPIOx, USART1_TX_GPIO_PINx);
+		GPIO_BC(USART1_GPIOx) = USART1_TX_GPIO_PINx;
 		break;
 #endif
 #if defined (DMX_USE_USART2)
 	case USART2:
-		_gpio_mode_output(USART2_GPIO_PORT, USART2_TX_PIN);
-		GPIO_BC(USART2_GPIO_PORT) = USART2_TX_PIN;
+		_gpio_mode_output(USART2_GPIOx, USART2_TX_GPIO_PINx);
+		GPIO_BC(USART2_GPIOx) = USART2_TX_GPIO_PINx;
 		break;
 #endif
 #if defined (DMX_USE_UART3)
 	case UART3:
-		_gpio_mode_output(UART3_GPIO_PORT, UART3_TX_PIN);
-		GPIO_BC(UART3_GPIO_PORT) = UART3_TX_PIN;
+		_gpio_mode_output(UART3_GPIOx, UART3_TX_GPIO_PINx);
+		GPIO_BC(UART3_GPIOx) = UART3_TX_GPIO_PINx;
 		break;
 #endif
 #if defined (DMX_USE_UART4)
 	case UART4:
-		_gpio_mode_output(UART4_GPIO_TX_PORT, UART4_TX_PIN);
-		GPIO_BC(UART4_GPIO_TX_PORT) = UART4_TX_PIN;
+		_gpio_mode_output(UART4_TX_GPIOx, UART4_TX_GPIO_PINx);
+		GPIO_BC(UART4_TX_GPIOx) = UART4_TX_GPIO_PINx;
 		break;
 #endif
 #if defined (DMX_USE_USART5)
 	case USART5:
-		_gpio_mode_output(USART5_GPIO_PORT, USART5_TX_PIN);
-		GPIO_BC(USART5_GPIO_PORT) = USART5_TX_PIN;
+		_gpio_mode_output(USART5_GPIOx, USART5_TX_GPIO_PINx);
+		GPIO_BC(USART5_GPIOx) = USART5_TX_GPIO_PINx;
 		break;
 #endif
 #if defined (DMX_USE_UART6)
 	case UART6:
-		_gpio_mode_output(UART6_GPIO_PORT, UART6_TX_PIN);
-		GPIO_BC(UART6_GPIO_PORT) = UART6_TX_PIN;
+		_gpio_mode_output(UART6_GPIOx, UART6_TX_GPIO_PINx);
+		GPIO_BC(UART6_GPIOx) = UART6_TX_GPIO_PINx;
 		break;
 #endif
 #if defined (DMX_USE_UART7)
 	case UART7:
-		_gpio_mode_output(UART7_GPIO_PORT, UART7_TX_PIN);
-		GPIO_BC(UART7_GPIO_PORT) = UART7_TX_PIN;
+		_gpio_mode_output(UART7_GPIOx, UART7_TX_GPIO_PINx);
+		GPIO_BC(UART7_GPIOx) = UART7_TX_GPIO_PINx;
 		break;
 #endif
 	default:
@@ -2346,42 +2352,42 @@ void Dmx::RdmSendRaw(const uint32_t nPortIndex, const uint8_t* pRdmData, uint32_
 	switch (nUart) {
 #if defined (DMX_USE_USART0)
 	case USART0:
-		_gpio_mode_af(USART0_GPIO_PORT, USART0_TX_PIN, USART0);
+		_gpio_mode_af(USART0_GPIOx, USART0_TX_GPIO_PINx, USART0);
 		break;
 #endif
 #if defined (DMX_USE_USART1)
 	case USART1:
-		_gpio_mode_af(USART1_GPIO_PORT, USART1_TX_PIN, USART1);
+		_gpio_mode_af(USART1_GPIOx, USART1_TX_GPIO_PINx, USART1);
 		break;
 #endif
 #if defined (DMX_USE_USART2)
 	case USART2:
-		_gpio_mode_af(USART2_GPIO_PORT, USART2_TX_PIN, USART2);
+		_gpio_mode_af(USART2_GPIOx, USART2_TX_GPIO_PINx, USART2);
 		break;
 #endif
 #if defined (DMX_USE_UART3)
 	case UART3:
-		_gpio_mode_af(UART3_GPIO_PORT, UART3_TX_PIN, UART3);
+		_gpio_mode_af(UART3_GPIOx, UART3_TX_GPIO_PINx, UART3);
 		break;
 #endif
 #if defined (DMX_USE_UART4)
 	case UART4:
-		_gpio_mode_af(UART4_GPIO_TX_PORT, UART4_TX_PIN, UART4);
+		_gpio_mode_af(UART4_TX_GPIOx, UART4_TX_GPIO_PINx, UART4);
 		break;
 #endif
 #if defined (DMX_USE_USART5)
 	case USART5:
-		_gpio_mode_af(USART5_GPIO_PORT, USART5_TX_PIN, USART5);
+		_gpio_mode_af(USART5_GPIOx, USART5_TX_GPIO_PINx, USART5);
 		break;
 #endif
 #if defined (DMX_USE_UART6)
 	case UART6:
-		_gpio_mode_af(UART6_GPIO_PORT, UART6_TX_PIN, UART6);
+		_gpio_mode_af(UART6_GPIOx, UART6_TX_GPIO_PINx, UART6);
 		break;
 #endif
 #if defined (DMX_USE_UART7)
 	case UART7:
-		_gpio_mode_af(UART7_GPIO_PORT, UART7_TX_PIN, UART7);
+		_gpio_mode_af(UART7_GPIOx, UART7_TX_GPIO_PINx, UART7);
 		break;
 #endif
 	default:

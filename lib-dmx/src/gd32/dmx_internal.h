@@ -179,6 +179,11 @@ inline void _gpio_mode_af(const uint32_t gpio_periph, const uint32_t pin, const 
 # define DMA_INTERRUPT_FLAG_GET				(DMA_INT_FLAG_FTF)
 # define DMA_INTERRUPT_FLAG_CLEAR			(DMA_INT_FLAG_FTF | DMA_INT_FLAG_TAE)
 #else
+// U(S)ART
+# define USART_TDATA						USART_DATA
+# define USART_RDATA						USART_DATA
+# define USART_TDATA_TDATA					USART_DATA_DATA
+# define USART_RDATA_TDATA					USART_DATA_DATA
 // GPIO
 inline void _gpio_mode_output(const uint32_t gpio_periph, const uint32_t pin) {
 	gpio_init(gpio_periph, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, pin);

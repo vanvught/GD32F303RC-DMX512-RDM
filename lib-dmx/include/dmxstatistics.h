@@ -1,8 +1,8 @@
 /**
- * @file board_gd32f303r.h
+ * @file dmxstatistics.h
  *
  */
-/* Copyright (C) 2022 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2024 by Arjan van Vught mailto:info@orangepi-dmx.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,22 +23,30 @@
  * THE SOFTWARE.
  */
 
-#ifndef GD32_BOARD_GD32F303RC_H_
-#define GD32_BOARD_GD32F303RC_H_
+#ifndef DMXSTATISTICS_H_
+#define DMXSTATISTICS_H_
 
-#include "gd32_board.h"
+#include <cstdint>
 
-#define DMX_MAX_PORTS  1
+namespace dmx {
+struct TotalStatistics {
+	struct  {
+		uint32_t Sent;
+		uint32_t Received;
+	} Dmx;
 
-namespace max {
-	static const uint32_t PORTS = DMX_MAX_PORTS;
-}  // namespace max
+	struct {
+		struct  {
+			uint32_t Good;
+			uint32_t Bad;
+			uint32_t DiscoveryResponse;
+		} Received;
+		struct  {
+			uint32_t Class;
+			uint32_t DiscoveryResponse;
+		} Sent;
+	} Rdm;
+};
+}  // namespace dmx
 
-#define DMX_USE_USART2
-
-static constexpr auto USART2_PORT = 0;
-
-static constexpr auto DIR_PORT_0_GPIO_PORT = GPIOB;
-static constexpr auto DIR_PORT_0_GPIO_PIN = GPIO_PIN_10;
-
-#endif /* GD32_BOARD_GD32F303RC_H_ */
+#endif /* DMXSTATISTICS_H_ */

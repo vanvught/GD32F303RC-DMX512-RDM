@@ -180,51 +180,51 @@ static void gpio_config(const uint32_t usart_periph) {
 static void gpio_config(const uint32_t usart_periph) {
 	switch (usart_periph) {
 	case USART0:
-		gpio_af_set(USART0_GPIOx, GPIO_AF_7, USART0_TX_GPIO_PINx);
+		gpio_af_set(USART0_GPIOx, USART0_GPIO_AFx, USART0_TX_GPIO_PINx);
 		gpio_mode_set(USART0_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, USART0_TX_GPIO_PINx);
 		gpio_output_options_set(USART0_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, USART0_TX_GPIO_PINx);
-		gpio_af_set(USART0_GPIOx, GPIO_AF_7, USART0_RX_GPIO_PINx);
+		gpio_af_set(USART0_GPIOx, USART0_GPIO_AFx, USART0_RX_GPIO_PINx);
 		gpio_mode_set(USART0_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, USART0_RX_GPIO_PINx);
 		gpio_output_options_set(USART0_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, USART0_RX_GPIO_PINx);
 		break;
 	case USART1:
-		gpio_af_set(USART1_GPIOx, GPIO_AF_7, USART1_TX_GPIO_PINx);
+		gpio_af_set(USART1_GPIOx, USART1_GPIO_AFx, USART1_TX_GPIO_PINx);
 		gpio_mode_set(USART1_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, USART1_TX_GPIO_PINx);
 		gpio_output_options_set(USART1_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, USART1_TX_GPIO_PINx);
-		gpio_af_set(USART1_GPIOx, GPIO_AF_7, USART1_RX_GPIO_PINx);
+		gpio_af_set(USART1_GPIOx, USART1_GPIO_AFx, USART1_RX_GPIO_PINx);
 		gpio_mode_set(USART1_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, USART1_RX_GPIO_PINx);
 		gpio_output_options_set(USART1_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, USART1_RX_GPIO_PINx);
 		break;
 	case USART2:
-		gpio_af_set(USART2_GPIOx, GPIO_AF_7, USART2_TX_GPIO_PINx);
+		gpio_af_set(USART2_GPIOx, USART2_GPIO_AFx, USART2_TX_GPIO_PINx);
 		gpio_mode_set(USART2_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, USART2_TX_GPIO_PINx);
 		gpio_output_options_set(USART2_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, USART2_TX_GPIO_PINx);
-		gpio_af_set(USART2_GPIOx, GPIO_AF_7, USART2_RX_GPIO_PINx);
+		gpio_af_set(USART2_GPIOx, USART2_GPIO_AFx, USART2_RX_GPIO_PINx);
 		gpio_mode_set(USART2_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, USART2_RX_GPIO_PINx);
 		gpio_output_options_set(USART2_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, USART2_RX_GPIO_PINx);
 		break;
 	case UART3:
-		gpio_af_set(UART3_GPIOx, GPIO_AF_8, UART3_TX_GPIO_PINx);
+		gpio_af_set(UART3_GPIOx, UART3_GPIO_AFx, UART3_TX_GPIO_PINx);
 		gpio_mode_set(UART3_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART3_TX_GPIO_PINx);
 		gpio_output_options_set(UART3_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, UART3_TX_GPIO_PINx);
-		gpio_af_set(UART3_GPIOx, GPIO_AF_8, UART3_RX_GPIO_PINx);
+		gpio_af_set(UART3_GPIOx, UART3_GPIO_AFx, UART3_RX_GPIO_PINx);
 		gpio_mode_set(UART3_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART3_RX_GPIO_PINx);
 		gpio_output_options_set(UART3_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, UART3_RX_GPIO_PINx);
 		break;
 	case UART4:
-		gpio_af_set(UART4_TX_GPIOx, GPIO_AF_8, UART4_TX_GPIO_PINx);
+		gpio_af_set(UART4_TX_GPIOx, UART4_GPIO_AFx, UART4_TX_GPIO_PINx);
 		gpio_mode_set(UART4_TX_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART4_TX_GPIO_PINx);
 		gpio_output_options_set(UART4_TX_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, UART4_TX_GPIO_PINx);
-		gpio_af_set(UART4_RX_GPIOx, GPIO_AF_8, UART4_RX_GPIO_PINx);
+		gpio_af_set(UART4_RX_GPIOx, UART4_GPIO_AFx, UART4_RX_GPIO_PINx);
 		gpio_mode_set(UART4_RX_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART4_RX_GPIO_PINx);
 		gpio_output_options_set(UART4_RX_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, UART4_RX_GPIO_PINx);
 		break;
 #if defined (USART5)
 	case USART5:
-		gpio_af_set(USART5_GPIOx, GPIO_AF_8, USART5_TX_GPIO_PINx);
+		gpio_af_set(USART5_GPIOx, USART5_GPIO_AFx, USART5_TX_GPIO_PINx);
 		gpio_mode_set(USART5_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, USART5_TX_GPIO_PINx);
 		gpio_output_options_set(USART5_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, USART5_TX_GPIO_PINx);
-		gpio_af_set(USART5_GPIOx, GPIO_AF_8, USART5_RX_GPIO_PINx);
+		gpio_af_set(USART5_GPIOx, USART5_GPIO_AFx, USART5_RX_GPIO_PINx);
 		gpio_mode_set(USART5_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, USART5_RX_GPIO_PINx);
 		gpio_output_options_set(USART5_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, USART5_RX_GPIO_PINx);
 
@@ -232,20 +232,20 @@ static void gpio_config(const uint32_t usart_periph) {
 #endif
 #if defined (UART6)
 	case UART6:
-		gpio_af_set(UART6_GPIOx, GPIO_AF_8, UART6_TX_GPIO_PINx);
+		gpio_af_set(UART6_GPIOx, UART6_GPIO_AFx, UART6_TX_GPIO_PINx);
 		gpio_mode_set(UART6_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART6_TX_GPIO_PINx);
 		gpio_output_options_set(UART6_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, UART6_TX_GPIO_PINx);
-		gpio_af_set(UART6_GPIOx, GPIO_AF_8, UART6_RX_GPIO_PINx);
+		gpio_af_set(UART6_GPIOx, UART6_GPIO_AFx, UART6_RX_GPIO_PINx);
 		gpio_mode_set(UART6_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART6_RX_GPIO_PINx);
 		gpio_output_options_set(UART6_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, UART6_RX_GPIO_PINx);
 		break;
 #endif
 #if defined (UART7)
 	case UART7:
-		gpio_af_set(UART7_GPIOx, GPIO_AF_8, UART7_TX_GPIO_PINx);
+		gpio_af_set(UART7_GPIOx, UART7_GPIO_AFx, UART7_TX_GPIO_PINx);
 		gpio_mode_set(UART7_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART7_TX_GPIO_PINx);
 		gpio_output_options_set(UART7_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, UART7_TX_GPIO_PINx);
-		gpio_af_set(UART7_GPIOx, GPIO_AF_8, UART7_RX_GPIO_PINx);
+		gpio_af_set(UART7_GPIOx, UART7_GPIO_AFx, UART7_RX_GPIO_PINx);
 		gpio_mode_set(UART7_GPIOx, GPIO_MODE_AF, GPIO_PUPD_PULLUP, UART7_RX_GPIO_PINx);
 		gpio_output_options_set(UART7_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, UART7_RX_GPIO_PINx);
 		break;
@@ -310,7 +310,7 @@ void gd32_uart_transmit(const uint32_t usart_periph, const uint8_t *data, uint32
 #if defined (GD32H7XX)
 		USART_TDATA(usart_periph) = USART_TDATA_TDATA & (uint32_t)*data++;
 #else
-		USART_DATA(usart_periph) = ((uint16_t) USART_DATA_DATA & *data++);
+		USART_DATA(usart_periph) = (USART_DATA_DATA & *data++);
 #endif
 	}
 
@@ -325,7 +325,7 @@ void gd32_uart_transmit_string(const uint32_t usart_periph, const char *data) {
 #if defined (GD32H7XX)
 		USART_TDATA(usart_periph) = USART_TDATA_TDATA & (uint32_t)*data++;
 #else
-		USART_DATA(usart_periph) = ((uint16_t) USART_DATA_DATA & *data++);
+		USART_DATA(usart_periph) = (USART_DATA_DATA & *data++);
 #endif
 	}
 }

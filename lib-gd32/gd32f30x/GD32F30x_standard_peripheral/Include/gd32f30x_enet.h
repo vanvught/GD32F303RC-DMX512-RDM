@@ -124,7 +124,7 @@ OF SUCH DAMAGE.
 #define ENET_MAC_HLH                     REG32((ENET) + 0x08U)                  /*!< ethernet MAC hash list high register */
 #define ENET_MAC_HLL                     REG32((ENET) + 0x0CU)                  /*!< ethernet MAC hash list low register */
 #define ENET_MAC_PHY_CTL                 REG32((ENET) + 0x10U)                  /*!< ethernet MAC PHY control register */
-#define ENET_MAC_PHY_DATA                REG32((ENET) + 0x14U)                  /*!< ethernet MAC MII data register */
+#define ENET_MAC_PHY_DATA                REG32((ENET) + 0x14U)                  /*!< ethernet MAC PHY data register */
 #define ENET_MAC_FCTL                    REG32((ENET) + 0x18U)                  /*!< ethernet MAC flow control register */
 #define ENET_MAC_VLT                     REG32((ENET) + 0x1CU)                  /*!< ethernet MAC VLAN tag register */
 #define ENET_MAC_RWFF                    REG32((ENET) + 0x28U)                  /*!< ethernet MAC remote wakeup frame filter register */
@@ -884,8 +884,7 @@ typedef enum
 {
     ENET_PROMISCUOUS_MODE           = ENET_MAC_FRMF_PM,                             /*!< promiscuous mode enabled */
     ENET_RECEIVEALL                 = (int32_t)ENET_MAC_FRMF_FAR,                   /*!< all received frame are forwarded to application */
-	ENET_CUSTOM						= BIT(4),
-	ENET_BROADCAST_FRAMES_PASS      = (uint32_t)0x00000000U,                        /*!< the address filters pass all received broadcast frames */
+    ENET_BROADCAST_FRAMES_PASS      = (uint32_t)0x00000000U,                        /*!< the address filters pass all received broadcast frames */
     ENET_BROADCAST_FRAMES_DROP      = ENET_MAC_FRMF_BFRMD                           /*!< the address filters filter all incoming broadcast frames */
 }enet_frmrecept_enum;
 

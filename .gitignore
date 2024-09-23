@@ -31,21 +31,27 @@
 *.out
 *.app
 
-.DS_Store
+#Eclipse user settings
+/.metadata/
+
+software_version_id.h
 
 lib_gd32
 build_gd32
 
+.DS_Store
 ._*
 ._*.*
-sofware_version_id.h
 *._gd32
 
-gd32f20x*.*
-lib-gd32/gd32f20x/*
+gd32f2*.*
+lib-gd32/gd32f2*/*
 
-gd32f40x*.*
-lib-gd32/gd32f40x/*
+gd32f4*.*
+lib-gd32/gd32f4*/*
+
+gd32h7*.*
+lib-gd32/gd32h7*/*
 
 lib-*/src/esp8266/*
 lib-*/include/esp8266/*
@@ -60,6 +66,15 @@ lib-network/src/apps/*
 lib-network/src/emac/*
 lib-network/src/net/*
 
+FreeRTOS*.*
+Artnet*.*
+
+*.list
+*.map
 *.bin
+*.size
+
 do-tftp.sh
 udp_send
+
+/lib-clib

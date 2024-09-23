@@ -41,13 +41,13 @@ OF SUCH DAMAGE.
 #include "gd32f30x.h"
 
 /* CTC definitions */
-#define CTC                          CTC_BASE
+#define CTC                          CTC_BASE                        /*!< CTC base address */
 
 /* registers definitions */
-#define CTC_CTL0                     REG32((CTC) + 0x00U)      /*!< CTC control register 0 */
-#define CTC_CTL1                     REG32((CTC) + 0x04U)      /*!< CTC control register 1 */
-#define CTC_STAT                     REG32((CTC) + 0x08U)      /*!< CTC status register */
-#define CTC_INTC                     REG32((CTC) + 0x0CU)      /*!< CTC interrupt clear register */
+#define CTC_CTL0                     REG32((CTC) + 0x00000000U)      /*!< CTC control register 0 */
+#define CTC_CTL1                     REG32((CTC) + 0x00000004U)      /*!< CTC control register 1 */
+#define CTC_STAT                     REG32((CTC) + 0x00000008U)      /*!< CTC status register */
+#define CTC_INTC                     REG32((CTC) + 0x0000000CU)      /*!< CTC interrupt clear register */
 
 /* bits definitions */
 /* CTC_CTL0 */
@@ -97,7 +97,6 @@ OF SUCH DAMAGE.
 #define CTL1_REFSEL(regval)                              (BITS(28,29) & ((uint32_t)(regval) << 28))
 #define CTC_REFSOURCE_GPIO                               CTL1_REFSEL(0)               /*!< GPIO is selected */
 #define CTC_REFSOURCE_LXTAL                              CTL1_REFSEL(1)               /*!< LXTAL is selected */
-#define CTC_REFSOURCE_USB_SOF                            CTL1_REFSEL(2)               /*!< USBD_SOF or USBFS_SOF is selected */
 
 /* reference signal source prescaler definitions */
 #define CTL1_REFPSC(regval)                              (BITS(24,26) & ((uint32_t)(regval) << 24))
@@ -170,6 +169,10 @@ uint16_t ctc_counter_reload_value_read(void);
 uint8_t ctc_irc48m_trim_value_read(void);
 
 /* interrupt & flag functions */
+/* get CTC flag */
+FlagStatus ctc_flag_get(uint32_t flag);
+/* clear CTC flag */
+void ctc_flag_clear(uint32_t flag);
 /* enable the CTC interrupt */
 void ctc_interrupt_enable(uint32_t interrupt);
 /* disable the CTC interrupt */
@@ -178,9 +181,5 @@ void ctc_interrupt_disable(uint32_t interrupt);
 FlagStatus ctc_interrupt_flag_get(uint32_t int_flag); 
 /* clear CTC interrupt flag */
 void ctc_interrupt_flag_clear(uint32_t int_flag);
-/* get CTC flag */
-FlagStatus ctc_flag_get(uint32_t flag);
-/* clear CTC flag */
-void ctc_flag_clear(uint32_t flag);
 
 #endif /* GD32F30X_CTC_H */

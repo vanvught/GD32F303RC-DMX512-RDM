@@ -500,6 +500,20 @@ void spi_bidirectional_transfer_config(uint32_t spi_periph, uint32_t transfer_di
 }
 
 /*!
+    \brief      clear SPI/I2S format error flag status
+    \param[in]  spi_periph: SPIx(x=0,1,2)
+    \param[in]  flag: SPI/I2S frame format error flag 
+      \arg        SPI_FLAG_FERR: only for SPI work in TI mode
+      \arg        I2S_FLAG_FERR: for I2S
+    \param[out] none
+    \retval     none
+*/
+void spi_i2s_format_error_clear(uint32_t spi_periph, uint32_t flag)
+{
+    SPI_STAT(spi_periph) = (uint32_t)(~flag);
+}
+
+/*!
     \brief      set SPI CRC polynomial 
     \param[in]  spi_periph: SPIx(x=0,1,2)
     \param[in]  crc_poly: CRC polynomial value
@@ -523,7 +537,7 @@ uint16_t spi_crc_polynomial_get(uint32_t spi_periph)
     return ((uint16_t)SPI_CRCPOLY(spi_periph));
 }
 
-/*!
+/*
     \brief      turn on CRC function 
     \param[in]  spi_periph: SPIx(x=0,1,2)
     \param[out] none
@@ -576,6 +590,17 @@ uint16_t spi_crc_get(uint32_t spi_periph,uint8_t crc)
 }
 
 /*!
+    \brief      clear SPI CRC error flag status
+    \param[in]  spi_periph: SPIx(x=0,1,2)
+    \param[out] none
+    \retval     none
+*/
+void spi_crc_error_clear(uint32_t spi_periph)
+{
+    SPI_STAT(spi_periph) = (uint32_t)(~SPI_FLAG_CRCERR);
+}
+
+/*!
     \brief      enable SPI TI mode
     \param[in]  spi_periph: SPIx(x=0,1,2)
     \param[out] none
@@ -625,7 +650,7 @@ void spi_nssp_mode_disable(uint32_t spi_periph)
     \param[out] none
     \retval     none
 */
-void qspi_enable(uint32_t spi_periph)
+void spi_quad_enable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) |= (uint32_t)SPI_QCTL_QMOD;
 }
@@ -636,7 +661,7 @@ void qspi_enable(uint32_t spi_periph)
     \param[out] none
     \retval     none
 */
-void qspi_disable(uint32_t spi_periph)
+void spi_quad_disable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) &= (uint32_t)(~SPI_QCTL_QMOD);
 }
@@ -647,7 +672,7 @@ void qspi_disable(uint32_t spi_periph)
     \param[out] none
     \retval     none
 */
-void qspi_write_enable(uint32_t spi_periph)
+void spi_quad_write_enable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) &= (uint32_t)(~SPI_QCTL_QRD);
 }
@@ -658,7 +683,7 @@ void qspi_write_enable(uint32_t spi_periph)
     \param[out] none
     \retval     none
 */
-void qspi_read_enable(uint32_t spi_periph)
+void spi_quad_read_enable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) |= (uint32_t)SPI_QCTL_QRD;
 }
@@ -669,7 +694,7 @@ void qspi_read_enable(uint32_t spi_periph)
     \param[out] none
     \retval     none
 */
-void qspi_io23_output_enable(uint32_t spi_periph)
+void spi_quad_io23_output_enable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) |= (uint32_t)SPI_QCTL_IO23_DRV;
 }
@@ -680,7 +705,7 @@ void qspi_io23_output_enable(uint32_t spi_periph)
     \param[out] none
     \retval     none
 */
- void qspi_io23_output_disable(uint32_t spi_periph)
+ void spi_quad_io23_output_disable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) &= (uint32_t)(~SPI_QCTL_IO23_DRV);
 }
@@ -845,15 +870,4 @@ FlagStatus spi_i2s_flag_get(uint32_t spi_periph, uint32_t flag)
     }else{
         return RESET;
     }
-}
-
-/*!
-    \brief      clear SPI CRC error flag status
-    \param[in]  spi_periph: SPIx(x=0,1,2)
-    \param[out] none
-    \retval     none
-*/
-void spi_crc_error_clear(uint32_t spi_periph)
-{
-    SPI_STAT(spi_periph) &= (uint32_t)(~SPI_FLAG_CRCERR);
 }

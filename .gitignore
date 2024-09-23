@@ -77,4 +77,3 @@ Artnet*.*
 do-tftp.sh
 udp_send
 
-/lib-clib

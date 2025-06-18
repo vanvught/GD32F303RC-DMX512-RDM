@@ -34,6 +34,9 @@
 #include "rdmhandler.h"
 #include "rdmdeviceresponder.h"
 #include "rdmpersonality.h"
+#ifndef NDEBUG
+# include "rdm_message_print.h"
+#endif
 
 #include "dmxreceiver.h"
 
@@ -165,7 +168,7 @@ private:
 		}
 
 #ifndef NDEBUG
-		if (nLength != INVALID_RESPONSE) {
+		if (nLength != rdm::responder::INVALID_RESPONSE) {
 			rdm::message_print(pResponse);
 		}
 #endif

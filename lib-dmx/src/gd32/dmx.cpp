@@ -51,6 +51,9 @@
 
 #include "debug.h"
 
+constexpr auto dmxSlotsCompleteFlag = 0x8000U;
+constexpr auto rdmSlotsCompleteFlag = 0x4000U;
+
 extern struct HwTimersSeconds g_Seconds;
 
 namespace dmx {
@@ -91,16 +94,20 @@ struct RxDmxData {
 	uint32_t nSlotsInPacket;
 };
 
+enum class ActiveBuffer { A, B };
+
 struct RxData {
 	struct {
-		volatile RxDmxData current;
+		volatile RxDmxData bufferA;
+		volatile RxDmxData bufferB;
+		ActiveBuffer active { ActiveBuffer::A }; // Active write buffer
 		RxDmxData previous;
 	} Dmx ALIGNED;
 	struct {
 		volatile uint8_t data[sizeof(struct TRdmMessage)] ALIGNED;
 		volatile uint32_t nIndex;
 	} Rdm ALIGNED;
-	volatile TxRxState State;
+	volatile TxRxState State { TxRxState::IDLE };
 } ALIGNED;
 
 struct DirGpio {
@@ -158,29 +165,62 @@ static RxData sv_RxBuffer[dmx::config::max::PORTS] ALIGNED;
 static TxData s_TxBuffer[dmx::config::max::PORTS] ALIGNED SECTION_DMA_BUFFER;
 static DmxTransmit s_nDmxTransmit;
 
+// The active DMX data buffer for writes
+volatile RxDmxData& getWriteDmxDataBuffer(const uint32_t nPortIndex) {
+	if (sv_RxBuffer[nPortIndex].Dmx.active == ActiveBuffer::A) {
+		return sv_RxBuffer[nPortIndex].Dmx.bufferA;
+	}	
+	return sv_RxBuffer[nPortIndex].Dmx.bufferB;
+}
+
+// The non-active DMX data buffer for reads
+volatile RxDmxData& getReadDmxDataBuffer(const uint32_t nPortIndex) {
+	if (sv_RxBuffer[nPortIndex].Dmx.active == ActiveBuffer::A) {
+		return sv_RxBuffer[nPortIndex].Dmx.bufferB;
+	}	
+	return sv_RxBuffer[nPortIndex].Dmx.bufferA;
+}
+
+// Swap the active buffer for writing
+void swapActiveDmxDataBuffer(const uint32_t nPortIndex) {
+	if (sv_RxBuffer[nPortIndex].Dmx.active == ActiveBuffer::A) {
+		sv_RxBuffer[nPortIndex].Dmx.active = ActiveBuffer::B;
+	}
+	else
+	{
+		sv_RxBuffer[nPortIndex].Dmx.active = ActiveBuffer::A;
+	}
+}
+
 template<uint32_t uart, uint32_t nPortIndex>
 void irq_handler_dmx_rdm_input() {
+	auto& dmxDataBuffer = getWriteDmxDataBuffer(nPortIndex);
 	const auto isFlagIdleFrame = (USART_REG_VAL(uart, USART_FLAG_IDLE) & BIT(USART_BIT_POS(USART_FLAG_IDLE))) == BIT(USART_BIT_POS(USART_FLAG_IDLE));
 	/*
 	 * Software can clear this bit by reading the USART_STAT and USART_DATA registers one by one.
 	 */
 	if (isFlagIdleFrame) {
 		static_cast<void>(GET_BITS(USART_RDATA(uart), 0U, 8U));
-
-		if (sv_RxBuffer[nPortIndex].State == TxRxState::DMXDATA) {
-			sv_RxBuffer[nPortIndex].State = TxRxState::IDLE;
-			sv_RxBuffer[nPortIndex].Dmx.current.nSlotsInPacket |= 0x8000;
-
-			return;
+		switch (sv_RxBuffer[nPortIndex].State)
+		{
+			case TxRxState::BREAK: break;
+			case TxRxState::DMXDATA:
+			{
+				dmxDataBuffer.nSlotsInPacket |= dmxSlotsCompleteFlag;
+				break;
+			}
+			case TxRxState::RDMDISC:
+			{
+				sv_RxBuffer[nPortIndex].State = TxRxState::IDLE;
+				sv_RxBuffer[nPortIndex].Rdm.nIndex |= rdmSlotsCompleteFlag;
+				break;
+			}
+			default:
+			{
+				sv_RxBuffer[nPortIndex].State = TxRxState::IDLE;
+				break;
+			}
 		}
-
-		if (sv_RxBuffer[0].State == TxRxState::RDMDISC) {
-			sv_RxBuffer[nPortIndex].State = TxRxState::IDLE;
-			sv_RxBuffer[nPortIndex].Rdm.nIndex |= 0x4000;
-
-			return;
-		}
-
 		return;
 	}
 
@@ -191,15 +231,41 @@ void irq_handler_dmx_rdm_input() {
 	if (isFlagFrameError) {
 		static_cast<void>(GET_BITS(USART_RDATA(uart), 0U, 8U));
 
-		if (sv_RxBuffer[nPortIndex].State == TxRxState::IDLE) {
-			sv_RxBuffer[nPortIndex].State = TxRxState::BREAK;
+		switch (sv_RxBuffer[nPortIndex].State)
+		{
+			case TxRxState::RDMDISC:
+			case TxRxState::IDLE:
+			{
+				break;
+			}
+			case TxRxState::DMXDATA:
+			{
+				if (!(dmxDataBuffer.nSlotsInPacket & dmxSlotsCompleteFlag)) {
+					return;
+				}
+				break;
+			}
+			case TxRxState::RDMDATA:
+			{
+				if (!(sv_RxBuffer[nPortIndex].Rdm.nIndex & rdmSlotsCompleteFlag)) { 
+					return;
+				}
+				break;
+			}
+			default:
+			{
+				sv_RxBuffer[nPortIndex].State = TxRxState::IDLE;
+				return;
+			}
 		}
+
+		sv_RxBuffer[nPortIndex].State = TxRxState::BREAK;
+		swapActiveDmxDataBuffer(nPortIndex);
 
 		return;
 	}
 
 	const auto data = static_cast<uint8_t>(GET_BITS(USART_RDATA(uart), 0U, 8U));
-
 	switch (sv_RxBuffer[nPortIndex].State) {
 	case TxRxState::IDLE:
 		sv_RxBuffer[nPortIndex].State = TxRxState::RDMDISC;
@@ -209,8 +275,8 @@ void irq_handler_dmx_rdm_input() {
 	case TxRxState::BREAK:
 		switch (data) {
 		case START_CODE:
-			sv_RxBuffer[nPortIndex].Dmx.current.data[0] = START_CODE;
-			sv_RxBuffer[nPortIndex].Dmx.current.nSlotsInPacket = 1;
+			dmxDataBuffer.data[0] = START_CODE;
+			dmxDataBuffer.nSlotsInPacket = 1;
 			sv_nRxDmxPackets[nPortIndex].nCount++;
 			sv_RxBuffer[nPortIndex].State = TxRxState::DMXDATA;
 			break;
@@ -220,21 +286,18 @@ void irq_handler_dmx_rdm_input() {
 			sv_RxBuffer[nPortIndex].State = TxRxState::RDMDATA;
 			break;
 		default:
-			sv_RxBuffer[nPortIndex].Dmx.current.nSlotsInPacket = 0;
+			dmxDataBuffer.nSlotsInPacket = 0;
 			sv_RxBuffer[nPortIndex].Rdm.nIndex = 0;
 			sv_RxBuffer[nPortIndex].State = TxRxState::IDLE;
 			break;
 		}
 		break;
 	case TxRxState::DMXDATA: {
-		auto nIndex = sv_RxBuffer[nPortIndex].Dmx.current.nSlotsInPacket;
-		sv_RxBuffer[nPortIndex].Dmx.current.data[nIndex] = data;
-		nIndex++;
-		sv_RxBuffer[nPortIndex].Dmx.current.nSlotsInPacket = nIndex;
+		dmxDataBuffer.nSlotsInPacket &= ~dmxSlotsCompleteFlag;
+		dmxDataBuffer.data[dmxDataBuffer.nSlotsInPacket++] = data;
 
-		if (nIndex > dmx::max::CHANNELS) {
-			nIndex |= 0x8000;
-			sv_RxBuffer[nPortIndex].Dmx.current.nSlotsInPacket = nIndex;
+		if (dmxDataBuffer.nSlotsInPacket > dmx::max::CHANNELS) {
+			dmxDataBuffer.nSlotsInPacket |= dmxSlotsCompleteFlag;
 			sv_RxBuffer[nPortIndex].State = TxRxState::IDLE;
 			break;
 		}
@@ -266,7 +329,7 @@ void irq_handler_dmx_rdm_input() {
 	case TxRxState::CHECKSUML: {
 		auto nIndex = sv_RxBuffer[nPortIndex].Rdm.nIndex;
 		sv_RxBuffer[nPortIndex].Rdm.data[nIndex] = data;
-		nIndex |= 0x4000;
+		nIndex |= rdmSlotsCompleteFlag;
 		sv_RxBuffer[nPortIndex].Rdm.nIndex = nIndex;
 		sv_RxBuffer[nPortIndex].State = TxRxState::IDLE;
 		gsv_RdmDataReceiveEnd = DWT->CYCCNT;
@@ -283,7 +346,7 @@ void irq_handler_dmx_rdm_input() {
 	}
 		break;
 	default:
-		sv_RxBuffer[nPortIndex].Dmx.current.nSlotsInPacket = 0;
+		dmxDataBuffer.nSlotsInPacket = 0;
 		sv_RxBuffer[nPortIndex].Rdm.nIndex = 0;
 		sv_RxBuffer[nPortIndex].State = TxRxState::IDLE;
 		break;
@@ -1960,11 +2023,12 @@ const uint8_t *Dmx::GetDmxChanged(const uint32_t nPortIndex) {
 		return nullptr;
 	}
 
-	const auto * __restrict__ pSrc32 = reinterpret_cast<const volatile uint32_t *>(sv_RxBuffer[nPortIndex].Dmx.current.data);
+	auto& dmxDataBuffer = getReadDmxDataBuffer(nPortIndex);
+	const auto * __restrict__ pSrc32 = reinterpret_cast<const volatile uint32_t *>(dmxDataBuffer.data);
 	auto * __restrict__ pDst32 = reinterpret_cast<uint32_t *>(sv_RxBuffer[nPortIndex].Dmx.previous.data);
 
-	if (sv_RxBuffer[nPortIndex].Dmx.current.nSlotsInPacket != sv_RxBuffer[nPortIndex].Dmx.previous.nSlotsInPacket) {
-		sv_RxBuffer[nPortIndex].Dmx.previous.nSlotsInPacket = sv_RxBuffer[nPortIndex].Dmx.current.nSlotsInPacket;
+	if (dmxDataBuffer.nSlotsInPacket != sv_RxBuffer[nPortIndex].Dmx.previous.nSlotsInPacket) {
+		sv_RxBuffer[nPortIndex].Dmx.previous.nSlotsInPacket = dmxDataBuffer.nSlotsInPacket;
 
 		for (size_t i = 0; i < buffer::SIZE / 4; ++i) {
 		    pDst32[i] = pSrc32[i];
@@ -1994,24 +2058,23 @@ const uint8_t *Dmx::GetDmxChanged(const uint32_t nPortIndex) {
 const uint8_t *Dmx::GetDmxAvailable([[maybe_unused]] const uint32_t nPortIndex)  {
 	assert(nPortIndex < dmx::config::max::PORTS);
 #if !defined(CONFIG_DMX_TRANSMIT_ONLY)
-	auto nSlotsInPacket = sv_RxBuffer[nPortIndex].Dmx.current.nSlotsInPacket;
 
-	if ((nSlotsInPacket & 0x8000) != 0x8000) {
+	auto& dmxDataBuffer = getReadDmxDataBuffer(nPortIndex);
+	if (!(dmxDataBuffer.nSlotsInPacket & dmxSlotsCompleteFlag)) {
 		return nullptr;
 	}
 
-	nSlotsInPacket &= ~0x8000;
-	nSlotsInPacket--;	// Remove SC from length
-	sv_RxBuffer[nPortIndex].Dmx.current.nSlotsInPacket = nSlotsInPacket;
+	dmxDataBuffer.nSlotsInPacket &= ~dmxSlotsCompleteFlag;
+	dmxDataBuffer.nSlotsInPacket--;	// Remove SC from length
 
-	return const_cast<const uint8_t *>(sv_RxBuffer[nPortIndex].Dmx.current.data);
+	return const_cast<const uint8_t *>(dmxDataBuffer.data);
 #else
 	return nullptr;
 #endif
 }
 
 const uint8_t *Dmx::GetDmxCurrentData(const uint32_t nPortIndex) {
-	return const_cast<const uint8_t *>(sv_RxBuffer[nPortIndex].Dmx.current.data);
+	return const_cast<const uint8_t *>(getReadDmxDataBuffer(nPortIndex).data);
 }
 
 uint32_t Dmx::GetDmxUpdatesPerSecond([[maybe_unused]] uint32_t nPortIndex) {
@@ -2247,7 +2310,7 @@ void Dmx::RdmSendDiscoveryRespondMessage(uint32_t nPortIndex, const uint8_t *pRd
 const uint8_t *Dmx::RdmReceive(const uint32_t nPortIndex) {
 	assert(nPortIndex < dmx::config::max::PORTS);
 
-	if ((sv_RxBuffer[nPortIndex].Rdm.nIndex & 0x4000) != 0x4000) {
+	if (!(sv_RxBuffer[nPortIndex].Rdm.nIndex & rdmSlotsCompleteFlag)) {
 		return nullptr;
 	}
 

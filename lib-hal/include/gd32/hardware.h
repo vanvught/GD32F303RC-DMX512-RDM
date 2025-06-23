@@ -150,7 +150,7 @@ public:
 	}
 
 	uint32_t GetBoardId() {
-		return 0;
+		return GD32_BOARD_ID;
 	}
 
 	const char *GetWebsiteUrl() {

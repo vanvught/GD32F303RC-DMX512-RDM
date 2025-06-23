@@ -160,7 +160,12 @@ static constexpr uint32_t PORT_A_TX = 0;
  */
 
 #define GD32_MCU_NAME			"GD32F303RC"
-#define GD32_BOARD_NAME			"GD32F303RC"
+#if !defined(GD32_BOARD_NAME)
+# define GD32_BOARD_NAME		"GD32F303RC"
+#endif
+#if !defined(GD32_BOARD_ID)
+# define GD32_BOARD_ID			0
+#endif
 
 #include "mcu/gd32f30x_mcu.h"
 #include "gd32_gpio.h"

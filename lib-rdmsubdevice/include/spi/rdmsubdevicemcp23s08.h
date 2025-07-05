@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file rdmsubdevicemcp23s08.h
  *
  */
-/* Copyright (C) 2018-2020 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2018-2025 by Arjan van Vught mailto:info@orangepi-dmx.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,41 +24,38 @@
  * THE SOFTWARE.
  */
 
-#ifndef RDMSUBDEVICEMCP23S08_H_
-#define RDMSUBDEVICEMCP23S08_H_
-
 #include <cstdint>
 
 #include "rdmsubdevice.h"
 
 #include "mcp23s08.h"
 
-class RDMSubDeviceMCP23S08: public RDMSubDevice {
-public:
-	RDMSubDeviceMCP23S08(uint16_t nDmxStartAddress = 1, char nChipSselect = 0, uint8_t nSlaveAddress = 0, uint32_t nSpiSpeed = 0);
+class RDMSubDeviceMCP23S08 : public RDMSubDevice
+{
+   public:
+    explicit RDMSubDeviceMCP23S08(uint16_t nDmxStartAddress = 1, char nChipSselect = 0, uint8_t nSlaveAddress = 0, uint32_t nSpiSpeed = 0);
 
-	bool Initialize() override {
-		m_MCP23S08.WriteRegister(gpio::mcp23s08::reg::IODIR, 0x00);
-		m_MCP23S08.WriteRegister(gpio::mcp23s08::reg::GPIO, 0x00);
-		return true;
-	}
+    bool Initialize() override
+    {
+        m_MCP23S08.WriteRegister(gpio::mcp23s08::reg::IODIR, 0x00);
+        m_MCP23S08.WriteRegister(gpio::mcp23s08::reg::GPIO, 0x00);
+        return true;
+    }
 
-	void Start() override {
-	}
+    void Start() override {}
 
-	void Stop() override {
-		m_MCP23S08.WriteRegister(gpio::mcp23s08::reg::GPIO, 0x00);
-		m_nData = 0;
-	}
+    void Stop() override
+    {
+        m_MCP23S08.WriteRegister(gpio::mcp23s08::reg::GPIO, 0x00);
+        m_nData = 0;
+    }
 
-	void Data(const uint8_t *pData, uint32_t nLength) override;
+    void Data(const uint8_t* pData, uint32_t nLength) override;
 
-private:
-	void UpdateEvent(TRDMSubDeviceUpdateEvent tUpdateEvent) override;
+   private:
+    void UpdateEvent(TRDMSubDeviceUpdateEvent tUpdateEvent) override;
 
-private:
-	gpio::MCP23S08 m_MCP23S08;
-	uint8_t m_nData = 0;
+   private:
+    gpio::MCP23S08 m_MCP23S08;
+    uint8_t m_nData = 0;
 };
-
-#endif /* RDMSUBDEVICEMCP23S08_H_ */

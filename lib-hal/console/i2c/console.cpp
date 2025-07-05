@@ -2,7 +2,7 @@
  * @file console.cpp
  *
  */
-/* Copyright (C) 2022-2024 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2022-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -88,37 +88,37 @@ static bool s_isConnected;
 static bool is_connected(const uint8_t address, const uint32_t baudrate) {
 	char buf;
 
-	FUNC_PREFIX(i2c_set_address(address));
-	FUNC_PREFIX(i2c_set_baudrate(baudrate));
+	FUNC_PREFIX(I2cSetAddress(address));
+	FUNC_PREFIX(I2cSetBaudrate(baudrate));
 
 	if ((address >= 0x30 && address <= 0x37) || (address >= 0x50 && address <= 0x5F)) {
-		return FUNC_PREFIX(i2c_read(&buf, 1)) == 0;
+		return FUNC_PREFIX(I2cRead(&buf, 1)) == 0;
 	}
 
 	/* This is known to corrupt the Atmel AT24RF08 EEPROM */
-	return FUNC_PREFIX(i2c_write(nullptr, 0)) == 0;
+	return FUNC_PREFIX(I2cWrite(nullptr, 0)) == 0;
 }
 
 static void setup() {
-	FUNC_PREFIX(i2c_set_address(CONSOLE_I2C_ADDRESS));
-	FUNC_PREFIX(i2c_set_baudrate(400000));
+	FUNC_PREFIX(I2cSetAddress(CONSOLE_I2C_ADDRESS));
+	FUNC_PREFIX(I2cSetBaudrate(400000));
 }
 
-static void write_register(uint8_t nRegister, uint8_t nValue) {
+static void write_register(const uint8_t nRegister, const uint8_t nValue) {
 	char buffer[2];
 
 	buffer[0] = static_cast<char>(nRegister);
 	buffer[1] = static_cast<char>(nValue);
 
 	setup();
-	FUNC_PREFIX(i2c_write(buffer, 2));
+	FUNC_PREFIX(I2cWrite(buffer, 2));
 }
 
 static uint8_t read_byte() {
 	char buffer[1];
 
 	setup();
-	FUNC_PREFIX(i2c_read(buffer, 1));
+	FUNC_PREFIX(I2cRead(buffer, 1));
 
 	return static_cast<uint8_t>(buffer[0]);
 }
@@ -129,7 +129,7 @@ static uint8_t read_register(uint8_t nRegister) {
 	buffer[0] = static_cast<char>(nRegister);
 
 	setup();
-	FUNC_PREFIX(i2c_write(buffer, 1));
+	FUNC_PREFIX(I2cWrite(buffer, 1));
 
 	return read_byte();
 }
@@ -156,8 +156,8 @@ static void set_baud(uint32_t nBaud) {
 	write_register(SC16IS7X0_LCR, nRegisterLCR);
 }
 
-void __attribute__((cold)) console_init() {
-	FUNC_PREFIX(i2c_begin());
+void __attribute__((cold)) ConsoleInit() {
+	FUNC_PREFIX(I2cBegin());
 
 	s_isConnected = is_connected(CONSOLE_I2C_ADDRESS, 100000);
 
@@ -187,18 +187,17 @@ void __attribute__((cold)) console_init() {
 	write_register(SC16IS7X0_MCR, MCR);
 
 	uint8_t EFR = read_register(SC16IS7X0_EFR);
-	write_register(SC16IS7X0_EFR, (uint8_t) (EFR | EFR_ENABLE_ENHANCED_FUNCTIONS));
+	write_register(SC16IS7X0_EFR, (EFR | EFR_ENABLE_ENHANCED_FUNCTIONS));
 
-	write_register(SC16IS7X0_TLR, (uint8_t) (0x10));
+	write_register(SC16IS7X0_TLR, (0x10));
 
 	write_register(SC16IS7X0_EFR, EFR);
 
-	write_register(SC16IS7X0_FCR, (uint8_t) (FCR_TX_FIFO_RST));
+	write_register(SC16IS7X0_FCR, (FCR_TX_FIFO_RST));
 	write_register(SC16IS7X0_FCR, FCR_ENABLE_FIFO);
 }
 
-extern "C" {
-void console_putc(int c) {
+void ConsolePutc(int c) {
 	if (!s_isConnected) {
 		return;
 	}
@@ -216,7 +215,7 @@ void console_putc(int c) {
 	write_register(SC16IS7X0_THR, (uint8_t) (c));
 }
 
-void console_puts(const char *s) {
+void ConsolePuts(const char *s) {
 	if (!s_isConnected) {
 		return;
 	}
@@ -234,7 +233,7 @@ void console_puts(const char *s) {
 	}
 }
 
-void console_write(const char *s, unsigned int n) {
+void ConsoleWrite(const char *s, unsigned int n) {
 	if (!s_isConnected) {
 		return;
 	}
@@ -253,65 +252,64 @@ void console_write(const char *s, unsigned int n) {
 	}
 }
 
-void console_error(const char *s) {
+void ConsoleError(const char *s) {
 	if (!s_isConnected) {
 		return;
 	}
 
-	console_puts("\x1b[31m");
-	console_puts(s);
-	console_puts("\x1b[37m");
+	ConsolePuts("\x1b[31m");
+	ConsolePuts(s);
+	ConsolePuts("\x1b[37m");
 }
 
-void console_set_fg_color(uint16_t fg) {
+void ConsoleSetFgColour(uint32_t fg) {
 	switch (fg) {
 	case CONSOLE_BLACK:
-		console_puts("\x1b[30m");
+		ConsolePuts("\x1b[30m");
 		break;
 	case CONSOLE_RED:
-		console_puts("\x1b[31m");
+		ConsolePuts("\x1b[31m");
 		break;
 	case CONSOLE_GREEN:
-		console_puts("\x1b[32m");
+		ConsolePuts("\x1b[32m");
 		break;
 	case CONSOLE_YELLOW:
-		console_puts("\x1b[33m");
+		ConsolePuts("\x1b[33m");
 		break;
 	case CONSOLE_WHITE:
-		console_puts("\x1b[37m");
+		ConsolePuts("\x1b[37m");
 		break;
 	default:
-		console_puts("\x1b[39m");
+		ConsolePuts("\x1b[39m");
 		break;
 	}
 }
 
-void console_set_bg_color(uint16_t bg) {
+void ConsoleSetBgColour(uint32_t bg) {
 	switch (bg) {
 	case CONSOLE_BLACK:
-		console_puts("\x1b[40m");
+		ConsolePuts("\x1b[40m");
 		break;
 	case CONSOLE_RED:
-		console_puts("\x1b[41m");
+		ConsolePuts("\x1b[41m");
 		break;
 	case CONSOLE_WHITE:
-		console_puts("\x1b[47m");
+		ConsolePuts("\x1b[47m");
 		break;
 	default:
-		console_puts("\x1b[49m");
+		ConsolePuts("\x1b[49m");
 		break;
 	}
 }
 
-void console_status(uint32_t nColour, const char *s) {
+void ConsoleStatus(uint32_t nColour, const char *s) {
 	if (!s_isConnected) {
 		return;
 	}
 
-	console_set_fg_color(static_cast<uint16_t>(nColour));
-	console_set_bg_color(CONSOLE_BLACK);
-	console_puts(s);
-	console_putc('\n');
-	console_set_fg_color(CONSOLE_WHITE);
-}
+	ConsoleSetFgColour(nColour);
+	ConsoleSetBgColour(CONSOLE_BLACK);
+	ConsolePuts(s);
+	ConsolePutc('\n');
+	ConsoleSetFgColour(CONSOLE_WHITE);
 }

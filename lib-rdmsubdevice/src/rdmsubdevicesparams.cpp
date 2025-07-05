@@ -2,7 +2,7 @@
  * @file rdmsubdevicesparams.cpp
  *
  */
-/* Copyright (C) 2020-2024 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2020-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,6 @@
  * THE SOFTWARE.
  */
 
-#if !defined(__clang__)	// Needed for compiling on MacOS
-# pragma GCC push_options
-# pragma GCC optimize ("Os")
-#endif
-
 #include <cstdint>
 #include <cstring>
 #include <cstdio>
@@ -38,236 +33,261 @@
 #include "rdmsubdevicesconst.h"
 #include "rdm _subdevices.h"
 
+#include "configstore.h"
+#include "configurationstore.h"
+
 #include "readconfigfile.h"
 #include "sscan.h"
 #include "propertiesbuilder.h"
 
 #if defined(CONFIG_RDM_ENABLE_SUBDEVICES)
-# if defined(CONFIG_RDM_SUBDEVICES_USE_SPI)
-#  include "spi/rdmsubdevicebw7fets.h"
-#  include "spi/rdmsubdevicebwdimmer.h"
-#  include "spi/rdmsubdevicebwdio.h"
-#  include "spi/rdmsubdevicebwlcd.h"
-#  include "spi/rdmsubdevicebwrelay.h"
-#  include "spi/rdmsubdevicemcp23s08.h"
-#  include "spi/rdmsubdevicemcp23s17.h"
-#  include "spi/rdmsubdevicemcp4822.h"
-#  include "spi/rdmsubdevicemcp4902.h"
-# endif
-# if defined(CONFIG_RDM_SUBDEVICES_USE_I2C)
-# endif
+#if defined(store_rdm_subdevices_USE_SPI)
+#include "spi/rdmsubdevicebw7fets.h"
+#include "spi/rdmsubdevicebwdimmer.h"
+#include "spi/rdmsubdevicebwdio.h"
+#include "spi/rdmsubdevicebwlcd.h"
+#include "spi/rdmsubdevicebwrelay.h"
+#include "spi/rdmsubdevicemcp23s08.h"
+#include "spi/rdmsubdevicemcp23s17.h"
+#include "spi/rdmsubdevicemcp4822.h"
+#include "spi/rdmsubdevicemcp4902.h"
+#endif
+#if defined(store_rdm_subdevices_USE_I2C)
+#endif
 #endif
 
 #include "debug.h"
 
-using namespace rdm::subdevices;
-
-RDMSubDevicesParams::RDMSubDevicesParams() {
-	DEBUG_ENTRY
-
-	memset(&m_Params, 0, sizeof(struct rdm::subdevicesparams::Params));
-
-	DEBUG_EXIT
+static void Update(const common::store::RdmSubdevices* store)
+{
+    ConfigStore::Instance().Store(store, &ConfigurationStore::rdm_subdevices);
 }
 
-void RDMSubDevicesParams::Load() {
-	DEBUG_ENTRY
+static void Copy(struct ::common::store::RdmSubdevices* store)
+{
+    ConfigStore::Instance().Copy(store, &ConfigurationStore::rdm_subdevices);
+}
 
-	m_Params.nCount = 0;
+RDMSubDevicesParams::RDMSubDevicesParams()
+{
+    DEBUG_ENTRY
+
+    memset(&store_rdm_subdevices_, 0, sizeof(struct ::common::store::RdmSubdevices));
+
+    DEBUG_EXIT
+}
+
+void RDMSubDevicesParams::Load()
+{
+    DEBUG_ENTRY
 
 #if !defined(DISABLE_FS)
-	ReadConfigFile configfile(RDMSubDevicesParams::staticCallbackFunction, this);
+    ReadConfigFile configfile(RDMSubDevicesParams::StaticCallbackFunction, this);
 
-	if (configfile.Read(RDMSubDevicesConst::PARAMS_FILE_NAME)) {
-		RDMSubDevicesParamsStore::Update(&m_Params);
-
-	} else
+    if (configfile.Read(RDMSubDevicesConst::PARAMS_FILE_NAME))
+    {
+        Update(&store_rdm_subdevices_);
+    }
+    else
 #endif
-		RDMSubDevicesParamsStore::Copy(&m_Params);
-
-	// Sanity check
-	if (m_Params.nCount >= rdm::subdevices::MAX) {
-		memset(&m_Params, 0, sizeof(struct rdm::subdevicesparams::Params));
-	}
+    {
+        Copy(&store_rdm_subdevices_);
+    }
+    // Sanity check
+    if (store_rdm_subdevices_.count >= rdm::subdevices::MAX)
+    {
+        memset(&store_rdm_subdevices_, 0, sizeof(struct ::common::store::RdmSubdevices));
+    }
 
 #ifndef NDEBUG
-	Dump();
+    Dump();
 #endif
-	DEBUG_EXIT
+    DEBUG_EXIT
 }
 
-void RDMSubDevicesParams::Load(const char *pBuffer, uint32_t nLength) {
-	DEBUG_ENTRY
+void RDMSubDevicesParams::Load(const char* buffer, uint32_t length)
+{
+    DEBUG_ENTRY
 
-	assert(pBuffer != nullptr);
-	assert(nLength != 0);
+    assert(buffer != nullptr);
+    assert(length != 0);
 
-	debug_dump(pBuffer, nLength);
+    ReadConfigFile config(RDMSubDevicesParams::StaticCallbackFunction, this);
 
-	m_Params.nCount = 0;
+    config.Read(buffer, length);
 
-	ReadConfigFile config(RDMSubDevicesParams::staticCallbackFunction, this);
-
-	config.Read(pBuffer, nLength);
-
-	RDMSubDevicesParamsStore::Update(&m_Params);
+    Update(&store_rdm_subdevices_);
 
 #ifndef NDEBUG
-	Dump();
+    Dump();
 #endif
-	DEBUG_EXIT
+    DEBUG_EXIT
 }
 
-void RDMSubDevicesParams::Builder(const rdm::subdevicesparams::Params *pParams, char *pBuffer, uint32_t nLength, uint32_t& nSize) {
-	DEBUG_ENTRY
+void RDMSubDevicesParams::Builder(char* buffer, uint32_t length, uint32_t& size)
+{
+    DEBUG_ENTRY
 
-	assert(pBuffer != nullptr);
+    assert(buffer != nullptr);
 
-	if (pParams != nullptr) {
-		memcpy(&m_Params, pParams, sizeof(struct rdm::subdevicesparams::Params));
-	} else {
-		RDMSubDevicesParamsStore::Copy(&m_Params);
-	}
+    Copy(&store_rdm_subdevices_);
 
-	PropertiesBuilder builder(RDMSubDevicesConst::PARAMS_FILE_NAME, pBuffer, nLength);
+    PropertiesBuilder builder(RDMSubDevicesConst::PARAMS_FILE_NAME, buffer, length);
 
-	for (uint32_t nCount = 0; nCount < m_Params.nCount; nCount++) {
-		char buffer[32];
-		const auto *p = &m_Params.Entry[nCount];
-		snprintf(buffer, sizeof(buffer) - 1, "%u,%s,%u,%u,%u", p->nChipSelect, rdm::subdevices::get_type_string(static_cast<rdm::subdevices::Types>(p->nType)), p->nAddress, p->nDmxStartAddress, static_cast<unsigned int>(p->nSpeedHz));
-		builder.AddRaw(buffer);
-	}
+    for (uint32_t count = 0; count < store_rdm_subdevices_.count; count++)
+    {
+        char buffer[32];
+        const auto* p = &store_rdm_subdevices_.entry[count];
+        snprintf(buffer, sizeof(buffer) - 1, "%u,%s,%u,%u,%u", p->chip_select, rdm::subdevices::GetTypeString(static_cast<rdm::subdevices::Types>(p->type)),
+                 p->address, p->dmx_start_address, static_cast<unsigned int>(p->speed_hz));
+        builder.AddRaw(buffer);
+    }
 
-	nSize = builder.GetSize();
+    size = builder.GetSize();
 
-	DEBUG_PRINTF("nSize=%d", nSize);
-	DEBUG_EXIT
+    DEBUG_PRINTF("size=%d", size);
+    DEBUG_EXIT
 }
 
-bool RDMSubDevicesParams::Add(RDMSubDevice *pRDMSubDevice) {
-	DEBUG_ENTRY
+bool RDMSubDevicesParams::Add(RDMSubDevice* rdm_sub_device)
+{
+    DEBUG_ENTRY
 
-	if (pRDMSubDevice->Initialize()) {
-		RDMSubDevices::Get()->Add(pRDMSubDevice);
-		DEBUG_EXIT
-		return true;
-	}
+    if (rdm_sub_device->Initialize())
+    {
+        RDMSubDevices::Get()->Add(rdm_sub_device);
+        DEBUG_EXIT
+        return true;
+    }
 
-	delete pRDMSubDevice;
+    delete rdm_sub_device;
 
-	DEBUG_EXIT
-	return false;
+    DEBUG_EXIT
+    return false;
 }
 
-void RDMSubDevicesParams::Set() {
+void RDMSubDevicesParams::Set()
+{
 #if defined(CONFIG_RDM_ENABLE_SUBDEVICES)
-	for (uint32_t i = 0; i < m_Params.nCount; i++) {
-# if defined(CONFIG_RDM_SUBDEVICES_USE_SPI) ||  defined(CONFIG_RDM_SUBDEVICES_USE_I2C)
-		const auto nChipSelect = m_Params.Entry[i].nChipSelect;
-		const auto nAddress = m_Params.Entry[i].nAddress;
-		const auto nDmxStartAddress = m_Params.Entry[i].nDmxStartAddress;
-		const auto nSpeedHz = m_Params.Entry[i].nSpeedHz;
-# endif
-		switch (static_cast<Types>(m_Params.Entry[i].nType)) {
-# if defined(CONFIG_RDM_SUBDEVICES_USE_SPI)
-			case Types::BW7FETS:
-				Add(new RDMSubDeviceBw7fets(nDmxStartAddress, nChipSelect, nAddress, nSpeedHz));
-				break;
-			case Types::BWDIMMER:
-				Add(new RDMSubDeviceBwDimmer(nDmxStartAddress, nChipSelect, nAddress, nSpeedHz));
-				break;
-			case Types::BWDIO:
-				Add(new RDMSubDeviceBwDio(nDmxStartAddress, nChipSelect, nAddress, nSpeedHz));
-				break;
-			case Types::BWLCD:
-				Add(new RDMSubDeviceBwLcd(nDmxStartAddress, nChipSelect, nAddress, nSpeedHz));
-				break;
-			case Types::BWRELAY:
-				Add(new RDMSubDeviceBwRelay(nDmxStartAddress, nChipSelect, nAddress, nSpeedHz));
-				break;
-			case Types::MCP23S08:
-				Add(new RDMSubDeviceMCP23S08(nDmxStartAddress, nChipSelect, nAddress, nSpeedHz));
-				break;
-			case Types::MCP23S17:
-				Add(new RDMSubDeviceMCP23S17(nDmxStartAddress, nChipSelect, nAddress, nSpeedHz));
-				break;
-			case Types::MCP4822:
-				Add(new RDMSubDeviceMCP4822(nDmxStartAddress, nChipSelect, nAddress, nSpeedHz));
-				break;
-			case Types::MCP4902:
-				Add(new RDMSubDeviceMCP4902(nDmxStartAddress, nChipSelect, nAddress, nSpeedHz));
-				break;
-# endif
-# if defined(CONFIG_RDM_SUBDEVICES_USE_I2C)
-# endif
-			default:
-				break;
-		}
-	}
+    for (uint32_t i = 0; i < store_rdm_subdevices_.count; i++)
+    {
+#if defined(store_rdm_subdevices_USE_SPI) || defined(store_rdm_subdevices_USE_I2C)
+        const auto chip_select = store_rdm_subdevices_.entry[i].chip_select;
+        const auto address = store_rdm_subdevices_.entry[i].address;
+        const auto dmx_start_address = store_rdm_subdevices_.entry[i].dmx_start_address;
+        const auto speed_hz = store_rdm_subdevices_.entry[i].speed_hz;
+#endif
+        switch (static_cast<rdm::subdevices::Types>(store_rdm_subdevices_.entry[i].type))
+        {
+#if defined(store_rdm_subdevices_USE_SPI)
+            case rdm::subdevices::Types::BW7FETS:
+                Add(new RDMSubDeviceBw7fets(dmx_start_address, chip_select, address, speed_hz));
+                break;
+            case rdm::subdevices::Types::BWDIMMER:
+                Add(new RDMSubDeviceBwDimmer(dmx_start_address, chip_select, address, speed_hz));
+                break;
+            case rdm::subdevices::Types::BWDIO:
+                Add(new RDMSubDeviceBwDio(dmx_start_address, chip_select, address, speed_hz));
+                break;
+            case rdm::subdevices::Types::BWLCD:
+                Add(new RDMSubDeviceBwLcd(dmx_start_address, chip_select, address, speed_hz));
+                break;
+            case rdm::subdevices::Types::BWRELAY:
+                Add(new RDMSubDeviceBwRelay(dmx_start_address, chip_select, address, speed_hz));
+                break;
+            case rdm::subdevices::Types::MCP23S08:
+                Add(new RDMSubDeviceMCP23S08(dmx_start_address, chip_select, address, speed_hz));
+                break;
+            case rdm::subdevices::Types::MCP23S17:
+                Add(new RDMSubDeviceMCP23S17(dmx_start_address, chip_select, address, speed_hz));
+                break;
+            case rdm::subdevices::rdm::subdevices::Types::MCP4822:
+                Add(new RDMSubDeviceMCP4822(dmx_start_address, chip_select, address, speed_hz));
+                break;
+            case rdm::subdevices::Types::MCP4902:
+                Add(new RDMSubDeviceMCP4902(dmx_start_address, chip_select, address, speed_hz));
+                break;
+#endif
+#if defined(store_rdm_subdevices_USE_I2C)
+#endif
+            default:
+                break;
+        }
+    }
 #endif
 }
 
-void RDMSubDevicesParams::callbackFunction(const char *pLine) {
-	assert(pLine != nullptr);
+void RDMSubDevicesParams::CallbackFunction(const char* line)
+{
+    assert(line != nullptr);
 
-	DEBUG_PUTS(pLine);
+    DEBUG_PUTS(line);
 
-	char aSubDeviceName[32];
-	memset(aSubDeviceName, 0, sizeof(aSubDeviceName));
+    char sub_device_name[32];
+    memset(sub_device_name, 0, sizeof(sub_device_name));
 
-	char nChipSelect = 0;
-	uint8_t nLength = sizeof(aSubDeviceName) - 1;
-	uint8_t nAddress = 0;
-	uint16_t nDmxStartAddress;
-	uint32_t nSpeedHz = 0;
+    char chip_select = 0;
+    uint8_t length = sizeof(sub_device_name) - 1;
+    uint8_t address = 0;
+    uint16_t dmx_start_address;
+    uint32_t speed_hz = 0;
 
-	const auto nReturnCode = Sscan::Spi(pLine, nChipSelect, aSubDeviceName, nLength, nAddress, nDmxStartAddress, nSpeedHz);
+    const auto kReturnCode = Sscan::Spi(line, chip_select, sub_device_name, length, address, dmx_start_address, speed_hz);
 
-	DEBUG_PRINTF("nReturnCode=%u", static_cast<uint32_t>(nReturnCode));
+    DEBUG_PRINTF("nReturnCode=%u", static_cast<uint32_t>(nReturnCode));
 
-	if ((nReturnCode == Sscan::OK) && (aSubDeviceName[0] != 0) && (nLength != 0)) {
-		DEBUG_PRINTF("{%.*s}:%d, nChipSelect=%d, nAddress=%d, nDmxStartAddress=%d, nSpeedHz=%d", nLength, aSubDeviceName, static_cast<int>(nLength), nChipSelect, nAddress, nDmxStartAddress, nSpeedHz);
+    if ((kReturnCode == Sscan::OK) && (sub_device_name[0] != 0) && (length != 0))
+    {
+        DEBUG_PRINTF("{%.*s}:%d, chip_select=%d, address=%d, dmx_start_address=%d, speed_hz=%d", length, aSubDeviceName, static_cast<int>(length), chip_select,
+                     address, dmx_start_address, speed_hz);
 
-		Types subDeviceType;
+        rdm::subdevices::Types sub_device_type;
 
-		if ((subDeviceType = rdm::subdevices::get_type_string(aSubDeviceName)) == Types::UNDEFINED) {
-			return;
-		}
+        if ((sub_device_type = rdm::subdevices::GetTypeString(sub_device_name)) == rdm::subdevices::Types::UNDEFINED)
+        {
+            return;
+        }
 
-		uint32_t i;
+        uint32_t i;
 
-		for (i = 0; i < m_Params.nCount; i++) {
-			if ((m_Params.Entry[i].nChipSelect == static_cast<uint8_t>(nChipSelect))
-					&& (m_Params.Entry[i].nType == static_cast<uint8_t>(subDeviceType))
-					&& (m_Params.Entry[i].nAddress == nAddress)) {
-				return;
-			}
-		}
+        for (i = 0; i < store_rdm_subdevices_.count; i++)
+        {
+            if ((store_rdm_subdevices_.entry[i].chip_select == static_cast<uint8_t>(chip_select)) &&
+                (store_rdm_subdevices_.entry[i].type == static_cast<uint8_t>(sub_device_type)) && (store_rdm_subdevices_.entry[i].address == address))
+            {
+                return;
+            }
+        }
 
-		if (m_Params.nCount == rdm::subdevices::MAX) {
-			return;
-		}
+        if (store_rdm_subdevices_.count == common::store::rdm::subdevices::kMaxSubdevices)
+        {
+            return;
+        }
 
-		m_Params.nCount++;
-		m_Params.Entry[i].nType = static_cast<uint8_t>(subDeviceType);
-		m_Params.Entry[i].nChipSelect = static_cast<uint8_t>(nChipSelect);
-		m_Params.Entry[i].nAddress = nAddress;
-		m_Params.Entry[i].nDmxStartAddress = nDmxStartAddress;
-		m_Params.Entry[i].nSpeedHz = nSpeedHz;
-	}
+        store_rdm_subdevices_.count++;
+        store_rdm_subdevices_.entry[i].type = static_cast<uint8_t>(sub_device_type);
+        store_rdm_subdevices_.entry[i].chip_select = static_cast<uint8_t>(chip_select);
+        store_rdm_subdevices_.entry[i].address = address;
+        store_rdm_subdevices_.entry[i].dmx_start_address = dmx_start_address;
+        store_rdm_subdevices_.entry[i].speed_hz = speed_hz;
+    }
 }
 
-void RDMSubDevicesParams::staticCallbackFunction(void *p, const char *s) {
-	assert(p != nullptr);
-	assert(s != nullptr);
+void RDMSubDevicesParams::StaticCallbackFunction(void* p, const char* s)
+{
+    assert(p != nullptr);
+    assert(s != nullptr);
 
-	(static_cast<RDMSubDevicesParams*>(p))->callbackFunction(s);
+    (static_cast<RDMSubDevicesParams*>(p))->CallbackFunction(s);
 }
 
-void RDMSubDevicesParams::Dump() {
-	printf("%s::%s \'%s\':\n", __FILE__, __FUNCTION__, RDMSubDevicesConst::PARAMS_FILE_NAME);
+void RDMSubDevicesParams::Dump()
+{
+    printf("%s::%s \'%s\':\n", __FILE__, __FUNCTION__, RDMSubDevicesConst::PARAMS_FILE_NAME);
 
-	for (uint32_t i = 0; i < m_Params.nCount; i++) {
-		printf(" %s 0x%.2x\n", rdm::subdevices::get_type_string(static_cast<Types>(m_Params.Entry[i].nType)), m_Params.Entry[i].nAddress);
-	}
+    for (uint32_t i = 0; i < store_rdm_subdevices_.count; i++)
+    {
+        printf(" %s 0x%.2x\n", rdm::subdevices::GetTypeString(static_cast<rdm::subdevices::Types>(store_rdm_subdevices_.entry[i].type)),
+               store_rdm_subdevices_.entry[i].address);
+    }
 }

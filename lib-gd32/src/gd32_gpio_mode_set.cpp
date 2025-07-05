@@ -1,9 +1,9 @@
-#if defined (GD32F4XX) || defined (GD32H7XX)
+#if defined(GD32F4XX) || defined(GD32H7XX)
 /**
- * @file gd32_gpio_mode_set.cpp
+ * @file Gd32GpioModeSet.cpp
  *
  */
-/* Copyright (C) 2024 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2024-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,47 +29,49 @@
 
 #include "gd32.h"
 
-void gd32_gpio_mode_set_output(const uint32_t gpio_periph, const uint32_t pin) {
-	assert(pin != 0);
-	assert(__builtin_popcount(static_cast<int>(pin)) == 1);
+void Gd32GpioModeSetOutput(uint32_t gpio_periph, uint32_t pin)
+{
+    assert(pin != 0);
+    assert(__builtin_popcount(static_cast<int>(pin)) == 1);
 
-	auto ctl = GPIO_CTL(gpio_periph);
-	auto pupd = GPIO_PUD(gpio_periph);
+    auto ctl = GPIO_CTL(gpio_periph);
+    auto pupd = GPIO_PUD(gpio_periph);
 
-	const auto i = 31 - __builtin_clz(pin);
+    const auto kI = 31 - __builtin_clz(pin);
 
-	/* clear the specified pin mode bits */
-	ctl &= ~GPIO_MODE_MASK(i);
-	/* set the specified pin mode bits */
-	ctl |= GPIO_MODE_SET(i, GPIO_MODE_OUTPUT);
-	/* clear the specified pin pupd bits */
-	pupd &= ~GPIO_PUPD_MASK(i);
-	/* set the specified pin pupd bits */
-	pupd |= GPIO_PUPD_SET(i, GPIO_PUPD_NONE);
+    /* clear the specified pin mode bits */
+    ctl &= ~GPIO_MODE_MASK(kI);
+    /* set the specified pin mode bits */
+    ctl |= GPIO_MODE_SET(kI, GPIO_MODE_OUTPUT);
+    /* clear the specified pin pupd bits */
+    pupd &= ~GPIO_PUPD_MASK(kI);
+    /* set the specified pin pupd bits */
+    pupd |= GPIO_PUPD_SET(kI, GPIO_PUPD_NONE);
 
-	GPIO_CTL(gpio_periph) = ctl;
-	GPIO_PUD(gpio_periph) = pupd;
+    GPIO_CTL(gpio_periph) = ctl;
+    GPIO_PUD(gpio_periph) = pupd;
 }
 
-void gd32_gpio_mode_set_af(const uint32_t gpio_periph, const uint32_t pin) {
-	assert(pin != 0);
-	assert(__builtin_popcount(static_cast<int>(pin)) == 1);
+void Gd32PpioModeSetAf(uint32_t gpio_periph,uint32_t pin)
+{
+    assert(pin != 0);
+    assert(__builtin_popcount(static_cast<int>(pin)) == 1);
 
-	auto ctl = GPIO_CTL(gpio_periph);
-	auto pupd = GPIO_PUD(gpio_periph);
+    auto ctl = GPIO_CTL(gpio_periph);
+    auto pupd = GPIO_PUD(gpio_periph);
 
-	const auto i = 31 - __builtin_clz(pin);
+    const auto kI = 31 - __builtin_clz(pin);
 
-	/* clear the specified pin mode bits */
-	ctl &= ~GPIO_MODE_MASK(i);
-	/* set the specified pin mode bits */
-	ctl |= GPIO_MODE_SET(i, GPIO_MODE_AF);
-	/* clear the specified pin pupd bits */
-	pupd &= ~GPIO_PUPD_MASK(i);
-	/* set the specified pin pupd bits */
-	pupd |= GPIO_PUPD_SET(i, GPIO_PUPD_PULLUP);
+    /* clear the specified pin mode bits */
+    ctl &= ~GPIO_MODE_MASK(kI);
+    /* set the specified pin mode bits */
+    ctl |= GPIO_MODE_SET(kI, GPIO_MODE_AF);
+    /* clear the specified pin pupd bits */
+    pupd &= ~GPIO_PUPD_MASK(kI);
+    /* set the specified pin pupd bits */
+    pupd |= GPIO_PUPD_SET(kI, GPIO_PUPD_PULLUP);
 
-	GPIO_CTL(gpio_periph) = ctl;
-	GPIO_PUD(gpio_periph) = pupd;
+    GPIO_CTL(gpio_periph) = ctl;
+    GPIO_PUD(gpio_periph) = pupd;
 }
 #endif

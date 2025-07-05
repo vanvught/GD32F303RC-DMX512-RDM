@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file mcp23x08.h
  *
@@ -23,23 +24,19 @@
  * THE SOFTWARE.
  */
 
-#ifndef MCP23X08_H_
-#define MCP23X08_H_
-
 #include <cstdint>
 
-namespace mcp23x08 {
-static constexpr uint8_t REG_IODIR   = 0x00;
-static constexpr uint8_t REG_IPOL    = 0x01;
+namespace mcp23x08
+{
+static constexpr uint8_t REG_IODIR = 0x00;
+static constexpr uint8_t REG_IPOL = 0x01;
 static constexpr uint8_t REG_GPINTEN = 0x02;
-static constexpr uint8_t REG_DEFVAL  = 0x03;
-static constexpr uint8_t REG_INTCON  = 0x04;
-static constexpr uint8_t REG_IOCON   = 0x05;
-static constexpr uint8_t REG_GPPU    = 0x06;
-static constexpr uint8_t REG_INTF	 = 0x07;
-static constexpr uint8_t REG_INTCAP  = 0x08;
-static constexpr uint8_t REG_GPIO    = 0x09;
-static constexpr uint8_t REG_OLAT    = 0x0A;
-}   // namespace mcp23x08
-
-#endif /* MCP23X08_H_ */
+static constexpr uint8_t REG_DEFVAL = 0x03;
+static constexpr uint8_t REG_INTCON = 0x04;
+static constexpr uint8_t REG_IOCON = 0x05;
+static constexpr uint8_t REG_GPPU = 0x06;
+static constexpr uint8_t REG_INTF = 0x07;
+static constexpr uint8_t REG_INTCAP = 0x08;
+static constexpr uint8_t REG_GPIO = 0x09;
+static constexpr uint8_t REG_OLAT = 0x0A;
+} // namespace mcp23x08

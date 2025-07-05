@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file sscan.h
  *
  */
-/* Copyright (C) 2016-2024 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2016-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +24,6 @@
  * THE SOFTWARE.
  */
 
-#ifndef SSCAN_H_
-#define SSCAN_H_
-
 #include <cstdint>
 
 class Sscan {
@@ -34,27 +32,26 @@ public:
 		OK, NAME_ERROR, VALUE_ERROR
 	};
 
-	static ReturnCode Char(const char *pBuffer, const char *pName, char *pValue, uint32_t& nLength);
+	static ReturnCode Char(const char *buffer, const char *name, char *value, uint32_t& length);
 
-	static ReturnCode Uint8(const char *pBuffer, const char *pName, uint8_t& nValue);
-	static ReturnCode Uint16(const char *pBuffer, const char *pName, uint16_t& nValue);
-	static ReturnCode Uint32(const char *pBuffer, const char *pName, uint32_t& nValue);
+	static ReturnCode Uint8(const char *buffer, const char *name, uint8_t& value);
+	static ReturnCode Uint16(const char *buffer, const char *name, uint16_t& value);
+	static ReturnCode Uint32(const char *buffer, const char *name, uint32_t& value);
 
-	static ReturnCode Float(const char *pBuffer, const char *pName, float& fValue);
+	static ReturnCode Float(const char *buffer, const char *name, float& value);
 
-	static ReturnCode IpAddress(const char *pBuffer, const char *pName, uint32_t& nIpAddress);
+	static ReturnCode IpAddress(const char *buffer, const char *name, uint32_t& nIpAddress);
 
-	static ReturnCode HexUint16(const char *pBuffer, const char *pName, uint16_t& nValue);
-	static ReturnCode Hex24Uint32(const char *pBuffer, const char *pName, uint32_t &nValue);
+	static ReturnCode HexUint16(const char *buffer, const char *name, uint16_t& value);
+	static ReturnCode Hex24Uint32(const char *buffer, const char *name, uint32_t &value);
 
-	static ReturnCode I2cAddress(const char *pBuffer, const char *pName, uint8_t& nAddress);
-	static ReturnCode I2c(const char *pBuffer, char *pName, uint8_t& nLength, uint8_t& nAddress, uint8_t& nReserved);
-	static ReturnCode Spi(const char *pBuffer, char& nChipSelect, char *pName, uint8_t& nLength, uint8_t& nAddress, uint16_t &nDmxStartAddress, uint32_t &nSpeedHz);
+	static ReturnCode I2cAddress(const char *buffer, const char *name, uint8_t& address);
+	static ReturnCode I2c(const char *buffer, char *name, uint8_t& length, uint8_t& address, uint8_t& nReserved);
+	static ReturnCode Spi(const char *buffer, char& nChipSelect, char *name, uint8_t& length, uint8_t& address, uint16_t &nDmxStartAddress, uint32_t &nSpeedHz);
 
-	static ReturnCode UtcOffset(const char *pBuffer, const char *pName, int8_t& nHours, uint8_t& nMinutes);
+	static ReturnCode UtcOffset(const char *buffer, const char *name, int32_t& hours, uint32_t& minutes);
+
 private:
-	static uint8_t fromHex(const char Hex[2]);
-	static const char *checkName(const char *pBuffer, const char *pName);
+	static uint8_t fromHex(const char hex[2]);
+	static const char *checkName(const char *buffer, const char *name);
 };
-
-#endif /* SSCAN_H_ */

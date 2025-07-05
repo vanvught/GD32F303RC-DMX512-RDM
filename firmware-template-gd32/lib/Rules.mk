@@ -20,10 +20,12 @@ DEFINES+=-D_TIME_STAMP_YEAR_=$(shell date  +"%Y") -D_TIME_STAMP_MONTH_=$(shell d
 
 include ../firmware-template-gd32/Board.mk
 include ../firmware-template-gd32/Mcu.mk
+include ../firmware-template/DmxNodeNodeType.mk
+include ../firmware-template/DmxNodeOutputType.mk
 include ../firmware-template-gd32/Includes.mk
 include ../firmware-template-gd32/Validate.mk
 
-INCLUDES+=-I../lib-configstore/include -I../lib-device/include -I../lib-display/include -I../lib-flash/include -I../lib-flashcode/include -I../lib-hal/include -I../lib-lightset/include -I../lib-network/include
+INCLUDES+=-I../lib-configstore/include -I../lib-device/include -I../lib-display/include -I../lib-flash/include -I../lib-flashcode/include -I../lib-hal/include -I../lib-network/include
 
 $(info $$DEFINES [${DEFINES}])
 $(info $$MAKE_FLAGS [${MAKE_FLAGS}])

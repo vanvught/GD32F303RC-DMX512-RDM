@@ -1,8 +1,7 @@
 /**
  * @file rdm_selftest.cpp
- *
  */
-/* Copyright (C) 2021 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2021-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +30,7 @@
 #include "pixelpatterns.h"
 #include "pixeltestpattern.h"
 #include "displayudf.h"
-#include "ws28xxdmx.h"
+#include "pixeldmx.h"
 #include "rdmresponder.h"
 
 namespace rdm {

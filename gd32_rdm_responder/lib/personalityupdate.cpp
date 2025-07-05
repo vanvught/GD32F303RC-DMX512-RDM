@@ -1,8 +1,7 @@
 /**
  * @file personalityupdate.cpp
- *
  */
-/* Copyright (C) 2021-2024 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2021-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +26,7 @@
 
 #include "rdmresponder.h"
 
-#include "ws28xxdmx.h"
+#include "pixeldmx.h"
 #include "pixeldmxstore.h"
 #include "pixeltestpattern.h"
 #include "pixelpatterns.h"
@@ -42,7 +41,7 @@ void RDMResponder::PersonalityUpdate(uint32_t nPersonality)  {
 	assert(nPersonality != 0);
 	assert((nPersonality - 1U) < static_cast<uint32_t>(pixel::Type::UNDEFINED));
 	const auto type = static_cast<uint8_t>(nPersonality - 1);
-	PixelDmxStore::SaveType(type);
+	dmxled_store::SaveType(type);
 
 	const auto nTestPattern = PixelTestPattern::Get()->GetPattern();
 

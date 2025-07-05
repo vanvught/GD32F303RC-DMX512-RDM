@@ -40,7 +40,7 @@ public:
 	~FlashCode();
 
 	bool IsDetected() const {
-		return m_IsDetected;
+		return detected_;
 	}
 
 	const char* GetName() const;
@@ -52,12 +52,12 @@ public:
 	bool Write(uint32_t nOffset, uint32_t nLength, const uint8_t *pBuffer, flashcode::result& nResult);
 
 	static FlashCode *Get() {
-		return s_pThis;
+		return s_this;
 	}
 
 private:
-	bool m_IsDetected { false };
-	static FlashCode *s_pThis;
+	bool detected_ { false };
+	static FlashCode *s_this;
 };
 
 #endif /* INCLUDE_FLASHROM_H_ */

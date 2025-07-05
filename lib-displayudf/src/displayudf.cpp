@@ -1,8 +1,7 @@
 /**
  * @file displayudf.cpp
- *
  */
-/* Copyright (C) 2019-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2019-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +22,10 @@
  * THE SOFTWARE.
  */
 
+#if defined (DEBUG_DISPLAYUDF)
+# undef NDEBUG
+#endif
+
 #include <cstdint>
 #include <cstdarg>
 #include <cstdio>
@@ -31,25 +34,22 @@
 #include "displayudf.h"
 #include "display.h"
 
-#include "lightset.h"
+#include "hal_boardinfo.h"
 #include "network.h"
 
-#include "hardware.h"
 #include "firmwareversion.h"
 
 #include "debug.h"
 
-using namespace displayudf;
-
-DisplayUdf *DisplayUdf::s_pThis = nullptr;
+DisplayUdf *DisplayUdf::s_this = nullptr;
 
 DisplayUdf::DisplayUdf() {
 	DEBUG_ENTRY
 
-	assert(s_pThis == nullptr);
-	s_pThis = this;
+	assert(s_this == nullptr);
+	s_this = this;
 
-	for (uint32_t i = 0; i < static_cast<uint32_t>(Labels::UNKNOWN); i++) {
+	for (uint32_t i = 0; i < static_cast<uint32_t>(displayudf::Labels::UNKNOWN); i++) {
 		m_aLabels[i] = static_cast<uint8_t>(i + 1);
 	}
 
@@ -60,28 +60,28 @@ void DisplayUdf::SetTitle(const char *format, ...) {
 	va_list arp;
 	va_start(arp, format);
 
-	const auto i = vsnprintf(m_aTitle, sizeof(m_aTitle) / sizeof(m_aTitle[0]) - 1, format, arp);
+	const auto kI = vsnprintf(m_aTitle, sizeof(m_aTitle) / sizeof(m_aTitle[0]) - 1, format, arp);
 
 	va_end(arp);
 
-	m_aTitle[i] = '\0';
+	m_aTitle[kI] = '\0';
 
 	DEBUG_PUTS(m_aTitle);
 }
 
-void DisplayUdf::Set(uint32_t nLine, Labels label) {
-	if (!((nLine > 0) && (nLine <= LABEL_MAX_ROWS))) {
+void DisplayUdf::Set(uint32_t line, displayudf::Labels label) {
+	if (!((line > 0) && (line <= displayudf::LABEL_MAX_ROWS))) {
 		return;
 	}
 
-	for (uint32_t i = 0; i < static_cast<uint32_t>(Labels::UNKNOWN); i++) {
-		if (m_aLabels[i] == static_cast<uint8_t>(nLine)) {
+	for (uint32_t i = 0; i < static_cast<uint32_t>(displayudf::Labels::UNKNOWN); i++) {
+		if (m_aLabels[i] == static_cast<uint8_t>(line)) {
 			m_aLabels[i] = m_aLabels[static_cast<uint32_t>(label)];
 			break;
 		}
 	}
 
-	m_aLabels[static_cast<uint32_t>(label)] = static_cast<uint8_t>(nLine);
+	m_aLabels[static_cast<uint32_t>(label)] = static_cast<uint8_t>(line);
 }
 
 void DisplayUdf::Show() {
@@ -93,8 +93,8 @@ void DisplayUdf::Show() {
 	ShowNode();
 #endif
 
-	for (uint32_t i = 0; i < static_cast<uint32_t>(Labels::UNKNOWN); i++) {
-		if (m_aLabels[i] > LABEL_MAX_ROWS) {
+	for (uint32_t i = 0; i < static_cast<uint32_t>(displayudf::Labels::UNKNOWN); i++) {
+		if (m_aLabels[i] > displayudf::LABEL_MAX_ROWS) {
 			m_aLabels[i] = 0xFF;
 		}
 
@@ -102,12 +102,12 @@ void DisplayUdf::Show() {
 	}
 
 	ClearEndOfLine();
-	Write(m_aLabels[static_cast<uint32_t>(Labels::TITLE)], m_aTitle);
-	uint8_t nHwTextLength;
+	Write(m_aLabels[static_cast<uint32_t>(displayudf::Labels::TITLE)], m_aTitle);
+	uint8_t hw_text_length;
 	ClearEndOfLine();
-	Write(m_aLabels[static_cast<uint32_t>(Labels::BOARDNAME)], Hardware::Get()->GetBoardName(nHwTextLength));
+	Write(m_aLabels[static_cast<uint32_t>(displayudf::Labels::BOARDNAME)], hal::BoardName(hw_text_length));
 	ClearEndOfLine();
-	Printf(m_aLabels[static_cast<uint32_t>(Labels::VERSION)], "Firmware V%.*s", firmwareversion::length::SOFTWARE_VERSION, FirmwareVersion::Get()->GetVersion()->SoftwareVersion);
+	Printf(m_aLabels[static_cast<uint32_t>(displayudf::Labels::VERSION)], "Firmware V%.*s", firmwareversion::length::kSoftwareVersion, FirmwareVersion::Get()->GetVersion()->software_version);
 
 #if defined (RDM_RESPONDER)
 	ShowDmxStartAddress();

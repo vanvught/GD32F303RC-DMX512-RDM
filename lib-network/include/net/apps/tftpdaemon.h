@@ -40,7 +40,7 @@ public:
 	TFTPDaemon();
 	virtual ~TFTPDaemon();
 
-	void Run();
+	void Input(const uint8_t *, uint32_t, uint32_t, uint16_t);
 
 	virtual bool FileOpen(const char *pFileName, tftp::Mode mode)=0;
 	virtual bool FileCreate(const char *pFileName, tftp::Mode mode)=0;
@@ -51,6 +51,7 @@ public:
 	virtual void Exit()=0;
 
 private:
+	void Init();
 	void HandleRequest();
 	void HandleRecvAck();
 	void HandleRecvData();
@@ -68,7 +69,7 @@ private:
 		WRQ_RECV_PACKET
 	};
 	TFTPState m_nState { TFTPState::INIT };
-	int m_nIdx { -1 };
+	int32_t m_nIdx { -1 };
 	uint8_t *m_pBuffer { nullptr };
 	uint32_t m_nFromIp { 0 };
 	uint32_t m_nLength { 0 };
@@ -78,12 +79,15 @@ private:
 	uint16_t m_nBlockNumber { 0 };
 	bool m_bIsLastBlock { false };
 
-	static TFTPDaemon* Get() {
-		return s_pThis;
+	static TFTPDaemon *Get() {
+		return s_this;
 	}
 
 private:
-	static TFTPDaemon *s_pThis;
+	void static StaticCallbackFunction(const uint8_t *pBuffer, uint32_t nSize, uint32_t nFromIp, uint16_t nFromPort) {
+		s_this->Input(pBuffer, nSize, nFromIp, nFromPort);
+	}
+	static inline TFTPDaemon *s_this;
 };
 
 #endif /* NET_APPS_TFTPDAEMON_H_ */

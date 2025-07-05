@@ -40,13 +40,13 @@ public:
 		assert(pRdmData != nullptr);
 		assert(nLength != 0);
 
-		Dmx::Get()->SetPortDirection(nPortIndex, dmx::PortDirection::OUTP, false);
+		Dmx::Get()->SetPortDirection(nPortIndex, dmx::PortDirection::kOutput, false);
 
 		Dmx::Get()->RdmSendRaw(nPortIndex, pRdmData, nLength);
 
 		udelay(RDM_RESPONDER_DATA_DIRECTION_DELAY);
 
-		Dmx::Get()->SetPortDirection(nPortIndex, dmx::PortDirection::INP, true);
+		Dmx::Get()->SetPortDirection(nPortIndex, dmx::PortDirection::kInput, true);
 	}
 
 	static void Send(const uint32_t nPortIndex, struct TRdmMessage *pRdmCommand) {

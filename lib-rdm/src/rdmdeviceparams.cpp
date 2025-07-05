@@ -1,8 +1,7 @@
 /**
  * @file rdmdeviceparams.cpp
- *
  */
-/* Copyright (C) 2019-2024 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2019-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +22,6 @@
  * THE SOFTWARE.
  */
 
-#if !defined(__clang__)	// Needed for compiling on MacOS
-# pragma GCC push_options
-# pragma GCC optimize ("Os")
-#endif
-
 #include <cstdint>
 #include <cstring>
 #include <cstdio>
@@ -36,11 +30,10 @@
 #include "rdmdeviceparams.h"
 #include "rdmdeviceparamsconst.h"
 #include "rdmdevice.h"
-
 #include "rdm_e120.h"
 
-#include "network.h"
-#include "hardware.h"
+#include "configstore.h"
+#include "configurationstore.h"
 
 #include "readconfigfile.h"
 #include "sscan.h"
@@ -48,161 +41,192 @@
 
 #include "debug.h"
 
-RDMDeviceParams::RDMDeviceParams() {
-	DEBUG_ENTRY
-	
-	memset(&m_Params, 0, sizeof(struct rdm::deviceparams::Params));
-	
-	m_Params.nProductCategory = E120_PRODUCT_CATEGORY_OTHER;
-	m_Params.nProductDetail = E120_PRODUCT_DETAIL_OTHER;
-
-	DEBUG_EXIT
+static void Update(const common::store::RdmDevice* store)
+{
+    ConfigStore::Instance().Store(store, &ConfigurationStore::rdm_device);
 }
 
-void RDMDeviceParams::Load() {
-	DEBUG_ENTRY
+static void Copy(struct ::common::store::RdmDevice* store)
+{
+    ConfigStore::Instance().Copy(store, &ConfigurationStore::rdm_device);
+}
+
+RDMDeviceParams::RDMDeviceParams()
+{
+    DEBUG_ENTRY
+
+    memset(&store_rdm_device_, 0, sizeof(struct common::store::RdmDevice));
+
+    store_rdm_device_.product_category = E120_PRODUCT_CATEGORY_OTHER;
+    store_rdm_device_.product_detail = E120_PRODUCT_DETAIL_OTHER;
+
+    DEBUG_EXIT
+}
+
+void RDMDeviceParams::Load()
+{
+    DEBUG_ENTRY
 
 #if !defined(DISABLE_FS)
-	m_Params.nSetList = 0;
+    store_rdm_device_.set_list = 0;
 
-	ReadConfigFile configfile(RDMDeviceParams::staticCallbackFunction, this);
+    ReadConfigFile configfile(RDMDeviceParams::StaticCallbackFunction, this);
 
-	if (configfile.Read(RDMDeviceParamsConst::FILE_NAME)) {
-		RDMDeviceParamsStore::Update(&m_Params);
-	} else
+    if (configfile.Read(RDMDeviceParamsConst::FILE_NAME))
+    {
+        Update(&store_rdm_device_);
+    }
+    else
 #endif
-	RDMDeviceParamsStore::Copy(&m_Params);
+    {
+        Copy(&store_rdm_device_);
+    }
+#ifndef NDEBUG
+    Dump();
+#endif
+    DEBUG_EXIT
+}
+
+void RDMDeviceParams::Load(const char* buffer, uint32_t length)
+{
+    DEBUG_ENTRY
+
+    assert(buffer != nullptr);
+    assert(length != 0);
+
+    store_rdm_device_.set_list = 0;
+
+    ReadConfigFile config(RDMDeviceParams::StaticCallbackFunction, this);
+
+    config.Read(buffer, length);
+
+    Update(&store_rdm_device_);
 
 #ifndef NDEBUG
-	Dump();
+    Dump();
 #endif
-	DEBUG_EXIT
+    DEBUG_EXIT
 }
 
-void RDMDeviceParams::Load(const char *pBuffer, uint32_t nLength) {
-	DEBUG_ENTRY
+void RDMDeviceParams::CallbackFunction(const char* line)
+{
+    assert(line != nullptr);
 
-	assert(pBuffer != nullptr);
-	assert(nLength != 0);
+    uint32_t length = RDM_DEVICE_LABEL_MAX_LENGTH;
 
-	m_Params.nSetList = 0;
+    if (Sscan::Char(line, RDMDeviceParamsConst::LABEL, reinterpret_cast<char *>(store_rdm_device_.device_root_label), length) == Sscan::OK)
+    {
+        store_rdm_device_.device_root_label_length = static_cast<uint8_t>(length);
+        store_rdm_device_.set_list |= rdm::deviceparams::Mask::kLabel;
 
-	ReadConfigFile config(RDMDeviceParams::staticCallbackFunction, this);
+        return;
+    }
 
-	config.Read(pBuffer, nLength);
+    uint16_t value16;
 
-	RDMDeviceParamsStore::Update(&m_Params);
+    if (Sscan::HexUint16(line, RDMDeviceParamsConst::PRODUCT_CATEGORY, value16) == Sscan::OK)
+    {
+        store_rdm_device_.product_category = value16;
 
-#ifndef NDEBUG
-	Dump();
-#endif
-	DEBUG_EXIT
+        if (value16 == E120_PRODUCT_CATEGORY_OTHER)
+        {
+            store_rdm_device_.set_list &= ~rdm::deviceparams::Mask::kProductCategory;
+        }
+        else
+        {
+            store_rdm_device_.set_list |= rdm::deviceparams::Mask::kProductCategory;
+        }
+
+        return;
+    }
+
+    if (Sscan::HexUint16(line, RDMDeviceParamsConst::PRODUCT_DETAIL, value16) == Sscan::OK)
+    {
+        store_rdm_device_.product_detail = value16;
+
+        if (value16 == E120_PRODUCT_DETAIL_OTHER)
+        {
+            store_rdm_device_.set_list &= ~rdm::deviceparams::Mask::kProductDetail;
+        }
+        else
+        {
+            store_rdm_device_.set_list |= rdm::deviceparams::Mask::kProductDetail;
+        }
+
+        return;
+    }
 }
 
-void RDMDeviceParams::callbackFunction(const char *pLine) {
-	assert(pLine != nullptr);
+void RDMDeviceParams::Set(RDMDevice *rdm_device)
+{
+    assert(rdm_device != nullptr);
 
-	uint32_t nLength = RDM_DEVICE_LABEL_MAX_LENGTH;
-	
-	if (Sscan::Char(pLine, RDMDeviceParamsConst::LABEL, m_Params.aDeviceRootLabel, nLength) == Sscan::OK) {
-		m_Params.nDeviceRootLabelLength = static_cast<uint8_t>(nLength);
-		m_Params.nSetList |= rdm::deviceparams::Mask::LABEL;
+    TRDMDeviceInfoData info;
 
-		return;
-	}
+    if (IsMaskSet(rdm::deviceparams::Mask::kLabel))
+    {
+        info.data = reinterpret_cast<char *>(store_rdm_device_.device_root_label);
+        info.length = store_rdm_device_.device_root_label_length;
+        rdm_device->SetLabel(&info);
+    }
 
-	uint16_t nValue16;
+    if (IsMaskSet(rdm::deviceparams::Mask::kProductCategory))
+    {
+        rdm_device->SetProductCategory(store_rdm_device_.product_category);
+    }
 
-	if (Sscan::HexUint16(pLine, RDMDeviceParamsConst::PRODUCT_CATEGORY, nValue16) == Sscan::OK) {
-		m_Params.nProductCategory = nValue16;
-
-		if (nValue16 == E120_PRODUCT_CATEGORY_OTHER) {
-			m_Params.nSetList &= ~rdm::deviceparams::Mask::PRODUCT_CATEGORY;
-		} else {
-			m_Params.nSetList |= rdm::deviceparams::Mask::PRODUCT_CATEGORY;
-		}
-
-		return;
-	}
-
-	if (Sscan::HexUint16(pLine, RDMDeviceParamsConst::PRODUCT_DETAIL, nValue16) == Sscan::OK) {
-		m_Params.nProductDetail = nValue16;
-
-		if (nValue16 == E120_PRODUCT_DETAIL_OTHER) {
-			m_Params.nSetList &= ~rdm::deviceparams::Mask::PRODUCT_DETAIL;
-		} else {
-			m_Params.nSetList |= rdm::deviceparams::Mask::PRODUCT_DETAIL;
-		}
-
-		return;
-	}
+    if (IsMaskSet(rdm::deviceparams::Mask::kProductDetail))
+    {
+        rdm_device->SetProductDetail(store_rdm_device_.product_detail);
+    }
 }
 
-void RDMDeviceParams::Set(RDMDevice *pRDMDevice) {
-	assert(pRDMDevice != nullptr);
+void RDMDeviceParams::Builder(char* buffer, uint32_t length, uint32_t& size)
+{
+    DEBUG_ENTRY
 
-	TRDMDeviceInfoData Info;
+    assert(buffer != nullptr);
 
-	if (isMaskSet(rdm::deviceparams::Mask::LABEL)) {
-		Info.data = m_Params.aDeviceRootLabel;
-		Info.length = m_Params.nDeviceRootLabelLength;
-		pRDMDevice->SetLabel(&Info);
-	}
+    Copy(&store_rdm_device_);
 
-	if (isMaskSet(rdm::deviceparams::Mask::PRODUCT_CATEGORY)) {
-		pRDMDevice->SetProductCategory(m_Params.nProductCategory);
-	}
+    PropertiesBuilder builder(RDMDeviceParamsConst::FILE_NAME, buffer, length);
 
-	if (isMaskSet(rdm::deviceparams::Mask::PRODUCT_DETAIL)) {
-		pRDMDevice->SetProductDetail(m_Params.nProductDetail);
-	}
+    const auto kIsProductCategory = IsMaskSet(rdm::deviceparams::Mask::kProductCategory);
+
+    if (!kIsProductCategory)
+    {
+        store_rdm_device_.product_category = RDMDevice::Get()->GetProductCategory();
+    }
+
+    builder.AddHex16(RDMDeviceParamsConst::PRODUCT_CATEGORY, store_rdm_device_.product_category, kIsProductCategory);
+
+    const auto kIsProductDetail = IsMaskSet(rdm::deviceparams::Mask::kProductDetail);
+
+    if (!kIsProductDetail)
+    {
+        store_rdm_device_.product_detail = RDMDevice::Get()->GetProductDetail();
+    }
+
+    builder.AddHex16(RDMDeviceParamsConst::PRODUCT_DETAIL, store_rdm_device_.product_detail, kIsProductDetail);
+
+    size = builder.GetSize();
+
+    DEBUG_PRINTF("size=%d", size);
+    DEBUG_EXIT
 }
 
-void RDMDeviceParams::Builder(const struct rdm::deviceparams::Params *pParams, char *pBuffer, uint32_t nLength, uint32_t& nSize) {
-	DEBUG_ENTRY
+void RDMDeviceParams::StaticCallbackFunction(void* p, const char* s)
+{
+    assert(p != nullptr);
+    assert(s != nullptr);
 
-	assert(pBuffer != nullptr);
-
-	if (pParams != nullptr) {
-		memcpy(&m_Params, pParams, sizeof(struct rdm::deviceparams::Params));
-	} else {
-		RDMDeviceParamsStore::Copy(&m_Params);
-	}
-
-	PropertiesBuilder builder(RDMDeviceParamsConst::FILE_NAME, pBuffer, nLength);
-
-	const auto isProductCategory = isMaskSet(rdm::deviceparams::Mask::PRODUCT_CATEGORY);
-
-	if (!isProductCategory) {
-		m_Params.nProductCategory = RDMDevice::Get()->GetProductCategory();
-	}
-
-	builder.AddHex16(RDMDeviceParamsConst::PRODUCT_CATEGORY, m_Params.nProductCategory, isProductCategory);
-
-	const auto isProductDetail = isMaskSet(rdm::deviceparams::Mask::PRODUCT_DETAIL);
-
-	if (!isProductDetail) {
-		m_Params.nProductDetail = RDMDevice::Get()->GetProductDetail();
-	}
-
-	builder.AddHex16(RDMDeviceParamsConst::PRODUCT_DETAIL, m_Params.nProductDetail, isProductDetail);
-
-	nSize = builder.GetSize();
-
-	DEBUG_PRINTF("nSize=%d", nSize);
-	DEBUG_EXIT
+    (static_cast<RDMDeviceParams*>(p))->CallbackFunction(s);
 }
 
-void RDMDeviceParams::staticCallbackFunction(void *p, const char *s) {
-	assert(p != nullptr);
-	assert(s != nullptr);
-
-	(static_cast<RDMDeviceParams *>(p))->callbackFunction(s);
-}
-
-void RDMDeviceParams::Dump() {
-	printf("%s::%s \'%s\':\n", __FILE__, __FUNCTION__, RDMDeviceParamsConst::FILE_NAME);
-	printf(" %s=%.*s\n", RDMDeviceParamsConst::LABEL, m_Params.nDeviceRootLabelLength, m_Params.aDeviceRootLabel);
-	printf(" %s=%.4x\n", RDMDeviceParamsConst::PRODUCT_CATEGORY, m_Params.nProductCategory);
-	printf(" %s=%.4x\n", RDMDeviceParamsConst::PRODUCT_DETAIL, m_Params.nProductDetail);
+void RDMDeviceParams::Dump()
+{
+    printf("%s::%s \'%s\':\n", __FILE__, __FUNCTION__, RDMDeviceParamsConst::FILE_NAME);
+    printf(" %s=%.*s\n", RDMDeviceParamsConst::LABEL, store_rdm_device_.device_root_label_length, store_rdm_device_.device_root_label);
+    printf(" %s=%.4x\n", RDMDeviceParamsConst::PRODUCT_CATEGORY, store_rdm_device_.product_category);
+    printf(" %s=%.4x\n", RDMDeviceParamsConst::PRODUCT_DETAIL, store_rdm_device_.product_detail);
 }

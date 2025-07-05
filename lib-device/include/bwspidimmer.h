@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file bwspidimmer.h
  *
@@ -23,16 +24,13 @@
  * THE SOFTWARE.
  */
 
-#ifndef BWSPIDIMMER_H_
-#define BWSPIDIMMER_H_
-
 #include <cstdint>
 
 #include "bw.h"
 
 class BwSpiDimmer: BwSpi {
 public:
-	BwSpiDimmer(uint8_t nChipSelect = 0, uint8_t nAddress = bw::dimmer::address): BwSpi(nChipSelect, nAddress, bw::dimmer::id_string) {}
+	explicit BwSpiDimmer(uint8_t nChipSelect = 0, uint8_t nAddress = bw::dimmer::address): BwSpi(nChipSelect, nAddress, bw::dimmer::id_string) {}
 
 	void Output(uint8_t nValue) {
 		char cmd[3];
@@ -48,5 +46,3 @@ public:
 		return m_IsConnected;
 	}
 };
-
-#endif /* BWSPIDIMMER_H_ */

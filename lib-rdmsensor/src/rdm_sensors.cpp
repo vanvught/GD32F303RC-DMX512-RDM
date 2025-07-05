@@ -29,12 +29,12 @@
 
 #include "rdm_sensors.h"
 
-namespace rdm {
-namespace sensors {
+
+namespace rdm::sensors {
 static constexpr char TYPE[static_cast<uint32_t>(rdm::sensors::Types::UNDEFINED)][8] = {
 		"bh1750", "htu21d", "ina219", "mcp9808", "si7021", "mcp3424" };
 
-const char *get_type_string(rdm::sensors::Types type) {
+const char *GetTypeString(rdm::sensors::Types type) {
 	if (type < rdm::sensors::Types::UNDEFINED) {
 		return TYPE[static_cast<uint32_t>(type)];
 	}
@@ -42,7 +42,7 @@ const char *get_type_string(rdm::sensors::Types type) {
 	return "Unknown";
 }
 
-rdm::sensors::Types get_type_string(const char *pValue) {
+rdm::sensors::Types GetTypeString(const char *pValue) {
 	assert(pValue != nullptr);
 
 	for (uint32_t i = 0; i < static_cast<uint32_t>(rdm::sensors::Types::UNDEFINED); i++) {
@@ -53,6 +53,6 @@ rdm::sensors::Types get_type_string(const char *pValue) {
 
 	return rdm::sensors::Types::UNDEFINED;
 }
-}  // namespace sensors
-}  // namespace rdm
+} // namespace rdm::sensors
+
 

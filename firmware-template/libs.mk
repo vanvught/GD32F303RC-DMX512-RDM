@@ -26,7 +26,7 @@ ifeq ($(findstring ENABLE_RDM_SUBDEVICES,$(DEFINES)),ENABLE_RDM_SUBDEVICES)
 endif
 
 ifeq ($(findstring OUTPUT_DMX_PIXEL,$(DEFINES)),OUTPUT_DMX_PIXEL)
-	LIBS+=ws28xxdmx ws28xx
+	LIBS+=pixeldmx pixel
 endif
 
 LIBS+=network
@@ -35,6 +35,6 @@ ifeq ($(findstring DISPLAY_UDF,$(DEFINES)),DISPLAY_UDF)
 	LIBS+=displayudf
 endif
 
-LIBS+=configstore flashcode properties lightset display hal
+LIBS+=configstore flashcode properties display hal
 
 $(info $$LIBS [${LIBS}])

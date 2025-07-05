@@ -79,15 +79,15 @@ void FT245RL_init() {
 	data_gpio_fsel_input();
 
 	// _RD, WR output
-	gd32_gpio_fsel(_RD, GPIO_FSEL_OUTPUT);
-	gd32_gpio_fsel(WR, GPIO_FSEL_OUTPUT);
+	Gd32GpioFsel(_RD, GPIO_FSEL_OUTPUT);
+	Gd32GpioFsel(WR, GPIO_FSEL_OUTPUT);
 	// _TXE, _RXF input
-	gd32_gpio_fsel(_TXE, GPIO_FSEL_INPUT);
-	gd32_gpio_fsel(_RXF, GPIO_FSEL_INPUT);
+	Gd32GpioFsel(_TXE, GPIO_FSEL_INPUT);
+	Gd32GpioFsel(_RXF, GPIO_FSEL_INPUT);
 	// RD#	high
-	gd32_gpio_set(_RD);
+	Gd32GpioSet(_RD);
 	// WR	low
-	gd32_gpio_clr(WR);
+	Gd32GpioClr(WR);
 }
 
 /**
@@ -96,7 +96,7 @@ void FT245RL_init() {
 void FT245RL_write_data(uint8_t data) {
 	data_gpio_fsel_output();
 	// Raise WR to start the write.
-	gd32_gpio_set(WR);
+	Gd32GpioSet(WR);
 
 	uint8_t i = NOP_COUNT_WRITE;
 	for (; i > 0; i--) {
@@ -129,7 +129,7 @@ void FT245RL_write_data(uint8_t data) {
 	}
 
 	// Drop WR to tell the FT245 to read the data.
-	gd32_gpio_clr(WR);
+	Gd32GpioClr(WR);
 }
 
 /**
@@ -138,7 +138,7 @@ void FT245RL_write_data(uint8_t data) {
 uint8_t FT245RL_read_data() {
 	data_gpio_fsel_input();
 
-	gd32_gpio_clr(_RD);
+	Gd32GpioClr(_RD);
 
 	// Wait for the FT245 to respond with data.
 	uint8_t i = NOP_COUNT_READ;
@@ -162,7 +162,7 @@ uint8_t FT245RL_read_data() {
 	data |= ((in_gpio_b & (GPIO_PIN_3)) ? 128 : 0);
 
 	// Bring RD# back up so the FT245 can let go of the data.
-	gd32_gpio_set(_RD);
+	Gd32GpioSet(_RD);
 
 	return data;
 }

@@ -2,7 +2,7 @@
  * @file rdmpersonality.h
  *
  */
-/* Copyright (C) 2018-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2018-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,32 +29,31 @@
 #include <cstdint>
 #include <cassert>
 
-#include "lightset.h"
+#include "dmxnode_outputtype.h"
 
 #include "debug.h"
 
-namespace rdm {
-namespace personality {
+namespace rdm::personality {
 static constexpr auto DESCRIPTION_MAX_LENGTH = 32U;
-}  // namespace personality
-}  // namespace rdm
+} // namespace rdm::personality
+
 
 class RDMPersonality {
 public:
-	RDMPersonality(const char* pDescription, LightSet *pLightSet) {
+	RDMPersonality(const char *pDescription, DmxNodeOutputType *pDmxNodeOutputType) {
 		assert(pDescription != nullptr);
 
-		if (pLightSet == nullptr) {
-			m_nSlots = 0;
+		if (pDmxNodeOutputType == nullptr) {
+			slots_ = 0;
 		} else {
-			m_nSlots = pLightSet->GetDmxFootprint();
-			m_pLightSet = pLightSet;
+			slots_ = pDmxNodeOutputType->GetDmxFootprint();
+			dmxnode_output_type_ = pDmxNodeOutputType;
 		}
 
 		SetDescription(pDescription);
 	}
 
-	RDMPersonality(const char* pDescription, uint16_t nSlots): m_nSlots(nSlots) {
+	RDMPersonality(const char* pDescription, uint16_t nSlots): slots_(nSlots) {
 		DEBUG_ENTRY
 		assert(pDescription != nullptr);
 
@@ -64,11 +63,11 @@ public:
 	}
 
 	uint16_t GetSlots() const {
-		return m_nSlots;
+		return slots_;
 	}
 
-	LightSet *GetLightSet() const {
-		return m_pLightSet;
+	DmxNodeOutputType *GetDmxNodeOutputType() const {
+		return dmxnode_output_type_;
 	}
 
 	void SetDescription(const char *pDescription) {
@@ -112,8 +111,8 @@ public:
 	}
 
 private:
-	uint16_t m_nSlots;
-	LightSet *m_pLightSet { nullptr };
+	uint16_t slots_;
+	DmxNodeOutputType *dmxnode_output_type_ { nullptr };
 	char m_aDescription[rdm::personality::DESCRIPTION_MAX_LENGTH];
 	uint32_t m_nDescriptionLength { 0 };
 };

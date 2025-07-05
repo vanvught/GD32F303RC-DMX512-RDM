@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file rdmdeviceparams.h
  *
  */
-/* Copyright (C) 2019-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2019-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,70 +24,45 @@
  * THE SOFTWARE.
  */
 
-#ifndef RDMDEVICEPARAMS_H_
-#define RDMDEVICEPARAMS_H_
-
 #include <cstdint>
 
-#include "rdmconst.h"
-#include "configstore.h"
+#include "configurationstore.h"
 
-namespace rdm {
-namespace deviceparams {
-struct Params {
-    uint32_t nSetList;
-    char aDeviceRootLabel[RDM_DEVICE_LABEL_MAX_LENGTH];
-	uint8_t nDeviceRootLabelLength;
-	uint16_t nProductCategory;
-	uint16_t nProductDetail;
-} __attribute__((packed));
-
-struct Mask {
-	static constexpr auto LABEL = (1U << 0);
-	static constexpr auto PRODUCT_CATEGORY = (1U << 1);
-	static constexpr auto PRODUCT_DETAIL = (1U << 2);
+namespace rdm::deviceparams
+{
+struct Mask
+{
+    static constexpr uint32_t kLabel = (1U << 0);
+    static constexpr uint32_t kProductCategory = (1U << 1);
+    static constexpr uint32_t kProductDetail = (1U << 2);
 };
-}  // namespace rdmdevice
-}  // namespace rdm
+} // namespace rdm::deviceparams
 
 class RDMDevice;
 
-class RDMDeviceParamsStore {
-public:
-	static void Update(const struct rdm::deviceparams::Params *pParams) {
-		ConfigStore::Get()->Update(configstore::Store::RDMDEVICE, pParams, sizeof(struct rdm::deviceparams::Params));
-	}
+class RDMDeviceParams
+{
+   public:
+    RDMDeviceParams();
 
-	static void Copy(struct rdm::deviceparams::Params *pParams) {
-		ConfigStore::Get()->Copy(configstore::Store::RDMDEVICE, pParams, sizeof(struct rdm::deviceparams::Params));
-	}
+    RDMDeviceParams(const RDMDeviceParams&) = delete;
+    RDMDeviceParams& operator=(const RDMDeviceParams&) = delete;
+
+    RDMDeviceParams(RDMDeviceParams&&) = delete;
+    RDMDeviceParams& operator=(RDMDeviceParams&&) = delete;
+
+    void Load();
+    void Load(const char* buffer, uint32_t length);
+    void Builder(char* buffer, uint32_t length, uint32_t& size);
+    void Set(RDMDevice *rdm_device);
+
+    static void StaticCallbackFunction(void* p, const char* s);
+
+   private:
+    void Dump();
+    void CallbackFunction(const char* s);
+    bool IsMaskSet(uint32_t mask) const { return (store_rdm_device_.set_list & mask) == mask; }
+
+   private:
+    common::store::RdmDevice store_rdm_device_;
 };
-
-class RDMDeviceParams {
-public:
-	RDMDeviceParams();
-
-	void Load();
-	void Load(const char *pBuffer, uint32_t nLength);
-
-	void Builder(const struct rdm::deviceparams::Params *pParams, char *pBuffer, uint32_t nLength, uint32_t& nSize);
-	void Save(char *pBuffer, uint32_t nLength, uint32_t& nSize) {
-		Builder(nullptr, pBuffer, nLength, nSize);
-	}
-
-	void Set(RDMDevice *pRDMDevice);
-
-    static void staticCallbackFunction(void *p, const char *s);
-
-private:
-	void Dump();
-    void callbackFunction(const char *s);
-    bool isMaskSet(uint32_t nMask) const {
-    	return (m_Params.nSetList & nMask) == nMask;
-    }
-
-private:
-    rdm::deviceparams::Params m_Params;
-};
-
-#endif /* RDMDEVICEPARAMS_H_ */

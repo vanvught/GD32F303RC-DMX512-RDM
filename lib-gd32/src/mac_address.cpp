@@ -2,7 +2,7 @@
  * @file mac_address.cpp
  *
  */
-/* Copyright (C) 2021-2024 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2021-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,29 +23,33 @@
  * THE SOFTWARE.
  */
 
-#include <cstdint>
-
-#include "gd32.h"
-#include "debug.h"
-
-void mac_address_get(uint8_t paddr[]) {
-#if defined (GD32H7XX)
-	const auto mac_hi = *(volatile uint32_t *) (0x1FF0F7E8);
-	const auto mac_lo = *(volatile uint32_t *) (0x1FF0F7EC);
-#elif defined (GD32F4XX)
-	const auto mac_hi = *(volatile uint32_t *) (0x1FFF7A10);
-	const auto mac_lo = *(volatile uint32_t *) (0x1FFF7A14);
-#else
-	const auto mac_hi = *(volatile uint32_t *) (0x1FFFF7E8);
-	const auto mac_lo = *(volatile uint32_t *) (0x1FFFF7EC);
+#if defined(DEBUG_MACADDRESS)
+#undef NDEBUG
 #endif
 
-	paddr[0] = 2;
-	paddr[1] = (mac_lo >> 0) & 0xff;
-	paddr[2] = (mac_hi >> 24) & 0xff;
-	paddr[3] = (mac_hi >> 16) & 0xff;
-	paddr[4] = (mac_hi >> 8) & 0xff;
-	paddr[5] = (mac_hi >> 0) & 0xff;
+#include <cstdint>
 
-	DEBUG_PRINTF("%02x:%02x:%02x:%02x:%02x:%02x", paddr[0], paddr[1], paddr[2], paddr[3], paddr[4], paddr[5]);
+#include "debug.h"
+
+void mac_address_get(uint8_t paddr[])
+{
+#if defined(GD32H7XX)
+    const auto kMacaddressHigh = *reinterpret_cast<volatile uint32_t*>(0x1FF0F7E8);
+    const auto kMacAddressLow = *reinterpret_cast<volatile uint32_t*>(0x1FF0F7EC);
+#elif defined(GD32F4XX)
+    const auto kMacaddressHigh = *reinterpret_cast<volatile uint32_t*>(0x1FFF7A10);
+    const auto kMacAddressLow = *reinterpret_cast<volatile uint32_t*>(0x1FFF7A14);
+#else
+    const auto kMacaddressHigh = *reinterpret_cast<volatile uint32_t*>(0x1FFFF7E8);
+    const auto kMacAddressLow = *reinterpret_cast<volatile uint32_t*>(0x1FFFF7EC);
+#endif
+
+    paddr[0] = 2;
+    paddr[1] = static_cast<uint8_t>((kMacAddressLow >> 0) & 0xFF);
+    paddr[2] = static_cast<uint8_t>((kMacaddressHigh >> 24) & 0xFF);
+    paddr[3] = static_cast<uint8_t>((kMacaddressHigh >> 16) & 0xFF);
+    paddr[4] = static_cast<uint8_t>((kMacaddressHigh >> 8) & 0xFF);
+    paddr[5] = static_cast<uint8_t>((kMacaddressHigh >> 0) & 0xFF);
+
+    DEBUG_PRINTF("%02x:%02x:%02x:%02x:%02x:%02x", paddr[0], paddr[1], paddr[2], paddr[3], paddr[4], paddr[5]);
 }

@@ -1,8 +1,7 @@
 /**
  * @file main.cpp
- *
  */
-/* Copyright (C) 2021-2024 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2021-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,10 +25,9 @@
 #include <cstdio>
 #include <cstdint>
 
-#include "hardware.h"
+#include "gd32/hal_watchdog.h"
 #include "network.h"
 #if !defined(NO_EMAC)
-# include "networkconst.h"
 # include "net/apps/mdns.h"
 #endif
 
@@ -45,9 +43,8 @@
 #endif
 
 #include "pixeltype.h"
+#include "pixeldmx.h"
 #include "pixeldmxparams.h"
-#include "ws28xxdmx.h"
-
 #include "pixeldmxparamsrdm.h"
 #include "pixeltestpattern.h"
 
@@ -60,26 +57,26 @@
 
 #include "firmwareversion.h"
 #include "software_version.h"
+#include "software_version_id.h"
 
 #include "is_config_mode.h"
 
-void Hardware::RebootHandler() {
-	WS28xx::Get()->Blackout();
+namespace hal {
+void RebootHandler() {
+	PixelDmx::Get().Blackout();
 }
+}  // namespace hal
 
 int main() {
-	Hardware hw;
+	hal::Init();
 	DisplayUdf display;
 	ConfigStore configStore;
 #if !defined(NO_EMAC)
-	display.TextStatus(NetworkConst::MSG_NETWORK_INIT, CONSOLE_YELLOW);
 	Network nw;
-	MDNS mDns;
-	display.TextStatus(NetworkConst::MSG_NETWORK_STARTED, CONSOLE_GREEN);
 #else
 	Network nw;
 #endif
-	FirmwareVersion fw(SOFTWARE_VERSION, __DATE__, __TIME__);
+	FirmwareVersion fw(SOFTWARE_VERSION, __DATE__, __TIME__, DEVICE_SOFTWARE_VERSION_ID);
 
 	const auto isConfigMode = is_config_mode();
 
@@ -91,7 +88,7 @@ int main() {
 	pixelDmxParams.Load();
 	pixelDmxParams.Set();
 
-	WS28xxDmx pixelDmx;
+	PixelDmx pixelDmx;
 
 	const auto nTestPattern = static_cast<pixelpatterns::Pattern>(pixelDmxParams.GetTestPattern());
 	PixelTestPattern pixelTestPattern(nTestPattern, 1);
@@ -162,14 +159,11 @@ int main() {
 	}
 
 #if !defined(NO_EMAC)
-	RemoteConfig remoteConfig(remoteconfig::Node::RDMRESPONDER, remoteconfig::Output::PIXEL);
+	RemoteConfig remoteConfig(remoteconfig::NodeType::RDMRESPONDER, remoteconfig::Output::PIXEL);
 
 	RemoteConfigParams remoteConfigParams;
 	remoteConfigParams.Load();
-	remoteConfigParams.Set(&remoteConfig);
-
-	while (configStore.Flash())
-		;
+	remoteConfigParams.Set();
 #endif
 
 	display.SetTitle("RDM Responder Pixel 1");
@@ -177,9 +171,8 @@ int main() {
 	display.Set(6, displayudf::Labels::DMX_START_ADDRESS);
 
 	DisplayUdfParams displayUdfParams;
-
 	displayUdfParams.Load();
-	displayUdfParams.Set(&display);
+	displayUdfParams.Set();
 
 	display.Show();
 	display.Printf(7, "%s:%d G%d %s",
@@ -198,20 +191,15 @@ int main() {
 		display.Printf(6, "%s:%u", PixelPatterns::GetName(nTestPattern), static_cast<uint32_t>(nTestPattern));
 	}
 
-	hw.SetMode(hardware::ledblink::Mode::NORMAL);
-	hw.WatchdogInit();
+	hal::WatchdogInit();
 
 	for(;;) {
-		hw.WatchdogFeed();
+		hal::WatchdogFeed();
 		rdmResponder.Run();
-		configStore.Flash();
 #if !defined(NO_EMAC)
-		nw.Run();
-		remoteConfig.Run();
-		mDns.Run();
+		net::Run();
 #endif
 		pixelTestPattern.Run();
-		display.Run();
-		hw.Run();
+		hal::Run();
 	}
 }

@@ -1,7 +1,7 @@
 /**
  * @file widgetparams.cpp
  */
-/* Copyright (C) 2019-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2019-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,137 +22,166 @@
  * THE SOFTWARE.
  */
 
-#if !defined(__clang__)	// Needed for compiling on MacOS
-# pragma GCC push_options
-# pragma GCC optimize ("Os")
-#endif
-
 #include <cstdint>
-#include <cstring>
 #include <cstdio>
 #include <cassert>
 
 #include "widgetparams.h"
+#include "configurationstore.h"
 #include "widgetparamsconst.h"
 #include "widgetconfiguration.h"
-
-#include "dmx.h"
 
 #include "readconfigfile.h"
 #include "sscan.h"
 
 #include "debug.h"
 
-using namespace widget;
+struct WidgetParamsMask
+{
+    static constexpr uint32_t kBreakTime = (1U << 0);
+    static constexpr uint32_t kMabTime = (1U << 1);
+    static constexpr uint32_t kRefreshRate = (1U << 2);
+    static constexpr uint32_t kMode = (1U << 3);
+    static constexpr uint32_t kThrottle = (1U << 4);
+};
 
-WidgetParams::WidgetParams() {
-	m_Params.nBreakTime = WIDGET_DEFAULT_BREAK_TIME;
-	m_Params.nMabTime = WIDGET_DEFAULT_MAB_TIME;
-	m_Params.nRefreshRate = WIDGET_DEFAULT_REFRESH_RATE;
-	m_Params.tMode = static_cast<uint8_t>(Mode::DMX_RDM);
-	m_Params.nThrottle = 0;
+
+static void Update(const common::store::Widget* store)
+{
+    ConfigStore::Instance().Store(store, &ConfigurationStore::widget);
 }
 
-void WidgetParams::Load() {
-	DEBUG_ENTRY
+static void Copy(struct ::common::store::Widget* store)
+{
+    ConfigStore::Instance().Copy(store, &ConfigurationStore::widget);
+}
 
-	m_Params.nSetList = 0;
+WidgetParams::WidgetParams()
+{
+    store_widget_.break_time = WIDGET_DEFAULT_BREAK_TIME;
+    store_widget_.mab_time = WIDGET_DEFAULT_MAB_TIME;
+    store_widget_.refresh_rate = WIDGET_DEFAULT_REFRESH_RATE;
+    store_widget_.mode = static_cast<uint8_t>(widget::Mode::DMX_RDM);
+    store_widget_.throttle = 0;
+}
 
-	ReadConfigFile configfile(WidgetParams::staticCallbackFunction, this);
+void WidgetParams::Load()
+{
+    DEBUG_ENTRY
 
-#if defined (WIDGET_HAVE_FLASHROM)
-# if !defined(DISABLE_FS)
-	if (configfile.Read( WidgetParamsConst::FILE_NAME)) {
-		WidgetParamsStore::Update(&m_Params);
-	} else
-# endif
-		WidgetParamsStore::Copy(&m_Params);
+    ReadConfigFile configfile(WidgetParams::StaticCallbackFunction, this);
+
+#if defined(WIDGET_HAVE_FLASHROM)
+#if !defined(DISABLE_FS)
+    if (configfile.Read(WidgetParamsConst::FILE_NAME))
+    {
+        Update(&store_widget_);
+    }
+    else
+#endif
+       Copy(&store_widget_);
 #else
-	configfile.Read(WidgetParamsConst::FILE_NAME);
+    configfile.Read(WidgetParamsConst::FILE_NAME);
 #endif
 #ifndef NDEBUG
-	Dump();
+    Dump();
 #endif
-	DEBUG_EXIT
+    DEBUG_EXIT
 }
 
-void WidgetParams::callbackFunction(const char* pLine) {
-	assert(pLine != nullptr);
+void WidgetParams::CallbackFunction(const char* line)
+{
+    assert(line != nullptr);
 
-	uint8_t nValue8;
+    uint8_t value8;
 
-	if (Sscan::Uint8(pLine,  WidgetParamsConst::DMXUSBPRO_BREAK_TIME, nValue8) == Sscan::OK) {
-		if ((nValue8 >= WIDGET_MIN_BREAK_TIME) && (nValue8 <= WIDGET_MAX_BREAK_TIME)) {
-			m_Params.nBreakTime = nValue8;
-			m_Params.nSetList |= WidgetParamsMask::BREAK_TIME;
-			return;
-		}
-	}
+    if (Sscan::Uint8(line, WidgetParamsConst::DMXUSBPRO_BREAK_TIME, value8) == Sscan::OK)
+    {
+        if ((value8 >= WIDGET_MIN_BREAK_TIME) && (value8 <= WIDGET_MAX_BREAK_TIME))
+        {
+            store_widget_.break_time = value8;
+            store_widget_.set_list |= WidgetParamsMask::kBreakTime;
+            return;
+        }
+    }
 
-	if (Sscan::Uint8(pLine,  WidgetParamsConst::DMXUSBPRO_MAB_TIME, nValue8) == Sscan::OK) {
-		if ((nValue8 >= WIDGET_MIN_MAB_TIME) && (nValue8 <= WIDGET_MAX_MAB_TIME)) {
-			m_Params.nMabTime = nValue8;
-			m_Params.nSetList |= WidgetParamsMask::MAB_TIME;
-			return;
-		}
-	}
+    if (Sscan::Uint8(line, WidgetParamsConst::DMXUSBPRO_MAB_TIME, value8) == Sscan::OK)
+    {
+        if ((value8 >= WIDGET_MIN_MAB_TIME) && (value8 <= WIDGET_MAX_MAB_TIME))
+        {
+            store_widget_.mab_time = value8;
+            store_widget_.set_list |= WidgetParamsMask::kMabTime;
+            return;
+        }
+    }
 
-	if (Sscan::Uint8(pLine,  WidgetParamsConst::DMXUSBPRO_REFRESH_RATE, nValue8) == Sscan::OK) {
-		m_Params.nRefreshRate = nValue8;
-		m_Params.nSetList |= WidgetParamsMask::REFRESH_RATE;
-		return;
-	}
+    if (Sscan::Uint8(line, WidgetParamsConst::DMXUSBPRO_REFRESH_RATE, value8) == Sscan::OK)
+    {
+        store_widget_.refresh_rate = value8;
+        store_widget_.set_list |= WidgetParamsMask::kRefreshRate;
+        return;
+    }
 
-	if (Sscan::Uint8(pLine,  WidgetParamsConst::WIDGET_MODE, nValue8) == Sscan::OK) {
-		if (nValue8 <= static_cast<uint8_t>(Mode::RDM_SNIFFER)) {
-			m_Params.tMode = nValue8;
-			m_Params.nSetList |= WidgetParamsMask::MODE;
-			return;
-		}
-	}
+    if (Sscan::Uint8(line, WidgetParamsConst::WIDGET_MODE, value8) == Sscan::OK)
+    {
+        if (value8 <= static_cast<uint8_t>(widget::Mode::RDM_SNIFFER))
+        {
+            store_widget_.mode = value8;
+            store_widget_.set_list |= WidgetParamsMask::kMode;
+            return;
+        }
+    }
 
-	if (Sscan::Uint8(pLine,  WidgetParamsConst::DMX_SEND_TO_HOST_THROTTLE, nValue8) == Sscan::OK) {
-		m_Params.nThrottle = nValue8;
-		m_Params.nSetList |= WidgetParamsMask::THROTTLE;
-		return;
-	}
-
+    if (Sscan::Uint8(line, WidgetParamsConst::DMX_SEND_TO_HOST_THROTTLE, value8) == Sscan::OK)
+    {
+        store_widget_.throttle = value8;
+        store_widget_.set_list |= WidgetParamsMask::kThrottle;
+        return;
+    }
 }
 
-void WidgetParams::Set() {
-	if (isMaskSet(WidgetParamsMask::REFRESH_RATE)) {
-		WidgetConfiguration::SetRefreshRate(m_Params.nRefreshRate);
-	}
+void WidgetParams::Set()
+{
+    if (IsMaskSet(WidgetParamsMask::kRefreshRate))
+    {
+        WidgetConfiguration::SetRefreshRate(store_widget_.refresh_rate);
+    }
 
-	if (isMaskSet(WidgetParamsMask::BREAK_TIME)) {
-		WidgetConfiguration::SetBreakTime(m_Params.nBreakTime);
-	}
+    if (IsMaskSet(WidgetParamsMask::kBreakTime))
+    {
+        WidgetConfiguration::SetBreakTime(store_widget_.break_time);
+    }
 
-	if (isMaskSet(WidgetParamsMask::MAB_TIME)) {
-		WidgetConfiguration::SetMabTime(m_Params.nMabTime);
-	}
+    if (IsMaskSet(WidgetParamsMask::kMabTime))
+    {
+        WidgetConfiguration::SetMabTime(store_widget_.mab_time);
+    }
 
-	if (isMaskSet(WidgetParamsMask::THROTTLE)) {
-		WidgetConfiguration::SetThrottle(m_Params.nThrottle);
-	}
+    if (IsMaskSet(WidgetParamsMask::kThrottle))
+    {
+        WidgetConfiguration::SetThrottle(store_widget_.throttle);
+    }
 
-	if (isMaskSet(WidgetParamsMask::MODE)) {
-		WidgetConfiguration::SetMode(static_cast<Mode>(m_Params.tMode));
-	}
+    if (IsMaskSet(WidgetParamsMask::kMode))
+    {
+        WidgetConfiguration::SetMode(static_cast<widget::Mode>(store_widget_.mode));
+    }
 }
 
-void WidgetParams::staticCallbackFunction(void* p, const char* s) {
-	assert(p != nullptr);
-	assert(s != nullptr);
+void WidgetParams::StaticCallbackFunction(void* p, const char* s)
+{
+    assert(p != nullptr);
+    assert(s != nullptr);
 
-	(static_cast<WidgetParams*>(p))->callbackFunction(s);
+    (static_cast<WidgetParams*>(p))->CallbackFunction(s);
 }
 
-void WidgetParams::Dump() {
-	printf("%s::%s \'%s\':\n", __FILE__, __FUNCTION__, WidgetParamsConst::FILE_NAME);
-	printf(" %s=%d\n", WidgetParamsConst::DMXUSBPRO_BREAK_TIME, static_cast<int>(m_Params.nBreakTime));
-	printf(" %s=%d\n", WidgetParamsConst::DMXUSBPRO_MAB_TIME, static_cast<int>(m_Params.nMabTime));
-	printf(" %s=%d\n", WidgetParamsConst::DMXUSBPRO_REFRESH_RATE, static_cast<int>(m_Params.nRefreshRate));
-	printf(" %s=%d\n", WidgetParamsConst::WIDGET_MODE, static_cast<int>(m_Params.tMode));
-	printf(" %s=%d\n", WidgetParamsConst::DMX_SEND_TO_HOST_THROTTLE, static_cast<int>(m_Params.nThrottle));
+void WidgetParams::Dump()
+{
+    printf("%s::%s \'%s\':\n", __FILE__, __FUNCTION__, WidgetParamsConst::FILE_NAME);
+    printf(" %s=%d\n", WidgetParamsConst::DMXUSBPRO_BREAK_TIME, static_cast<int>(store_widget_.break_time));
+    printf(" %s=%d\n", WidgetParamsConst::DMXUSBPRO_MAB_TIME, static_cast<int>(store_widget_.mab_time));
+    printf(" %s=%d\n", WidgetParamsConst::DMXUSBPRO_REFRESH_RATE, static_cast<int>(store_widget_.refresh_rate));
+    printf(" %s=%d\n", WidgetParamsConst::WIDGET_MODE, static_cast<int>(store_widget_.mode));
+    printf(" %s=%d\n", WidgetParamsConst::DMX_SEND_TO_HOST_THROTTLE, static_cast<int>(store_widget_.throttle));
 }

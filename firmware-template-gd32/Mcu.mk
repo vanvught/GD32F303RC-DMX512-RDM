@@ -20,12 +20,14 @@ ifeq ($(strip $(MCU)),GD32F103RC)
 	LINKER=$(FIRMWARE_DIR)gd32f103rc_flash.ld
 	FAMILY=gd32f10x
 	LINE=gd32f10x_hd
+	TARGET=gd32f103rc.bin
 endif
 
 ifeq ($(strip $(MCU)),GD32F107RC)
 	LINKER=$(FIRMWARE_DIR)gd32f107rc_flash.ld
 	FAMILY=gd32f10x
 	LINE=gd32f10x_cl
+	TARGET=gd32f107.bin
 endif
 
 ifeq ($(strip $(MCU)),GD32F207VC)
@@ -40,10 +42,18 @@ ifeq ($(strip $(MCU)),GD32F207RG)
 	LINE=gd32f20x_cl
 endif
 
+ifeq ($(strip $(MCU)),GD32F303CB)
+	LINKER=$(FIRMWARE_DIR)gd32f303cb_flash.ld
+	FAMILY=gd32f30x
+	LINE=gd32f30x_hd
+	TARGET=gd32f303cb.bin
+endif
+
 ifeq ($(strip $(MCU)),GD32F303RC)
 	LINKER=$(FIRMWARE_DIR)gd32f303rc_flash.ld
 	FAMILY=gd32f30x
 	LINE=gd32f30x_hd
+	TARGET=gd32f303rc.bin
 endif
 
 ifeq ($(strip $(MCU)),GD32F407RE) 
@@ -76,6 +86,12 @@ ifeq ($(strip $(MCU)),GD32F470ZK)
   LINE=gd32f470
 endif
 
+ifeq ($(strip $(MCU)),GD32H757ZM) 
+  LINKER=$(FIRMWARE_DIR)gd32h7xx_xM_flash.ld
+  FAMILY=gd32h7xx
+  LINE=gd32h757
+endif
+
 ifeq ($(strip $(MCU)),GD32H759IM) 
   LINKER=$(FIRMWARE_DIR)gd32h7xx_xM_flash.ld
   FAMILY=gd32h7xx
@@ -96,7 +112,7 @@ ARMOPS_CM4=-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-p
 ARMOPS_CM7=-mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-d16 -fsingle-precision-constant
 
 # CMSIS options for FPU present
-CMSISOPS_FPU_PRESENT = -D__FPU_PRESENT=1 -DARM_MATH_CM4
+CMSISOPS_FPU_PRESENT=-D__FPU_PRESENT=1 -DARM_MATH_CM4
 
 # Common CMSIS options
 CMSISOPS=-D__Vendor_SysTickConfig=0
@@ -109,6 +125,7 @@ endif
 
 ifeq ($(FAMILY),gd32f20x)
 	ARMOPS=$(ARMOPS_CM3)
+	TARGET=gd32f207.bin
 endif
 
 ifeq ($(FAMILY),gd32f30x)
@@ -119,11 +136,13 @@ endif
 ifeq ($(FAMILY),gd32f4xx)
 	ARMOPS=$(ARMOPS_CM4)
 	CMSISOPS+=$(CMSISOPS_FPU_PRESENT)
+	TARGET=gd32f4xx.bin
 endif
 
 ifeq ($(FAMILY),gd32h7xx)
 	ARMOPS=$(ARMOPS_CM7)
 	CMSISOPS+=-D__FPU_PRESENT=1 -DARM_MATH_CM7
+	TARGET=gd32h7xx.bin
 endif
 
 FAMILY_UC=$(shell echo $(FAMILY) | tr a-w A-W)

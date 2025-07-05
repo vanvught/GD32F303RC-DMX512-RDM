@@ -5,7 +5,7 @@
 /*
  * Stub - Monitor is not supported with boards which have no HDMI output
  */
-/* Copyright (C) 2019-2021 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2019-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@
 
 #include <widgetmonitor.h>
 
-void WidgetMonitor::RdmData([[maybe_unused]] int line, [[maybe_unused]] uint16_t data_length, [[maybe_unused]] const uint8_t *data, [[maybe_unused]] bool is_sent) {
-
+void WidgetMonitor::RdmData([[maybe_unused]] int line, [[maybe_unused]] uint16_t data_length, [[maybe_unused]] const uint8_t* data,
+                            [[maybe_unused]] bool is_sent)
+{
 }

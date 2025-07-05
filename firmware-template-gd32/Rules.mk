@@ -23,6 +23,8 @@ DEFINES:=$(addprefix -D,$(DEFINES))
 include ../firmware-template-gd32/Board.mk
 include ../firmware-template-gd32/Mcu.mk
 include ../firmware-template/libs.mk
+include ../firmware-template/DmxNodeNodeType.mk
+include ../firmware-template/DmxNodeOutputType.mk
 include ../firmware-template-gd32/Includes.mk
 include ../firmware-template-gd32/Validate.mk
 

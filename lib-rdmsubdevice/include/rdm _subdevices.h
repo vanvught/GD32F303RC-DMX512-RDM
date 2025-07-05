@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file rdm_subdevices.h
  *
  */
-/* Copyright (C) 2023 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2023-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,21 +24,22 @@
  * THE SOFTWARE.
  */
 
-#ifndef RDM_SUBDEVICES_H_
-#define RDM_SUBDEVICES_H_
-
-namespace rdm {
-namespace subdevices {
-enum class Types {
-	BW7FETS, BWDIMMER, BWDIO, BWLCD, BWRELAY,	// BitWizard
-	MCP23S08, MCP23S17, 						// GPIO
-	MCP4822, MCP4902,							// DAC
-	UNDEFINED
+namespace rdm::subdevices
+{
+enum class Types
+{
+    BW7FETS,
+    BWDIMMER,
+    BWDIO,
+    BWLCD,
+    BWRELAY, // BitWizard
+    MCP23S08,
+    MCP23S17, // GPIO
+    MCP4822,
+    MCP4902, // DAC
+    UNDEFINED
 };
 
-const char* get_type_string(rdm::subdevices::Types type);
-rdm::subdevices::Types get_type_string(const char *pValue);
-}  // namespace subdevices
-}  // namespace rdm
-
-#endif /* RDM_SUBDEVICES_H_ */
+const char* GetTypeString(rdm::subdevices::Types type);
+rdm::subdevices::Types GetTypeString(const char* value);
+} // namespace rdm::subdevices

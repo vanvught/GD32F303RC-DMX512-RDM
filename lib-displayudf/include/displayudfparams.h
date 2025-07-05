@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file displayudfparams.h
  *
  */
-/* Copyright (C) 2019-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2019-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,68 +24,46 @@
  * THE SOFTWARE.
  */
 
-#ifndef DISPLAYUDFPARAMS_H_
-#define DISPLAYUDFPARAMS_H_
-
 #include <cstdint>
 
 #include "displayudf.h"
-#include "configstore.h"
-
-namespace displayudfparams {
-struct Params {
-    uint32_t nSetList;
-    uint8_t nLabelIndex[28];
-    uint8_t nSleepTimeout;
-    uint8_t nIntensity;
-}__attribute__((packed));
+#include "configurationstore.h"
 
 static_assert(static_cast<int>(displayudf::Labels::UNKNOWN) <= 28, "too many labels");
-static_assert(sizeof(struct displayudfparams::Params) <= 48, "struct Params is too large");
 
-struct Mask {
-	static constexpr auto SLEEP_TIMEOUT = (1U << 28);
-	static constexpr auto INTENSITY = (1U << 29);
-	static constexpr auto FLIP_VERTICALLY = (1U << 30);
+namespace displayudfparams
+{
+struct Mask
+{
+    static constexpr auto kSleepTimeout = (1U << 28);
+    static constexpr auto kIntensity = (1U << 29);
+    static constexpr auto kFlipVertically = (1U << 30);
 };
-}  // namespace displayudfparams
+} // namespace displayudfparams
 
-class DisplayUdfParamsStore {
-public:
-	static void Update(const struct displayudfparams::Params *pParams) {
-		ConfigStore::Get()->Update(configstore::Store::DISPLAYUDF, pParams, sizeof(struct displayudfparams::Params));
-	}
+class DisplayUdfParams
+{
+   public:
+    DisplayUdfParams() = default;
 
-	static void Copy(struct displayudfparams::Params *pParams) {
-		ConfigStore::Get()->Copy(configstore::Store::DISPLAYUDF, pParams, sizeof(struct displayudfparams::Params));
-	}
+    DisplayUdfParams(const DisplayUdfParams&) = delete;
+    DisplayUdfParams& operator=(const DisplayUdfParams&) = delete;
+
+    DisplayUdfParams(DisplayUdfParams&&) = delete;
+    DisplayUdfParams& operator=(DisplayUdfParams&&) = delete;
+
+    void Load();
+    void Load(const char* buffer, uint32_t length);
+    void Builder(char* buffer, uint32_t length, uint32_t& size);
+    void Set();
+
+    static void StaticCallbackFunction(void* p, const char* s);
+
+   private:
+    void Dump();
+    void CallbackFunction(const char* s);
+    bool IsMaskSet(uint32_t mask) const { return (store_display_udf_.set_list & mask) == mask; }
+
+   private:
+    common::store::DisplayUdf store_display_udf_;
 };
-
-class DisplayUdfParams {
-public:
-	DisplayUdfParams();
-
-	void Load();
-	void Load(const char *pBuffer, uint32_t nLength);
-
-	void Builder(const struct displayudfparams::Params *pParams, char *pBuffer, uint32_t nLength, uint32_t& nSize);
-	void Save(char *pBuffer, uint32_t nLength, uint32_t& nSize) {
-		Builder(nullptr, pBuffer, nLength, nSize);
-	}
-
-	void Set(DisplayUdf *pDisplayUdf);
-
-    static void staticCallbackFunction(void *p, const char *s);
-
-private:
-	void Dump();
-    void callbackFunction(const char *s);
-    bool isMaskSet(uint32_t nMask) const {
-    	return (m_Params.nSetList & nMask) == nMask;
-    }
-
-private:
-    displayudfparams::Params m_Params;
-};
-
-#endif /* DISPLAYUDFPARAMS_H_ */

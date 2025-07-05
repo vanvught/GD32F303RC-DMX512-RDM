@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file max7219.h
  *
@@ -23,21 +24,20 @@
  * THE SOFTWARE.
  */
 
-#ifndef DEVICE_MAX7219_H_
-#define DEVICE_MAX7219_H_
-
 #include <cstdint>
 
 #include "hal_spi.h"
 
-namespace max7219 {
-static constexpr uint32_t SPEED_MAX_HZ = 10000000;		// 10 MHz
-static constexpr uint32_t SPEED_DEFAULT_HZ = 2000000; 	// 2 MHz
+namespace max7219
+{
+static constexpr uint32_t SPEED_MAX_HZ = 10000000;    // 10 MHz
+static constexpr uint32_t SPEED_DEFAULT_HZ = 2000000; // 2 MHz
 //
 static constexpr uint32_t MAX7219_OK = 0;
 static constexpr uint32_t MAX7219_ERROR = 1;
 // https://datasheets.maximintegrated.com/en/ds/MAX7219-MAX7221.pdf
-namespace reg {
+namespace reg
+{
 static constexpr uint8_t NOOP = 0x00;
 static constexpr uint8_t DIGIT0 = 0x01;
 static constexpr uint8_t DIGIT1 = 0x02;
@@ -52,34 +52,38 @@ static constexpr uint8_t INTENSITY = 0x0A;
 static constexpr uint8_t SCAN_LIMIT = 0x0B;
 static constexpr uint8_t SHUTDOWN = 0x0C;
 static constexpr uint8_t DISPLAY_TEST = 0x0F;
-namespace decode_mode {
+namespace decode_mode
+{
 static constexpr uint8_t CODEB = 0xFF; // Code B decode for digits 7–0
-}  // namespace decode_mode
-namespace shutdown {
+} // namespace decode_mode
+namespace shutdown
+{
 static constexpr uint8_t MODE = 0x00;
 static constexpr uint8_t NORMAL_OP = 0x01;
-}  // namespace shutdown
-}  // namespace reg
-namespace digit {
+} // namespace shutdown
+} // namespace reg
+namespace digit
+{
 static constexpr uint8_t NEGATIVE = 0x0A;
 static constexpr uint8_t E = 0x0B;
 static constexpr uint8_t H = 0x0C;
 static constexpr uint8_t L = 0x0D;
 static constexpr uint8_t P = 0x0E;
 static constexpr uint8_t BLANK = 0x0F;
-}  // namespace digit
-}  // namespace max7219
+} // namespace digit
+} // namespace max7219
 
-class MAX7219: public HAL_SPI {
-public:
-	MAX7219(uint32_t nSpeedHz = 0):
-		HAL_SPI(SPI_CS0, nSpeedHz == 0 ? max7219::SPEED_DEFAULT_HZ : (nSpeedHz <= max7219::SPEED_MAX_HZ ? nSpeedHz : max7219::SPEED_MAX_HZ)) {
-	}
+class MAX7219 : public HAL_SPI
+{
+   public:
+    explicit MAX7219(uint32_t nSpeedHz = 0)
+        : HAL_SPI(SPI_CS0, nSpeedHz == 0 ? max7219::SPEED_DEFAULT_HZ : (nSpeedHz <= max7219::SPEED_MAX_HZ ? nSpeedHz : max7219::SPEED_MAX_HZ))
+    {
+    }
 
-	void WriteRegister(uint32_t nRegister, uint32_t nData, const bool bSpiSetup = true) {
-		const auto nSpiData = static_cast<uint16_t>(((nRegister & 0xFF) << 8) | (nData & 0xFF));
-		Write(nSpiData, bSpiSetup);
-	}
+    void WriteRegister(uint32_t nRegister, uint32_t nData, const bool bSpiSetup = true)
+    {
+        const auto nSpiData = static_cast<uint16_t>(((nRegister & 0xFF) << 8) | (nData & 0xFF));
+        Write(nSpiData, bSpiSetup);
+    }
 };
-
-#endif /* DEVICE_MAX7219_H_ */

@@ -2,7 +2,7 @@
  * @file console.cpp
  *
  */
-/* Copyright (C) 2018-2024 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2018-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,26 +27,27 @@
 
 #include "console.h"
 
-extern "C" {
 void uart0_init();
 void uart0_putc(int);
 void uart0_puts(const char *);
 
-void console_putc(int c) {
+void ConsolePutc(int c) {
 	uart0_putc(c);
 }
 
-void console_puts(const char *s) {
+void ConsolePuts(const char *s) {
 	uart0_puts(s);
 }
 
-void console_error(const char *s) {
+// https://github.com/shiena/ansicolor/blob/master/README.md
+
+void ConsoleError(const char *s) {
 	uart0_puts("\x1b[31m");
 	uart0_puts(s);
-	uart0_puts("\x1b[37m");
+	uart0_puts("\x1b[39m");
 }
 
-void console_set_fg_color(uint16_t fg) {
+void ConsoleSetFgColour(uint32_t fg) {
 	switch (fg) {
 	case CONSOLE_BLACK:
 		uart0_puts("\x1b[30m");
@@ -69,7 +70,7 @@ void console_set_fg_color(uint16_t fg) {
 	}
 }
 
-void console_set_bg_color(uint16_t bg) {
+void ConsoleSetBgColour(uint32_t bg) {
 	switch (bg) {
 	case CONSOLE_BLACK:
 		uart0_puts("\x1b[40m");
@@ -86,28 +87,24 @@ void console_set_bg_color(uint16_t bg) {
 	}
 }
 
-void console_write(const char *s, unsigned int n) {
+void ConsoleWrite(const char *s, unsigned int n) {
 	char c;
 
 	while (((c = *s++) != 0) && (n-- != 0)) {
-		console_putc(static_cast<int>(c));
+		ConsolePutc(static_cast<int>(c));
 	}
 }
 
-void console_status(uint32_t nColour, const char *s) {
-	console_set_fg_color(static_cast<uint16_t>(nColour));
-	console_set_bg_color(CONSOLE_BLACK);
-
+void ConsoleStatus(uint32_t nColour, const char *s) {
+	ConsoleSetFgColour(nColour);
 	uart0_puts(s);
-	console_putc('\n');
-
-	console_set_fg_color(CONSOLE_WHITE);
-}
+	ConsolePutc('\n');
+	ConsoleSetFgColour(CONSOLE_DEFAULT);
 }
 
-void __attribute__((cold)) console_init() {
+void __attribute__((cold)) ConsoleInit() {
 	uart0_init();
 
-	console_set_fg_color(CONSOLE_WHITE);
-	console_set_bg_color(CONSOLE_BLACK);
+	ConsoleSetFgColour(CONSOLE_WHITE);
+	ConsoleSetBgColour(CONSOLE_BLACK);
 }

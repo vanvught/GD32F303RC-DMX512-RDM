@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file hal_i2c.h
  *
  */
-/* Copyright (C) 2021 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2021-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +24,5 @@
  * THE SOFTWARE.
  */
 
-#ifndef GD32_HAL_I2C_H_
-#define GD32_HAL_I2C_H_
-
 #include "gd32.h"
 #include "gd32_i2c.h"
-
-#endif /* GD32_HAL_I2C_H_ */

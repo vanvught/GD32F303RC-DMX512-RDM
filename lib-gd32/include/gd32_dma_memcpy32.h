@@ -1,56 +1,76 @@
-/*
- * gd32_dma_memcpy32.h
+#pragma once
+/**
+ * @file gd32_dma_memcpy32.h
+ *
  */
+/* Copyright (C) 2024-2025 by Arjan van Vught mailto:info@gd32-dmx.org
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
 
-#ifndef GD32_DMA_MEMCPY32_H_
-#define GD32_DMA_MEMCPY32_H_
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 #include <cstdint>
 #include <cassert>
 
 #include "gd32.h"
 
-namespace dma {
-void memcpy32_init() ;
+namespace dma
+{
+void Memcpy32Init();
 
-inline void memcpy32(const void *pDestination, const void *pSource, const uint32_t nLength) {
-	assert((reinterpret_cast<uint32_t>(pSource) & 0x3) == 0);
-	assert((reinterpret_cast<uint32_t>(pDestination) & 0x3) == 0);
+inline void Memcpy32(const void* destination, const void* source, uint32_t length)
+{
+    assert((reinterpret_cast<uint32_t>(source) & 0x3) == 0);
+    assert((reinterpret_cast<uint32_t>(destination) & 0x3) == 0);
 
-#if !defined (GD32F4XX)
-	uint32_t dmaCHCTL = DMA_CHCTL(DMA0, DMA_CH3);
-	dmaCHCTL &= ~DMA_CHXCTL_CHEN;
-	DMA_CHCTL(DMA0, DMA_CH3) = dmaCHCTL;
+#if !defined(GD32F4XX)
+    uint32_t dmaCHCTL = DMA_CHCTL(DMA0, DMA_CH3);
+    dmaCHCTL &= ~DMA_CHXCTL_CHEN;
+    DMA_CHCTL(DMA0, DMA_CH3) = dmaCHCTL;
 
-    DMA_CHPADDR(DMA0, DMA_CH3) = reinterpret_cast<uint32_t>(pSource);
-    DMA_CHMADDR(DMA0, DMA_CH3) = reinterpret_cast<uint32_t>(pDestination);
-    DMA_CHCNT(DMA0, DMA_CH3) = (nLength & DMA_CHXCNT_CNT);
+    DMA_CHPADDR(DMA0, DMA_CH3) = reinterpret_cast<uint32_t>(source);
+    DMA_CHMADDR(DMA0, DMA_CH3) = reinterpret_cast<uint32_t>(destination);
+    DMA_CHCNT(DMA0, DMA_CH3) = (length & DMA_CHXCNT_CNT);
 
     dmaCHCTL |= DMA_CHXCTL_CHEN;
     DMA_CHCTL(DMA0, DMA_CH3) = dmaCHCTL;
 #else
-	uint32_t dmaCHCTL = DMA_CHCTL(DMA1, DMA_CH0);
-	dmaCHCTL &= ~DMA_CHXCTL_CHEN;
-	DMA_CHCTL(DMA1, DMA_CH0) = dmaCHCTL;
+    uint32_t dmaCHCTL = DMA_CHCTL(DMA1, DMA_CH0);
+    dmaCHCTL &= ~DMA_CHXCTL_CHEN;
+    DMA_CHCTL(DMA1, DMA_CH0) = dmaCHCTL;
 
-	DMA_INTC0(DMA1) |= DMA_FLAG_ADD(DMA_CHINTF_RESET_VALUE, DMA_CH0);
+    DMA_INTC0(DMA1) |= DMA_FLAG_ADD(DMA_CHINTF_RESET_VALUE, DMA_CH0);
 
-    DMA_CHM0ADDR(DMA1, DMA_CH0) = reinterpret_cast<uint32_t>(pDestination);
-    DMA_CHPADDR(DMA1, DMA_CH0) = reinterpret_cast<uint32_t>(pSource);
-    DMA_CHCNT(DMA1, DMA_CH0) = nLength;
+    DMA_CHM0ADDR(DMA1, DMA_CH0) = reinterpret_cast<uint32_t>(destination);
+    DMA_CHPADDR(DMA1, DMA_CH0) = reinterpret_cast<uint32_t>(source);
+    DMA_CHCNT(DMA1, DMA_CH0) = length;
 
-	dmaCHCTL |= DMA_CHXCTL_CHEN;
-	DMA_CHCTL(DMA1, DMA_CH0) = dmaCHCTL;
+    dmaCHCTL |= DMA_CHXCTL_CHEN;
+    DMA_CHCTL(DMA1, DMA_CH0) = dmaCHCTL;
 #endif
 }
 
-inline bool memcpy32_is_active() {
-#if !defined (GD32F4XX)
-	return DMA_CHCNT(DMA0, DMA_CH3) != 0;
+inline bool Memcpy32IsActive()
+{
+#if !defined(GD32F4XX)
+    return DMA_CHCNT(DMA0, DMA_CH3) != 0;
 #else
-	return DMA_CHCNT(DMA1, DMA_CH0) != 0;
+    return DMA_CHCNT(DMA1, DMA_CH0) != 0;
 #endif
 }
-}  // namespace dma
-
-#endif /* GD32_DMA_MEMCPY32_H_ */
+} // namespace dma

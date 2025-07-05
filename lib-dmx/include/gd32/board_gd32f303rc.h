@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file board_gd32f303r.h
  *
@@ -23,16 +24,15 @@
  * THE SOFTWARE.
  */
 
-#ifndef GD32_BOARD_GD32F303RC_H_
-#define GD32_BOARD_GD32F303RC_H_
-
+#include <cstdint>
 #include "gd32_board.h"
 
-#define DMX_MAX_PORTS  1
+#define DMX_MAX_PORTS 1
 
-namespace max {
-	static const uint32_t PORTS = DMX_MAX_PORTS;
-}  // namespace max
+namespace max
+{
+static constexpr uint32_t PORTS = DMX_MAX_PORTS;
+} // namespace max
 
 #define DMX_USE_USART2
 
@@ -40,5 +40,3 @@ static constexpr auto USART2_PORT = 0;
 
 static constexpr auto DIR_PORT_0_GPIO_PORT = GPIOB;
 static constexpr auto DIR_PORT_0_GPIO_PIN = GPIO_PIN_10;
-
-#endif /* GD32_BOARD_GD32F303RC_H_ */

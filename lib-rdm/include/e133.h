@@ -27,7 +27,7 @@
 #define E133_H_
 
 /**
- * A.3 Root Layer PDU Vector
+ * A.3 Root Layer PDU vector
  */
 
 #define VECTOR_ROOT_LLRP 			0x0000000A	/* Section 5.4 */
@@ -50,7 +50,7 @@
 #define VECTOR_PROBE_REPLY_DATA 0x01
 
 /**
- * Table A.12 RDM Command PDU Vector
+ * Table A.12 RDM Command PDU vector
  */
 #define VECTOR_RDM_CMD_RDM_DATA	0xCC
 

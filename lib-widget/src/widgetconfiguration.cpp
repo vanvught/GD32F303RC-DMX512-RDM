@@ -24,7 +24,6 @@
  */
 
 #include <cstdint>
-#include <cassert>
 
 #include "widgetconfiguration.h"
 #include "widget.h"

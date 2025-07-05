@@ -2,7 +2,7 @@
  * @file gd32_spi.cpp
  *
  */
-/* Copyright (C) 2021-2024 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2021-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,151 +24,181 @@
  */
 
 #include <cstdint>
-#include <cstdio>
 #include <cassert>
 
 #include "gd32_spi.h"
+#include "gd32_gpio.h"
 #include "gd32.h"
 
 static uint8_t s_nChipSelect = GD32_SPI_CS0;
 
-static void cs_high() {
-	if (s_nChipSelect == GD32_SPI_CS0) {
-		GPIO_BOP(SPI_NSS_GPIOx) = SPI_NSS_GPIO_PINx;
-	}
+static void SetCsHigh()
+{
+    if (s_nChipSelect == GD32_SPI_CS0)
+    {
+        GPIO_BOP(SPI_NSS_GPIOx) = SPI_NSS_GPIO_PINx;
+    }
 }
 
-static void cs_low() {
-	if (s_nChipSelect == GD32_SPI_CS0) {
-		GPIO_BC(SPI_NSS_GPIOx) = SPI_NSS_GPIO_PINx;
-	}
+static void SetCsLow()
+{
+    if (s_nChipSelect == GD32_SPI_CS0)
+    {
+        GPIO_BC(SPI_NSS_GPIOx) = SPI_NSS_GPIO_PINx;
+    }
 }
 
-static uint8_t send_byte(uint8_t byte) {
-	while (RESET == (SPI_STAT(SPI_PERIPH) & SPI_FLAG_TBE))
-		;
+static uint8_t SpiWriteRead(uint8_t nByte)
+{
+    while (RESET == (SPI_STAT(SPI_PERIPH) & SPI_FLAG_TBE));
 
-	SPI_DATA(SPI_PERIPH) = static_cast<uint32_t>(byte);
+    SPI_DATA(SPI_PERIPH) = static_cast<uint32_t>(nByte);
 
-	while (RESET == (SPI_STAT(SPI_PERIPH) & SPI_FLAG_RBNE))
-		;
+    while (RESET == (SPI_STAT(SPI_PERIPH) & SPI_FLAG_RBNE));
 
-	return static_cast<uint8_t>(static_cast<uint16_t>(SPI_DATA(SPI_PERIPH)));
+    return static_cast<uint8_t>(SPI_DATA(SPI_PERIPH));
 }
 
-static void rcu_config() {
-	rcu_periph_clock_enable(SPI_RCU_SPIx);
-	rcu_periph_clock_enable(SPI_RCU_GPIOx);
-	rcu_periph_clock_enable(SPI_NSS_RCU_GPIOx);
+static void RcuConfig()
+{
+    rcu_periph_clock_enable(SPI_RCU_SPIx);
+    rcu_periph_clock_enable(SPI_RCU_GPIOx);
+    rcu_periph_clock_enable(SPI_NSS_RCU_GPIOx);
 
-#if defined (GPIO_INIT)
-	rcu_periph_clock_enable(RCU_AF);
+#if defined(GPIO_INIT)
+    rcu_periph_clock_enable(RCU_AF);
 #endif
 }
 
-static void gpio_config() {
-#if defined (GPIO_INIT)
-# if defined (SPI_REMAP_GPIO)
-	gpio_pin_remap_config(SPI_REMAP_GPIO, ENABLE);
-	if (SPI_PERIPH == SPI0) {
-		gpio_pin_remap_config(GPIO_SWJ_DISABLE_REMAP, ENABLE);
-	}
-# else
-	if (SPI_PERIPH == SPI2) {
-		gpio_pin_remap_config(GPIO_SWJ_DISABLE_REMAP, ENABLE);
-	}
-# endif
-	gpio_init(SPI_GPIOx, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, SPI_SCK_GPIO_PINx | SPI_MOSI_GPIO_PINx);
-	gpio_init(SPI_GPIOx, GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, SPI_MISO_GPIO_PINx);
-	gpio_init(SPI_NSS_GPIOx, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, SPI_NSS_GPIO_PINx);
+static void GpioConfig()
+{
+#if defined(GPIO_INIT)
+#if defined(SPI_REMAP_GPIO)
+    gpio_pin_remap_config(SPI_REMAP_GPIO, ENABLE);
+    if (SPI_PERIPH == SPI0)
+    {
+        gpio_pin_remap_config(GPIO_SWJ_DISABLE_REMAP, ENABLE);
+    }
 #else
-	gpio_af_set(SPI_GPIOx, SPI_GPIO_AFx, SPI_SCK_GPIO_PINx | SPI_MISO_GPIO_PINx | SPI_MOSI_GPIO_PINx);
-	gpio_mode_set(SPI_GPIOx, GPIO_MODE_AF, GPIO_PUPD_NONE, SPI_SCK_GPIO_PINx | SPI_MISO_GPIO_PINx | SPI_MOSI_GPIO_PINx);
+    if (SPI_PERIPH == SPI2)
+    {
+        gpio_pin_remap_config(GPIO_SWJ_DISABLE_REMAP, ENABLE);
+    }
+#endif
+    gpio_init(SPI_GPIOx, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, SPI_SCK_GPIO_PINx | SPI_MOSI_GPIO_PINx);
+    gpio_init(SPI_GPIOx, GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, SPI_MISO_GPIO_PINx);
+    gpio_init(SPI_NSS_GPIOx, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, SPI_NSS_GPIO_PINx);
+#else
+    gpio_af_set(SPI_GPIOx, SPI_GPIO_AFx, SPI_SCK_GPIO_PINx | SPI_MISO_GPIO_PINx | SPI_MOSI_GPIO_PINx);
+    gpio_mode_set(SPI_GPIOx, GPIO_MODE_AF, GPIO_PUPD_NONE, SPI_SCK_GPIO_PINx | SPI_MISO_GPIO_PINx | SPI_MOSI_GPIO_PINx);
     gpio_output_options_set(SPI_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, SPI_SCK_GPIO_PINx | SPI_MOSI_GPIO_PINx);
 
-    gpio_mode_set(SPI_NSS_GPIOx, GPIO_MODE_OUTPUT,GPIO_PUPD_NONE, SPI_NSS_GPIO_PINx);
+    gpio_mode_set(SPI_NSS_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, SPI_NSS_GPIO_PINx);
     gpio_output_options_set(SPI_NSS_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, SPI_NSS_GPIO_PINx);
 #endif
 
-	cs_high();
+    SetCsHigh();
 }
 
-static void spi_config() {
-	spi_disable(SPI_PERIPH);
-	spi_i2s_deinit(SPI_PERIPH);
+static void SpiConfig()
+{
+    spi_disable(SPI_PERIPH);
+    spi_i2s_deinit(SPI_PERIPH);
 
-	spi_parameter_struct spi_init_struct;
-	spi_init_struct.trans_mode = SPI_TRANSMODE_FULLDUPLEX;
-	spi_init_struct.device_mode = SPI_MASTER;
-	spi_init_struct.frame_size = SPI_FRAMESIZE_8BIT;
-	spi_init_struct.clock_polarity_phase = SPI_CK_PL_LOW_PH_1EDGE;
-	spi_init_struct.nss = SPI_NSS_SOFT;
-	spi_init_struct.prescale = SPI_PSC_64;
-	spi_init_struct.endian = SPI_ENDIAN_MSB;
-	spi_init(SPI_PERIPH, &spi_init_struct);
+    spi_parameter_struct spi_init_struct;
+    spi_init_struct.trans_mode = SPI_TRANSMODE_FULLDUPLEX;
+    spi_init_struct.device_mode = SPI_MASTER;
+    spi_init_struct.frame_size = SPI_FRAMESIZE_8BIT;
+    spi_init_struct.clock_polarity_phase = SPI_CK_PL_LOW_PH_1EDGE;
+    spi_init_struct.nss = SPI_NSS_SOFT;
+    spi_init_struct.prescale = SPI_PSC_64;
+    spi_init_struct.endian = SPI_ENDIAN_MSB;
+    spi_init(SPI_PERIPH, &spi_init_struct);
 
-	spi_enable(SPI_PERIPH);
+    spi_enable(SPI_PERIPH);
 }
 
 /*
  * Public API's
  */
 
-void gd32_spi_begin()  {
-	rcu_config();
-	gpio_config();
-	spi_config();
+void Gd32SpiBegin()
+{
+    RcuConfig();
+    GpioConfig();
+    SpiConfig();
 }
 
-void gd32_spi_end() {
-	spi_disable(SPI_PERIPH);
-#if defined (GPIO_INIT)
-	gpio_init(SPI_GPIOx, GPIO_MODE_IPD, GPIO_OSPEED_50MHZ, SPI_SCK_GPIO_PINx | SPI_MISO_GPIO_PINx | SPI_MOSI_GPIO_PINx);
-	gpio_init(SPI_NSS_GPIOx, GPIO_MODE_IPD, GPIO_OSPEED_50MHZ, SPI_NSS_GPIO_PINx);
+void Gd32SpiEnd()
+{
+    spi_disable(SPI_PERIPH);
+#if defined(GPIO_INIT)
+    gpio_init(SPI_GPIOx, GPIO_MODE_IPD, GPIO_OSPEED_50MHZ, SPI_SCK_GPIO_PINx | SPI_MISO_GPIO_PINx | SPI_MOSI_GPIO_PINx);
+    gpio_init(SPI_NSS_GPIOx, GPIO_MODE_IPD, GPIO_OSPEED_50MHZ, SPI_NSS_GPIO_PINx);
 #else
-	gpio_mode_set(SPI_GPIOx, GPIO_MODE_INPUT, GPIO_PUPD_NONE, SPI_SCK_GPIO_PINx | SPI_MISO_GPIO_PINx | SPI_MOSI_GPIO_PINx);
+    gpio_mode_set(SPI_GPIOx, GPIO_MODE_INPUT, GPIO_PUPD_NONE, SPI_SCK_GPIO_PINx | SPI_MISO_GPIO_PINx | SPI_MOSI_GPIO_PINx);
     gpio_mode_set(SPI_NSS_GPIOx, GPIO_MODE_INPUT, GPIO_PUPD_NONE, SPI_NSS_GPIO_PINx);
 #endif
 }
 
-void gd32_spi_set_speed_hz(uint32_t nSpeedHz) {
-	assert(nSpeedHz != 0);
+void Gd32SpiSetSpeedHz(uint32_t nSpeedHz)
+{
+    assert(nSpeedHz != 0);
 
-	uint32_t nDiv;
+    uint32_t nDiv;
 
-	if (SPI_PERIPH == SPI0) {
-		nDiv = APB2_CLOCK_FREQ / nSpeedHz;	/* PCLK2 when using SPI0  */
-	} else {
-		nDiv = APB1_CLOCK_FREQ / nSpeedHz;	/* PCLK1 when using SPI1 and SPI2 */
-	}
+    if (SPI_PERIPH == SPI0)
+    {
+        nDiv = APB2_CLOCK_FREQ / nSpeedHz; /* PCLK2 when using SPI0  */
+    }
+    else
+    {
+        nDiv = APB1_CLOCK_FREQ / nSpeedHz; /* PCLK1 when using SPI1 and SPI2 */
+    }
 
-	uint32_t nCTL0 = SPI_CTL0(SPI_PERIPH);
-	nCTL0 &= ~CTL0_PSC(7);
+    uint32_t nCTL0 = SPI_CTL0(SPI_PERIPH);
+    nCTL0 &= ~CTL0_PSC(7);
 
-	if (nDiv <= 2) {
-		nCTL0 |= SPI_PSC_2;
-	} else if (nDiv <= 4) {
-		nCTL0 |= SPI_PSC_4;
-	} else if (nDiv <= 8) {
-		nCTL0 |= SPI_PSC_8;
-	} else if (nDiv <= 16) {
-		nCTL0 |= SPI_PSC_16;
-	} else if (nDiv <= 32) {
-		nCTL0 |= SPI_PSC_32;
-	} else if (nDiv <= 64) {
-		nCTL0 |= SPI_PSC_64;
-	} else if (nDiv <= 128) {
-		nCTL0 |= SPI_PSC_128;
-	} else {
-		nCTL0 |= SPI_PSC_256;
-	}
+    if (nDiv <= 2)
+    {
+        nCTL0 |= SPI_PSC_2;
+    }
+    else if (nDiv <= 4)
+    {
+        nCTL0 |= SPI_PSC_4;
+    }
+    else if (nDiv <= 8)
+    {
+        nCTL0 |= SPI_PSC_8;
+    }
+    else if (nDiv <= 16)
+    {
+        nCTL0 |= SPI_PSC_16;
+    }
+    else if (nDiv <= 32)
+    {
+        nCTL0 |= SPI_PSC_32;
+    }
+    else if (nDiv <= 64)
+    {
+        nCTL0 |= SPI_PSC_64;
+    }
+    else if (nDiv <= 128)
+    {
+        nCTL0 |= SPI_PSC_128;
+    }
+    else
+    {
+        nCTL0 |= SPI_PSC_256;
+    }
 
-	spi_disable(SPI_PERIPH);
-	SPI_CTL0(SPI_PERIPH) = nCTL0;
-	spi_enable(SPI_PERIPH);
+    spi_disable(SPI_PERIPH);
+    SPI_CTL0(SPI_PERIPH) = nCTL0;
+    spi_enable(SPI_PERIPH);
 }
 
-void gd32_spi_setDataMode(uint8_t nMode) {
+void Gd32SpiSetDataMode(uint8_t nMode)
+{
     uint32_t nCTL0 = SPI_CTL0(SPI_PERIPH);
     nCTL0 &= ~0x3;
     nCTL0 |= (nMode & 0x3);
@@ -178,53 +208,152 @@ void gd32_spi_setDataMode(uint8_t nMode) {
     spi_enable(SPI_PERIPH);
 }
 
-void gd32_spi_chipSelect(uint8_t nChipSelect) {
-	s_nChipSelect = nChipSelect;
+void Gd32SpiChipSelect(uint8_t nChipSelect)
+{
+    s_nChipSelect = nChipSelect;
 
-	if (nChipSelect == GD32_SPI_CS0) {
-		spi_nss_output_enable(SPI_PERIPH);
-	} else {
-		spi_nss_output_disable(SPI_PERIPH);
-	}
+    if (nChipSelect == GD32_SPI_CS0)
+    {
+        spi_nss_output_enable(SPI_PERIPH);
+    }
+    else
+    {
+        spi_nss_output_disable(SPI_PERIPH);
+    }
 }
 
-void gd32_spi_transfernb(const char *pTxBuffer, char *pRxBuffer, uint32_t nDataLength) {
-	assert(pTxBuffer != nullptr);
-	assert(pRxBuffer != nullptr);
+void Gd32SpiTransfernb(const char* pTxBuffer, char* pRxBuffer, uint32_t nDataLength)
+{
+    assert(pTxBuffer != nullptr);
+    assert(pRxBuffer != nullptr);
 
-	cs_low();
+    SetCsLow();
 
-	while (nDataLength-- > 0) {
-		*pRxBuffer = send_byte(static_cast<uint8_t>(*pTxBuffer));
-		pRxBuffer++;
-		pTxBuffer++;
-	}
+    while (nDataLength-- > 0)
+    {
+        *pRxBuffer = SpiWriteRead(static_cast<uint8_t>(*pTxBuffer));
+        pRxBuffer++;
+        pTxBuffer++;
+    }
 
-	cs_high();
+    SetCsHigh();
 }
 
-void gd32_spi_transfern(char *pTxBuffer, uint32_t nDataLength) {
-	gd32_spi_transfernb(pTxBuffer, pTxBuffer, nDataLength);
+void Gd32SpiTransfern(char* pTxBuffer, uint32_t nDataLength)
+{
+    Gd32SpiTransfernb(pTxBuffer, pTxBuffer, nDataLength);
 }
 
-void gd32_spi_write(const uint16_t nData) {
-	cs_low();
+void Gd32SpiWrite(const uint16_t nData)
+{
+    SetCsLow();
 
-	send_byte(static_cast<uint8_t>(nData >> 8));
-	send_byte(static_cast<uint8_t>(nData & 0xFF));
+    SpiWriteRead(static_cast<uint8_t>(nData >> 8));
+    SpiWriteRead(static_cast<uint8_t>(nData & 0xFF));
 
-	cs_high();
+    SetCsHigh();
 }
 
-void gd32_spi_writenb(const char *pTxBuffer, uint32_t nDataLength) {
-	assert(pTxBuffer != nullptr);
+void Gd32SpiWritenb(const char* pTxBuffer, uint32_t nDataLength)
+{
+    assert(pTxBuffer != nullptr);
 
-	cs_low();
+    SetCsLow();
 
-	while (nDataLength-- > 0) {
-		send_byte(static_cast<uint8_t>(*pTxBuffer));
-		pTxBuffer++;
-	}
+    while (nDataLength-- > 0)
+    {
+        SpiWriteRead(static_cast<uint8_t>(*pTxBuffer));
+        pTxBuffer++;
+    }
 
-	cs_high();
+    SetCsHigh();
 }
+
+#if defined(SPI_BITBANG_SCK_GPIO_PINx)
+/*
+ * bitbang support
+ * Note: /CS is handled by the user application
+ */
+
+void __attribute__((cold)) Gd32BitbangSpiBegin()
+{
+    Gd32GpioFsel(SPI_BITBANG_SCK_GPIOx, SPI_BITBANG_SCK_GPIO_PINx, GPIO_FSEL_OUTPUT);
+    Gd32GpioFsel(SPI_BITBANG_MOSI_GPIOx, SPI_BITBANG_MOSI_GPIO_PINx, GPIO_FSEL_OUTPUT);
+    Gd32GpioFsel(SPI_BITBANG_MISO_GPIOx, SPI_BITBANG_MISO_GPIO_PINx, GPIO_FSEL_INPUT);
+}
+
+static inline void bitbang_spi_write(const char c)
+{
+    for (uint32_t nMask = (1U << 7); nMask != 0; nMask = (nMask >> 1U))
+    {
+        if (c & nMask)
+        {
+            GPIO_BOP(SPI_BITBANG_MOSI_GPIOx) = SPI_BITBANG_MOSI_GPIO_PINx;
+        }
+        else
+        {
+            GPIO_BC(SPI_BITBANG_MOSI_GPIOx) = SPI_BITBANG_MOSI_GPIO_PINx;
+        }
+
+        __ISB();
+        GPIO_BOP(SPI_BITBANG_SCK_GPIOx) = SPI_BITBANG_SCK_GPIO_PINx;
+        __ISB();
+        GPIO_BC(SPI_BITBANG_SCK_GPIOx) = SPI_BITBANG_SCK_GPIO_PINx;
+    }
+}
+
+static inline char bitbang_spi_write_read(const char c)
+{
+    char r = 0;
+
+    for (uint32_t nMask = (1U << 7); nMask != 0; nMask = (nMask >> 1U))
+    {
+        if (c & nMask)
+        {
+            GPIO_BOP(SPI_BITBANG_MOSI_GPIOx) = SPI_BITBANG_MOSI_GPIO_PINx;
+        }
+        else
+        {
+            GPIO_BC(SPI_BITBANG_MOSI_GPIOx) = SPI_BITBANG_MOSI_GPIO_PINx;
+        }
+
+        __ISB();
+        GPIO_BOP(SPI_BITBANG_SCK_GPIOx) = SPI_BITBANG_SCK_GPIO_PINx;
+
+        if ((GPIO_ISTAT(SPI_BITBANG_MISO_GPIOx) & SPI_BITBANG_MISO_GPIO_PINx) == SPI_BITBANG_MISO_GPIO_PINx)
+        {
+            r |= (nMask);
+        }
+
+        __ISB();
+        GPIO_BC(SPI_BITBANG_SCK_GPIOx) = SPI_BITBANG_SCK_GPIO_PINx;
+    }
+
+    return r;
+}
+
+void Gd32BitbangSpi_writenb(const char* pTxBuffer, uint32_t nDataLength)
+{
+    assert(pTxBuffer != nullptr);
+    assert(nDataLength != 0);
+
+    for (uint32_t i = 0; i < nDataLength; i++)
+    {
+        bitbang_spi_write(pTxBuffer[i]);
+    }
+}
+
+void Gd32BitbangSpi_transfernb(const char* pTxBuffer, char* pRxBuffer, uint32_t nDataLength)
+{
+    assert(pTxBuffer != nullptr);
+    assert(pRxBuffer != nullptr);
+    assert(nDataLength != 0);
+
+    while (nDataLength-- > 0)
+    {
+        *pRxBuffer = bitbang_spi_write_read(static_cast<uint8_t>(*pTxBuffer));
+        pRxBuffer++;
+        pTxBuffer++;
+    }
+}
+#endif

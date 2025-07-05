@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file htu21d.h
  *
@@ -23,45 +24,43 @@
  * THE SOFTWARE.
  */
 
-#ifndef HTU21D_H_
-#define HTU21D_H_
-
 #include <cstdint>
 
 #include "hal_i2c.h"
 
-namespace sensor {
-namespace htu21d {
-namespace temperature {
+namespace sensor
+{
+namespace htu21d
+{
+namespace temperature
+{
 static constexpr char DESCRIPTION[] = "Ambient Temperature";
 static constexpr auto RANGE_MIN = -40;
 static constexpr auto RANGE_MAX = 125;
-}  // namespace temperature
-namespace humidity {
+} // namespace temperature
+namespace humidity
+{
 static constexpr char DESCRIPTION[] = "Relative Humidity";
 static constexpr auto RANGE_MIN = 0;
 static constexpr auto RANGE_MAX = 100;
-}  // namespace humidity
-}  // namespace htu21d
+} // namespace humidity
+} // namespace htu21d
 
-class HTU21D: HAL_I2C {
-public:
-	HTU21D(uint8_t nAddress = 0);
+class HTU21D : HAL_I2C
+{
+   public:
+    explicit HTU21D(uint8_t address = 0);
 
-	bool Initialize() {
-		return m_bIsInitialized;
-	}
+    bool Initialize() { return m_bIsInitialized; }
 
-	float GetTemperature();
-	float GetHumidity();
+    float GetTemperature();
+    float GetHumidity();
 
-private:
-	uint16_t ReadRaw(uint8_t nCmd);
+   private:
+    uint16_t ReadRaw(uint8_t nCmd);
 
-private:
-	bool m_bIsInitialized { false };
+   private:
+    bool m_bIsInitialized{false};
 };
 
-}  // namespace sensor
-
-#endif /* HTU21D_H_ */
+} // namespace sensor

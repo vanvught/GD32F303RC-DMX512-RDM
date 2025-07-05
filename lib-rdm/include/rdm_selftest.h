@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file rdm_selftest.h
  *
  */
-/* Copyright (C) 2021-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2021-2023 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +24,11 @@
  * THE SOFTWARE.
  */
 
-#ifndef RDM_SELFTEST_H_
-#define RDM_SELFTEST_H_
-
 #include <cstdint>
 
-namespace rdm {
-namespace selftest {
+namespace rdm::selftest
+{
 uint8_t Get();
-bool Set(uint8_t nSelfTest);
-const char* GetDescription(uint8_t nSelfTest, uint32_t &nLength);
-}  // namespace selftest
-}  // namespace rdm
-
-#endif /* RDM_SELFTEST_H_ */
+bool Set(uint8_t self_test);
+const char* GetDescription(uint8_t self_test, uint32_t& length);
+} // namespace rdm::selftest

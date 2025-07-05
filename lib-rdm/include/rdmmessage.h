@@ -86,7 +86,7 @@ public:
 
 	void Send(const uint32_t nPortIndex) {
 #ifndef NDEBUG
-		rdm::message_print(reinterpret_cast<const uint8_t *>(&m_message));
+		rdm::MessagePrint(reinterpret_cast<const uint8_t *>(&m_message));
 #endif
 		Rdm::Send(nPortIndex, &m_message);
 	}

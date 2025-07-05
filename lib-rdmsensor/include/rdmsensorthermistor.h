@@ -86,7 +86,7 @@ public:
 			const auto iMeasure = static_cast<int32_t>(GetValue(nResistor) * 10);
 			DEBUG_PRINTF("iCalibrate=%d, iMeasure=%d, m_nOffset=%d, nResistor=%u", iCalibrate, iMeasure, m_nCalibration, nResistor);
 			if (iCalibrate == iMeasure) {
-				RDMSensorsStore::SaveCalibration(RDMSensor::GetSensor(), m_nCalibration);
+				rdmsensors_store::SaveCalibration(RDMSensor::GetSensor(), m_nCalibration);
 				return true;
 			}
 		}
@@ -96,7 +96,7 @@ public:
 
 	void ResetCalibration() {
 		m_nCalibration = 0;
-		RDMSensorsStore::SaveCalibration(RDMSensor::GetSensor(), m_nCalibration);
+		rdmsensors_store::SaveCalibration(RDMSensor::GetSensor(), m_nCalibration);
 	}
 
 	int32_t GetCalibration() const {
@@ -111,7 +111,7 @@ public:
 		}
 		const auto v = sum / 4;
 		const auto r = resistor(v);
-		const auto t = sensor::thermistor::temperature(r);
+		const auto t = sensor::thermistor::Temperature(r);
 		DEBUG_PRINTF("v=%1.3f, r=%u, t=%3.1f", v, r, t);
 		nResistor = r;
 		return t;

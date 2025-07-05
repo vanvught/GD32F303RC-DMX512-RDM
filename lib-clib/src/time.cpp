@@ -2,7 +2,7 @@
  * @file time.cpp
  *
  */
-/* Copyright (C) 2016-2024 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2016-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,10 +30,10 @@
 #include <time.h>
 
 namespace global {
-int32_t *gp_nUtcOffset;
+int32_t g_nUtcOffset = 0;
 }  // namespace global
 
-static constexpr int days_of_month[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+static constexpr int DAYS_OF_MONTH[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 static int isleapyear(const int year) {
 	if (year % 100 == 0) {
@@ -48,7 +48,7 @@ static int getdaysofmonth(const int month, const int year) {
 		return 29;
 	}
 
-	return days_of_month[month];
+	return DAYS_OF_MONTH[month];
 }
 
 static struct tm Tm;
@@ -60,7 +60,7 @@ struct tm *localtime(const time_t *pTime) {
 		return nullptr;
 	}
 
-	auto nTime = *pTime + *global::gp_nUtcOffset;
+	auto nTime = *pTime + global::g_nUtcOffset;
 	return gmtime(&nTime);
 }
 

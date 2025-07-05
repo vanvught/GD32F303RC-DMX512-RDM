@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file rdmdevice.h
  *
  */
-/* Copyright (C) 2017-2024 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2017-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +23,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#ifndef RDMDEVICE_H_
-#define RDMDEVICE_H_
 
 #include <cstdint>
 #include <cstring>
@@ -69,10 +67,11 @@ public:
 		return (m_nCheckSum == RDMDevice::CalculateChecksum());
 	}
 
-	const uint8_t *GetUID() const {
+    const uint8_t* GetUID() const
+    {
 #if defined (NO_EMAC) || !defined(CONFIG_RDMDEVICE_UUID_IP)
 #else
-		const auto nIp = Network::Get()->GetIp();
+		const auto nIp = net::GetPrimaryIp();
 # if !defined(CONFIG_RDMDEVICE_REVERSE_UID)
 		m_aUID[5] = static_cast<uint8_t>(nIp >> 24);
 		m_aUID[4] = (nIp >> 16) & 0xFF;
@@ -86,9 +85,9 @@ public:
 # endif
 #endif
 		return m_aUID;
-	}
+    }
 
-	const uint8_t *GetSN() const {
+    const uint8_t *GetSN() const {
 #if defined (NO_EMAC) || !defined(CONFIG_RDMDEVICE_UUID_IP)
 #else
 		GetUID();
@@ -100,62 +99,62 @@ public:
 		return m_aSN;
 	}
 
-	void GetManufacturerId(struct TRDMDeviceInfoData *pInfo) {
-		pInfo->data = reinterpret_cast<char *>(const_cast<uint8_t *>(RDMConst::MANUFACTURER_ID));
-		pInfo->length = RDM_DEVICE_MANUFACTURER_ID_LENGTH;
+	void GetManufacturerId(struct TRDMDeviceInfoData *info_data) {
+		info_data->data = reinterpret_cast<char *>(const_cast<uint8_t *>(RDMConst::MANUFACTURER_ID));
+		info_data->length = RDM_DEVICE_MANUFACTURER_ID_LENGTH;
 	}
 
-	void GetManufacturerName(struct TRDMDeviceInfoData *pInfo) {
-		pInfo->data = const_cast<char *>(&RDMConst::MANUFACTURER_NAME[0]);
-		pInfo->length = static_cast<uint8_t>(std::min(static_cast<size_t>(RDM_MANUFACTURER_LABEL_MAX_LENGTH), strlen(RDMConst::MANUFACTURER_NAME)));
+	void GetManufacturerName(struct TRDMDeviceInfoData *info_data) {
+		info_data->data = const_cast<char *>(&RDMConst::MANUFACTURER_NAME[0]);
+		info_data->length = static_cast<uint8_t>(std::min(static_cast<size_t>(RDM_MANUFACTURER_LABEL_MAX_LENGTH), strlen(RDMConst::MANUFACTURER_NAME)));
 	}
 
-	void SetLabel(const struct TRDMDeviceInfoData *pInfo) {
-		const auto nLength = std::min(static_cast<uint8_t>(RDM_DEVICE_LABEL_MAX_LENGTH), pInfo->length);
+	void SetLabel(const struct TRDMDeviceInfoData *info_data) {
+		const auto kLength = std::min(static_cast<uint8_t>(RDM_DEVICE_LABEL_MAX_LENGTH), info_data->length);
 
 		if (m_IsInit) {
-			memcpy(m_aRootLabel, pInfo->data, nLength);
-			m_nRootLabelLength = nLength;
+			memcpy(m_aRootLabel, info_data->data, kLength);
+			m_nRootLabelLength = kLength;
 
-			RDMDeviceStore::SaveLabel(m_aRootLabel, m_nRootLabelLength);
+			rdmdevice_store::SaveLabel(m_aRootLabel, m_nRootLabelLength);
 		} else {
-			memcpy(m_aFactoryRootLabel, pInfo->data, nLength);
-			m_nFactoryRootLabelLength = nLength;
+			memcpy(m_aFactoryRootLabel, info_data->data, kLength);
+			m_nFactoryRootLabelLength = kLength;
 		}
 	}
 
-	void GetLabel(struct TRDMDeviceInfoData *pInfo) {
-		pInfo->data = m_aRootLabel;
-		pInfo->length = m_nRootLabelLength;
+	void GetLabel(struct TRDMDeviceInfoData *info_data) {
+		info_data->data = m_aRootLabel;
+		info_data->length = m_nRootLabelLength;
 	}
 
-	void SetProductCategory(const uint16_t nProductCategory) {
-		m_nProductCategory = nProductCategory;
+	void SetProductCategory(uint16_t product_category) {
+		m_nProductCategory = product_category;
 	}
 	uint16_t GetProductCategory() const {
 		return m_nProductCategory;
 	}
 
-	void SetProductDetail(const uint16_t nProductDetail) {
-		m_nProductDetail = nProductDetail;
+	void SetProductDetail(uint16_t product_detail) {
+		m_nProductDetail = product_detail;
 	}
 	uint16_t GetProductDetail() const {
 		return m_nProductDetail;
 	}
 
 	static RDMDevice *Get() {
-		return s_pThis;
+		return s_this;
 	}
 
 private:
 	uint16_t CalculateChecksum() {
-		uint16_t nChecksum = m_nFactoryRootLabelLength;
+		uint16_t checksum = m_nFactoryRootLabelLength;
 
 		for (uint32_t i = 0; i < m_nRootLabelLength; i++) {
-			nChecksum = static_cast<uint16_t>(nChecksum + m_aRootLabel[i]);
+			checksum = static_cast<uint16_t>(checksum + m_aRootLabel[i]);
 		}
 
-		return nChecksum;
+		return checksum;
 	}
 
 private:
@@ -174,7 +173,5 @@ private:
 
 	bool m_IsInit { false };
 
-	static RDMDevice *s_pThis;
+	static inline RDMDevice *s_this;
 };
-
-#endif /* RDMDEVICE_H_ */

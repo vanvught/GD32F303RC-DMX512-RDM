@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file rdmhandler.h
  *
@@ -23,11 +24,10 @@
  * THE SOFTWARE.
  */
 
-#ifndef RDMHANDLER_H_
-#define RDMHANDLER_H_
-
 #include <cstdint>
+#if defined (CONFIG_RDM_ENABLE_MANUFACTURER_PIDS)
 #include <cstring>
+#endif
 
 #if defined (NODE_RDMNET_LLRP_ONLY)
 # if defined (CONFIG_RDM_ENABLE_MANUFACTURER_PIDS)
@@ -45,7 +45,7 @@
 
 class RDMHandler {
 public:
-	RDMHandler(bool bRDM = true);
+	explicit RDMHandler(bool rdm = true);
 
 	void HandleData(const uint8_t *pRdmDataIn, uint8_t *pRdmDataOut);
 
@@ -180,5 +180,3 @@ private:
 	}
 #endif
 };
-
-#endif /* RDMHANDLER_H_ */

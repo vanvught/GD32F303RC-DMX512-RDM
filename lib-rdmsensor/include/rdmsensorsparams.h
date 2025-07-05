@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file rdmsensorsparams.h
  *
  */
-/* Copyright (C) 2020-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2020-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,65 +24,35 @@
  * THE SOFTWARE.
  */
 
-#ifndef RDMSENSORSPARAMS_H_
-#define RDMSENSORSPARAMS_H_
-
 #include <cstdint>
 
-#include "rdmsensors.h"
-#include "configstore.h"
+#include "configurationstore.h"
 
-namespace rdm {
-namespace sensorsparams {
-struct Params {
-	uint32_t nDevices;
-	struct {
-		uint8_t nType;
-		uint8_t nAddress;
-		uint8_t nReserved;
-	} __attribute__((packed)) Entry[rdm::sensors::devices::MAX];
-	int16_t nCalibrate[rdm::sensors::MAX];
-} __attribute__((packed));
+class RDMSensor;
 
-static_assert(sizeof(struct Params) <= rdm::sensors::STORE, "struct Params is too large");
+class RDMSensorsParams
+{
+   public:
+    RDMSensorsParams();
 
-}  // namespace sensorsparams
-}  // namespace rdm
+    RDMSensorsParams(const RDMSensorsParams&) = delete;
+    RDMSensorsParams& operator=(const RDMSensorsParams&) = delete;
 
-class RDMSensorsParamsStore {
-public:
-	static void Update(const rdm::sensorsparams::Params *pParams) {
-		ConfigStore::Get()->Update(configstore::Store::RDMSENSORS, pParams, sizeof(struct rdm::sensorsparams::Params));
-	}
+    RDMSensorsParams(RDMSensorsParams&&) = delete;
+    RDMSensorsParams& operator=(RDMSensorsParams&&) = delete;
 
-	static void Copy(rdm::sensorsparams::Params *pParams) {
-		ConfigStore::Get()->Copy(configstore::Store::RDMSENSORS, pParams, sizeof(struct rdm::sensorsparams::Params));
-	}
+    void Load();
+    void Load(const char* buffer, uint32_t length);
+    void Builder(char* buffer, uint32_t length, uint32_t& size);
+    void Set();
+
+    static void StaticCallbackFunction(void* p, const char* s);
+
+   private:
+    void Dump();
+    void CallbackFunction(const char* line);
+    bool Add(RDMSensor* rdm_sensor);
+
+   private:
+    common::store::RdmSensors store_rdm_sensors_;
 };
-
-class RDMSensorsParams {
-public:
-	RDMSensorsParams();
-
-	void Load();
-	void Load(const char *pBuffer, uint32_t nLength);
-
-	void Builder(const rdm::sensorsparams::Params *pParams, char *pBuffer, uint32_t nLength, uint32_t& nSize);
-	void Save(char *pBuffer, uint32_t nLength, uint32_t& nSize) {
-		Builder(nullptr, pBuffer, nLength, nSize);
-	}
-
-	void Set();
-
-    static void staticCallbackFunction(void *p, const char *s);
-
-private:
-	void Dump();
-    void callbackFunction(const char *pLine);
-    bool Add(RDMSensor *pRDMSensor);
-
-private:
-	rdm::sensorsparams::Params m_Params;
-};
-
-#endif /* RDMSENSORSPARAMS_H_ */

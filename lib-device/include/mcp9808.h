@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file mcp9808.h
  *
@@ -23,34 +24,30 @@
  * THE SOFTWARE.
  */
 
-#ifndef MCP9808_H_
-#define MCP9808_H_
-
 #include <cstdint>
 
 #include "hal_i2c.h"
 
-namespace sensor {
-namespace mcp9808 {
+namespace sensor
+{
+namespace mcp9808
+{
 static constexpr char DESCRIPTION[] = "Ambient Temperature";
 static constexpr auto RANGE_MIN = -20;
 static constexpr auto RANGE_MAX = 100;
-}  // namespace mcp9808
+} // namespace mcp9808
 
-class MCP9808: HAL_I2C {
-public:
-	MCP9808(uint8_t nAddress = 0);
+class MCP9808 : HAL_I2C
+{
+   public:
+    MCP9808(uint8_t address = 0);
 
-	bool Initialize() {
-		return m_bIsInitialized;
-	}
+    bool Initialize() { return m_bIsInitialized; }
 
-	float Get();
+    float Get();
 
-private:
-	bool m_bIsInitialized { false };
+   private:
+    bool m_bIsInitialized{false};
 };
 
-}  // namespace sensor
-
-#endif /* MCP9808_H_ */
+} // namespace sensor

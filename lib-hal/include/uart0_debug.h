@@ -26,18 +26,10 @@
 #ifndef UART0_DEBUG_H_
 #define UART0_DEBUG_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-extern void uart0_init(void);
-extern void uart0_putc(int);
-extern void uart0_puts(const char *);
-extern int uart0_getc(void);
-extern int uart0_printf(const char* fmt, ...);
-
-#ifdef __cplusplus
-}
-#endif
+void uart0_init(void);
+void uart0_putc(int);
+void uart0_puts(const char *);
+int uart0_getc(void);
+int uart0_printf(const char* fmt, ...);
 
 #endif /* UART0_DEBUG_H_ */

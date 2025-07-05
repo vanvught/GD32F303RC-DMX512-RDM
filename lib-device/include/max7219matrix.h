@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file max7219matrix.h
  *
@@ -23,9 +24,6 @@
  * THE SOFTWARE.
  */
 
-#ifndef DEVICE_MAX7219MATRIX_H_
-#define DEVICE_MAX7219MATRIX_H_
-
 #include <cstdint>
 
 #include "max7219.h"
@@ -35,22 +33,20 @@ public:
 	Max7219Matrix();
 	~Max7219Matrix();
 
-	void Init(uint16_t nCount, uint8_t nIntensity);
+	void Init(uint16_t count, uint8_t intensity);
 
 	void Cls();
 
-	void Write(const char *pBuffer, uint16_t nCount);
+	void Write(const char *buffer, uint16_t count);
 
-	void UpdateCharacter(uint32_t nChar, const uint8_t pBytes[8]);
+	void UpdateCharacter(uint32_t c, const uint8_t bytes[8]);
 
 private:
 	uint8_t Rotate(uint32_t r, uint32_t x);
-	void WriteAll(uint8_t nRegister, uint8_t nData);
+	void WriteAll(uint8_t reg, uint8_t data);
 
 private:
-	uint32_t m_nFontSize;
-	uint8_t *m_pFont;
-	uint16_t m_nCount { 4 };
+	uint32_t font_size_;
+	uint8_t *font_;
+	uint16_t count_ { 4 };
 };
-
-#endif /* DEVICE_MAX7219MATRIX_H_ */

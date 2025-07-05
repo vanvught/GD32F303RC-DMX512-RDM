@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file bwspidio.h
  *
@@ -23,40 +24,36 @@
  * THE SOFTWARE.
  */
 
-#ifndef BWSPIDIO_H_
-#define BWSPIDIO_H_
-
 #include <cstdint>
 
 #include "bw.h"
 
-class BwSpiDio: BwSpi {
-public:
-	BwSpiDio(uint8_t nChipSelect = 0, uint8_t nAddress = bw::dio::address): BwSpi(nChipSelect, nAddress, bw::dio::id_string) {}
+class BwSpiDio : BwSpi
+{
+   public:
+    explicit BwSpiDio(uint8_t nChipSelect = 0, uint8_t nAddress = bw::dio::address) : BwSpi(nChipSelect, nAddress, bw::dio::id_string) {}
 
-	void SetDirection(uint8_t nMask) {
-		char cmd[3];
+    void SetDirection(uint8_t nMask)
+    {
+        char cmd[3];
 
-		cmd[0] = static_cast<char>(m_nAddress);
-		cmd[1] = bw::port::write::io_direction;
-		cmd[2] = static_cast<char>(nMask);
+        cmd[0] = static_cast<char>(m_nAddress);
+        cmd[1] = bw::port::write::io_direction;
+        cmd[2] = static_cast<char>(nMask);
 
-		HAL_SPI::Write(cmd, sizeof(cmd));
-	}
+        HAL_SPI::Write(cmd, sizeof(cmd));
+    }
 
-	void Output(uint8_t nPins) {
-		char cmd[3];
+    void Output(uint8_t nPins)
+    {
+        char cmd[3];
 
-		cmd[0] = static_cast<char>(m_nAddress);
-		cmd[1] = bw::port::write::set_all_outputs;
-		cmd[2] = static_cast<char>(nPins);
+        cmd[0] = static_cast<char>(m_nAddress);
+        cmd[1] = bw::port::write::set_all_outputs;
+        cmd[2] = static_cast<char>(nPins);
 
-		HAL_SPI::Write(cmd, sizeof(cmd));
-	}
+        HAL_SPI::Write(cmd, sizeof(cmd));
+    }
 
-	bool IsConnected() {
-		return m_IsConnected;
-	}
+    bool IsConnected() { return m_IsConnected; }
 };
-
-#endif /* BWSPIDIO_H_ */

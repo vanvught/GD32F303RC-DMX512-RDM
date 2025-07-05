@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file si5351a.h
  *
@@ -23,29 +24,23 @@
  * THE SOFTWARE.
  */
 
-#ifndef SI5351A_H_
-#define SI5351A_H_
-
 #include <cstdint>
 
 #include "hal_i2c.h"
 
-class SI5351A: HAL_I2C {
-public:
-	SI5351A(uint8_t nAddress = 0);
+class SI5351A : HAL_I2C
+{
+   public:
+    explicit SI5351A(uint8_t address = 0);
 
-	bool IsConnected() {
-		return m_bIsConnected;
-	}
+    bool IsConnected() { return is_connected_; }
 
-	void ClockBuilder();
+    void ClockBuilder();
 
-private:
-	void Pre();
-	void Post();
+   private:
+    void Pre();
+    void Post();
 
-private:
-	bool m_bIsConnected = false;
+   private:
+    bool is_connected_ = false;
 };
-
-#endif /* SI5351A_H_ */

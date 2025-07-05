@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file dmx.h
  *
  */
-/* Copyright (C) 2021-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2021-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,27 +24,22 @@
  * THE SOFTWARE.
  */
 
-#ifndef DMX_H_
-#define DMX_H_
-
-#if defined (OUTPUT_DMX_SEND_MULTI)
-# if defined (H3)
-#  include "h3/multi/dmx.h"
-# elif defined (GD32)
-#  include "gd32/dmx.h"
-# else
-#  include "linux/dmx.h"
-# endif
+#if defined(OUTPUT_DMX_SEND_MULTI)
+#if defined(H3)
+#include "h3/multi/dmx.h"
+#elif defined(GD32)
+#include "gd32/dmx.h"
 #else
-# if defined (H3)
-#  include "h3/single/dmx.h"
-# elif defined (GD32)
-#  include "gd32/dmx.h"
-# elif defined(RPI1) || defined (RPI2)
-#  include "rpi/dmx.h"
-# else
-#  include "linux/dmx.h"
-# endif
+#include "linux/dmx.h"
 #endif
-
-#endif /* DMX_H_ */
+#else
+#if defined(H3)
+#include "h3/single/dmx.h"
+#elif defined(GD32)
+#include "gd32/dmx.h"
+#elif defined(RPI1) || defined(RPI2)
+#include "rpi/dmx.h"
+#else
+#include "linux/dmx.h"
+#endif
+#endif

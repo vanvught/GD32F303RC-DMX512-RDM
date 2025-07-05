@@ -2,11 +2,14 @@
  * config_delay.cpp
  */
 
-#include "configstore.h"
+#undef NDEBUG
+
+#include "debug.h"
 
 namespace configstore {
 	void delay() {
-		ConfigStore::Get()->Delay();
+		//ConfigStore::Get()->Delay();
+		DEBUG_PUTS("not implemented");
 	}
 }  // namespace configstore
 

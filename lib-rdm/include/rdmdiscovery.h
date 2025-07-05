@@ -43,7 +43,7 @@ namespace rdmdiscovery {
 #endif
 static constexpr uint32_t UNMUTE_COUNTER = 3;
 static constexpr uint32_t MUTE_COUNTER = 10;
-static constexpr uint32_t DISCOVERY_STACK_SIZE = rdmtod::TOD_TABLE_SIZE;
+static constexpr uint32_t DISCOVERY_STACK_SIZE = rdmtod::kTodTableSize;
 static constexpr uint32_t DISCOVERY_COUNTER = 3;
 static constexpr uint32_t QUIKFIND_COUNTER = 5;
 static constexpr uint32_t QUIKFIND_DISCOVERY_COUNTER = 5;
@@ -74,7 +74,7 @@ public:
 	bool IsRunning(uint32_t& nPortIndex, bool& bIsIncremental) const {
 		nPortIndex = m_nPortIndex;
 		bIsIncremental = m_doIncremental;
-		return (m_State != rdmdiscovery::State::IDLE);
+		return (state_ != rdmdiscovery::State::IDLE);
 	}
 
 	bool IsFinished(uint32_t& nPortIndex, bool& bIsIncremental) {
@@ -92,7 +92,7 @@ public:
 	uint32_t CopyWorkingQueue(char *pOutBuffer, const uint32_t nOutBufferSize);
 
 	void Run() {
-		if (__builtin_expect((m_State == rdmdiscovery::State::IDLE), 1)) {
+		if (__builtin_expect((state_ == rdmdiscovery::State::IDLE), 1)) {
 			return;
 		}
 
@@ -116,7 +116,7 @@ private:
 
 	bool m_bIsFinished { false };
 	bool m_doIncremental { false };
-	rdmdiscovery::State m_State { rdmdiscovery::State::IDLE };
+	rdmdiscovery::State state_ { rdmdiscovery::State::IDLE };
 	rdmdiscovery::State m_SavedState { rdmdiscovery::State::IDLE };
 
 	struct {

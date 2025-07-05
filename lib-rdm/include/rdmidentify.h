@@ -1,8 +1,7 @@
 /**
  * @file rdmidentify.h
- *
  */
-/* Copyright (C) 2018-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2018-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,25 +26,27 @@
 #define RDMIDENTIFY_H_
 
 #include <cstdint>
+#include <cassert>
 
-#include "hardware.h"
+#include "hal_statusled.h"
 
-namespace rdm {
-namespace identify {
+namespace rdm::identify {
 enum class Mode : uint8_t {
 	QUIET = 0x00, LOUD = 0xFF,
 };
-}  // namespace identify
-}  // namespace rdm
+} // namespace rdm::identify
 
 class RDMIdentify {
 public:
-	RDMIdentify();
+	RDMIdentify() {
+		assert(s_this == nullptr);
+		s_this = this;
+	}
 	~RDMIdentify() = default;
 
 	void On() {
 		m_bIsEnabled = true;
-		Hardware::Get()->SetModeWithLock(hardware::ledblink::Mode::FAST, true);
+		hal::statusled_set_mode_with_lock(hal::StatusLedMode::FAST, true);
 
 		if (m_nMode != rdm::identify::Mode::QUIET) {
 			On(m_nMode);
@@ -54,7 +55,7 @@ public:
 
 	void Off() {
 		m_bIsEnabled = false;
-		Hardware::Get()->SetModeWithLock(hardware::ledblink::Mode::NORMAL, false);
+		hal::statusled_set_mode_with_lock(hal::StatusLedMode::NORMAL, false);
 
 		if (m_nMode != rdm::identify::Mode::QUIET) {
 			Off(m_nMode);
@@ -65,7 +66,7 @@ public:
 		return m_bIsEnabled;
 	}
 
-	void SetMode(rdm::identify::Mode nMode) {
+	void SetMode(const rdm::identify::Mode nMode) {
 		if ((nMode == rdm::identify::Mode::QUIET) || (nMode == rdm::identify::Mode::LOUD)) {
 			m_nMode = nMode;
 
@@ -85,8 +86,8 @@ public:
 		return m_nMode;
 	}
 
-	static RDMIdentify* Get() {
-		return s_pThis;
+	static RDMIdentify *Get() {
+		return s_this;
 	}
 
 private:
@@ -94,9 +95,9 @@ private:
 	void Off(rdm::identify::Mode nMode) __attribute__((weak));
 
 private:
-	static bool m_bIsEnabled;
-	static rdm::identify::Mode m_nMode;
-	static RDMIdentify *s_pThis;
+	static inline bool m_bIsEnabled;
+	static inline rdm::identify::Mode m_nMode;
+	static inline RDMIdentify *s_this;
 };
 
 #endif /* RDMIDENTIFY_H_ */

@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file bwspi7fets.h
  *
@@ -23,41 +24,36 @@
  * THE SOFTWARE.
  */
 
-#ifndef BWSPI7FETS_H_
-#define BWSPI7FETS_H_
-
 #include <cstdint>
 
 #include "bw.h"
 
-class BwSpi7fets: BwSpi {
-	void SetDirection(uint8_t nMask) {
-		char cmd[3];
+class BwSpi7fets : BwSpi
+{
+    void SetDirection(uint8_t nMask)
+    {
+        char cmd[3];
 
-		cmd[0] = static_cast<char>(m_nAddress);
-		cmd[1] = bw::port::write::io_direction;
-		cmd[2] = static_cast<char>(nMask);
+        cmd[0] = static_cast<char>(m_nAddress);
+        cmd[1] = bw::port::write::io_direction;
+        cmd[2] = static_cast<char>(nMask);
 
-		HAL_SPI::Write(cmd, sizeof(cmd));
-	}
-public:
-	BwSpi7fets(uint8_t nChipSelect = 0, uint8_t nAddress = bw::fets::address): BwSpi(nChipSelect, nAddress, bw::fets::id_string) {
-		SetDirection(0x7F);
-	}
+        HAL_SPI::Write(cmd, sizeof(cmd));
+    }
 
-	void Output(uint8_t nPins) {
-		char cmd[3];
+   public:
+    explicit BwSpi7fets(uint8_t nChipSelect = 0, uint8_t nAddress = bw::fets::address) : BwSpi(nChipSelect, nAddress, bw::fets::id_string) { SetDirection(0x7F); }
 
-		cmd[0] = static_cast<char>(m_nAddress);
-		cmd[1] = bw::port::write::set_all_outputs;
-		cmd[2] = static_cast<char>(nPins);
+    void Output(uint8_t nPins)
+    {
+        char cmd[3];
 
-		HAL_SPI::Write(cmd, sizeof(cmd));
-	}
+        cmd[0] = static_cast<char>(m_nAddress);
+        cmd[1] = bw::port::write::set_all_outputs;
+        cmd[2] = static_cast<char>(nPins);
 
-	bool IsConnected() {
-		return m_IsConnected;
-	}
+        HAL_SPI::Write(cmd, sizeof(cmd));
+    }
+
+    bool IsConnected() { return m_IsConnected; }
 };
-
-#endif /* BWSPI7FETS_H_ */

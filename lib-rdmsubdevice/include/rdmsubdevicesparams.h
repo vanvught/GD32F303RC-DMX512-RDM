@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file rdmsubdevicesparams.h
  *
  */
-/* Copyright (C) 2020-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2020-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,66 +24,35 @@
  * THE SOFTWARE.
  */
 
-#ifndef RDMSUBDEVICESPARAMS_H_
-#define RDMSUBDEVICESPARAMS_H_
-
 #include <cstdint>
 
-#include "rdmsubdevices.h"
-#include "configstore.h"
+#include "configurationstore.h"
 
-namespace rdm {
-namespace subdevicesparams {
-struct Params {
-	uint32_t nCount;
-	struct {
-		uint8_t nType;
-		uint8_t nChipSelect;
-		uint8_t nAddress;
-		uint16_t nDmxStartAddress;
-		uint32_t nSpeedHz;
-	} __attribute__((packed)) Entry[rdm::subdevices::MAX];
-} __attribute__((packed));
+class RDMSubDevice;
 
-static_assert(sizeof(struct Params) <= rdm::subdevices::STORE, "struct Params is too large");
+class RDMSubDevicesParams
+{
+   public:
+    RDMSubDevicesParams();
 
-}  // namespace subdevicesparams
-}  // namespace rdm
+    RDMSubDevicesParams(const RDMSubDevicesParams&) = delete;
+    RDMSubDevicesParams& operator=(const RDMSubDevicesParams&) = delete;
 
-class RDMSubDevicesParamsStore {
-public:
-	static void Update(const rdm::subdevicesparams::Params *pParams)  {
-		ConfigStore::Get()->Update(configstore::Store::RDMSUBDEVICES, pParams, sizeof(struct rdm::subdevicesparams::Params));
-	}
+    RDMSubDevicesParams(RDMSubDevicesParams&&) = delete;
+    RDMSubDevicesParams& operator=(RDMSubDevicesParams&&) = delete;
 
-	static void Copy(rdm::subdevicesparams::Params *pParams) {
-		ConfigStore::Get()->Copy(configstore::Store::RDMSUBDEVICES, pParams, sizeof(struct rdm::subdevicesparams::Params));
-	}
+    void Load();
+    void Load(const char* buffer, uint32_t length);
+    void Builder(char* buffer, uint32_t length, uint32_t& size);
+    void Set();
+
+    static void StaticCallbackFunction(void* p, const char* s);
+
+   private:
+    void Dump();
+    void CallbackFunction(const char* line);
+    bool Add(RDMSubDevice* rdm_sub_device);
+
+   private:
+    common::store::RdmSubdevices store_rdm_subdevices_;
 };
-
-class RDMSubDevicesParams {
-public:
-	RDMSubDevicesParams();
-
-	void Load();
-	void Load(const char *pBuffer, uint32_t nLength);
-
-	void Builder(const rdm::subdevicesparams::Params *pParams, char *pBuffer, uint32_t nLength, uint32_t& nSize);
-	void Save(char *pBuffer, uint32_t nLength, uint32_t& nSize) {
-		Builder(nullptr, pBuffer, nLength, nSize);
-	}
-
-	void Set();
-
-    static void staticCallbackFunction(void *p, const char *s);
-
-private:
-	void Dump();
-    void callbackFunction(const char *pLine);
-    bool Add(RDMSubDevice *pRDMSubDevice);
-
-private:
-    rdm::subdevicesparams::Params m_Params;
-};
-
-#endif /* RDMSUBDEVICESPARAMS_H_ */

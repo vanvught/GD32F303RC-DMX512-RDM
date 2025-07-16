@@ -32,36 +32,37 @@
 
 #include "dmx.h"
 #include "rdmdevice.h"
+#include "usb.h"
 
 namespace widget
 {
 enum class Amf
 {
-    START_CODE = 0x7E, ///< Start of message delimiter
-    END_CODE = 0xE7    ///< End of message delimiter
+    kStartCode = 0x7E, ///< Start of message delimiter
+    kEndCode = 0xE7    ///< End of message delimiter
 };
 
 enum class SendState
 {
-    ALWAYS = 0,             ///< The widget will always send (default)
-    ON_DATA_CHANGE_ONLY = 1 ///< Requests the Widget to send a DMX packet to the host only when the DMX values change on the input port
+    kAlways = 0,          ///< The widget will always send (default)
+    kOnDataChangeOnly = 1 ///< Requests the Widget to send a DMX packet to the host only when the DMX values change on the input port
 };
 
 enum class Mode
 {
-    DMX_RDM = 0,    ///< Both DMX (FIRMWARE_NORMAL_DMX)and RDM (FIRMWARE_RDM) firmware enabled.
-    DMX = 1,        ///< DMX (FIRMWARE_NORMAL_DMX) firmware enabled
-    RDM = 2,        ///< RDM (FIRMWARE_RDM) firmware enabled.
-    RDM_SNIFFER = 3 ///< RDM Sniffer firmware enabled.
+    kDmxRdm = 0,    ///< Both DMX (FIRMWARE_NORMAL_DMX)and RDM (FIRMWARE_RDM) firmware enabled.
+    kDmx = 1,       ///< DMX (FIRMWARE_NORMAL_DMX) firmware enabled
+    kRdm = 2,       ///< RDM (FIRMWARE_RDM) firmware enabled.
+    kRdmSniffer = 3 ///< RDM Sniffer firmware enabled.
 };
 } // namespace widget
 
 struct TRdmStatistics
 {
-    uint32_t nDiscoveryPackets;
-    uint32_t nDiscoveryResponsePackets;
-    uint32_t nGetRequests;
-    uint32_t nSetRequests;
+    uint32_t discovery_packets;
+    uint32_t discovery_response_packets;
+    uint32_t get_requests;
+    uint32_t set_requests;
 };
 
 class Widget : public Dmx, public RDMDevice
@@ -71,19 +72,19 @@ class Widget : public Dmx, public RDMDevice
 
     void Init() { RDMDevice::Init(); }
 
-    widget::SendState GetReceiveDmxOnChange() const { return m_tReceiveDmxOnChange; }
+    widget::SendState GetReceiveDmxOnChange() const { return send_state_; }
 
-    widget::Mode GetMode() const { return m_tMode; }
+    widget::Mode GetMode() const { return mode_; }
 
-    void SetMode(widget::Mode mode) { m_tMode = mode; }
+    void SetMode(widget::Mode mode) { mode_ = mode; }
 
-    uint32_t GetReceivedDmxPacketPeriodMillis() const { return m_nReceivedDmxPacketPeriodMillis; }
+    uint32_t GetReceivedDmxPacketPeriodMillis() const { return received_dmx_packet_period_millis_; }
 
-    void SetReceivedDmxPacketPeriodMillis(uint32_t period) { m_nReceivedDmxPacketPeriodMillis = period; }
+    void SetReceivedDmxPacketPeriodMillis(uint32_t period) { received_dmx_packet_period_millis_ = period; }
 
-    uint32_t GetReceivedDmxPacketCount() const { return m_nReceivedDmxPacketCount; }
+    uint32_t GetReceivedDmxPacketCount() const { return received_dmx_packet_count_; }
 
-    const struct TRdmStatistics* RdmStatisticsGet() const { return &m_RdmStatistics; }
+    const struct TRdmStatistics* RdmStatisticsGet() const { return &rdm_statistics_; }
 
     void SnifferFillTransmitBuffer();
 
@@ -121,25 +122,45 @@ class Widget : public Dmx, public RDMDevice
     void SnifferRdm();
     void SnifferDmx();
     // USB
-    void SendMessage(uint8_t label, const uint8_t* data, uint32_t length);
-    void SendHeader(uint8_t label, uint32_t length);
-    void SendData(const uint8_t* data, uint32_t length);
-    void SendFooter();
+    void SendHeader(uint8_t label, uint32_t length)
+    {
+        usb_send_byte(static_cast<uint8_t>(widget::Amf::kStartCode));
+        usb_send_byte(label);
+        usb_send_byte(static_cast<uint8_t>(length & 0x00FF));
+        usb_send_byte(static_cast<uint8_t>(length >> 8));
+    }
+
+    void SendMessage(uint8_t label, const uint8_t* data, uint32_t length)
+    {
+        SendHeader(label, length);
+        SendData(data, length);
+        SendFooter();
+    }
+
+    void SendData(const uint8_t* data, uint32_t length)
+    {
+        for (uint32_t i = 0; i < length; i++)
+        {
+            usb_send_byte(data[i]);
+        }
+    }
+
+    void SendFooter() { usb_send_byte(static_cast<uint8_t>(widget::Amf::kEndCode)); }
     //
     void UsbSendPackage(const uint8_t* data, uint16_t start, uint16_t data_length);
     bool UsbCanSend();
 
    private:
-#define WIDGET_DATA_BUFFER_SIZE 600
-    uint8_t m_aData[WIDGET_DATA_BUFFER_SIZE]; ///< Message between widget and the USB host
-    widget::Mode m_tMode{widget::Mode::DMX_RDM};
-    widget::SendState m_tReceiveDmxOnChange{widget::SendState::ALWAYS};
-    uint32_t m_nReceivedDmxPacketPeriodMillis{0};
-    uint32_t m_nReceivedDmxPacketStartMillis{0};
-    uint32_t m_nSendRdmPacketStartMillis{0};
-    bool m_isRdmDiscoveryRunning{false};
-    uint32_t m_nReceivedDmxPacketCount{0};
-    TRdmStatistics m_RdmStatistics;
+    static constexpr uint32_t kWidgetDataBufferSize = 600;
+    uint8_t data_[kWidgetDataBufferSize]; ///< Message between widget and the USB host
+    widget::Mode mode_{widget::Mode::kDmxRdm};
+    widget::SendState send_state_{widget::SendState::kAlways};
+    uint32_t received_dmx_packet_period_millis_{0};
+    uint32_t received_dmx_packet_start_millis_{0};
+    uint32_t send_rdm_packet_start_millis_{0};
+    bool is_rdm_discovery_running_{false};
+    uint32_t received_dmx_packet_count_{0};
+    TRdmStatistics rdm_statistics_;
 
     inline static Widget* s_this;
 };

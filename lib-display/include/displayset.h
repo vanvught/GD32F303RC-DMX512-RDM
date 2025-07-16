@@ -43,7 +43,7 @@ class DisplaySet
 
     uint32_t GetRows() const { return rows_; }
 
-    void ClearEndOfLine() { m_bClearEndOfLine = true; }
+    void ClearEndOfLine() { clear_end_of_line_ = true; }
 
     virtual bool Start() = 0;
 
@@ -67,5 +67,5 @@ class DisplaySet
    protected:
     uint32_t cols_;
     uint32_t rows_;
-    bool m_bClearEndOfLine{false};
+    bool clear_end_of_line_{false};
 };

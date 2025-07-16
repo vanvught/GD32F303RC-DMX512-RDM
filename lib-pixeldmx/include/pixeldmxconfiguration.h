@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file pixeldmxconfiguration.h
  *
  */
-/* Copyright (C) 2021-2024 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2021-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,9 +30,6 @@
  * the C++ runtime ensures that the instance is initialized only once.
  */
 
-#ifndef PIXELDMXCONFIGURATION_H_
-#define PIXELDMXCONFIGURATION_H_
-
 #include <cstdint>
 #include <cstdio>
 #include <algorithm>
@@ -43,8 +41,8 @@
 
 namespace pixeldmxconfiguration {
 struct PortInfo {
-	uint16_t nBeginIndexPort[4];
-	uint16_t nProtocolPortIndexLast;
+	uint16_t begin_index_port[4];
+	uint16_t protocol_port_index_last;
 };
 }  // namespace pixeldmxconfiguration
 
@@ -64,36 +62,36 @@ public:
 	PixelDmxConfiguration(const PixelDmxConfiguration&) = delete;
 	PixelDmxConfiguration& operator=(const PixelDmxConfiguration&) = delete;
 
-	void SetOutputPorts(const uint16_t nOutputPorts) {
-		m_nOutputPorts = nOutputPorts;
+	void SetOutputPorts(uint16_t output_ports) {
+		output_ports_ = output_ports;
 	}
 
 	uint32_t GetOutputPorts() const {
-		return m_nOutputPorts;
+		return output_ports_;
 	}
 
-	void SetGroupingCount(const uint16_t nGroupingCount) {
-		m_nGroupingCount = nGroupingCount;
+	void SetGroupingCount(uint16_t grouping_count) {
+		grouping_count_ = grouping_count;
 	}
 
 	uint32_t GetGroupingCount() const {
-		return m_nGroupingCount;
+		return grouping_count_;
 	}
 
 	uint32_t GetGroups() const {
-		return m_nGroups;
+		return groups_;
 	}
 
 	uint32_t GetUniverses() const {
-		return m_nUniverses;
+		return universes_;
 	}
 
 	pixeldmxconfiguration::PortInfo& GetPortInfo() {
-		return m_portInfo;
+		return port_info_;
 	}
 
-	void SetDmxStartAddress(const uint16_t nDmxStartAddress) {
-		dmx_start_address_ = nDmxStartAddress;
+	void SetDmxStartAddress(uint16_t dmx_start_address) {
+		dmx_start_address_ = dmx_start_address;
 	}
 
 	uint32_t GetDmxStartAddress() const {
@@ -101,10 +99,10 @@ public:
 	}
 
 	uint32_t GetDmxFootprint() const {
-		return m_nDmxFootprint;
+		return dmx_footprint_;
 	}
 
-	void Validate(const uint32_t nPortsMax) {
+	void Validate(uint32_t ports_max) {
 		DEBUG_ENTRY
 
 		PixelConfiguration::Validate();
@@ -117,34 +115,34 @@ public:
 			PixelConfiguration::Validate();
 		}
 
-		m_portInfo.nBeginIndexPort[0] = 0;
+		port_info_.begin_index_port[0] = 0;
 
 		if (PixelConfiguration::GetType() == pixel::Type::SK6812W) {
-			m_portInfo.nBeginIndexPort[1] = 128;
-			m_portInfo.nBeginIndexPort[2] = 256;
-			m_portInfo.nBeginIndexPort[3] = 384;
+			port_info_.begin_index_port[1] = 128;
+			port_info_.begin_index_port[2] = 256;
+			port_info_.begin_index_port[3] = 384;
 		} else {
-			m_portInfo.nBeginIndexPort[1] = 170;
-			m_portInfo.nBeginIndexPort[2] = 340;
-			m_portInfo.nBeginIndexPort[3] = 510;
+			port_info_.begin_index_port[1] = 170;
+			port_info_.begin_index_port[2] = 340;
+			port_info_.begin_index_port[3] = 510;
 		}
 
-		if ((m_nGroupingCount == 0) || (m_nGroupingCount > PixelConfiguration::GetCount())) {
-			m_nGroupingCount = PixelConfiguration::GetCount();
+		if ((grouping_count_ == 0) || (grouping_count_ > PixelConfiguration::GetCount())) {
+			grouping_count_ = PixelConfiguration::GetCount();
 		}
 
-		m_nGroups = PixelConfiguration::GetCount() / m_nGroupingCount;
-		m_nOutputPorts = std::min(nPortsMax, m_nOutputPorts);
-		m_nUniverses = (1U + (m_nGroups  / (1U + m_portInfo.nBeginIndexPort[1])));
-		m_nDmxFootprint = PixelConfiguration::GetLedsPerPixel() * m_nGroups;
+		groups_ = PixelConfiguration::GetCount() / grouping_count_;
+		output_ports_ = std::min(ports_max, output_ports_);
+		universes_ = (1U + (groups_  / (1U + port_info_.begin_index_port[1])));
+		dmx_footprint_ = PixelConfiguration::GetLedsPerPixel() * groups_;
 
-		if (nPortsMax == 1) {
-			m_portInfo.nProtocolPortIndexLast = static_cast<uint16_t>(m_nGroups / (1U + m_portInfo.nBeginIndexPort[1]));
+		if (ports_max == 1) {
+			port_info_.protocol_port_index_last = static_cast<uint16_t>(groups_ / (1U + port_info_.begin_index_port[1]));
 		} else {
 #if defined (NODE_DDP_DISPLAY)
-			m_portInfo.nProtocolPortIndexLast = static_cast<uint16_t>(((m_nOutputPorts - 1U) * 4U) + m_nUniverses - 1U);
+			port_info_.protocol_port_index_last = static_cast<uint16_t>(((output_ports_ - 1U) * 4U) + universes_ - 1U);
 #else
-			m_portInfo.nProtocolPortIndexLast = static_cast<uint16_t>((m_nOutputPorts * m_nUniverses)  - 1U);
+			port_info_.protocol_port_index_last = static_cast<uint16_t>((output_ports_ * universes_)  - 1U);
 #endif
 		}
 
@@ -154,32 +152,30 @@ public:
 	void Print() {
 		PixelConfiguration::Print();
 		puts("Pixel DMX configuration");
-		printf(" Outputs        : %u\n", m_nOutputPorts);
-		printf(" Grouping count : %u [Groups : %u]\n", m_nGroupingCount, m_nGroups);
-		printf(" Universes      : %u\n", m_nUniverses);
-		printf(" DmxFootprint   : %u\n", m_nDmxFootprint);
+		printf(" Outputs        : %u\n", output_ports_);
+		printf(" Grouping count : %u [Groups : %u]\n", grouping_count_, groups_);
+		printf(" Universes      : %u\n", universes_);
+		printf(" DmxFootprint   : %u\n", dmx_footprint_);
 
 #ifndef NDEBUG
-		const auto& beginIndexPort = m_portInfo.nBeginIndexPort;
-		printf(" %u:%u:%u:%u -> %u\n", beginIndexPort[0], beginIndexPort[1], beginIndexPort[2], beginIndexPort[3], m_portInfo.nProtocolPortIndexLast);
+		const auto& begin_index_port = port_info_.begin_index_port;
+		printf(" %u:%u:%u:%u -> %u\n", begin_index_port[0], begin_index_port[1], begin_index_port[2], begin_index_port[3], port_info_.protocol_port_index_last);
 #endif
 	}
 
 	static PixelDmxConfiguration& Get() {
-		assert(s_this != nullptr); // Ensure that s_this is valid
+		assert(s_this != nullptr);
 		return *s_this;
 	}
 
 private:
-	uint32_t m_nOutputPorts { 1 };
-	uint32_t m_nGroupingCount { 1 };
-	uint32_t m_nGroups { pixel::defaults::COUNT };
-	uint32_t m_nUniverses { 0 };
+	uint32_t output_ports_ { 1 };
+	uint32_t grouping_count_ { 1 };
+	uint32_t groups_ { pixel::defaults::COUNT };
+	uint32_t universes_ { 0 };
 	uint32_t dmx_start_address_ { 1 };
-	uint32_t m_nDmxFootprint { 0 };
-	pixeldmxconfiguration::PortInfo m_portInfo;
+	uint32_t dmx_footprint_ { 0 };
+	pixeldmxconfiguration::PortInfo port_info_;
 
 	static inline PixelDmxConfiguration *s_this;
 };
-
-#endif /* PIXELDMXCONFIGURATION_H_ */

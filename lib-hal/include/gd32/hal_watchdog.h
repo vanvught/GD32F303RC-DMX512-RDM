@@ -28,13 +28,15 @@
 
 namespace hal
 {
-extern bool g_bWatchdog;
-
+namespace global
+{
+extern bool watchdog;
+}
 inline void WatchdogInit()
 {
-    g_bWatchdog = (SUCCESS == fwdgt_config(0xFFFF, FWDGT_PSC_DIV16));
+    global::watchdog = (SUCCESS == fwdgt_config(0xFFFF, FWDGT_PSC_DIV16));
 
-    if (g_bWatchdog)
+    if (global::watchdog)
     {
         fwdgt_enable();
     }
@@ -47,12 +49,12 @@ inline void WatchdogFeed()
 
 inline void WatchdogStop()
 {
-    g_bWatchdog = false;
+    global::watchdog = false;
     fwdgt_config(0xFFFF, FWDGT_PSC_DIV64);
 }
 
 inline bool Watchdog()
 {
-    return g_bWatchdog;
+    return global::watchdog;
 }
 } // namespace hal

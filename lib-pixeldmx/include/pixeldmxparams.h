@@ -91,7 +91,7 @@ class PixelDmxParams
    private:
     void Dump();
     void CallbackFunction(const char* line);
-    bool IsMaskSet(uint32_t mask) const { return (store_dmxled_.set_list & mask) == mask; }
+    bool IsMaskSet(uint32_t mask) const { return (store_dmxled_.flags & mask) == mask; }
 
    private:
     common::store::DmxLed store_dmxled_;

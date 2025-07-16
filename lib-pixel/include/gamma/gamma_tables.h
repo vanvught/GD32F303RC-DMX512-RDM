@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file gamma_tables.h
  *
  */
-/* Copyright (C) 2022 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2022-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +24,6 @@
  * THE SOFTWARE.
  */
 
-#ifndef GAMMA_TABLES_H_
-#define GAMMA_TABLES_H_
-
 #include <cstdint>
 
 #include "gamma10offset0.h"
@@ -39,56 +37,61 @@
 
 #include "pixeltype.h"
 
-namespace gamma {
-static constexpr auto MIN = 20U; ///< 2.0
-static constexpr auto MAX = 25U; ///< 2.5
+namespace gamma
+{
+inline constexpr auto kMin = 20U; ///< 2.0
+inline constexpr auto kMax = 25U; ///< 2.5
 
-inline static const uint8_t *get_table_default(const pixel::Type type) {
-	if (type == pixel::Type::WS2801) {
-		return gamma25_0;
-	}
+inline static const uint8_t* GetTableDefault(pixel::Type type)
+{
+    if (type == pixel::Type::WS2801)
+    {
+        return gamma25_0;
+    }
 
-	if ((type == pixel::Type::APA102) || (type == pixel::Type::SK9822)) {
-		return gamma25_5;
-	}
+    if ((type == pixel::Type::APA102) || (type == pixel::Type::SK9822))
+    {
+        return gamma25_5;
+    }
 
-	if (type == pixel::Type::P9813) {
-		return gamma10_0;
-	}
+    if (type == pixel::Type::P9813)
+    {
+        return gamma10_0;
+    }
 
-	return gamma22_0;
+    return gamma22_0;
 }
 
-inline static const uint8_t *get_table(const uint32_t nValue) {
-	if ((nValue < MIN) || (nValue > MAX)) {
-		return gamma10_0;
-	}
+inline static const uint8_t* GetTable(uint32_t value)
+{
+    if ((value < kMin) || (value > kMax))
+    {
+        return gamma10_0;
+    }
 
-	switch (nValue) {
-	case 20:
-		return gamma20_0;
-		break;
-	case 21:
-		return gamma21_0;
-		break;
-	case 22:
-		return gamma22_0;
-		break;
-	case 23:
-		return gamma23_0;
-		break;
-	case 24:
-		return gamma24_0;
-		break;
-	case 25:
-		return gamma25_0;
-		break;
-	default:
-		return gamma10_0;
-		break;
-	}
+    switch (value)
+    {
+        case 20:
+            return gamma20_0;
+            break;
+        case 21:
+            return gamma21_0;
+            break;
+        case 22:
+            return gamma22_0;
+            break;
+        case 23:
+            return gamma23_0;
+            break;
+        case 24:
+            return gamma24_0;
+            break;
+        case 25:
+            return gamma25_0;
+            break;
+        default:
+            return gamma10_0;
+            break;
+    }
 }
-
-}  // namespace gamma
-
-#endif /* GAMMA_TABLES_H_ */
+} // namespace gamma

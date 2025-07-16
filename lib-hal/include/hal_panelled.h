@@ -1,9 +1,9 @@
 #pragma once
 /**
- * @file micros.h
+ * @file panel_led.h
  *
  */
-/* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2021-2024 by Arjan van Vught mailto:info@orangepi-dmx.nl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,44 @@
  * THE SOFTWARE.
  */
 
+/**
+ * Must implement the following:
+ *
+ * namespace hal {
+ * namespace panelled {
+ * inline constexpr uint32_t ACTIVITY = ;
+ * inline constexpr uint32_t ARTNET = ;
+ * inline constexpr uint32_t DDP = ;
+ * inline constexpr uint32_t SACN = ;
+ * inline constexpr uint32_t LTC_IN = ;
+ * inline constexpr uint32_t LTC_OUT = ;
+ * inline constexpr uint32_t MIDI_IN = ;
+ * inline constexpr uint32_t MIDI_OUT = ;
+ * inline constexpr uint32_t OSC_IN = ;
+ * inline constexpr uint32_t OSC_OUT = ;
+ * inline constexpr uint32_t TCNET = ;
+ *  DMX
+ * inline constexpr uint32_t PORT_A_RX = ;
+ * inline constexpr uint32_t PORT_A_TX = ;
+ *
+ * Assumption we can use (PORT_A_TX << nPortIndex)
+ *
+ * }  // namespace panelled
+ *
+ * void PanelLedOn(uint32_t)
+ * void PanelLedOff(uint32_t)
+ *
+ * }  // namespace hal
+ */
+
 #if defined(__linux__) || defined(__APPLE__)
-#include "hal/linux/micros.h"
-#elif defined(H3)
-#include "hal/h3/micros.h"
-#elif defined(GD32)
-#include "hal/gd32/micros.h"
+#include "linux/hal_panelled.h"
 #else
-#include "hal/rpi/micros.h"
+#if defined(H3)
+#include "h3/hal_panelled.h"
+#elif defined(GD32)
+#include "gd32/hal_panelled.h"
+#else
+#include "rpi/hal_panelled.h"
+#endif
 #endif

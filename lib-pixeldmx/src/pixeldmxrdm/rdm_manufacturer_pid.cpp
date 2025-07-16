@@ -157,7 +157,7 @@ bool HandleManufactureerPidGet(uint16_t pid, [[maybe_unused]] const Manufacturer
 
 	switch (pid) {
 	case rdm::E120_MANUFACTURER_PIXEL_TYPE::kCode: {
-		const auto *string = ::pixel::pixel_get_type(pixel_configuration.GetType());
+		const auto *string = ::pixel::GetType(pixel_configuration.GetType());
 		out->nPdl = static_cast<uint8_t>(strlen(string));
 		memcpy(out->pParamData, string, out->nPdl);
 		return true;
@@ -177,7 +177,7 @@ bool HandleManufactureerPidGet(uint16_t pid, [[maybe_unused]] const Manufacturer
 		return true;
 	}
 	case rdm::E120_MANUFACTURER_PIXEL_MAP::kCode: {
-        const auto* string = ::pixel::pixel_get_map(pixel_configuration.GetMap());
+        const auto* string = ::pixel::GetMap(pixel_configuration.GetMap());
         out->nPdl = static_cast<uint8_t>(strlen(string));
 		memcpy(out->pParamData, string, out->nPdl);
 		return true;
@@ -233,7 +233,7 @@ bool HandleManufactureerPidSet(const bool isBroadcast, uint16_t pid, const rdm::
 	}
 	case rdm::E120_MANUFACTURER_PIXEL_MAP::kCode: {
 		if (in->nPdl == 3) {
-			const auto map = ::pixel::pixel_get_map(reinterpret_cast<const char *>(in->pParamData));
+			const auto map = ::pixel::GetMap(reinterpret_cast<const char *>(in->pParamData));
 
 			if (map == pixel::Map::UNDEFINED) {
 				reason = E120_NR_DATA_OUT_OF_RANGE;

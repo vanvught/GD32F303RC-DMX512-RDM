@@ -31,15 +31,14 @@
 
 #include "widget.h"
 #include "widgetconfiguration.h"
+#if !defined(NO_HDMI_OUTPUT)
 #include "widgetmonitor.h"
-
+#endif
 #include "hal_millis.h"
-
 #include "dmx.h"
 #include "rdm.h"
 #include "rdmdevice.h"
 #include "rdm_e120.h"
-
 #include "usb.h"
 
 enum
@@ -82,8 +81,10 @@ Widget::Widget()
  */
 void Widget::GetParamsReply()
 {
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "GET_WIDGET_PARAMS_REPLY");
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::STATUS, nullptr);
+#if !defined(NO_HDMI_OUTPUT)	
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "GET_WIDGET_PARAMS_REPLY");
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
+#endif
 
     TWidgetConfiguration widget_configuration;
     WidgetConfiguration::Get(&widget_configuration);
@@ -100,19 +101,21 @@ void Widget::SetParams()
 {
     TWidgetConfiguration widget_configuration;
 
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "SET_WIDGET_PARAMS");
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::STATUS, nullptr);
+#if !defined(NO_HDMI_OUTPUT)
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "SET_WIDGET_PARAMS");
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
+#endif 
 
     SetPortDirection(0, dmx::PortDirection::kInput, false);
 
-    widget_configuration.nBreakTime = m_aData[2];
-    widget_configuration.nMabTime = m_aData[3];
-    widget_configuration.nRefreshRate = m_aData[4];
+    widget_configuration.break_time = data_[2];
+    widget_configuration.mab_time = data_[3];
+    widget_configuration.refresh_rate = data_[4];
     WidgetConfiguration::Store(&widget_configuration);
 
     SetPortDirection(0, dmx::PortDirection::kInput, true);
 
-    m_nReceivedDmxPacketStartMillis = hal::Millis();
+    received_dmx_packet_start_millis_ = hal::Millis();
 }
 
 /**
@@ -126,12 +129,12 @@ void Widget::SetParams()
  */
 void Widget::ReceivedDmxPacket()
 {
-    if (m_tMode == widget::Mode::RDM_SNIFFER)
+    if (mode_ == widget::Mode::kRdmSniffer)
     {
         return;
     }
 
-    if (m_isRdmDiscoveryRunning || (dmx::PortDirection::kInput != GetPortDirection(0)) || (widget::SendState::ON_DATA_CHANGE_ONLY == m_tReceiveDmxOnChange))
+    if (is_rdm_discovery_running_ || (dmx::PortDirection::kInput != GetPortDirection(0)) || (widget::SendState::kOnDataChangeOnly == send_state_))
     {
         return;
     }
@@ -145,20 +148,22 @@ void Widget::ReceivedDmxPacket()
 
     const auto kMillis = hal::Millis();
 
-    if (kMillis - m_nReceivedDmxPacketStartMillis < m_nReceivedDmxPacketPeriodMillis)
+    if (kMillis - received_dmx_packet_start_millis_ < received_dmx_packet_period_millis_)
     {
         return;
     }
 
-    m_nReceivedDmxPacketStartMillis = kMillis;
-    m_nReceivedDmxPacketCount++;
+    received_dmx_packet_start_millis_ = kMillis;
+    received_dmx_packet_count_++;
 
     const auto* dmx_statistics = reinterpret_cast<const struct Data*>(dmx_data_available);
     const auto kLength = dmx_statistics->Statistics.nSlotsInPacket + 1;
 
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::LABEL, "RECEIVED_DMX_PACKET");
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "Send DMX data to HOST, %d", kLength);
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::STATUS, nullptr);
+#if !defined(NO_HDMI_OUTPUT)
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kLabel, "RECEIVED_DMX_PACKET");
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "Send DMX data to HOST, %d", kLength);
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
+#endif 
 
     SendHeader(RECEIVED_DMX_PACKET, static_cast<uint16_t>(kLength + 1));
     usb_send_byte(0); // DMX Receive status
@@ -177,7 +182,7 @@ void Widget::ReceivedDmxPacket()
  */
 void Widget::ReceivedRdmPacket()
 {
-    if ((m_tMode == widget::Mode::DMX) || (m_tMode == widget::Mode::RDM_SNIFFER) || (m_tReceiveDmxOnChange == widget::SendState::ON_DATA_CHANGE_ONLY))
+    if ((mode_ == widget::Mode::kDmx) || (mode_ == widget::Mode::kRdmSniffer) || (send_state_ == widget::SendState::kOnDataChangeOnly))
     {
         return;
     }
@@ -197,8 +202,10 @@ void Widget::ReceivedRdmPacket()
         const auto kCommandClass = p->command_class;
         message_length = static_cast<uint8_t>(p->message_length + 2);
 
-        WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "Send RDM data to HOST, l:%d", message_length);
-        WidgetMonitor::Line(widgetmonitor::MonitorLine::STATUS, "RECEIVED_RDM_PACKET SC:0xCC");
+#if !defined(NO_HDMI_OUTPUT)
+        WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "Send RDM data to HOST, l:%d", message_length);
+        WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, "RECEIVED_RDM_PACKET SC:0xCC");
+#endif
 
         SendHeader(RECEIVED_DMX_PACKET, static_cast<uint32_t>(1 + message_length));
         usb_send_byte(0); // RDM Receive status
@@ -213,15 +220,17 @@ void Widget::ReceivedRdmPacket()
         }
         else
         {
-            m_nSendRdmPacketStartMillis = 0;
+            send_rdm_packet_start_millis_ = 0;
         }
     }
     else if (rdm_data[0] == 0xFE)
     {
         message_length = 24;
 
-        WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "Send RDM data to HOST, l:%d", message_length);
-        WidgetMonitor::Line(widgetmonitor::MonitorLine::STATUS, "RECEIVED_RDM_PACKET SC:0xFE");
+#if !defined(NO_HDMI_OUTPUT)
+        WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "Send RDM data to HOST, l:%d", message_length);
+        WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, "RECEIVED_RDM_PACKET SC:0xFE");
+#endif
 
         SendHeader(RECEIVED_DMX_PACKET, static_cast<uint32_t>(1 + message_length));
         usb_send_byte(0); // RDM Receive status
@@ -231,7 +240,9 @@ void Widget::ReceivedRdmPacket()
         RdmTimeOutMessage();
     }
 
-    WidgetMonitor::RdmData(widgetmonitor::MonitorLine::RDM_DATA, message_length, rdm_data, false);
+#if !defined(NO_HDMI_OUTPUT)
+    WidgetMonitor::RdmData(widgetmonitor::MonitorLine::kRdmData, message_length, rdm_data, false);
+#endif
 }
 
 /**
@@ -251,16 +262,18 @@ void Widget::ReceivedRdmPacket()
  */
 void Widget::SendDmxPacketRequestOutputOnly(uint16_t data_length)
 {
-    if (m_nSendRdmPacketStartMillis != 0)
+    if (send_rdm_packet_start_millis_ != 0)
     {
         return;
     }
 
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "OUTPUT_ONLY_SEND_DMX_PACKET_REQUEST");
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::STATUS, nullptr);
+#if !defined(NO_HDMI_OUTPUT)
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "OUTPUT_ONLY_SEND_DMX_PACKET_REQUEST");
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
+#endif
 
     Dmx::SetPortDirection(0, dmx::PortDirection::kOutput, false);
-    Dmx::SetSendData<dmx::SendStyle::kDirect>(0, m_aData, data_length);
+    Dmx::SetSendData<dmx::SendStyle::kDirect>(0, data_, data_length);
     Dmx::SetPortDirection(0, dmx::PortDirection::kOutput, true);
 }
 
@@ -275,18 +288,22 @@ void Widget::SendDmxPacketRequestOutputOnly(uint16_t data_length)
  */
 void Widget::SendRdmPacketRequest(uint16_t data_length)
 {
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "SEND_RDM_PACKET_REQUEST");
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::STATUS, nullptr);
+#if !defined(NO_HDMI_OUTPUT)
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "SEND_RDM_PACKET_REQUEST");
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
+#endif
 
-    const auto* data = reinterpret_cast<const struct TRdmMessage*>(m_aData);
+    const auto* data = reinterpret_cast<const struct TRdmMessage*>(data_);
 
-    m_isRdmDiscoveryRunning = (data->command_class == E120_DISCOVERY_COMMAND);
+    is_rdm_discovery_running_ = (data->command_class == E120_DISCOVERY_COMMAND);
 
-    Rdm::SendRaw(0, m_aData, data_length);
+    Rdm::SendRaw(0, data_, data_length);
 
-    m_nSendRdmPacketStartMillis = hal::Millis();
+    send_rdm_packet_start_millis_ = hal::Millis();
 
-    WidgetMonitor::RdmData(widgetmonitor::MonitorLine::RDM_DATA, data_length, m_aData, true);
+#if !defined(NO_HDMI_OUTPUT)
+    WidgetMonitor::RdmData(widgetmonitor::MonitorLine::kRdmData, data_length, data_, true);
+#endif    
 }
 
 /**
@@ -296,23 +313,23 @@ void Widget::SendRdmPacketRequest(uint16_t data_length)
  */
 void Widget::RdmTimeout()
 {
-    if (m_tMode == widget::Mode::RDM_SNIFFER)
+    if (mode_ == widget::Mode::kRdmSniffer)
     {
         return;
     }
 
-    if (m_nSendRdmPacketStartMillis == 0)
+    if (send_rdm_packet_start_millis_ == 0)
     {
         return;
     }
 
-    if (hal::Millis() - m_nSendRdmPacketStartMillis < 1000U)
+    if (hal::Millis() - send_rdm_packet_start_millis_ < 1000U)
     { // 1 second
         return;
     }
 
     RdmTimeOutMessage(); // Send message to host Label=12 RDM_TIMEOUT
-    m_nSendRdmPacketStartMillis = 0;
+    send_rdm_packet_start_millis_ = 0;
 }
 
 /**
@@ -331,16 +348,18 @@ void Widget::RdmTimeout()
  */
 void Widget::ReceiveDmxOnChange()
 {
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "RECEIVE_DMX_ON_CHANGE");
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::STATUS, nullptr);
+#if !defined(NO_HDMI_OUTPUT)
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "RECEIVE_DMX_ON_CHANGE");
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
+#endif
 
-    m_tReceiveDmxOnChange = static_cast<widget::SendState>(m_aData[0]);
+    send_state_ = static_cast<widget::SendState>(data_[0]);
 
     Dmx::SetPortDirection(0, dmx::PortDirection::kInput, false);
     Dmx::ClearData(0);
     Dmx::SetPortDirection(0, dmx::PortDirection::kInput, true);
 
-    m_nReceivedDmxPacketStartMillis = hal::Millis();
+    received_dmx_packet_start_millis_ = hal::Millis();
 }
 
 /**
@@ -353,22 +372,24 @@ void Widget::ReceiveDmxOnChange()
  */
 void Widget::ReceivedDmxChangeOfStatePacket()
 {
-    if (m_tMode == widget::Mode::RDM_SNIFFER)
+    if (mode_ == widget::Mode::kRdmSniffer)
     {
         return;
     }
 
-    if (m_isRdmDiscoveryRunning || (dmx::PortDirection::kInput != GetPortDirection(0)) || (widget::SendState::ALWAYS == m_tReceiveDmxOnChange))
+    if (is_rdm_discovery_running_ || (dmx::PortDirection::kInput != GetPortDirection(0)) || (widget::SendState::kAlways == send_state_))
     {
         return;
     }
 
     if (nullptr != Dmx::GetDmxChanged(0))
     {
-        WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "RECEIVED_DMX_COS_TYPE");
-        WidgetMonitor::Line(widgetmonitor::MonitorLine::STATUS, nullptr);
+#if !defined(NO_HDMI_OUTPUT)
+        WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "RECEIVED_DMX_COS_TYPE");
+        WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
         // TODO (a) widget_received_dmx_change_of_state_packet
-        WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "Sent changed DMX data to HOST");
+        WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "Sent changed DMX data to HOST");
+#endif
     }
 }
 
@@ -379,8 +400,10 @@ void Widget::ReceivedDmxChangeOfStatePacket()
  */
 void Widget::GetSnReply()
 {
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "GET_WIDGET_PARAMS_REPLY");
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::STATUS, nullptr);
+#if !defined(NO_HDMI_OUTPUT)
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "GET_WIDGET_PARAMS_REPLY");
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
+#endif
 
     Dmx::SetPortDirection(0, dmx::PortDirection::kInput, false);
 
@@ -388,7 +411,7 @@ void Widget::GetSnReply()
 
     Dmx::SetPortDirection(0, dmx::PortDirection::kInput, true);
 
-    m_nReceivedDmxPacketStartMillis = hal::Millis();
+    received_dmx_packet_start_millis_ = hal::Millis();
 }
 
 /**
@@ -400,15 +423,19 @@ void Widget::GetSnReply()
  */
 void Widget::SendRdmDiscoveryRequest(uint16_t data_length)
 {
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "SEND_RDM_DISCOVERY_REQUEST");
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::STATUS, nullptr);
+#if !defined(NO_HDMI_OUTPUT)
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "SEND_RDM_DISCOVERY_REQUEST");
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
+#endif
 
-    Rdm::SendRaw(0, m_aData, data_length);
+    Rdm::SendRaw(0, data_, data_length);
 
-    m_isRdmDiscoveryRunning = true;
-    m_nSendRdmPacketStartMillis = hal::Millis();
+    is_rdm_discovery_running_ = true;
+    send_rdm_packet_start_millis_ = hal::Millis();
 
-    WidgetMonitor::RdmData(widgetmonitor::MonitorLine::RDM_DATA, data_length, m_aData, true);
+#if !defined(NO_HDMI_OUTPUT)
+    WidgetMonitor::RdmData(widgetmonitor::MonitorLine::kRdmData, data_length, data_, true);
+#endif
 }
 
 /**
@@ -422,14 +449,16 @@ void Widget::RdmTimeOutMessage()
 {
     const auto kMessageLength = 0;
 
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "Send RDM data to HOST, l:%d", kMessageLength);
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::STATUS, "RDM_TIMEOUT");
+#if !defined(NO_HDMI_OUTPUT)
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "Send RDM data to HOST, l:%d", kMessageLength);
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, "RDM_TIMEOUT");
+#endif
 
     SendHeader(RDM_TIMEOUT, kMessageLength);
     SendFooter();
 
-    m_isRdmDiscoveryRunning = false;
-    m_nSendRdmPacketStartMillis = 0;
+    is_rdm_discovery_running_ = false;
+    send_rdm_packet_start_millis_ = 0;
 }
 
 /**
@@ -440,8 +469,10 @@ void Widget::RdmTimeOutMessage()
  */
 void Widget::GetManufacturerReply()
 {
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "MANUFACTURER_LABEL");
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::STATUS, nullptr);
+#if !defined(NO_HDMI_OUTPUT)
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "MANUFACTURER_LABEL");
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
+#endif
 
     TRDMDeviceInfoData manufacturer_name;
     GetManufacturerName(&manufacturer_name);
@@ -458,7 +489,7 @@ void Widget::GetManufacturerReply()
 
     Dmx::SetPortDirection(0, dmx::PortDirection::kInput, true);
 
-    m_nReceivedDmxPacketStartMillis = hal::Millis();
+    received_dmx_packet_start_millis_ = hal::Millis();
 }
 
 /**
@@ -469,8 +500,10 @@ void Widget::GetManufacturerReply()
  */
 void Widget::GetNameReply()
 {
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "GET_WIDGET_NAME_LABEL");
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::STATUS, nullptr);
+#if !defined(NO_HDMI_OUTPUT)	
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "GET_WIDGET_NAME_LABEL");
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
+#endif
 
     TRDMDeviceInfoData widget_label;
     GetLabel(&widget_label);
@@ -480,14 +513,14 @@ void Widget::GetNameReply()
 
     Dmx::SetPortDirection(0, dmx::PortDirection::kInput, false);
 
-    SendHeader(GET_WIDGET_NAME_LABEL, static_cast<uint32_t>(widget_type_id.nLength + widget_label.length));
-    SendData(widget_type_id.pData, widget_type_id.nLength);
+    SendHeader(GET_WIDGET_NAME_LABEL, static_cast<uint32_t>(widget_type_id.length + widget_label.length));
+    SendData(widget_type_id.data, widget_type_id.length);
     SendData(reinterpret_cast<uint8_t*>(widget_label.data), widget_label.length);
     SendFooter();
 
     Dmx::SetPortDirection(0, dmx::PortDirection::kInput, true);
 
-    m_nReceivedDmxPacketStartMillis = hal::Millis();
+    received_dmx_packet_start_millis_ = hal::Millis();
 }
 
 /**
@@ -502,7 +535,7 @@ void Widget::ReceiveDataFromHost()
     {
         const auto kByte = usb_read_byte();
 
-        if (static_cast<uint8_t>(widget::Amf::START_CODE) == kByte)
+        if (static_cast<uint8_t>(widget::Amf::kStartCode) == kByte)
         {
             const auto kLabel = usb_read_byte();
             const auto kLsb = usb_read_byte();
@@ -513,12 +546,14 @@ void Widget::ReceiveDataFromHost()
 
             for (i = 0; i < kDataLength; i++)
             {
-                m_aData[i] = usb_read_byte();
+                data_[i] = usb_read_byte();
             }
 
-            while ((static_cast<uint8_t>(widget::Amf::END_CODE) != usb_read_byte()) && (i++ < (sizeof(m_aData) / sizeof(m_aData[0]))));
+            while ((static_cast<uint8_t>(widget::Amf::kEndCode) != usb_read_byte()) && (i++ < (sizeof(data_) / sizeof(data_[0]))));
 
-            WidgetMonitor::Line(widgetmonitor::MonitorLine::LABEL, "L:%d:%d(%d)", kLabel, kDataLength, i);
+#if !defined(NO_HDMI_OUTPUT)
+            WidgetMonitor::Line(widgetmonitor::MonitorLine::kLabel, "L:%d:%d(%d)", kLabel, kDataLength, i);
+#endif
 
             switch (kLabel)
             {

@@ -28,59 +28,60 @@
 
 #include "rdmqueuedmessage.h"
 #include "rdmconst.h"
+#include "e120.h"
 #include "rdm_e120.h"
 
 RDMQueuedMessage::RDMQueuedMessage()
 {
-    m_pQueue = new TRdmQueuedMessage[RDM_MESSAGE_COUNT_MAX];
-    assert(m_pQueue != nullptr);
+    queued_message_ = new TRdmQueuedMessage[RDM_MESSAGE_COUNT_MAX];
+    assert(queued_message_ != nullptr);
 }
 
 RDMQueuedMessage::~RDMQueuedMessage()
 {
-    assert(m_pQueue == nullptr);
-    delete[] m_pQueue;
+    assert(queued_message_ == nullptr);
+    delete[] queued_message_;
 }
 
 void RDMQueuedMessage::Copy(struct TRdmMessage* rdm_message, uint32_t index)
 {
     assert(index < RDM_MESSAGE_COUNT_MAX);
 
-    rdm_message->command_class = m_pQueue[index].command_class;
-    rdm_message->param_id[0] = m_pQueue[index].param_id[0];
-    rdm_message->param_id[1] = m_pQueue[index].param_id[1];
-    rdm_message->param_data_length = m_pQueue[index].param_data_length;
+    rdm_message->command_class = queued_message_[index].command_class;
+    rdm_message->param_id[0] = queued_message_[index].param_id[0];
+    rdm_message->param_id[1] = queued_message_[index].param_id[1];
+    rdm_message->param_data_length = queued_message_[index].param_data_length;
 
     for (uint32_t i = 0; i < rdm_message->param_data_length; i++)
     {
-        rdm_message->param_data[i] = m_pQueue[index].param_data[i];
+        rdm_message->param_data[i] = queued_message_[index].param_data[i];
     }
 }
 
 uint8_t RDMQueuedMessage::GetMessageCount() const
 {
-    return m_nMessageCount;
+    return message_count_;
 }
 
 void RDMQueuedMessage::Handler(uint8_t* rdm_data)
 {
     auto rdm_response = reinterpret_cast<struct TRdmMessage*>(rdm_data);
 
-    if (m_IsNeverQueued)
+    if (is_never_queued_)
     {
         rdm_response->slot16.response_type = E120_STATUS_MESSAGES;
         rdm_response->param_data_length = 0;
     }
     else if (rdm_response->param_data[0] == E120_STATUS_GET_LAST_MESSAGE)
     {
-        Copy(rdm_response, m_nMessageCount);
+        Copy(rdm_response, message_count_);
     }
     else
     {
-        if (m_nMessageCount != 0)
+        if (message_count_ != 0)
         {
-            m_nMessageCount--;
-            Copy(rdm_response, m_nMessageCount);
+            message_count_--;
+            Copy(rdm_response, message_count_);
         }
         else
         {
@@ -92,21 +93,21 @@ void RDMQueuedMessage::Handler(uint8_t* rdm_data)
 
 bool RDMQueuedMessage::Add(const struct TRdmQueuedMessage* queued_message)
 {
-    m_IsNeverQueued = false;
+    is_never_queued_ = false;
 
-    if (m_nMessageCount != RDM_MESSAGE_COUNT_MAX)
+    if (message_count_ != RDM_MESSAGE_COUNT_MAX)
     {
-        m_pQueue[m_nMessageCount].command_class = queued_message->command_class;
-        m_pQueue[m_nMessageCount].param_id[0] = queued_message->param_id[0];
-        m_pQueue[m_nMessageCount].param_id[1] = queued_message->param_id[1];
-        m_pQueue[m_nMessageCount].param_data_length = queued_message->param_data_length;
+        queued_message_[message_count_].command_class = queued_message->command_class;
+        queued_message_[message_count_].param_id[0] = queued_message->param_id[0];
+        queued_message_[message_count_].param_id[1] = queued_message->param_id[1];
+        queued_message_[message_count_].param_data_length = queued_message->param_data_length;
 
         for (uint32_t i = 0; i < queued_message->param_data_length; i++)
         {
-            m_pQueue[m_nMessageCount].param_data[i] = queued_message->param_data[i];
+            queued_message_[message_count_].param_data[i] = queued_message->param_data[i];
         }
 
-        m_nMessageCount++;
+        message_count_++;
 
         return true;
     }

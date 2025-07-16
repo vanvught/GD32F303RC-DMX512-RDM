@@ -208,7 +208,7 @@ class ConfigStore : StoreDevice
     void SetFlagOscClient(uint32_t flag) { SetFlagInternal(GetStore()->osc_client, &common::store::OscClient::set_list, flag); }
     void SetFlagOscServer(uint32_t flag) { SetFlagInternal(GetStore()->osc_server, &common::store::OscServer::set_list, flag); }
     void SetFlagDmxSend(uint32_t flag) { SetFlagInternal(GetStore()->dmx_send, &common::store::DmxSend::flags, flag); }
-    void SetFlagDmxLed(uint32_t flag) { SetFlagInternal(GetStore()->dmx_led, &common::store::DmxLed::set_list, flag); }
+    void SetFlagDmxLed(uint32_t flag) { SetFlagInternal(GetStore()->dmx_led, &common::store::DmxLed::flags, flag); }
     void SetFlagDmxPwm(uint32_t flag) { SetFlagInternal(GetStore()->dmx_pwm, &common::store::DmxPwm::set_list, flag); }
     void SetFlagDmxSerial(uint32_t flag) { SetFlagInternal(GetStore()->dmx_serial, &common::store::DmxSerial::set_list, flag); }
     void SetFlagDmxMonitor(uint32_t flag) { SetFlagInternal(GetStore()->dmx_monitor, &common::store::DmxMonitor::set_list, flag); }
@@ -229,7 +229,7 @@ class ConfigStore : StoreDevice
     void ClearFlagOscClient(uint32_t flag) { ClearFlagInternal(GetStore()->osc_client, &common::store::OscClient::set_list, flag); }
     void ClearFlagOscServer(uint32_t flag) { ClearFlagInternal(GetStore()->osc_server, &common::store::OscServer::set_list, flag); }
     void ClearFlagDmxSend(uint32_t flag) { ClearFlagInternal(GetStore()->dmx_send, &common::store::DmxSend::flags, flag); }
-    void ClearFlagDmxLed(uint32_t flag) { ClearFlagInternal(GetStore()->dmx_led, &common::store::DmxLed::set_list, flag); }
+    void ClearFlagDmxLed(uint32_t flag) { ClearFlagInternal(GetStore()->dmx_led, &common::store::DmxLed::flags, flag); }
     void ClearFlagDmxPwm(uint32_t flag) { ClearFlagInternal(GetStore()->dmx_pwm, &common::store::DmxPwm::set_list, flag); }
     void ClearFlagDmxSerial(uint32_t flag) { ClearFlagInternal(GetStore()->dmx_serial, &common::store::DmxSerial::set_list, flag); }
     void ClearFlagDmxMonitor(uint32_t flag) { ClearFlagInternal(GetStore()->dmx_monitor, &common::store::DmxMonitor::set_list, flag); }
@@ -250,7 +250,7 @@ class ConfigStore : StoreDevice
     bool IsFlagSetOscClient(uint32_t flag) const { return IsFlagSetInternal(GetStore()->osc_client, &common::store::OscClient::set_list, flag); }
     bool IsFlagSetOscServer(uint32_t flag) const { return IsFlagSetInternal(GetStore()->osc_server, &common::store::OscServer::set_list, flag); }
     bool IsFlagSetDmxSend(uint32_t flag) const { return IsFlagSetInternal(GetStore()->dmx_send, &common::store::DmxSend::flags, flag); }
-    bool IsFlagSetDmxLed(uint32_t flag) const { return IsFlagSetInternal(GetStore()->dmx_led, &common::store::DmxLed::set_list, flag); }
+    bool IsFlagSetDmxLed(uint32_t flag) const { return IsFlagSetInternal(GetStore()->dmx_led, &common::store::DmxLed::flags, flag); }
     bool IsFlagSetDmxPwm(uint32_t flag) const { return IsFlagSetInternal(GetStore()->dmx_pwm, &common::store::DmxPwm::set_list, flag); }
     bool IsFlagSetDmxSerial(uint32_t flag) const { return IsFlagSetInternal(GetStore()->dmx_serial, &common::store::DmxSerial::set_list, flag); }
     bool IsFlagSetDmxMonitor(uint32_t flag) const { return IsFlagSetInternal(GetStore()->dmx_monitor, &common::store::DmxMonitor::set_list, flag); }
@@ -481,7 +481,7 @@ class ConfigStore : StoreDevice
 
     static void Timer([[maybe_unused]] TimerHandle_t timer_handle)
     {
-        DEBUG_ENTRY
+//        DEBUG_ENTRY
 
         if (!Instance().Commit())
         {
@@ -491,7 +491,7 @@ class ConfigStore : StoreDevice
             return;
         }
 
-        DEBUG_EXIT
+//        DEBUG_EXIT
     }
 
     void TimerStart()
@@ -526,7 +526,7 @@ class ConfigStore : StoreDevice
 
     bool Flash()
     {
-        DEBUG_PUTS(kStateNames[static_cast<unsigned int>(s_state)]);
+//        DEBUG_PUTS(kStateNames[static_cast<unsigned int>(s_state)]);
 
         if (__builtin_expect((s_state == State::kIdle), 1))
         {
@@ -559,10 +559,11 @@ class ConfigStore : StoreDevice
                 break;
             case State::kErased:
                 s_state = State::kWriting;
+                SoftwareTimerChange(s_timer_id, 0);
                 return true;
                 break;
             case State::kWriting:
-            {
+            {  
                 storedevice::Result result;
                 if (StoreDevice::Write(s_start_address, sizeof(ConfigurationStore), reinterpret_cast<uint8_t*>(&s_store), result))
                 {

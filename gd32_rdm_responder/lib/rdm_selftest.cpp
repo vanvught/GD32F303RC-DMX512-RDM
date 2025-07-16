@@ -47,7 +47,7 @@ bool Set(uint8_t nSelfTest) {
 		return false;
 	}
 
-	if (static_cast<pixelpatterns::Pattern>(nSelfTest) != pixelpatterns::Pattern::NONE) {
+	if (static_cast<pixelpatterns::Pattern>(nSelfTest) != pixelpatterns::Pattern::kNone) {
 		RDMResponder::Get()->DmxDisableOutput(true);
 		Display::Get()->ClearLine(6);
 		Display::Get()->Printf(6, "%s:%u", PixelPatterns::GetName(static_cast<pixelpatterns::Pattern>(nSelfTest)), nSelfTest);

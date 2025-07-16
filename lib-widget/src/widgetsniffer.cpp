@@ -25,15 +25,14 @@
 #include <cstdint>
 
 #include "widget.h"
-#include "widgetmonitor.h"
-
 #include "hal_micros.h"
-
 #include "dmx.h"
 #include "rdm.h"
 #include "rdm_e120.h"
-
 #include "usb.h"
+#if !defined(NO_HDMI_OUTPUT)
+#include "widgetmonitor.h"
+#endif
 
 #define SNIFFER_PACKET 0x81     ///< Label
 #define SNIFFER_PACKET_SIZE 200 ///< Packet size
@@ -88,7 +87,9 @@ bool Widget::UsbCanSend()
 
     if (!usb_can_write())
     {
-        WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "!Failed! Cannot send to host");
+#if !defined(NO_HDMI_OUTPUT)
+        WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "!Failed! Cannot send to host");
+#endif
         return false;
     }
 
@@ -100,7 +101,7 @@ bool Widget::UsbCanSend()
  */
 void Widget::SnifferDmx()
 {
-    if ((GetMode() != widget::Mode::RDM_SNIFFER) || !UsbCanSend())
+    if ((GetMode() != widget::Mode::kRdmSniffer) || !UsbCanSend())
     {
         return;
     }
@@ -120,7 +121,9 @@ void Widget::SnifferDmx()
         return;
     }
 
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "Send DMX data to HOST -> %d", kDataLength);
+#if !defined(NO_HDMI_OUTPUT)
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "Send DMX data to HOST -> %d", kDataLength);
+#endif
     UsbSendPackage(dmx_data_changed, 0, static_cast<uint16_t>(kDataLength));
 }
 
@@ -129,7 +132,7 @@ void Widget::SnifferDmx()
  */
 void Widget::SnifferRdm()
 {
-    if ((GetMode() != widget::Mode::RDM_SNIFFER) || !UsbCanSend())
+    if ((GetMode() != widget::Mode::kRdmSniffer) || !UsbCanSend())
     {
         return;
     }
@@ -150,16 +153,16 @@ void Widget::SnifferRdm()
         switch (p->command_class)
         {
             case E120_DISCOVERY_COMMAND:
-                m_RdmStatistics.nDiscoveryPackets++;
+                rdm_statistics_.discovery_packets++;
                 break;
             case E120_DISCOVERY_COMMAND_RESPONSE:
-                m_RdmStatistics.nDiscoveryResponsePackets++;
+                rdm_statistics_.discovery_response_packets++;
                 break;
             case E120_GET_COMMAND:
-                m_RdmStatistics.nGetRequests++;
+                rdm_statistics_.get_requests++;
                 break;
             case E120_SET_COMMAND:
-                m_RdmStatistics.nSetRequests++;
+                rdm_statistics_.set_requests++;
                 break;
             default:
                 break;
@@ -167,7 +170,7 @@ void Widget::SnifferRdm()
     }
     else if (rdm_data[0] == 0xFE)
     {
-        m_RdmStatistics.nDiscoveryResponsePackets++;
+        rdm_statistics_.discovery_response_packets++;
         message_length = 24;
     }
 
@@ -176,7 +179,9 @@ void Widget::SnifferRdm()
         return;
     }
 
-    WidgetMonitor::Line(widgetmonitor::MonitorLine::INFO, "Send RDM data to HOST");
+#if !defined(NO_HDMI_OUTPUT)
+    WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "Send RDM data to HOST");
+#endif
     UsbSendPackage(rdm_data, 0, message_length);
 }
 

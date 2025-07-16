@@ -39,10 +39,10 @@ public:
 		SetType(E120_SENS_CURRENT);
 		SetUnit(E120_UNITS_AMPERE_DC);
 		SetPrefix(E120_PREFIX_MILLI);
-		SetRangeMin(rdm::sensor::safe_range_min(sensor::ina219::current::RANGE_MIN));
-		SetRangeMax(rdm::sensor::safe_range_max(sensor::ina219::current::RANGE_MAX));
-		SetNormalMin(rdm::sensor::safe_range_min(sensor::ina219::current::RANGE_MIN));
-		SetNormalMax(rdm::sensor::safe_range_max(sensor::ina219::current::RANGE_MAX));
+		SetRangeMin(rdm::sensor::SafeRangeMin(sensor::ina219::current::RANGE_MIN));
+		SetRangeMax(rdm::sensor::SafeRangeMax(sensor::ina219::current::RANGE_MAX));
+		SetNormalMin(rdm::sensor::SafeRangeMin(sensor::ina219::current::RANGE_MIN));
+		SetNormalMax(rdm::sensor::SafeRangeMax(sensor::ina219::current::RANGE_MAX));
 		SetDescription(sensor::ina219::current::DESCRIPTION);
 	}
 

@@ -38,8 +38,8 @@
 #endif
 
 #include "configstore.h"
- 
-#if !defined(NO_EMAC)  
+
+#if !defined(NO_EMAC)
 namespace net
 {
 void Shutdown();
@@ -48,8 +48,6 @@ void Shutdown();
 
 namespace hal
 {
-bool g_bWatchdog;
-
 void RebootHandler();
 
 bool Reboot()
@@ -63,10 +61,10 @@ bool Reboot()
     HwClock::Get()->SysToHc();
 #endif
     hal::RebootHandler();
-#if !defined(NO_EMAC)  
+#if !defined(NO_EMAC)
     net::Shutdown();
 #endif
-    hal::statusled_set_mode(hal::StatusLedMode::OFF_OFF);
+    hal::statusled::SetMode(hal::statusled::Mode::OFF_OFF);
 
     NVIC_SystemReset();
 

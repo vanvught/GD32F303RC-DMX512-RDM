@@ -28,19 +28,31 @@
 #include <cassert>
 
 #include "configstoredevice.h"
-#include "gd32.h"
+#include "i2c/at24cxx.h"
 
 #include "debug.h"
 
-static constexpr uint32_t kFlashSectorSize = 4096U;
-static constexpr uint32_t kBsramSize = 4096U;
+namespace storedevice {
+#if !defined (CONFIG_FLASHROM_I2C_INDEX)
+# define CONFIG_FLASHROM_I2C_INDEX	0
+#endif
+static constexpr uint8_t kI2CIndex = CONFIG_FLASHROM_I2C_INDEX;
+/* Backwards compatibility with SPI FLASH */
+static constexpr auto kFlashSectorSize = 4096U;
+static constexpr auto kRomSize = 4096U;
+}  // namespace storedevice
 
-StoreDevice::StoreDevice() {
+StoreDevice::StoreDevice() : AT24C32(storedevice::kI2CIndex) {
 	DEBUG_ENTRY
 
-	detected_ = true;
+	detected_ = AT24C32::IsConnected();
 
-	printf("StoreDevice: BSRAM with total %d bytes [%d kB]\n", GetSize(), GetSize() / 1024U);
+	if (!detected_) {
+		printf("StoreDevice: No AT24C32 at %2x", AT24C32::GetAddress());
+	} else {
+		printf("StoreDevice: AT24C32 total %u bytes [%u kB]\n", GetSize(), GetSize() / 1024U);
+	}
+
 	DEBUG_EXIT
 }
 
@@ -51,17 +63,18 @@ StoreDevice::~StoreDevice() {
 }
 
 uint32_t StoreDevice::GetSize() const {
-	return kBsramSize;
+	return storedevice::kRomSize;
 }
 
 uint32_t StoreDevice::GetSectorSize() const {
-	return kFlashSectorSize;
+	return storedevice::kFlashSectorSize;
 }
 
-bool StoreDevice::Read(__attribute__((unused)) uint32_t offset, __attribute__((unused)) uint32_t length, __attribute__((unused)) uint8_t *buffer, storedevice::Result& result) {
+bool StoreDevice::Read(uint32_t offset, uint32_t length, uint8_t *buffer, storedevice::Result& result) {
 	DEBUG_ENTRY
-	DEBUG_PRINTF("offset=%p[%d], len=%u[%d], data=%p[%d]", offset, (((uint32_t)(offset) & 0x3) == 0), length, (((uint32_t)(length) & 0x3) == 0), buffer, (((uint32_t)(buffer) & 0x3) == 0));
-	assert((offset + length) <= BSRAM_SIZE);
+	assert((offset + length) <= storedevice::ROM_SIZE);
+
+	AT24C32::Read(offset, buffer, length);
 
 	result = storedevice::Result::OK;
 
@@ -69,7 +82,7 @@ bool StoreDevice::Read(__attribute__((unused)) uint32_t offset, __attribute__((u
 	return true;
 }
 
-bool StoreDevice::Erase(__attribute__((unused)) uint32_t offset, __attribute__((unused)) uint32_t length, storedevice::Result& result) {
+bool StoreDevice::Erase([[maybe_unused]] uint32_t offset, [[maybe_unused]] uint32_t length, storedevice::Result& result) {
 	DEBUG_ENTRY
 
 	result = storedevice::Result::OK;
@@ -78,10 +91,11 @@ bool StoreDevice::Erase(__attribute__((unused)) uint32_t offset, __attribute__((
 	return true;
 }
 
-bool StoreDevice::Write(__attribute__((unused)) uint32_t offset, __attribute__((unused)) uint32_t length, __attribute__((unused)) const uint8_t *buffer, storedevice::Result& result) {
+bool StoreDevice::Write(uint32_t offset, uint32_t length, const uint8_t *buffer, storedevice::Result& result) {
 	DEBUG_ENTRY
-	DEBUG_PRINTF("offset=%p[%d], len=%u[%d], data=%p[%d]", offset, (((uint32_t)(offset) & 0x3) == 0), length, (((uint32_t)(length) & 0x3) == 0), buffer, (((uint32_t)(buffer) & 0x3) == 0));
-	assert((offset + length) <= BSRAM_SIZE);
+	assert((offset + length) <= ROM_SIZE);
+
+	AT24C32::Write(offset, buffer, length);
 
 	result = storedevice::Result::OK;
 

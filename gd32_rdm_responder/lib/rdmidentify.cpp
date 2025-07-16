@@ -41,7 +41,7 @@ void RDMIdentify::On(rdm::identify::Mode nMode) {
 	if ((nMode == rdm::identify::Mode::LOUD) && (!s_isOn)) {
 		s_isOn = true;
 		s_Pattern = PixelTestPattern::Get()->GetPattern();
-		PixelTestPattern::Get()->SetPattern(pixelpatterns::Pattern::FADE);
+		PixelTestPattern::Get()->SetPattern(pixelpatterns::Pattern::kFade);
 		RDMResponder::Get()->DmxDisableOutput(true);
 	}
 
@@ -55,7 +55,7 @@ void RDMIdentify::Off([[maybe_unused]] rdm::identify::Mode nMode) {
 	if (s_isOn) {
 		s_isOn = false;
 		PixelTestPattern::Get()->SetPattern(s_Pattern);
-		RDMResponder::Get()->DmxDisableOutput(pixelpatterns::Pattern::NONE != s_Pattern);
+		RDMResponder::Get()->DmxDisableOutput(pixelpatterns::Pattern::kNone != s_Pattern);
 	}
 
 	DEBUG_EXIT

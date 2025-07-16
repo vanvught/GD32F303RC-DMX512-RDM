@@ -58,7 +58,7 @@ void emac_debug_run();
 #include "hwclock.h"
 #endif
 
-#include "panel_led.h"
+#include "hal_panelled.h"
 
 #if defined(CONFIG_HAL_USE_SYSTICK)
 extern volatile uint32_t gv_nSysTickMillis;
@@ -72,7 +72,7 @@ inline constexpr uint32_t kBoardId =
 #else
     0;
 #endif
-static constexpr uint32_t kReleaseId = 
+static constexpr uint32_t kReleaseId =
 #if defined(RELEASE_ID)
     RELEASE_ID;
 #else
@@ -94,7 +94,7 @@ inline void Run()
 #if !defined(USE_FREE_RTOS)
     SoftwareTimerRun();
 #endif
-    hal::panel_led_run();
+    hal::panelled::Run();
 #if defined(DEBUG_STACK)
     stack_debug_run();
 #endif

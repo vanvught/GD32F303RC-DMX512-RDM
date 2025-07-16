@@ -29,29 +29,29 @@
 
 namespace hal
 {
-void display_statusled(hal::StatusLedMode status_led_mode)
+void DisplayStatusled(hal::statusled::Mode status_led_mode)
 {
     if (Display::Get()->IsDetected())
     {
         char c;
         switch (status_led_mode)
         {
-            case hal::StatusLedMode::OFF_OFF:
+            case hal::statusled::Mode::OFF_OFF:
                 c = 'O';
                 break;
-            case hal::StatusLedMode::OFF_ON:
+            case hal::statusled::Mode::OFF_ON:
                 c = 'O';
                 break;
-            case hal::StatusLedMode::NORMAL:
+            case hal::statusled::Mode::NORMAL:
                 c = 'N';
                 break;
-            case hal::StatusLedMode::DATA:
+            case hal::statusled::Mode::DATA:
                 c = 'D';
                 break;
-            case hal::StatusLedMode::FAST:
+            case hal::statusled::Mode::FAST:
                 c = 'F';
                 break;
-            case hal::StatusLedMode::REBOOT:
+            case hal::statusled::Mode::REBOOT:
                 c = 'R';
                 break;
             default:

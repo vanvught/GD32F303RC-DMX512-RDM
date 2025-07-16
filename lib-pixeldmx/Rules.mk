@@ -3,7 +3,7 @@ EXTRA_INCLUDES+=../lib-dmxled/include
 EXTRA_INCLUDES+=../lib-properties/include 
 EXTRA_INCLUDES+=../lib-network/include
 
-EXTRA_SRCDIR+=src/pixeldmxparams
+EXTRA_SRCDIR+=src/pixeldmxparams src/json
 
 ifneq ($(MAKE_FLAGS),)
 	ifeq ($(findstring OUTPUT_DMX_SEND,$(MAKE_FLAGS)), OUTPUT_DMX_SEND)

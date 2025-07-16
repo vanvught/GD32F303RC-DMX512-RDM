@@ -45,7 +45,7 @@ void RDMResponder::PersonalityUpdate(uint32_t nPersonality)  {
 
 	const auto nTestPattern = PixelTestPattern::Get()->GetPattern();
 
-	if (nTestPattern == pixelpatterns::Pattern::NONE) {
+	if (nTestPattern == pixelpatterns::Pattern::kNone) {
 	} else {
 		DisplayUdf::Get()->ClearEndOfLine();
 		DisplayUdf::Get()->Printf(6, "%s:%u", PixelPatterns::GetName(nTestPattern), static_cast<uint32_t>(nTestPattern));
@@ -55,10 +55,10 @@ void RDMResponder::PersonalityUpdate(uint32_t nPersonality)  {
 
 	DisplayUdf::Get()->ClearEndOfLine();
 	DisplayUdf::Get()->Printf(7, "%s:%d G%d %s",
-					pixel::pixel_get_type(PixelConfiguration::Get().GetType()),
+					pixel::GetType(PixelConfiguration::Get().GetType()),
 					PixelConfiguration::Get().GetCount(),
 					PixelDmxConfiguration::Get().GetGroupingCount(),
-					pixel::pixel_get_map(PixelConfiguration::Get().GetMap()));
+					pixel::GetMap(PixelConfiguration::Get().GetMap()));
 	DisplayUdf::Get()->Show();
 
 #if defined (CONFIG_RDM_MANUFACTURER_PIDS_SET)
@@ -66,7 +66,7 @@ void RDMResponder::PersonalityUpdate(uint32_t nPersonality)  {
 	if (nPersonality == 1) {
 		const auto nTestPattern = PixelTestPattern::Get()->GetPattern();
 
-		if (nTestPattern == pixelpatterns::Pattern::NONE) {
+		if (nTestPattern == pixelpatterns::Pattern::kNone) {
 		} else {
 			DisplayUdf::Get()->ClearEndOfLine();
 			DisplayUdf::Get()->Printf(6, "%s:%u", PixelPatterns::GetName(nTestPattern), static_cast<uint32_t>(nTestPattern));

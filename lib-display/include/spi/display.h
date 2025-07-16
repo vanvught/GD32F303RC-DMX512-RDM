@@ -47,13 +47,13 @@
 
 #if defined(CONFIG_USE_ILI9341)
 #include "spi/ili9341.h"
-typedef ILI9341 LcdDriver;
+using LcdDriver = ILI9341;
 #elif defined(CONFIG_USE_ST7735S)
 #include "spi/st7735s.h"
-typedef ST7735S LcdDriver;
+using LcdDriver = ST7735S;
 #else
 #include "spi/st7789.h"
-typedef ST7789 LcdDriver;
+using LcdDriver = ST7789;
 #endif
 
 #include "spi/lcd_font.h"
@@ -66,9 +66,9 @@ typedef ST7789 LcdDriver;
 #endif
 
 #if defined(SPI_LCD_HAVE_CS_GPIO)
-static constexpr uint32_t CS_GPIO = SPI_LCD_CS_GPIO;
+inline constexpr uint32_t CS_GPIO = SPI_LCD_CS_GPIO;
 #else
-static constexpr uint32_t CS_GPIO = 0;
+inline constexpr uint32_t CS_GPIO = 0;
 #endif
 
 #include "debug.h"
@@ -76,7 +76,7 @@ static constexpr uint32_t CS_GPIO = 0;
 class Display : public LcdDriver
 {
    public:
-    Display(uint32_t nCS = CS_GPIO) : LcdDriver(nCS)
+    Display(uint32_t cs = CS_GPIO) : LcdDriver(cs)
     {
         DEBUG_ENTRY
 
@@ -84,7 +84,7 @@ class Display : public LcdDriver
 
         SetBackLight(1);
         SetFlipVertically(false);
-        FillColour(COLOR_BACKGROUND);
+        FillColour(kColorBackground);
 
         cols_ = (GetWidth() / s_pFONT->Width);
         rows_ = (GetHeight() / s_pFONT->Height);
@@ -114,29 +114,29 @@ class Display : public LcdDriver
         printf("(%u,%u)\n", rows_, cols_);
     }
 
-    void Cls() { FillColour(COLOR_BACKGROUND); }
+    void Cls() { FillColour(kColorBackground); }
 
     void SetCursorPos(const uint32_t nCol, const uint32_t nRow)
     {
-        m_nCursorX = nCol * s_pFONT->Width;
-        m_nCursorY = nRow * s_pFONT->Height;
+        cursor_x_ = nCol * s_pFONT->Width;
+        cursor_y_ = nRow * s_pFONT->Height;
     }
 
     void PutChar(const int c)
     {
-        DrawChar(m_nCursorX, m_nCursorY, static_cast<char>(c), s_pFONT, COLOR_BACKGROUND, COLOR_FOREGROUND);
+        DrawChar(cursor_x_, cursor_y_, static_cast<char>(c), s_pFONT, kColorBackground, kColorForeground);
 
-        m_nCursorX += s_pFONT->Width;
+        cursor_x_ += s_pFONT->Width;
 
-        if (m_nCursorX >= GetWidth())
+        if (cursor_x_ >= GetWidth())
         {
-            m_nCursorX = 0;
+            cursor_x_ = 0;
 
-            m_nCursorY += s_pFONT->Height;
+            cursor_y_ += s_pFONT->Height;
 
-            if (m_nCursorY >= GetHeight())
+            if (cursor_y_ >= GetHeight())
             {
-                m_nCursorY = 0;
+                cursor_y_ = 0;
             }
         }
     }
@@ -178,7 +178,7 @@ class Display : public LcdDriver
         Text(pText, nLength);
     }
 
-    void ClearEndOfLine() { m_bClearEndOfLine = true; }
+    void ClearEndOfLine() { clear_end_of_line_ = true; }
 
     void Text(const char* pData, uint32_t nLength)
     {
@@ -328,14 +328,14 @@ class Display : public LcdDriver
     uint32_t cols_;
     uint32_t rows_;
     uint32_t sleep_timeout_{1000U * 60U * display::Defaults::kSleepTimeout};
-    uint32_t m_nCursorX{0};
-    uint32_t m_nCursorY{0};
+    uint32_t cursor_x_{0};
+    uint32_t cursor_y_{0};
 
     uint8_t contrast_{0x7F};
 
     bool is_flipped_vertically_{false};
     bool is_sleep_{false};
-    bool m_bClearEndOfLine{false};
+    bool clear_end_of_line_{false};
 
     static inline Display* s_this;
 
@@ -348,8 +348,8 @@ class Display : public LcdDriver
 #else
     static constexpr sFONT* s_pFONT = &Font12x12;
 #endif
-    static constexpr uint16_t COLOR_BACKGROUND = 0x001F;
-    static constexpr uint16_t COLOR_FOREGROUND = 0xFFE0;
+    static constexpr uint16_t kColorBackground = 0x001F;
+    static constexpr uint16_t kColorForeground = 0xFFE0;
 };
 
 #if defined(__GNUC__) && !defined(__clang__)

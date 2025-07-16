@@ -22,130 +22,142 @@
  * THE SOFTWARE.
  */
 
-#if defined (DEBUG_PIXEL)
-# undef NDEBUG
+#if defined(DEBUG_PIXEL)
+#undef NDEBUG
 #endif
 
-#if defined(__GNUC__) && !defined(__clang__)	
-# pragma GCC push_options
-# pragma GCC optimize ("O3")
-# pragma GCC optimize ("-funroll-loops")
-# pragma GCC optimize ("-fprefetch-loop-arrays")
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC push_options
+#pragma GCC optimize("O3")
+#pragma GCC optimize("-funroll-loops")
+#pragma GCC optimize("-fprefetch-loop-arrays")
 #endif
 
 #include <cstdint>
-#include <cstdio>
 #include <cassert>
 
 #include "pixeloutput.h"
 #include "pixeltype.h"
-
-#include "gamma/gamma_tables.h"
-
-void PixelOutput::SetColorWS28xx(uint32_t offset, uint8_t value) {
-	auto& pixel_configuration = PixelConfiguration::Get();
-	assert(pixelConfiguration.GetType() != pixel::Type::WS2801);
-	assert(buffer_ != nullptr);
-	assert(offset + 7 < buf_size_);
-
-	offset += 1;
-
-	const auto kLowCode = pixel_configuration.GetLowCode();
-	const auto kHighCode = pixel_configuration.GetHighCode();
-
-	for (uint8_t mask = 0x80; mask != 0; mask = static_cast<uint8_t>(mask >> 1)) {
-		if (value & mask) {
-			buffer_[offset] = kHighCode;
-		} else {
-			buffer_[offset] = kLowCode;
-		}
-		offset++;
-	}
-}
-
-void PixelOutput::SetPixel(uint32_t pixel_index, uint8_t red, uint8_t green, uint8_t blue) {
-	auto& pixel_configuration = PixelConfiguration::Get();
-	assert(nPixelIndex < pixelConfiguration.GetCount());
-
+#include "pixelconfiguration.h"
 #if defined(CONFIG_PIXELDMX_ENABLE_GAMMATABLE)
-	const auto pGammaTable = pixelConfiguration.GetGammaTable();
-
-	red = pGammaTable[red];
-	green = pGammaTable[green];
-	blue = pGammaTable[blue];
+#include "gamma/gamma_tables.h"
 #endif
 
-	if (pixel_configuration.IsRTZProtocol()) {
-		const auto kOffset = pixel_index * 24U;
+void PixelOutput::SetColorWS28xx(uint32_t offset, uint8_t value)
+{
+    auto& pixel_configuration = PixelConfiguration::Get();
+    assert(pixel_configuration.GetType() != pixel::Type::WS2801);
+    assert(buffer_ != nullptr);
+    assert(offset + 7 < buf_size_);
 
-		SetColorWS28xx(kOffset, red);
-		SetColorWS28xx(kOffset + 8, green);
-		SetColorWS28xx(kOffset + 16, blue);
-		return;
-	}
+    offset += 1;
 
-	assert(buffer_ != nullptr);
+    const auto kLowCode = pixel_configuration.GetLowCode();
+    const auto kHighCode = pixel_configuration.GetHighCode();
 
-	const auto kType = pixel_configuration.GetType();
-
-	if (kType == pixel::Type::WS2801) {
-		const auto kOffset = pixel_index * 3U;
-		assert(kOffset + 2U < buf_size_);
-
-		buffer_[kOffset] = red;
-		buffer_[kOffset + 1] = green;
-		buffer_[kOffset + 2] = blue;
-
-		return;
-	}
-
-	if ((kType == pixel::Type::APA102) || (kType == pixel::Type::SK9822)) {
-		const auto kOffset = 4U + (pixel_index * 4U);
-		assert(kOffset + 3U < buf_size_);
-
-		buffer_[kOffset] = pixel_configuration.GetGlobalBrightness();
-		buffer_[kOffset + 1] = red;
-		buffer_[kOffset + 2] = green;
-		buffer_[kOffset + 3] = blue;
-
-		return;
-	}
-
-	if (kType == pixel::Type::P9813) {
-		const auto kOffset = 4U + (pixel_index * 4U);
-		assert(kOffset + 3 < buf_size_);
-
-		const auto kFlag = static_cast<uint8_t>(0xC0 | ((~blue & 0xC0) >> 2) | ((~green & 0xC0) >> 4) | ((~red & 0xC0) >> 6));
-
-		buffer_[kOffset] = kFlag;
-		buffer_[kOffset + 1] = blue;
-		buffer_[kOffset + 2] = green;
-		buffer_[kOffset + 3] = red;
-
-		return;
-	}
-
-	assert(0);
-	__builtin_unreachable();
+    for (uint8_t mask = 0x80; mask != 0; mask = static_cast<uint8_t>(mask >> 1))
+    {
+        if (value & mask)
+        {
+            buffer_[offset] = kHighCode;
+        }
+        else
+        {
+            buffer_[offset] = kLowCode;
+        }
+        offset++;
+    }
 }
 
-void PixelOutput::SetPixel(uint32_t pixel_index, uint8_t red, uint8_t green, uint8_t blue, uint8_t white) {
-	assert(nPixelIndex < PixelConfiguration::Get().GetCount());
-	assert(PixelConfiguration::Get().GetType() == pixel::Type::SK6812W);
+void PixelOutput::SetPixel(uint32_t pixel_index, uint8_t red, uint8_t green, uint8_t blue)
+{
+    auto& pixel_configuration = PixelConfiguration::Get();
+    assert(pixel_index < pixel_configuration.GetCount());
 
 #if defined(CONFIG_PIXELDMX_ENABLE_GAMMATABLE)
-	const auto pGammaTable = pixelConfiguration.GetGammaTable();
+    const auto pGammaTable = pixelConfiguration.GetGammaTable();
 
-	red = pGammaTable[red];
-	green = pGammaTable[green];
-	blue = pGammaTable[blue];
-	white = pGammaTable[white];
+    red = pGammaTable[red];
+    green = pGammaTable[green];
+    blue = pGammaTable[blue];
+#endif
+
+    if (pixel_configuration.IsRTZProtocol())
+    {
+        const auto kOffset = pixel_index * 24U;
+
+        SetColorWS28xx(kOffset, red);
+        SetColorWS28xx(kOffset + 8, green);
+        SetColorWS28xx(kOffset + 16, blue);
+        return;
+    }
+
+    assert(buffer_ != nullptr);
+
+    const auto kType = pixel_configuration.GetType();
+
+    if (kType == pixel::Type::WS2801)
+    {
+        const auto kOffset = pixel_index * 3U;
+        assert(kOffset + 2U < buf_size_);
+
+        buffer_[kOffset] = red;
+        buffer_[kOffset + 1] = green;
+        buffer_[kOffset + 2] = blue;
+
+        return;
+    }
+
+    if ((kType == pixel::Type::APA102) || (kType == pixel::Type::SK9822))
+    {
+        const auto kOffset = 4U + (pixel_index * 4U);
+        assert(kOffset + 3U < buf_size_);
+
+        buffer_[kOffset] = pixel_configuration.GetGlobalBrightness();
+        buffer_[kOffset + 1] = red;
+        buffer_[kOffset + 2] = green;
+        buffer_[kOffset + 3] = blue;
+
+        return;
+    }
+
+    if (kType == pixel::Type::P9813)
+    {
+        const auto kOffset = 4U + (pixel_index * 4U);
+        assert(kOffset + 3 < buf_size_);
+
+        const auto kFlag = static_cast<uint8_t>(0xC0 | ((~blue & 0xC0) >> 2) | ((~green & 0xC0) >> 4) | ((~red & 0xC0) >> 6));
+
+        buffer_[kOffset] = kFlag;
+        buffer_[kOffset + 1] = blue;
+        buffer_[kOffset + 2] = green;
+        buffer_[kOffset + 3] = red;
+
+        return;
+    }
+
+    assert(0);
+    __builtin_unreachable();
+}
+
+void PixelOutput::SetPixel(uint32_t pixel_index, uint8_t red, uint8_t green, uint8_t blue, uint8_t white)
+{
+    assert(pixel_index < PixelConfiguration::Get().GetCount());
+    assert(PixelConfiguration::Get().GetType() == pixel::Type::SK6812W);
+
+#if defined(CONFIG_PIXELDMX_ENABLE_GAMMATABLE)
+    const auto kGammaTable = pixelConfiguration.GetGammaTable();
+
+    red = kGammaTable[red];
+    green = kGammaTable[green];
+    blue = kGammaTable[blue];
+    white = kGammaTable[white];
 #endif
 
     const auto kOffset = pixel_index * 32U;
 
     SetColorWS28xx(kOffset, green);
-	SetColorWS28xx(kOffset + 8, red);
-	SetColorWS28xx(kOffset + 16, blue);
-	SetColorWS28xx(kOffset + 24, white);
+    SetColorWS28xx(kOffset + 8, red);
+    SetColorWS28xx(kOffset + 16, blue);
+    SetColorWS28xx(kOffset + 24, white);
 }

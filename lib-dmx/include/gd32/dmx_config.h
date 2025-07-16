@@ -46,6 +46,8 @@ namespace dmx::config
 #include "board_gd32f450ve.h"
 #elif defined(BOARD_GD32F450VI)
 #include "board_gd32f450vi.h"
+#elif defined(BOARD_GD32H757ZM)
+#include "board_gd32h757zm.h"
 #elif defined(BOARD_GD32F470Z_EVAL)
 #include "board_gd32f470z_eval.h"
 #elif defined(BOARD_GD32F207C_EVAL)

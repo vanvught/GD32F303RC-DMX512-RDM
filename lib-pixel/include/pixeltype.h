@@ -91,52 +91,32 @@ static constexpr auto COUNT = 170;
 static constexpr auto OUTPUT_PORTS = 1;
 } // namespace defaults
 
-inline Map pixel_get_map(pixel::Type type)
+inline constexpr auto kFInterval = 0.15625f;
+
+inline float ConvertTxH(uint8_t code)
 {
-    if ((type == pixel::Type::WS2811) || (type == pixel::Type::UCS2903))
-    {
-        return pixel::Map::RGB;
-    }
-
-    if (type == pixel::Type::UCS1903)
-    {
-        return pixel::Map::BRG;
-    }
-
-    if (type == pixel::Type::CS8812)
-    {
-        return pixel::Map::BGR;
-    }
-
-    return pixel::Map::GRB;
-}
-
-static constexpr auto F_INTERVAL = 0.15625f;
-
-inline float pixel_convert_TxH(uint8_t nCode)
-{
-    switch (nCode)
+    switch (code)
     {
         case 0x80:
-            return F_INTERVAL * 1;
+            return kFInterval * 1;
             break;
         case 0xC0:
-            return F_INTERVAL * 2;
+            return kFInterval * 2;
             break;
         case 0xE0:
-            return F_INTERVAL * 3;
+            return kFInterval * 3;
             break;
         case 0xF0:
-            return F_INTERVAL * 4;
+            return kFInterval * 4;
             break;
         case 0xF8:
-            return F_INTERVAL * 5;
+            return kFInterval * 5;
             break;
         case 0xFC:
-            return F_INTERVAL * 6;
+            return kFInterval * 6;
             break;
         case 0xFE:
-            return F_INTERVAL * 7;
+            return kFInterval * 7;
             break;
         default:
             return 0;
@@ -147,54 +127,74 @@ inline float pixel_convert_TxH(uint8_t nCode)
     __builtin_unreachable();
 }
 
-inline uint8_t pixel_convert_TxH(float fTxH)
+inline uint8_t ConvertTxH(float tx_h)
 {
-    if (fTxH < 0.5f * F_INTERVAL)
+    if (tx_h < 0.5f * kFInterval)
     {
         return 0x00;
     }
 
-    if (fTxH < 1.5f * F_INTERVAL)
+    if (tx_h < 1.5f * kFInterval)
     {
         return 0x80;
     }
 
-    if (fTxH < 2.5f * F_INTERVAL)
+    if (tx_h < 2.5f * kFInterval)
     {
         return 0xC0;
     }
 
-    if (fTxH < 3.5f * F_INTERVAL)
+    if (tx_h < 3.5f * kFInterval)
     {
         return 0xE0;
     }
 
-    if (fTxH < 4.5f * F_INTERVAL)
+    if (tx_h < 4.5f * kFInterval)
     {
         return 0xF0;
     }
 
-    if (fTxH < 5.5f * F_INTERVAL)
+    if (tx_h < 5.5f * kFInterval)
     {
         return 0xF8;
     }
 
-    if (fTxH < 6.5f * F_INTERVAL)
+    if (tx_h < 6.5f * kFInterval)
     {
         return 0xFC;
     }
 
-    if (fTxH < 7.5f * F_INTERVAL)
+    if (tx_h < 7.5f * kFInterval)
     {
         return 0xFE;
     }
-
+	
     return 0x00;
 }
 
-const char* pixel_get_type(pixel::Type);
-pixel::Type pixel_get_type(const char*);
+const char* GetType(Type);
+Type GetType(const char*);
 
-const char* pixel_get_map(pixel::Map);
-pixel::Map pixel_get_map(const char*);
+const char* GetMap(Map);
+Map GetMap(const char*);
+
+inline Map GetMap(Type type)
+{
+    if ((type == Type::WS2811) || (type == Type::UCS2903))
+    {
+        return Map::RGB;
+    }
+
+    if (type == Type::UCS1903)
+    {
+        return Map::BRG;
+    }
+
+    if (type == Type::CS8812)
+    {
+        return Map::BGR;
+    }
+
+    return Map::GRB;
+}
 } // namespace pixel

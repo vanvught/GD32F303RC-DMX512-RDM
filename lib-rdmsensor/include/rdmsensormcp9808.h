@@ -39,10 +39,10 @@ public:
 		SetType(E120_SENS_TEMPERATURE);
 		SetUnit(E120_UNITS_CENTIGRADE);
 		SetPrefix(E120_PREFIX_NONE);
-		SetRangeMin(rdm::sensor::safe_range_min(sensor::mcp9808::RANGE_MIN));
-		SetRangeMax(rdm::sensor::safe_range_max(sensor::mcp9808::RANGE_MAX));
-		SetNormalMin(rdm::sensor::safe_range_min(18));
-		SetNormalMax(rdm::sensor::safe_range_min(40));
+		SetRangeMin(rdm::sensor::SafeRangeMin(sensor::mcp9808::RANGE_MIN));
+		SetRangeMax(rdm::sensor::SafeRangeMax(sensor::mcp9808::RANGE_MAX));
+		SetNormalMin(rdm::sensor::SafeRangeMin(18));
+		SetNormalMax(rdm::sensor::SafeRangeMin(40));
 		SetDescription(sensor::mcp9808::DESCRIPTION);
 	}
 

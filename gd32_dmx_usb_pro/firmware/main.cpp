@@ -26,64 +26,60 @@
 #include <cstdio>
 #include <cstdint>
 
+#include "hal.h"
 #include "gd32/hal_watchdog.h"
 #include "hal_boardinfo.h"
-#include "network.h"
-#include "display.h"
-
+#include "noemac/network.h"
 #include "widget.h"
 #include "widgetparams.h"
 #include "rdmdeviceparams.h"
-
 #include "configstore.h"
-
 #include "software_version.h"
 
 #ifndef ALIGNED
 #define ALIGNED __attribute__((aligned(4)))
 #endif
 
-static constexpr char widget_mode_names[4][12] ALIGNED = {"DMX_RDM", "DMX", "RDM", "RDM_SNIFFER"};
-static constexpr TRDMDeviceInfoData deviceLabel ALIGNED = {const_cast<char*>("GD32F103RC DMX USB Pro"), 22};
+static constexpr char kWidgetModeNames[4][12] ALIGNED = {"DMX_RDM", "DMX", "RDM", "RDM_SNIFFER"};
+static constexpr TRDMDeviceInfoData kDeviceLabel ALIGNED = {const_cast<char*>("GD32F103RC DMX USB Pro"), 22};
 
 int main()
 {
     hal::Init();
-    Display display; // Not supported, yet.
-    ConfigStore configStore;
+    ConfigStore config_store;
     Network nw;
 
     Widget widget;
     widget.SetPortDirection(0, dmx::PortDirection::kInput, false);
 
-    WidgetParams widgetParams;
+    WidgetParams widget_params;
 
-    widgetParams.Load();
-    widgetParams.Set();
+    widget_params.Load();
+    widget_params.Set();
 
-    widget.SetLabel(&deviceLabel);
+    widget.SetLabel(&kDeviceLabel);
 
-    RDMDeviceParams rdmDeviceParams;
+    RDMDeviceParams rdm_device_params;
 
-    rdmDeviceParams.Load();
-    rdmDeviceParams.Set(&widget);
+    rdm_device_params.Load();
+    rdm_device_params.Set(&widget);
 
     widget.Init();
 
-    const auto* pRdmDeviceUid = widget.GetUID();
-    TRDMDeviceInfoData tRdmDeviceLabel;
-    widget.GetLabel(&tRdmDeviceLabel);
-    const auto widgetMode = widgetParams.GetMode();
+    const auto* rdm_device_uid = widget.GetUID();
+    TRDMDeviceInfoData rdm_device_label;
+    widget.GetLabel(&rdm_device_label);
+    const auto kWidgetMode = widget_params.GetMode();
 
-    uint8_t nHwTextLength;
-    printf("[V%s] %s Compiled on %s at %s\n", SOFTWARE_VERSION, hal::BoardName(nHwTextLength), __DATE__, __TIME__);
-    printf("RDM Controller with USB [Compatible with Enttec USB Pro protocol], Widget mode : %d (%s)\n", widgetMode, widget_mode_names[static_cast<uint32_t>(widgetMode)]);
-    printf("Device UUID : %.2x%.2x:%.2x%.2x%.2x%.2x, ", pRdmDeviceUid[0], pRdmDeviceUid[1], pRdmDeviceUid[2], pRdmDeviceUid[3], pRdmDeviceUid[4], pRdmDeviceUid[5]);
-    printf("Label : %.*s\n", static_cast<int>(tRdmDeviceLabel.length), reinterpret_cast<const char*>(tRdmDeviceLabel.data));
+    uint8_t hw_text_length;
+    printf("[V%s] %s Compiled on %s at %s\n", SOFTWARE_VERSION, hal::BoardName(hw_text_length), __DATE__, __TIME__);
+    printf("RDM Controller with USB [Compatible with Enttec USB Pro protocol], Widget mode : %d (%s)\n", kWidgetMode, kWidgetModeNames[static_cast<uint32_t>(kWidgetMode)]);
+    printf("Device UUID : %.2x%.2x:%.2x%.2x%.2x%.2x, ", rdm_device_uid[0], rdm_device_uid[1], rdm_device_uid[2], rdm_device_uid[3], rdm_device_uid[4], rdm_device_uid[5]);
+    printf("Label : %.*s\n", static_cast<int>(rdm_device_label.length), reinterpret_cast<const char*>(rdm_device_label.data));
 
     hal::WatchdogInit();
 
-    if (widgetMode == widget::Mode::RDM_SNIFFER)
+    if (kWidgetMode == widget::Mode::kRdmSniffer)
     {
         widget.SetPortDirection(0, dmx::PortDirection::kInput, true);
         widget.SnifferFillTransmitBuffer(); // Prevent missing first frame

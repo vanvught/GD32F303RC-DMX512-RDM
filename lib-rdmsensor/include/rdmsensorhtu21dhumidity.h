@@ -39,10 +39,10 @@ public:
 		SetType(E120_SENS_HUMIDITY);
 		SetUnit(E120_UNITS_NONE);
 		SetPrefix(E120_PREFIX_NONE);
-		SetRangeMin(rdm::sensor::safe_range_min(sensor::htu21d::humidity::RANGE_MIN));
-		SetRangeMax(rdm::sensor::safe_range_max(sensor::htu21d::humidity::RANGE_MAX));
-		SetNormalMin(rdm::sensor::safe_range_min(sensor::htu21d::humidity::RANGE_MIN));
-		SetNormalMax(rdm::sensor::safe_range_max(sensor::htu21d::humidity::RANGE_MAX));
+		SetRangeMin(rdm::sensor::SafeRangeMin(sensor::htu21d::humidity::RANGE_MIN));
+		SetRangeMax(rdm::sensor::SafeRangeMax(sensor::htu21d::humidity::RANGE_MAX));
+		SetNormalMin(rdm::sensor::SafeRangeMin(sensor::htu21d::humidity::RANGE_MIN));
+		SetNormalMax(rdm::sensor::SafeRangeMax(sensor::htu21d::humidity::RANGE_MAX));
 		SetDescription(sensor::htu21d::humidity::DESCRIPTION);
 	}
 

@@ -130,7 +130,7 @@ void Display::Detect(display::Type display_type)
             break;
 #endif
         case display::Type::SSD1306:
-            lcd_display_ = new Ssd1306(OLED_PANEL_128x64_8ROWS);
+            lcd_display_ = new Ssd1306(OledPanel::k128x648Rows);
             assert(lcd_display_ != nullptr);
             break;
         case display::Type::UNKNOWN:
@@ -177,12 +177,14 @@ void Display::Detect(uint32_t rows)
             }
             else
 #endif
-                lcd_display_ = new Ssd1306(OLED_PANEL_128x64_4ROWS);
-            assert(lcd_display_ != nullptr);
+            {
+                lcd_display_ = new Ssd1306(OledPanel::k128x644Rows);
+                assert(lcd_display_ != nullptr);
+            }
         }
         else
         {
-            lcd_display_ = new Ssd1306(OLED_PANEL_128x64_8ROWS);
+            lcd_display_ = new Ssd1306(OledPanel::k128x648Rows);
             assert(lcd_display_ != nullptr);
         }
 

@@ -51,10 +51,10 @@ public:
 		SetType(E120_SENS_TEMPERATURE);
 		SetUnit(E120_UNITS_CENTIGRADE);
 		SetPrefix(E120_PREFIX_NONE);
-		SetRangeMin(rdm::sensor::safe_range_min(sensor::thermistor::RANGE_MIN));
-		SetRangeMax(rdm::sensor::safe_range_max(sensor::thermistor::RANGE_MAX));
-		SetNormalMin(rdm::sensor::safe_range_min(sensor::thermistor::RANGE_MIN));
-		SetNormalMax(rdm::sensor::safe_range_max(sensor::thermistor::RANGE_MAX));
+		SetRangeMin(rdm::sensor::SafeRangeMin(sensor::thermistor::RANGE_MIN));
+		SetRangeMax(rdm::sensor::SafeRangeMax(sensor::thermistor::RANGE_MAX));
+		SetNormalMin(rdm::sensor::SafeRangeMin(sensor::thermistor::RANGE_MIN));
+		SetNormalMax(rdm::sensor::SafeRangeMax(sensor::thermistor::RANGE_MAX));
 		SetDescription(sensor::thermistor::DESCRIPTION);
 
 		DEBUG_EXIT

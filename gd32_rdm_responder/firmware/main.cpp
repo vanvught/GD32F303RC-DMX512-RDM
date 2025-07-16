@@ -100,7 +100,7 @@ int main() {
 	RDMPersonality *personalities[PERSONALITY_COUNT];
 
 	for (uint32_t nIndex = 0; nIndex < PERSONALITY_COUNT; nIndex++) {
-		const auto description = pixel::pixel_get_type(static_cast<pixel::Type>(nIndex));
+		const auto description = pixel::GetType(static_cast<pixel::Type>(nIndex));
 		personalities[nIndex] = new RDMPersonality(description, &pixelDmx);
 	}
 
@@ -108,10 +108,10 @@ int main() {
 #else
 	char aDescription[rdm::personality::DESCRIPTION_MAX_LENGTH];
 	snprintf(aDescription, sizeof(aDescription) - 1U, "%s:%u G%u [%s]",
-			pixel::pixel_get_type(pixelDmxConfiguration.GetType()),
+			pixel::GetType(pixelDmxConfiguration.GetType()),
 			pixelDmxConfiguration.GetCount(),
 			pixelDmxConfiguration.GetGroupingCount(),
-			pixel::pixel_get_map(pixelDmxConfiguration.GetMap()));
+			pixel::GetMap(pixelDmxConfiguration.GetMap()));
 
 	RDMPersonality *personalities[2] = {
 			new RDMPersonality(aDescription, &pixelDmx),
@@ -143,7 +143,7 @@ int main() {
 	rdmDeviceParams.Set(&rdmResponder);
 
 	rdmResponder.Start();
-	rdmResponder.DmxDisableOutput(!isConfigMode && (nTestPattern != pixelpatterns::Pattern::NONE));
+	rdmResponder.DmxDisableOutput(!isConfigMode && (nTestPattern != pixelpatterns::Pattern::kNone));
 	rdmResponder.Print();
 
 	if (isConfigMode) {
@@ -154,7 +154,7 @@ int main() {
 
 	if (isConfigMode) {
 		puts("Config mode");
-	} else if (nTestPattern != pixelpatterns::Pattern::NONE) {
+	} else if (nTestPattern != pixelpatterns::Pattern::kNone) {
 		printf("Test pattern : %s [%u]\n", PixelPatterns::GetName(nTestPattern), static_cast<uint32_t>(nTestPattern));
 	}
 
@@ -176,17 +176,17 @@ int main() {
 
 	display.Show();
 	display.Printf(7, "%s:%d G%d %s",
-			pixel::pixel_get_type(pixelDmxConfiguration.GetType()),
+			pixel::GetType(pixelDmxConfiguration.GetType()),
 			pixelDmxConfiguration.GetCount(),
 			pixelDmxConfiguration.GetGroupingCount(),
-			pixel::pixel_get_map(pixelDmxConfiguration.GetMap()));
+			pixel::GetMap(pixelDmxConfiguration.GetMap()));
 
 	if (isConfigMode) {
 		display.ClearLine(3);
 		display.ClearLine(4);
 		display.Write(4, "Config Mode");
 		display.ClearLine(5);
-	} else if (nTestPattern != pixelpatterns::Pattern::NONE) {
+	} else if (nTestPattern != pixelpatterns::Pattern::kNone) {
 		display.ClearLine(6);
 		display.Printf(6, "%s:%u", PixelPatterns::GetName(nTestPattern), static_cast<uint32_t>(nTestPattern));
 	}

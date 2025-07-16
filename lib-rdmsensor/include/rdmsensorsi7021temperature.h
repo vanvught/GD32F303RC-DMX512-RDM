@@ -39,10 +39,10 @@ public:
 		SetType(E120_SENS_TEMPERATURE);
 		SetUnit(E120_UNITS_CENTIGRADE);
 		SetPrefix(E120_PREFIX_NONE);
-		SetRangeMin(rdm::sensor::safe_range_min(sensor::si7021::temperature::RANGE_MIN));
-		SetRangeMax(rdm::sensor::safe_range_max(sensor::si7021::temperature::RANGE_MAX));
-		SetNormalMin(rdm::sensor::safe_range_min(sensor::si7021::temperature::RANGE_MIN));
-		SetNormalMax(rdm::sensor::safe_range_max(sensor::si7021::temperature::RANGE_MAX));
+		SetRangeMin(rdm::sensor::SafeRangeMin(sensor::si7021::temperature::RANGE_MIN));
+		SetRangeMax(rdm::sensor::SafeRangeMax(sensor::si7021::temperature::RANGE_MAX));
+		SetNormalMin(rdm::sensor::SafeRangeMin(sensor::si7021::temperature::RANGE_MIN));
+		SetNormalMax(rdm::sensor::SafeRangeMax(sensor::si7021::temperature::RANGE_MAX));
 		SetDescription(sensor::si7021::temperature::DESCRIPTION);
 	}
 

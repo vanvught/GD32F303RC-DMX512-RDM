@@ -136,9 +136,9 @@ void Ssd1311::PutString(const char* string)
         --n;
     }
 
-    if (m_bClearEndOfLine)
+    if (clear_end_of_line_)
     {
-        m_bClearEndOfLine = false;
+        clear_end_of_line_ = false;
 
         for (auto i = static_cast<uint32_t>(src - string); i < ssd1311::kMaxColumns; i++)
         {
@@ -187,9 +187,9 @@ void Ssd1311::Text(const char* data, uint32_t length)
 
     memcpy(&text_buffer[1], data, length);
 
-    if (m_bClearEndOfLine)
+    if (clear_end_of_line_)
     {
-        m_bClearEndOfLine = false;
+        clear_end_of_line_ = false;
 
         memset(&text_buffer[length + 1], ' ', ssd1311::kMaxColumns - length);
 

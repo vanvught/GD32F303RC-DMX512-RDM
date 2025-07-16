@@ -36,7 +36,7 @@
 #if !defined(CONFIG_DMXSEND_DISABLE_CONFIGUDP)
 #include "dmxconfigudp.h"
 #endif
-#include "panel_led.h"
+#include "hal_panelled.h"
 #include "hal.h"
 
 #include "debug.h"
@@ -63,7 +63,7 @@ class DmxSend
 
         if (Dmx::Get()->GetOutputStyle(port_index) == dmx::OutputStyle::kConstant)
         {
-            hal::panel_led_on(hal::panelled::PORT_A_TX << port_index);
+            hal::panelled::On(hal::panelled::PORT_A_TX << port_index);
         }
 
         DEBUG_EXIT
@@ -86,7 +86,7 @@ class DmxSend
 
         Dmx::Get()->SetPortDirection(port_index, dmx::PortDirection::kOutput, false);
 
-        hal::panel_led_off(hal::panelled::PORT_A_TX << port_index);
+        hal::panelled::Off(hal::panelled::PORT_A_TX << port_index);
 
         DEBUG_EXIT
     }
@@ -100,7 +100,7 @@ class DmxSend
         if constexpr (doUpdate)
         {
             Dmx::Get()->SetSendDataWithoutSC<doUpdate ? dmx::SendStyle::kDirect : dmx::SendStyle::kSync>(port_index, data, length);
-            hal::panel_led_on(hal::panelled::PORT_A_TX << port_index);
+            hal::panelled::On(hal::panelled::PORT_A_TX << port_index);
         }
     }
 
@@ -121,7 +121,7 @@ class DmxSend
             if (dmxnode::Data::GetLength(kLightsetOffset) != 0)
             {
                 dmxnode::Data::ClearLength(kLightsetOffset);
-                hal::panel_led_on(hal::panelled::PORT_A_TX << port_index);
+                hal::panelled::On(hal::panelled::PORT_A_TX << port_index);
                 if (!IsStarted(started_, port_index))
                 {
                     Start(port_index);

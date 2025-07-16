@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file e133.h
  *
  */
-/* Copyright (C) 2019-2024 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2019-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +23,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-#ifndef E133_H_
-#define E133_H_
 
 /**
  * A.3 Root Layer PDU vector
@@ -70,5 +68,3 @@
 #define LLRP_COMPONENT_TYPE_RPT_CONTROLLER 0x01	///< The LLRP Target is a Controller
 #define LLRP_COMPONENT_TYPE_BROKER         0x02	///< The LLRP Target is a Broker
 #define LLRP_COMPONENT_TYPE_NON_RDMNET     0xFF	///< The LLRP Target does not implement any RDMnet protocol other than LLRP
-
-#endif /* E133_H_ */

@@ -61,7 +61,7 @@ WidgetParams::WidgetParams()
     store_widget_.break_time = WIDGET_DEFAULT_BREAK_TIME;
     store_widget_.mab_time = WIDGET_DEFAULT_MAB_TIME;
     store_widget_.refresh_rate = WIDGET_DEFAULT_REFRESH_RATE;
-    store_widget_.mode = static_cast<uint8_t>(widget::Mode::DMX_RDM);
+    store_widget_.mode = static_cast<uint8_t>(widget::Mode::kDmxRdm);
     store_widget_.throttle = 0;
 }
 
@@ -124,7 +124,7 @@ void WidgetParams::CallbackFunction(const char* line)
 
     if (Sscan::Uint8(line, WidgetParamsConst::WIDGET_MODE, value8) == Sscan::OK)
     {
-        if (value8 <= static_cast<uint8_t>(widget::Mode::RDM_SNIFFER))
+        if (value8 <= static_cast<uint8_t>(widget::Mode::kRdmSniffer))
         {
             store_widget_.mode = value8;
             store_widget_.set_list |= WidgetParamsMask::kMode;

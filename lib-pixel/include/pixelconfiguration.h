@@ -60,185 +60,187 @@ class PixelConfiguration
     PixelConfiguration(const PixelConfiguration&) = delete;
     PixelConfiguration& operator=(const PixelConfiguration&) = delete;
 
-    void SetType(const pixel::Type Type) { m_type = Type; }
+    void SetType(pixel::Type type) { type_ = type; }
 
-    pixel::Type GetType() const { return m_type; }
+    pixel::Type GetType() const { return type_; }
 
-    void SetCount(const uint32_t nCount) { m_nCount = (nCount == 0 ? pixel::defaults::COUNT : nCount); }
+    void SetCount(uint32_t count) { count_ = (count == 0 ? pixel::defaults::COUNT : count); }
 
-    uint32_t GetCount() const { return m_nCount; }
+    uint32_t GetCount() const { return count_; }
 
-    void SetMap(const pixel::Map tMap) { m_map = tMap; }
+    void SetMap(pixel::Map map) { map_ = map; }
 
-    pixel::Map GetMap() const { return m_map; }
+    pixel::Map GetMap() const { return map_; }
 
-    void SetLowCode(const uint8_t nLowCode) { m_nLowCode = nLowCode; }
+    void SetLowCode(uint8_t low_code) { low_code_ = low_code; }
 
-    uint8_t GetLowCode() const { return m_nLowCode; }
+    uint8_t GetLowCode() const { return low_code_; }
 
-    void SetHighCode(const uint8_t nHighCode) { m_nHighCode = nHighCode; }
+    void SetHighCode(uint8_t high_code) { high_code_ = high_code; }
 
-    uint8_t GetHighCode() const { return m_nHighCode; }
+    uint8_t GetHighCode() const { return high_code_; }
 
-    void SetClockSpeedHz(const uint32_t nClockSpeedHz) { m_nClockSpeedHz = nClockSpeedHz; }
+    void SetClockSpeedHz(uint32_t clock_speed_hz) { clock_speed_hz_ = clock_speed_hz; }
 
-    uint32_t GetClockSpeedHz() const { return m_nClockSpeedHz; }
+    uint32_t GetClockSpeedHz() const { return clock_speed_hz_; }
 
-    void SetGlobalBrightness(const uint8_t nGlobalBrightness) { m_nGlobalBrightness = nGlobalBrightness; }
+    void SetGlobalBrightness(uint8_t global_brightness) { global_brightness_ = global_brightness; }
 
-    uint8_t GetGlobalBrightness() const { return m_nGlobalBrightness; }
+    uint8_t GetGlobalBrightness() const { return global_brightness_; }
 
-    bool IsRTZProtocol() const { return m_bIsRTZProtocol; }
+    bool IsRTZProtocol() const { return is_rtz_protocol_; }
 
-    uint32_t GetLedsPerPixel() const { return m_nLedsPerPixel; }
+    uint32_t GetLedsPerPixel() const { return leds_per_pixel_; }
 
-    uint32_t GetRefreshRate() const { return m_nRefreshRate; }
+    uint32_t GetRefreshRate() const { return refresh_rate_; }
 
 #if defined(CONFIG_PIXELDMX_ENABLE_GAMMATABLE)
-    void SetEnableGammaCorrection(const bool doEnable) { m_bEnableGammaCorrection = doEnable; }
+    void SetEnableGammaCorrection(bool do_enable) { enable_gamma_correction_ = do_enable; }
 
-    bool IsEnableGammaCorrection() const { return m_bEnableGammaCorrection; }
+    bool IsEnableGammaCorrection() const { return enable_gamma_correction_; }
 
-    void SetGammaTable(const uint32_t nValue) { m_nGammaValue = static_cast<uint8_t>(nValue); }
+    void SetGammaTable(uint32_t value) { gamma_value_ = static_cast<uint8_t>(value); }
 
-    const uint8_t* GetGammaTable() const { return m_pGammaTable; }
+    const uint8_t* GetGammaTable() const { return gamma_table_; }
 #endif
 
-    void GetTxH(const pixel::Type type, uint8_t& nLowCode, uint8_t& nHighCode)
+    void GetTxH(pixel::Type type, uint8_t& low_code, uint8_t& high_code)
     {
-        nLowCode = 0xC0;
-        nHighCode = (type == pixel::Type::WS2812B ? 0xF8 : (((type == pixel::Type::UCS1903) || (type == pixel::Type::UCS2903) || (type == pixel::Type::CS8812)) ? 0xFC : 0xF0));
+        low_code = 0xC0;
+        high_code = (type == pixel::Type::WS2812B
+                         ? 0xF8
+                         : (((type == pixel::Type::UCS1903) || (type == pixel::Type::UCS2903) || (type == pixel::Type::CS8812)) ? 0xFC : 0xF0));
     }
 
     void Validate()
     {
         DEBUG_ENTRY
 
-        if (m_type == pixel::Type::SK6812W)
+        if (type_ == pixel::Type::SK6812W)
         {
-            m_nCount = m_nCount <= pixel::max::ledcount::RGBW ? m_nCount : pixel::max::ledcount::RGBW;
-            m_nLedsPerPixel = 4;
+            count_ = count_ <= pixel::max::ledcount::RGBW ? count_ : pixel::max::ledcount::RGBW;
+            leds_per_pixel_ = 4;
         }
         else
         {
-            m_nCount = m_nCount <= pixel::max::ledcount::RGB ? m_nCount : pixel::max::ledcount::RGB;
-            m_nLedsPerPixel = 3;
+            count_ = count_ <= pixel::max::ledcount::RGB ? count_ : pixel::max::ledcount::RGB;
+            leds_per_pixel_ = 3;
         }
 
-        if ((m_type == pixel::Type::APA102) || (m_type == pixel::Type::SK9822))
+        if ((type_ == pixel::Type::APA102) || (type_ == pixel::Type::SK9822))
         {
-            if (m_nGlobalBrightness > 0x1F)
+            if (global_brightness_ > 0x1F)
             {
-                m_nGlobalBrightness = 0xFF;
+                global_brightness_ = 0xFF;
             }
             else
             {
-                m_nGlobalBrightness = 0xE0 | (m_nGlobalBrightness & 0x1F);
+                global_brightness_ = 0xE0 | (global_brightness_ & 0x1F);
             }
         }
 
-        if ((m_type == pixel::Type::WS2801) || (m_type == pixel::Type::APA102) || (m_type == pixel::Type::SK9822) || (m_type == pixel::Type::P9813))
+        if ((type_ == pixel::Type::WS2801) || (type_ == pixel::Type::APA102) || (type_ == pixel::Type::SK9822) || (type_ == pixel::Type::P9813))
         {
-            m_bIsRTZProtocol = false;
+            is_rtz_protocol_ = false;
 
-            if (m_map == pixel::Map::UNDEFINED)
+            if (map_ == pixel::Map::UNDEFINED)
             {
-                m_map = pixel::Map::RGB;
+                map_ = pixel::Map::RGB;
             }
 
-            if (m_type == pixel::Type::P9813)
+            if (type_ == pixel::Type::P9813)
             {
-                if (m_nClockSpeedHz == 0)
+                if (clock_speed_hz_ == 0)
                 {
-                    m_nClockSpeedHz = pixel::spi::speed::p9813::default_hz;
+                    clock_speed_hz_ = pixel::spi::speed::p9813::default_hz;
                 }
-                else if (m_nClockSpeedHz > pixel::spi::speed::p9813::max_hz)
+                else if (clock_speed_hz_ > pixel::spi::speed::p9813::max_hz)
                 {
-                    m_nClockSpeedHz = pixel::spi::speed::p9813::max_hz;
+                    clock_speed_hz_ = pixel::spi::speed::p9813::max_hz;
                 }
             }
             else
             {
-                if (m_nClockSpeedHz == 0)
+                if (clock_speed_hz_ == 0)
                 {
-                    m_nClockSpeedHz = pixel::spi::speed::ws2801::default_hz;
+                    clock_speed_hz_ = pixel::spi::speed::ws2801::default_hz;
                 }
-                else if (m_nClockSpeedHz > pixel::spi::speed::ws2801::max_hz)
+                else if (clock_speed_hz_ > pixel::spi::speed::ws2801::max_hz)
                 {
-                    m_nClockSpeedHz = pixel::spi::speed::ws2801::max_hz;
+                    clock_speed_hz_ = pixel::spi::speed::ws2801::max_hz;
                 }
             }
 
-            const auto nLedTime = (8U * 1000000U) / m_nClockSpeedHz;
-            const auto nLedsTime = nLedTime * m_nCount * m_nLedsPerPixel;
-            if (nLedsTime > 0)
+            const auto kLedTime = (8U * 1000000U) / clock_speed_hz_;
+            const auto kLedsTime = kLedTime * count_ * leds_per_pixel_;
+            if (kLedsTime > 0)
             {
-                m_nRefreshRate = 1000000U / nLedsTime;
+                refresh_rate_ = 1000000U / kLedsTime;
             }
             else
             {
-                m_nRefreshRate = 0;
+                refresh_rate_ = 0;
                 assert(0);
             }
         }
         else
         {
-            m_bIsRTZProtocol = true;
+            is_rtz_protocol_ = true;
 
-            if (m_type == pixel::Type::UNDEFINED)
+            if (type_ == pixel::Type::UNDEFINED)
             {
-                m_type = pixel::Type::WS2812B;
+                type_ = pixel::Type::WS2812B;
             }
 
-            if (m_map == pixel::Map::UNDEFINED)
+            if (map_ == pixel::Map::UNDEFINED)
             {
-                m_map = pixel::pixel_get_map(m_type);
+                map_ = pixel::GetMap(type_);
             }
 
-            if (m_nLowCode >= m_nHighCode)
+            if (low_code_ >= high_code_)
             {
-                m_nLowCode = 0;
-                m_nHighCode = 0;
+                low_code_ = 0;
+                high_code_ = 0;
             }
 
-            uint8_t nLowCode, nHighCode;
+            uint8_t low_code, high_code;
 
-            GetTxH(m_type, nLowCode, nHighCode);
+            GetTxH(type_, low_code, high_code);
 
-            if (m_nLowCode == 0)
+            if (low_code_ == 0)
             {
-                m_nLowCode = nLowCode;
+                low_code_ = low_code;
             }
 
-            if (m_nHighCode == 0)
+            if (high_code_ == 0)
             {
-                m_nHighCode = nHighCode;
+                high_code_ = high_code;
             }
 
-            m_nClockSpeedHz = 6400000; // 6.4MHz / 8 bits = 800Hz
+            clock_speed_hz_ = 6400000; // 6.4MHz / 8 bits = 800Hz
 
             //                  8 * 1000.000
             // led time (us) =  ------------ * 8 = 10 us
             //                   6.400.000
-            const auto nLedsTime = 10U * m_nCount * m_nLedsPerPixel;
-            m_nRefreshRate = 1000000U / nLedsTime;
+            const auto kLedsTime = 10U * count_ * leds_per_pixel_;
+            refresh_rate_ = 1000000U / kLedsTime;
         }
 
 #if defined(CONFIG_PIXELDMX_ENABLE_GAMMATABLE)
-        if (m_bEnableGammaCorrection)
+        if (enable_gamma_correction_)
         {
-            if (m_nGammaValue == 0)
+            if (gamma_value_ == 0)
             {
-                m_pGammaTable = gamma::get_table_default(m_type);
+                gamma_table_ = gamma::GetTableDefault(type_);
             }
             else
             {
-                m_pGammaTable = gamma::get_table(m_nGammaValue);
+                gamma_table_ = gamma::GetTable(gamma_value_);
             }
         }
         else
         {
-            m_pGammaTable = gamma10_0;
+            gamma_table_ = gamma10_0;
         }
 #endif
 
@@ -248,52 +250,52 @@ class PixelConfiguration
     void Print()
     {
         puts("Pixel configuration");
-        printf(" Type    : %s [%d] <%d leds/pixel>\n", pixel::pixel_get_type(m_type), static_cast<int>(m_type), static_cast<int>(m_nLedsPerPixel));
-        printf(" Count   : %d\n", m_nCount);
+        printf(" Type    : %s [%d] <%d leds/pixel>\n", pixel::GetType(type_), static_cast<int>(type_), static_cast<int>(leds_per_pixel_));
+        printf(" Count   : %d\n", count_);
 
-        if (m_bIsRTZProtocol)
+        if (is_rtz_protocol_)
         {
-            printf(" Mapping : %s [%d]\n", pixel::pixel_get_map(m_map), static_cast<int>(m_map));
-            printf(" T0H     : %.2f [0x%X]\n", pixel::pixel_convert_TxH(m_nLowCode), m_nLowCode);
-            printf(" T1H     : %.2f [0x%X]\n", pixel::pixel_convert_TxH(m_nHighCode), m_nHighCode);
+            printf(" Mapping : %s [%d]\n", pixel::GetMap(map_), static_cast<int>(map_));
+            printf(" T0H     : %.2f [0x%X]\n", pixel::ConvertTxH(low_code_), low_code_);
+            printf(" T1H     : %.2f [0x%X]\n", pixel::ConvertTxH(high_code_), high_code_);
         }
         else
         {
-            if ((m_type == pixel::Type::APA102) || (m_type == pixel::Type::SK9822))
+            if ((type_ == pixel::Type::APA102) || (type_ == pixel::Type::SK9822))
             {
-                printf(" GlobalBrightness: %u\n", m_nGlobalBrightness);
+                printf(" GlobalBrightness: %u\n", global_brightness_);
             }
         }
 
-        printf(" Clock   : %u Hz\n", static_cast<unsigned int>(m_nClockSpeedHz));
-        printf(" Refresh : %u Hz\n", static_cast<unsigned int>(m_nRefreshRate));
+        printf(" Clock   : %u Hz\n", static_cast<unsigned int>(clock_speed_hz_));
+        printf(" Refresh : %u Hz\n", static_cast<unsigned int>(refresh_rate_));
 
 #if defined(CONFIG_PIXELDMX_ENABLE_GAMMATABLE)
-        printf(" Gamma correction %s\n", m_bEnableGammaCorrection ? "Yes" : "No");
+        printf(" Gamma correction %s\n", enable_gamma_correction_ ? "Yes" : "No");
 #endif
     }
 
     static PixelConfiguration& Get()
     {
-        assert(s_this != nullptr); // Ensure that s_this is valid
+        assert(s_this != nullptr);
         return *s_this;
     }
 
    private:
-    uint32_t m_nCount{pixel::defaults::COUNT};
-    uint32_t m_nClockSpeedHz{0};
-    uint32_t m_nLedsPerPixel{3};
-    pixel::Type m_type{pixel::defaults::TYPE};
-    pixel::Map m_map{pixel::Map::UNDEFINED};
-    bool m_bIsRTZProtocol{true};
-    uint8_t m_nLowCode{0};
-    uint8_t m_nHighCode{0};
-    uint8_t m_nGlobalBrightness{0xFF};
-    uint32_t m_nRefreshRate{0};
+    uint32_t count_{pixel::defaults::COUNT};
+    uint32_t clock_speed_hz_{0};
+    uint32_t leds_per_pixel_{3};
+    pixel::Type type_{pixel::defaults::TYPE};
+    pixel::Map map_{pixel::Map::UNDEFINED};
+    bool is_rtz_protocol_{true};
+    uint8_t low_code_{0};
+    uint8_t high_code_{0};
+    uint8_t global_brightness_{0xFF};
+    uint32_t refresh_rate_{0};
 #if defined(CONFIG_PIXELDMX_ENABLE_GAMMATABLE)
-    uint8_t m_nGammaValue{0};
-    bool m_bEnableGammaCorrection{false};
-    const uint8_t* m_pGammaTable{gamma10_0};
+    uint8_t gamma_value_{0};
+    bool enable_gamma_correction_{false};
+    const uint8_t* gamma_table_{gamma10_0};
 #endif
 
     static inline PixelConfiguration* s_this{nullptr};

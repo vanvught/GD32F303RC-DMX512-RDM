@@ -219,9 +219,22 @@ struct DmxSend
 static_assert(offsetof(DmxSend, break_time) % alignof(uint16_t) == 0, "break_time must be uint16_t-aligned");
 static_assert(sizeof(DmxSend) == kDmxSendSize);
 
+namespace dmxled
+{
+struct Flags
+{
+    enum class Flag : uint32_t
+    {
+        kEnableGamma = (1U << 0),
+    };
+
+    static constexpr bool Has(uint32_t value, Flag flag) noexcept { return (value & static_cast<uint32_t>(flag)) != 0; }
+};
+} // namespace dmxled
+
 struct DmxLed
 {
-    uint32_t set_list;
+    uint32_t flags;
     uint8_t type;
     uint8_t map;
     uint16_t count;

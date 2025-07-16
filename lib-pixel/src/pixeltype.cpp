@@ -59,9 +59,9 @@ static constexpr char kMaps[static_cast<uint32_t>(pixel::Map::UNDEFINED)][4] =
 	"BGR"
 };
 
-const char* pixel_get_type(pixel::Type type)
+const char* GetType(Type type)
 {
-    if (type < pixel::Type::UNDEFINED)
+    if (type < Type::UNDEFINED)
     {
         return kTypes[static_cast<uint32_t>(type)];
     }
@@ -69,43 +69,43 @@ const char* pixel_get_type(pixel::Type type)
     return "Unknown";
 }
 
-pixel::Type pixel_get_type(const char* string)
+Type GetType(const char* string)
 {
-    assert(pString != nullptr);
+    assert(string != nullptr);
     uint32_t index = 0;
 
-    for (const char(&type)[pixel::TYPES_MAX_NAME_LENGTH] : kTypes)
+    for (const char(&type)[TYPES_MAX_NAME_LENGTH] : kTypes)
     {
         if (strcasecmp(string, type) == 0)
         {
-            return static_cast<pixel::Type>(index);
+            return static_cast<Type>(index);
         }
         ++index;
     }
 
-    return pixel::Type::UNDEFINED;
+    return Type::UNDEFINED;
 }
 
-pixel::Map pixel_get_map(const char* string)
+Map GetMap(const char* string)
 {
-    assert(pString != nullptr);
+    assert(string != nullptr);
     uint32_t index = 0;
 
     for (const char(&map)[4] : kMaps)
     {
         if (strncasecmp(map, string, 3) == 0)
         {
-            return static_cast<pixel::Map>(index);
+            return static_cast<Map>(index);
         }
         ++index;
     }
 
-    return pixel::Map::UNDEFINED;
+    return Map::UNDEFINED;
 }
 
-const char* pixel_get_map(pixel::Map map)
+const char* GetMap(Map map)
 {
-    if (map < pixel::Map::UNDEFINED)
+    if (map < Map::UNDEFINED)
     {
         return kMaps[static_cast<uint32_t>(map)];
     }
@@ -131,7 +131,7 @@ uint32_t JsonGetTypes(char* out_buffer, uint32_t out_buffer_size)
     out_buffer[length++] = ']';
     out_buffer[length++] = '}';
 
-    assert(nLength <= nOutBufferSize);
+    assert(length <= kBufferSize);
     return length;
 }
 } // namespace remoteconfig::pixel

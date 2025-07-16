@@ -122,12 +122,12 @@ void PixelDmxParams::CallbackFunction(const char* line)
     if (Sscan::Char(line, DmxLedParamsConst::TYPE, buffer, length) == Sscan::OK)
     {
         buffer[length] = '\0';
-        const auto kType = pixel::pixel_get_type(buffer);
+        const auto kType = pixel::GetType(buffer);
 
         if (kType != pixel::Type::UNDEFINED)
         {
             store_dmxled_.type = static_cast<uint8_t>(kType);
-            store_dmxled_.set_list |= pixeldmxparams::Mask::kType;
+            store_dmxled_.flags |= pixeldmxparams::Mask::kType;
         }
 
         return;
@@ -140,7 +140,7 @@ void PixelDmxParams::CallbackFunction(const char* line)
         if (value16 != 0 && value16 <= std::max(pixel::max::ledcount::RGB, pixel::max::ledcount::RGBW))
         {
             store_dmxled_.count = value16;
-            store_dmxled_.set_list |= pixeldmxparams::Mask::kCount;
+            store_dmxled_.flags |= pixeldmxparams::Mask::kCount;
         }
 
         return;
@@ -152,12 +152,12 @@ void PixelDmxParams::CallbackFunction(const char* line)
     {
         buffer[length] = '\0';
 
-        const auto kMap = pixel::pixel_get_map(buffer);
+        const auto kMap = pixel::GetMap(buffer);
 
         if (kMap != pixel::Map::UNDEFINED)
         {
             store_dmxled_.map = static_cast<uint8_t>(kMap);
-            store_dmxled_.set_list |= pixeldmxparams::Mask::kMap;
+            store_dmxled_.flags |= pixeldmxparams::Mask::kMap;
         }
 
         return;
@@ -168,10 +168,10 @@ void PixelDmxParams::CallbackFunction(const char* line)
 
     if (Sscan::Float(line, DmxLedParamsConst::LED_T0H, value_float) == Sscan::OK)
     {
-        if ((value8 = pixel::pixel_convert_TxH(value_float)) != 0)
+        if ((value8 = pixel::ConvertTxH(value_float)) != 0)
         {
             store_dmxled_.low_code = value8;
-            store_dmxled_.set_list |= pixeldmxparams::Mask::kLowCode;
+            store_dmxled_.flags |= pixeldmxparams::Mask::kLowCode;
         }
 
         return;
@@ -179,10 +179,10 @@ void PixelDmxParams::CallbackFunction(const char* line)
 
     if (Sscan::Float(line, DmxLedParamsConst::LED_T1H, value_float) == Sscan::OK)
     {
-        if ((value8 = pixel::pixel_convert_TxH(value_float)) != 0)
+        if ((value8 = pixel::ConvertTxH(value_float)) != 0)
         {
             store_dmxled_.high_code = value8;
-            store_dmxled_.set_list |= pixeldmxparams::Mask::kHighCode;
+            store_dmxled_.flags |= pixeldmxparams::Mask::kHighCode;
         }
 
         return;
@@ -193,7 +193,7 @@ void PixelDmxParams::CallbackFunction(const char* line)
         if (value16 > 1 && value16 <= std::max(pixel::max::ledcount::RGB, pixel::max::ledcount::RGBW))
         {
             store_dmxled_.grouping_count = value16;
-            store_dmxled_.set_list |= pixeldmxparams::Mask::kGroupingCount;
+            store_dmxled_.flags |= pixeldmxparams::Mask::kGroupingCount;
         }
 
         return;
@@ -206,7 +206,7 @@ void PixelDmxParams::CallbackFunction(const char* line)
         if (value32 != pixel::spi::speed::ws2801::default_hz)
         {
             store_dmxled_.spi_speed_hz = value32;
-            store_dmxled_.set_list |= pixeldmxparams::Mask::kSpiSpeed;
+            store_dmxled_.flags |= pixeldmxparams::Mask::kSpiSpeed;
         }
 
         return;
@@ -216,7 +216,7 @@ void PixelDmxParams::CallbackFunction(const char* line)
     {
         if ((value8 != 0) && (value8 != 0xFF))
         {
-            store_dmxled_.set_list |= pixeldmxparams::Mask::kGlobalBrightness;
+            store_dmxled_.flags |= pixeldmxparams::Mask::kGlobalBrightness;
             store_dmxled_.global_brightness = value8;
         }
 
@@ -229,7 +229,7 @@ void PixelDmxParams::CallbackFunction(const char* line)
         if ((value16 != 0) && (value16 <= dmxnode::kUniverseSize))
         {
             store_dmxled_.dmx_start_address = value16;
-            store_dmxled_.set_list |= pixeldmxparams::Mask::kDmxStartAddress;
+            store_dmxled_.flags |= pixeldmxparams::Mask::kDmxStartAddress;
         }
 
         return;
@@ -243,12 +243,12 @@ void PixelDmxParams::CallbackFunction(const char* line)
             if (value16 > 0)
             {
                 store_dmxled_.start_universe[i] = value16;
-                store_dmxled_.set_list |= (pixeldmxparams::Mask::kStartUniPort1 << i);
+                store_dmxled_.flags |= (pixeldmxparams::Mask::kStartUniPort1 << i);
             }
             else
             {
                 store_dmxled_.start_universe[i] = static_cast<uint16_t>(1 + (i * 4));
-                store_dmxled_.set_list &= ~(pixeldmxparams::Mask::kStartUniPort1 << i);
+                store_dmxled_.flags &= ~(pixeldmxparams::Mask::kStartUniPort1 << i);
             }
         }
     }
@@ -259,7 +259,7 @@ void PixelDmxParams::CallbackFunction(const char* line)
         if ((value8 > 0) && (value8 <= pixeldmxparams::kMaxPorts) && (value8 != pixel::defaults::OUTPUT_PORTS))
         {
             store_dmxled_.active_outputs = value8;
-            store_dmxled_.set_list |= pixeldmxparams::Mask::kActiveOut;
+            store_dmxled_.flags |= pixeldmxparams::Mask::kActiveOut;
         }
 
         return;
@@ -268,10 +268,10 @@ void PixelDmxParams::CallbackFunction(const char* line)
 
     if (Sscan::Uint8(line, DmxLedParamsConst::TEST_PATTERN, value8) == Sscan::OK)
     {
-        if (value8 < static_cast<uint8_t>(pixelpatterns::Pattern::LAST))
+        if (value8 < static_cast<uint8_t>(pixelpatterns::Pattern::kLast))
         {
             store_dmxled_.test_pattern = value8;
-            store_dmxled_.set_list |= pixeldmxparams::Mask::kTestPattern;
+            store_dmxled_.flags |= pixeldmxparams::Mask::kTestPattern;
         }
 
         return;
@@ -282,11 +282,11 @@ void PixelDmxParams::CallbackFunction(const char* line)
     {
         if (nValue8 != 0)
         {
-            store_dmxled_.set_list |= pixeldmxparams::Mask::GAMMA_CORRECTION;
+            store_dmxled_.flags |= pixeldmxparams::Mask::GAMMA_CORRECTION;
         }
         else
         {
-            store_dmxled_.set_list &= ~pixeldmxparams::Mask::GAMMA_CORRECTION;
+            store_dmxled_.flags &= ~pixeldmxparams::Mask::GAMMA_CORRECTION;
         }
         return;
     }
@@ -294,7 +294,7 @@ void PixelDmxParams::CallbackFunction(const char* line)
     if (Sscan::Float(line, DmxLedParamsConst::GAMMA_VALUE, fValue) == Sscan::OK)
     {
         const auto nValue = static_cast<uint8_t>(fValue * 10);
-        if ((nValue < gamma::MIN) || (nValue > gamma::MAX))
+        if ((nValue < gamma::kMin) || (nValue > gamma::kMax))
         {
             store_dmxled_.gamma_value = 0;
         }
@@ -322,7 +322,7 @@ void PixelDmxParams::Builder(char* buffer, uint32_t length, uint32_t& size)
         store_dmxled_.type = static_cast<uint8_t>(pixel_dmx_configuration.GetType());
     }
 
-    builder.Add(DmxLedParamsConst::TYPE, pixel::pixel_get_type(static_cast<pixel::Type>(store_dmxled_.type)));
+    builder.Add(DmxLedParamsConst::TYPE, pixel::GetType(static_cast<pixel::Type>(store_dmxled_.type)));
 
     if (store_dmxled_.count == 0)
     {
@@ -350,7 +350,7 @@ void PixelDmxParams::Builder(char* buffer, uint32_t length, uint32_t& size)
     }
 
     builder.AddComment("Overwrite datasheet");
-    builder.Add(DmxLedParamsConst::MAP, pixel::pixel_get_map(static_cast<pixel::Map>(store_dmxled_.map)));
+    builder.Add(DmxLedParamsConst::MAP, pixel::GetMap(static_cast<pixel::Map>(store_dmxled_.map)));
 
     if (!IsMaskSet(pixeldmxparams::Mask::kLowCode) || !IsMaskSet(pixeldmxparams::Mask::kHighCode))
     {
@@ -371,8 +371,8 @@ void PixelDmxParams::Builder(char* buffer, uint32_t length, uint32_t& size)
     }
 
     builder.AddComment("Overwrite timing (us)");
-    builder.Add(DmxLedParamsConst::LED_T0H, pixel::pixel_convert_TxH(store_dmxled_.low_code), true, 2);
-    builder.Add(DmxLedParamsConst::LED_T1H, pixel::pixel_convert_TxH(store_dmxled_.high_code), true, 2);
+    builder.Add(DmxLedParamsConst::LED_T0H, pixel::ConvertTxH(store_dmxled_.low_code), true, 2);
+    builder.Add(DmxLedParamsConst::LED_T1H, pixel::ConvertTxH(store_dmxled_.high_code), true, 2);
 
     if (store_dmxled_.grouping_count == 0)
     {
@@ -515,14 +515,14 @@ void PixelDmxParams::StaticCallbackFunction(void* p, const char* s)
 void PixelDmxParams::Dump()
 {
     printf("%s::%s \'%s\':\n", __FILE__, __FUNCTION__, DmxLedParamsConst::FILE_NAME);
-    printf(" %s=%s [%d]\n", DmxLedParamsConst::TYPE, pixel::pixel_get_type(static_cast<pixel::Type>(store_dmxled_.type)), static_cast<int>(store_dmxled_.type));
-    printf(" %s=%d [%s]\n", DmxLedParamsConst::MAP, static_cast<int>(store_dmxled_.map), pixel::pixel_get_map(static_cast<pixel::Map>(store_dmxled_.map)));
-    printf(" %s=%.2f [0x%X]\n", DmxLedParamsConst::LED_T0H, pixel::pixel_convert_TxH(store_dmxled_.low_code), store_dmxled_.low_code);
-    printf(" %s=%.2f [0x%X]\n", DmxLedParamsConst::LED_T1H, pixel::pixel_convert_TxH(store_dmxled_.high_code), store_dmxled_.high_code);
+    printf(" %s=%s [%d]\n", DmxLedParamsConst::TYPE, pixel::GetType(static_cast<pixel::Type>(store_dmxled_.type)), static_cast<int>(store_dmxled_.type));
+    printf(" %s=%d [%s]\n", DmxLedParamsConst::MAP, static_cast<int>(store_dmxled_.map), pixel::GetMap(static_cast<pixel::Map>(store_dmxled_.map)));
+    printf(" %s=%.2f [0x%X]\n", DmxLedParamsConst::LED_T0H, pixel::ConvertTxH(store_dmxled_.low_code), store_dmxled_.low_code);
+    printf(" %s=%.2f [0x%X]\n", DmxLedParamsConst::LED_T1H, pixel::ConvertTxH(store_dmxled_.high_code), store_dmxled_.high_code);
     printf(" %s=%d\n", DmxLedParamsConst::COUNT, store_dmxled_.count);
     printf(" %s=%d\n", DmxLedParamsConst::GROUPING_COUNT, store_dmxled_.grouping_count);
 
-    for (uint32_t i = 0; i < std::min(static_cast<size_t>(pixelpatterns::MAX_PORTS),
+    for (uint32_t i = 0; i < std::min(static_cast<size_t>(pixelpatterns::kMaxPorts),
                                       sizeof(PixelDmxParamsConst::START_UNI_PORT) / sizeof(PixelDmxParamsConst::START_UNI_PORT[0]));
          i++)
     {

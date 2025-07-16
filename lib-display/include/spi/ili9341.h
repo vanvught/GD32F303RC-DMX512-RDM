@@ -177,23 +177,23 @@ public:
 		switch (nRotation) {
 		case 0:
 			WriteDataByte(ili9341::data::MADCTL_BGR);
-			m_nWidth = config::WIDTH;
-			m_nHeight = config::HEIGHT;
+			width_ = config::WIDTH;
+			height_ = config::HEIGHT;
 			break;
 		case 1:
 			WriteDataByte(ili9341::data::MADCTL_MX | ili9341::data::MADCTL_MV | ili9341::data::MADCTL_BGR);
-			m_nWidth = config::HEIGHT;
-			m_nHeight = config::WIDTH;
+			width_ = config::HEIGHT;
+			height_ = config::WIDTH;
 			break;
 		case 2:
 			WriteDataByte(ili9341::data::MADCTL_MX | ili9341::data::MADCTL_MY | ili9341::data::MADCTL_BGR);
-			m_nWidth = config::WIDTH;
-			m_nHeight = config::HEIGHT;
+			width_ = config::WIDTH;
+			height_ = config::HEIGHT;
 			break;
 		case 3:
 			WriteDataByte(ili9341::data::MADCTL_MY | ili9341::data::MADCTL_MV | ili9341::data::MADCTL_BGR);
-			m_nWidth = config::HEIGHT;
-			m_nHeight = config::WIDTH;
+			width_ = config::HEIGHT;
+			height_ = config::WIDTH;
 			break;
 		default:
 			assert(0);
@@ -201,7 +201,7 @@ public:
 			break;
 		}
 
-		m_nRotate = nRotation;
+		rotate_ = nRotation;
 	}
 
 	void SetBackLight(uint32_t nValue) {
@@ -238,6 +238,6 @@ private:
 	}
 
 protected:
-	uint32_t m_nShiftX { 0 };
-	uint32_t m_nShiftY { 0 };
+	uint32_t shift_x_ { 0 };
+	uint32_t shift_y_ { 0 };
 };

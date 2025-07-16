@@ -50,7 +50,7 @@
 #endif
 
 #include "hal_statusled.h"
-#include "panel_led.h"
+#include "hal_panelled.h"
 #include "logic_analyzer.h"
 
 #include "debug.h"
@@ -100,7 +100,10 @@ extern unsigned char _epixel;
 
 namespace hal
 {
-
+namespace global
+{
+bool watchdog = false;
+}
 void Init()
 {
     /*
@@ -299,7 +302,7 @@ void Init()
     GPIO_BOP(PANELLED_595_CS_GPIOx) = PANELLED_595_CS_GPIO_PINx;
 #endif
 
-    hal::panel_led_init();
+    hal::panelled::Init();
 
 #if defined ENABLE_USB_HOST
     usb_init();
@@ -314,8 +317,8 @@ void Init()
     tmbuf.tm_mon = _TIME_STAMP_MONTH_ - 1;    // The number of months since January, in the range 0 to 11.
     tmbuf.tm_year = _TIME_STAMP_YEAR_ - 1900; // The number of years since 1900.
 
-    const auto seconds = mktime(&tmbuf);
-    const struct timeval tv = {seconds, 0};
+    const auto kSeconds = mktime(&tmbuf);
+    const struct timeval tv = {kSeconds, 0};
 
     settimeofday(&tv, nullptr);
 #endif
@@ -337,7 +340,7 @@ void Init()
 #endif
 
 #if !defined(USE_FREE_RTOS)
-    hal::statusled_set_frequency(1);
+    hal::statusled::SetFrequency(1);
 #endif
 }
 } // namespace hal

@@ -32,9 +32,9 @@
 
 namespace hd44780::pcf8574t
 {
-static constexpr uint8_t kDefaultAddress = 0x27;
-static constexpr uint8_t kTC2004Address = kDefaultAddress;
-static constexpr uint8_t kTC1602Address = 0x26;
+inline constexpr uint8_t kDefaultAddress = 0x27;
+inline constexpr uint8_t kTC2004Address = kDefaultAddress;
+inline constexpr uint8_t kTC1602Address = 0x26;
 } // namespace hd44780::pcf8574t
 
 class Hd44780 final : public DisplaySet

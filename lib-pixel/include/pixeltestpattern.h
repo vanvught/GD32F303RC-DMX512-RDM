@@ -46,14 +46,14 @@ public:
 	}
 
 	bool SetPattern(const pixelpatterns::Pattern Pattern) {
-		if (Pattern >= pixelpatterns::Pattern::LAST)  {
+		if (Pattern >= pixelpatterns::Pattern::kLast)  {
 			return false;
 		}
 
 		m_Pattern = Pattern;
 
-		const auto nColour1 = pixel::get_colour(0, 0, 0);
-		const auto nColour2 = pixel::get_colour(100, 100, 100);
+		const auto colour1 = pixel::GetColour(0, 0, 0);
+		const auto colour2 = pixel::GetColour(100, 100, 100);
 		constexpr auto nInterval = 100;
 		constexpr auto nSteps = 10;
 
@@ -61,19 +61,19 @@ public:
 			DEBUG_PRINTF("i=%u",i);
 
 			switch (Pattern) {
-			case pixelpatterns::Pattern::RAINBOW_CYCLE:
+			case pixelpatterns::Pattern::kRainbowCycle:
 				PixelPatterns::RainbowCycle(i, nInterval);
 				break;
-			case pixelpatterns::Pattern::THEATER_CHASE:
-				PixelPatterns::TheaterChase(i, nColour1, nColour2, nInterval);
+			case pixelpatterns::Pattern::kTheaterChase:
+				PixelPatterns::TheaterChase(i, colour1, colour2, nInterval);
 				break;
-			case pixelpatterns::Pattern::COLOR_WIPE:
-				PixelPatterns::ColourWipe(i, nColour2, nInterval);
+			case pixelpatterns::Pattern::kColorWipe:
+				PixelPatterns::ColourWipe(i, colour2, nInterval);
 				break;
-			case pixelpatterns::Pattern::FADE:
-				PixelPatterns::Fade(i, nColour1, nColour2, nSteps, nInterval);
+			case pixelpatterns::Pattern::kFade:
+				PixelPatterns::Fade(i, colour1, colour2, nSteps, nInterval);
 				break;
-			case pixelpatterns::Pattern::NONE:
+			case pixelpatterns::Pattern::kNone:
 				PixelPatterns::None(i);
 				break;
 			default:
@@ -86,7 +86,7 @@ public:
 	}
 
 	void Run() {
-		if (__builtin_expect((m_Pattern != pixelpatterns::Pattern::NONE), 0)) {
+		if (__builtin_expect((m_Pattern != pixelpatterns::Pattern::kNone), 0)) {
 			PixelPatterns::Run();
 		}
 	}

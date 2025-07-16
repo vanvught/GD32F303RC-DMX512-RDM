@@ -77,19 +77,25 @@ struct CircularBuffer
     uint32_t tail;
 };
 
-static volatile CircularBuffer s_circular_buffer __attribute__ ((aligned (4)));
+static volatile CircularBuffer s_circular_buffer __attribute__((aligned(4)));
 static volatile State s_state;
 static volatile uint8_t s_data;
 static volatile uint8_t s_shift;
 
 static bool IsCircularBufferEmpty()
 {
-    return s_circular_buffer.head == s_circular_buffer.tail;
+    NVIC_DisableIRQ(TIMERx_IRQn);
+    auto empty = s_circular_buffer.head == s_circular_buffer.tail;
+    NVIC_EnableIRQ(TIMERx_IRQn);
+    return empty;
 }
 
 static bool IsCircularBufferFull(uint32_t next_head)
 {
-    return next_head == s_circular_buffer.tail;
+    NVIC_DisableIRQ(TIMERx_IRQn);
+    auto is_full = next_head == s_circular_buffer.tail;
+    NVIC_EnableIRQ(TIMERx_IRQn);
+    return is_full;
 }
 
 extern "C"
@@ -248,10 +254,6 @@ void uart0_puts(const char* s)
 {
     while (*s != '\0')
     {
-        if (*s == '\n')
-        {
-            uart0_putc('\r');
-        }
         uart0_putc(*s++);
     }
 

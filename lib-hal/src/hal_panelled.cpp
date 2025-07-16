@@ -1,9 +1,8 @@
-#pragma once
 /**
- * @file boardinfo.h
+ * @file panel_led.cpp
  *
  */
-/* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2023-2025 by Arjan van Vught mailto:infogd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,11 +25,8 @@
 
 #include <cstdint>
 
-namespace hal
+namespace hal::panelled::global
 {
-const char* BoardName(uint8_t& length);
-const char* SocName(uint8_t& length);
-const char* CpuName(uint8_t& length);
-const char* SysName(uint8_t& length);
-const char* MachineName(uint8_t& length);
-} // namespace hal
+uint32_t data;
+uint32_t data_previous;
+} // namespace hal::panelled::global

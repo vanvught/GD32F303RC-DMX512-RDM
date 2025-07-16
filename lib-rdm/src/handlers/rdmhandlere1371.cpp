@@ -24,8 +24,8 @@
  */
 
 #include "rdmhandler.h"
-#include "rdmconst.h"
 #include "rdmidentify.h"
+#include "e120.h"
 #include "rdm_e120.h"
 
 #include "debug.h"

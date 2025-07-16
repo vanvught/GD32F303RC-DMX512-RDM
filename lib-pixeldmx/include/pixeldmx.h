@@ -150,13 +150,13 @@ public:
 #if !defined(DMXNODE_PORTS)
 		static constexpr uint32_t beginIndex = 0;
 #else
-		const auto beginIndex = portInfo.nBeginIndexPort[nSwitch];
+		const auto beginIndex = portInfo.begin_index_port[nSwitch];
 #endif
 		const auto nChannelsPerPixel = pixelDmxConfiguration.GetLedsPerPixel();
 		const auto endIndex = std::min(nGroups,
 				(beginIndex + (nLength / nChannelsPerPixel)));
 
-		if ((nSwitch == 0) && (nGroups < portInfo.nBeginIndexPort[1])) {
+		if ((nSwitch == 0) && (nGroups < portInfo.begin_index_port[1])) {
 			d = (pixelDmxConfiguration.GetDmxStartAddress() - 1U);
 		}
 
@@ -250,7 +250,7 @@ public:
 #error
 #endif
 		if constexpr (doUpdate) {
-			if (nPortIndex == portInfo.nProtocolPortIndexLast) {
+			if (nPortIndex == portInfo.protocol_port_index_last) {
 
 				if (__builtin_expect((m_bBlackout), 0)) {
 					return;

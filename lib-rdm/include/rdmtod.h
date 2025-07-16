@@ -32,7 +32,6 @@
 #endif
 
 #include "rdmconst.h"
-
 #include "debug.h"
 
 namespace rdmtod

@@ -25,9 +25,7 @@
  */
 
 #include "spi/config.h"
-
 #include "hal_spi.h"
-
 #include "debug.h"
 
 #if defined CONFIG_LCD_SPI_BITBANG

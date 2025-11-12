@@ -132,7 +132,7 @@ void HwClock::RtcProbe()
 
         if (!RtcConfiguration())
         {
-            m_bIsConnected = false;
+            is_connected_ = false;
             DEBUG_PUTS("RTC did not start");
             DEBUG_EXIT
             return;
@@ -162,7 +162,7 @@ void HwClock::RtcProbe()
     }
 
     m_Type = rtc::Type::SOC_INTERNAL;
-    m_bIsConnected = true;
+    is_connected_ = true;
     m_nLastHcToSysMillis = millis();
 
     DEBUG_EXIT

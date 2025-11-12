@@ -104,7 +104,7 @@ class DmxConfigUdp
         s_this = this;
 
         assert(handle_ == -1);
-        handle_ = net::udp_begin(kUdpPort, DmxConfigUdp::StaticCallbackFunction);
+        handle_ = net::udp::Begin(kUdpPort, DmxConfigUdp::StaticCallbackFunction);
 
         DEBUG_EXIT
     }
@@ -117,7 +117,7 @@ class DmxConfigUdp
         DEBUG_ENTRY
 
         assert(handle_ != -1);
-        net::udp_end(kUdpPort);
+        net::udp::End(kUdpPort);
         handle_ = -1;
 
         s_this = nullptr;
@@ -193,7 +193,7 @@ class DmxConfigUdp
     {
         static constexpr auto kOffset = kCmdBreakLength + 4;
         const auto kBreakTime = Atoi(reinterpret_cast<const char*>(&buffer[kOffset]), size - kOffset);
-        if (kBreakTime >= dmx::transmit::BREAK_TIME_MIN)
+        if (kBreakTime >= dmx::transmit::kBreakTimeMin)
         {
             Dmx::Get()->SetDmxBreakTime(kBreakTime);
             DEBUG_PRINTF("kBreakTime=%u", kBreakTime);
@@ -210,7 +210,7 @@ class DmxConfigUdp
     {
         static constexpr auto kOffset = kCmdMabLength + 4;
         const auto kMabTime = Atoi(reinterpret_cast<const char*>(&buffer[kOffset]), size - kOffset);
-        if (Validate(kMabTime, dmx::transmit::MAB_TIME_MIN, dmx::transmit::MAB_TIME_MAX))
+        if (Validate(kMabTime, dmx::transmit::kMabTimeMin, dmx::transmit::kMabTimeMax))
         {
             Dmx::Get()->SetDmxMabTime(kMabTime);
             DEBUG_PRINTF("kMabTime=%u", kMabTime);

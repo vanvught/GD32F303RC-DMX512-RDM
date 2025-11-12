@@ -32,7 +32,7 @@
 #include "debug.h"
 
 bool HwClock::Set(const tm *pTime) {
-	if (!m_bIsConnected) {
+	if (!is_connected_) {
 		return false;
 	}
 

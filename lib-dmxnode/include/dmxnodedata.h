@@ -55,11 +55,11 @@ class Data
         return instance;
     }
 
-    static void SetSourceA(uint32_t port_index, const uint8_t* data, uint32_t length) { Get().IMergeSourceA(port_index, data, length, MergeMode::LTP); }
+    static void SetSourceA(uint32_t port_index, const uint8_t* data, uint32_t length) { Get().IMergeSourceA(port_index, data, length, MergeMode::kLtp); }
 
     static void MergeSourceA(uint32_t port_index, const uint8_t* data, uint32_t length, MergeMode merge_mode) { Get().IMergeSourceA(port_index, data, length, merge_mode); }
 
-    static void SetSourceB(uint32_t port_index, const uint8_t* data, uint32_t length) { Get().IMergeSourceB(port_index, data, length, MergeMode::LTP); }
+    static void SetSourceB(uint32_t port_index, const uint8_t* data, uint32_t length) { Get().IMergeSourceB(port_index, data, length, MergeMode::kLtp); }
 
     static void MergeSourceB(uint32_t port_index, const uint8_t* data, uint32_t length, MergeMode merge_mode) { Get().IMergeSourceB(port_index, data, length, merge_mode); }
 
@@ -76,14 +76,14 @@ class Data
    private:
     void IMergeSourceA(uint32_t port_index, const uint8_t* data, uint32_t length, MergeMode merge_mode)
     {
-        assert(port_index < PORTS);
+        assert(port_index < kPorts);
         assert(data != nullptr);
 
         memcpy(output_port_[port_index].source_a.data, data, length);
 
         output_port_[port_index].length = length;
 
-        if (merge_mode == MergeMode::HTP)
+        if (merge_mode == MergeMode::kHtp)
         {
             for (uint32_t i = 0; i < length; i++)
             {
@@ -99,14 +99,14 @@ class Data
 
     void IMergeSourceB(uint32_t port_index, const uint8_t* data, uint32_t length, MergeMode merge_mode)
     {
-        assert(port_index < PORTS);
+        assert(port_index < kPorts);
         assert(data != nullptr);
 
         memcpy(output_port_[port_index].source_b.data, data, length);
 
         output_port_[port_index].length = length;
 
-        if (merge_mode == MergeMode::HTP)
+        if (merge_mode == MergeMode::kHtp)
         {
             for (uint32_t i = 0; i < length; i++)
             {
@@ -122,7 +122,7 @@ class Data
 
     void IClear(uint32_t port_index)
     {
-        assert(port_index < PORTS);
+        assert(port_index < kPorts);
 
         memset(output_port_[port_index].data, 0, dmxnode::kUniverseSize);
         output_port_[port_index].length = dmxnode::kUniverseSize;
@@ -130,22 +130,25 @@ class Data
 
     void IClearLength(uint32_t port_index)
     {
-        assert(port_index < PORTS);
-
+        assert(port_index < kPorts);
         output_port_[port_index].length = 0;
     }
 
-    uint32_t IGetLength(uint32_t port_index) const { return output_port_[port_index].length; }
+    uint32_t IGetLength(uint32_t port_index) const 
+    { 
+		assert(port_index < kPorts);
+		return output_port_[port_index].length; 
+	}
 
     const uint8_t* IBackup(uint32_t port_index)
     {
-        assert(port_index < PORTS);
+        assert(port_index < kPorts);
         return const_cast<const uint8_t*>(output_port_[port_index].data);
     }
 
     void IRestore(uint32_t port_index, const uint8_t* data)
     {
-        assert(port_index < PORTS);
+        assert(port_index < kPorts);
         assert(data != nullptr);
 
         memcpy(output_port_[port_index].data, data, dmxnode::kUniverseSize);
@@ -157,9 +160,9 @@ class Data
 #endif
 
 #if (DMXNODE_PORTS == 0)
-    static constexpr auto PORTS = 1; // ISO C++ forbids zero-size array
+    static constexpr auto kPorts = 1; // ISO C++ forbids zero-size array
 #else
-    static constexpr auto PORTS = DMXNODE_PORTS;
+    static constexpr auto kPorts = DMXNODE_PORTS;
 #endif
 
     struct Source
@@ -175,6 +178,6 @@ class Data
         uint32_t length;
     };
 
-    OutputPort output_port_[PORTS];
+    OutputPort output_port_[kPorts];
 };
 } // namespace dmxnode

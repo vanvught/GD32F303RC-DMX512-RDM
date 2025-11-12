@@ -34,7 +34,7 @@ namespace rdmsensors_store
 {
 inline void SaveCalibration(uint32_t sensor, int32_t calibration)
 {
-    assert(nSensor < common::store::rdm::sensors::kMaxSensors);
+    assert(sensor < common::store::rdm::sensors::kMaxSensors);
     auto c = static_cast<int16_t>(calibration);
     ConfigStore::Instance().RdmSensorsUpdateIndexed(&common::store::RdmSensors::calibrate, sensor, c);
 }

@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file millis.h
+ * @file hal_millis.h
  *
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org

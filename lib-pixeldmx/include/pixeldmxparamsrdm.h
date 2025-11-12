@@ -25,15 +25,16 @@
  */
 
 #include <cstdint>
+#include <cstdio>
 
 #include "dmxnode.h"
 #include "dmxnodeoutputrdmpixel.h"
-
 #include "debug.h"
+#include "rdmpersonality.h"
 
 namespace pixeldmx::paramsdmx
 {
-enum class SlotInfo
+enum class SlotsInfo
 {
     TYPE,
     COUNT,
@@ -43,7 +44,16 @@ enum class SlotInfo
     PROGRAM,
     LAST
 };
-static constexpr auto DMX_FOOTPRINT = static_cast<uint16_t>(SlotInfo::LAST);
+inline constexpr auto kDmxFootprint = static_cast<uint16_t>(SlotsInfo::LAST);
+
+inline void SetPersonalityDescription(char description[rdm::personality::DESCRIPTION_MAX_LENGTH])
+{
+    auto& configuration = PixelDmxConfiguration::Get();
+    snprintf(description, rdm::personality::DESCRIPTION_MAX_LENGTH - 1U, "%s:%u G%u [%s]", pixel::GetType(configuration.GetType()), configuration.GetCount(),
+             configuration.GetGroupingCount(), pixel::GetMap(configuration.GetMap()));
+}
+
+void Display(const uint8_t data[kDmxFootprint]);
 } // namespace pixeldmx::paramsdmx
 
 class PixelDmxParamsRdm final : public DmxNodeOutputRdmPixel
@@ -60,11 +70,11 @@ class PixelDmxParamsRdm final : public DmxNodeOutputRdmPixel
 
     void SetDataImpl(uint32_t port_index, const uint8_t* data, uint32_t length, bool do_update) override;
 
-    uint16_t GetDmxFootprint() override { return pixeldmx::paramsdmx::DMX_FOOTPRINT; }
+    uint16_t GetDmxFootprint() override { return pixeldmx::paramsdmx::kDmxFootprint; }
 
     bool GetSlotInfo(uint16_t slot_offset, dmxnode::SlotInfo& slot_info) override
     {
-        if (slot_offset >= pixeldmx::paramsdmx::DMX_FOOTPRINT)
+        if (slot_offset >= pixeldmx::paramsdmx::kDmxFootprint)
         {
             return false;
         }
@@ -75,8 +85,6 @@ class PixelDmxParamsRdm final : public DmxNodeOutputRdmPixel
         return true;
     }
 
-    void Display(const uint8_t* data) __attribute__((weak));
-
    private:
-    uint8_t m_Data{0};
+    uint8_t data_{0};
 };

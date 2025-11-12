@@ -3,7 +3,7 @@
  * @file bwspi7fets.h
  *
  */
-/* Copyright (C) 2020 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2020 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ class BwSpi7fets : BwSpi
     {
         char cmd[3];
 
-        cmd[0] = static_cast<char>(m_nAddress);
+        cmd[0] = static_cast<char>(address_);
         cmd[1] = bw::port::write::io_direction;
         cmd[2] = static_cast<char>(nMask);
 
@@ -42,13 +42,13 @@ class BwSpi7fets : BwSpi
     }
 
    public:
-    explicit BwSpi7fets(uint8_t nChipSelect = 0, uint8_t nAddress = bw::fets::address) : BwSpi(nChipSelect, nAddress, bw::fets::id_string) { SetDirection(0x7F); }
+    explicit BwSpi7fets(uint8_t nChipSelect = 0, uint8_t address = bw::fets::address) : BwSpi(nChipSelect, address, bw::fets::id_string) { SetDirection(0x7F); }
 
     void Output(uint8_t nPins)
     {
         char cmd[3];
 
-        cmd[0] = static_cast<char>(m_nAddress);
+        cmd[0] = static_cast<char>(address_);
         cmd[1] = bw::port::write::set_all_outputs;
         cmd[2] = static_cast<char>(nPins);
 

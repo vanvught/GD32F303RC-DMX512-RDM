@@ -23,12 +23,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-/**
- * Static Local Variables:
- * Since C++11, the initialization of function-local static variables, is guaranteed to be thread-safe.
- * This means that even if multiple threads attempt to access Get() simultaneously,
- * the C++ runtime ensures that the instance is initialized only once.
- */
 
 #include <cstdint>
 #include <cstdio>
@@ -60,11 +54,19 @@ class PixelConfiguration
     PixelConfiguration(const PixelConfiguration&) = delete;
     PixelConfiguration& operator=(const PixelConfiguration&) = delete;
 
-    void SetType(pixel::Type type) { type_ = type; }
+    void SetType(pixel::Type type)
+    {
+        type_ = type;
+        refresh_needed_ = true;
+    }
 
     pixel::Type GetType() const { return type_; }
 
-    void SetCount(uint32_t count) { count_ = (count == 0 ? pixel::defaults::COUNT : count); }
+    void SetCount(uint32_t count)
+    {
+        count_ = (count == 0 ? pixel::defaults::kCount : count);
+        refresh_needed_ = true;
+    }
 
     uint32_t GetCount() const { return count_; }
 
@@ -72,15 +74,27 @@ class PixelConfiguration
 
     pixel::Map GetMap() const { return map_; }
 
-    void SetLowCode(uint8_t low_code) { low_code_ = low_code; }
+    void SetLowCode(uint8_t low_code)
+    {
+        low_code_ = low_code;
+        refresh_needed_ = true;
+    }
 
     uint8_t GetLowCode() const { return low_code_; }
 
-    void SetHighCode(uint8_t high_code) { high_code_ = high_code; }
+    void SetHighCode(uint8_t high_code)
+    {
+        high_code_ = high_code;
+        refresh_needed_ = true;
+    }
 
     uint8_t GetHighCode() const { return high_code_; }
 
-    void SetClockSpeedHz(uint32_t clock_speed_hz) { clock_speed_hz_ = clock_speed_hz; }
+    void SetClockSpeedHz(uint32_t clock_speed_hz)
+    {
+        clock_speed_hz_ = clock_speed_hz;
+        refresh_needed_ = true;
+    }
 
     uint32_t GetClockSpeedHz() const { return clock_speed_hz_; }
 
@@ -99,7 +113,8 @@ class PixelConfiguration
 
     bool IsEnableGammaCorrection() const { return enable_gamma_correction_; }
 
-    void SetGammaTable(uint32_t value) { gamma_value_ = static_cast<uint8_t>(value); }
+    void SetGammaTable(uint32_t value) { gamma_value_ = static_cast<uint8_t>(gamma::GetValidValue(value)); }
+    uint8_t GetGammaTableValue() const { return gamma_value_; }
 
     const uint8_t* GetGammaTable() const { return gamma_table_; }
 #endif
@@ -152,22 +167,22 @@ class PixelConfiguration
             {
                 if (clock_speed_hz_ == 0)
                 {
-                    clock_speed_hz_ = pixel::spi::speed::p9813::default_hz;
+                    clock_speed_hz_ = pixel::spi::speed::p9813::kDefaultHz;
                 }
-                else if (clock_speed_hz_ > pixel::spi::speed::p9813::max_hz)
+                else if (clock_speed_hz_ > pixel::spi::speed::p9813::kMaxHz)
                 {
-                    clock_speed_hz_ = pixel::spi::speed::p9813::max_hz;
+                    clock_speed_hz_ = pixel::spi::speed::p9813::kMaxHz;
                 }
             }
             else
             {
                 if (clock_speed_hz_ == 0)
                 {
-                    clock_speed_hz_ = pixel::spi::speed::ws2801::default_hz;
+                    clock_speed_hz_ = pixel::spi::speed::ws2801::kDefaultHz;
                 }
-                else if (clock_speed_hz_ > pixel::spi::speed::ws2801::max_hz)
+                else if (clock_speed_hz_ > pixel::spi::speed::ws2801::kMaxHz)
                 {
-                    clock_speed_hz_ = pixel::spi::speed::ws2801::max_hz;
+                    clock_speed_hz_ = pixel::spi::speed::ws2801::kMaxHz;
                 }
             }
 
@@ -242,10 +257,16 @@ class PixelConfiguration
         {
             gamma_table_ = gamma10_0;
         }
+
+        gamma_value_ = gamma::GetValue(gamma_table_);
 #endif
 
         DEBUG_EXIT
     }
+
+    bool RefreshNeeded() const { return refresh_needed_; }
+
+    void RefreshNeededReset() { refresh_needed_ = false; }
 
     void Print()
     {
@@ -272,6 +293,10 @@ class PixelConfiguration
 
 #if defined(CONFIG_PIXELDMX_ENABLE_GAMMATABLE)
         printf(" Gamma correction %s\n", enable_gamma_correction_ ? "Yes" : "No");
+        if (enable_gamma_correction_)
+        {
+            printf("   Value = %u\n", gamma_value_);
+        }
 #endif
     }
 
@@ -282,16 +307,17 @@ class PixelConfiguration
     }
 
    private:
-    uint32_t count_{pixel::defaults::COUNT};
+    uint32_t count_{pixel::defaults::kCount};
     uint32_t clock_speed_hz_{0};
     uint32_t leds_per_pixel_{3};
-    pixel::Type type_{pixel::defaults::TYPE};
+    pixel::Type type_{pixel::defaults::kType};
     pixel::Map map_{pixel::Map::UNDEFINED};
     bool is_rtz_protocol_{true};
     uint8_t low_code_{0};
     uint8_t high_code_{0};
     uint8_t global_brightness_{0xFF};
     uint32_t refresh_rate_{0};
+    bool refresh_needed_{true};
 #if defined(CONFIG_PIXELDMX_ENABLE_GAMMATABLE)
     uint8_t gamma_value_{0};
     bool enable_gamma_correction_{false};

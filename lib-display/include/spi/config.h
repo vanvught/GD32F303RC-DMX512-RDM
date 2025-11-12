@@ -29,17 +29,17 @@
 namespace config
 {
 #if defined(SPI_LCD_240X240)
-inline constexpr uint32_t WIDTH = 240;
-inline constexpr uint32_t HEIGHT = 240;
+inline constexpr uint32_t kWidth = 240;
+inline constexpr uint32_t kHeight = 240;
 #elif defined(SPI_LCD_240X320)
-inline constexpr uint32_t WIDTH = 240;
-inline constexpr uint32_t HEIGHT = 320;
+inline constexpr uint32_t kWidth = 240;
+inline constexpr uint32_t kHeight = 320;
 #elif defined(SPI_LCD_128X128)
-inline constexpr uint32_t WIDTH = 128;
-inline constexpr uint32_t HEIGHT = 128;
+inline constexpr uint32_t kWidth = 128;
+inline constexpr uint32_t kHeight = 128;
 #elif defined(SPI_LCD_160X80)
-inline constexpr uint32_t WIDTH = 80;
-inline constexpr uint32_t HEIGHT = 160;
+inline constexpr uint32_t kWidth = 80;
+inline constexpr uint32_t kHeight = 160;
 #else
 #error lib-display spi config
 #endif

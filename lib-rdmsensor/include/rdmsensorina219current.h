@@ -2,7 +2,7 @@
  * @file rdmsensorina219current.h
  *
  */
-/* Copyright (C) 2020 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2020 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,7 @@
 
 class RDMSensorINA219Current: public RDMSensor, sensor::INA219 {
 public:
-	RDMSensorINA219Current(uint8_t nSensor, uint8_t nAddress = 0) : RDMSensor(nSensor), sensor::INA219(nAddress) {
+	RDMSensorINA219Current(uint8_t nSensor, uint8_t address = 0) : RDMSensor(nSensor), sensor::INA219(address) {
 		SetType(E120_SENS_CURRENT);
 		SetUnit(E120_UNITS_AMPERE_DC);
 		SetPrefix(E120_PREFIX_MILLI);

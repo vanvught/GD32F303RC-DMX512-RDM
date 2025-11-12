@@ -29,12 +29,9 @@
 
 #include "spi/config.h"
 #include "spi/st77xx.h"
-
 #include "debug.h"
 
-namespace st7789
-{
-namespace cmd
+namespace st7789::cmd
 {
 inline constexpr uint8_t kGctrl = 0xB7;    ///< Gate Control
 inline constexpr uint8_t kVcoms = 0xBB;    ///< VCOM Setting
@@ -44,7 +41,7 @@ inline constexpr uint8_t kVrhs = 0xC3;     ///< VRH Set
 inline constexpr uint8_t kVdvs = 0xC4;     ///< VDV Set
 inline constexpr uint8_t kFrctrL2 = 0xC6;  ///< Frame Rate Control in Normal Mode
 inline constexpr uint8_t kPwctrL1 = 0xD0;  ///< Power Control 1
-} // namespace cmd
+} // namespace st7789::cmd
 #if defined(SPI_LCD_240X240)
 inline constexpr uint32_t kRotation0ShiftX = 0;
 inline constexpr uint32_t kRotation0ShiftY = 80;
@@ -64,7 +61,7 @@ inline constexpr uint32_t kRotation2ShiftY = 0;
 inline constexpr uint32_t kRotation3ShiftX = 0;
 inline constexpr uint32_t kRotation3ShiftY = 0;
 #endif
-} // namespace st7789
+
 
 class ST7789 : public ST77XX
 {
@@ -81,11 +78,11 @@ class ST7789 : public ST77XX
         s_instance++;
 #endif
 
-        WriteCommand(st77xx::cmd::SWRESET);
+        WriteCommand(st77xx::cmd::kSwreset);
         udelay(1000 * 150);
 
         static constexpr uint8_t kConfig[] = {1,
-                                              st77xx::cmd::COLMOD,
+                                              st77xx::cmd::kColmod,
                                               0x55,
                                               1,
                                               st7789::cmd::kGctrl,
@@ -113,23 +110,23 @@ class ST7789 : public ST77XX
                                               0xA4,
                                               0xA1,
                                               0,
-                                              st77xx::cmd::NORON,
+                                              st77xx::cmd::kNoron,
                                               0,
-                                              st77xx::cmd::INVON};
+                                              st77xx::cmd::kInvon};
 
         uint32_t arg_length = 0;
 
         for (uint32_t i = 0; i < sizeof(kConfig); i += (arg_length + 2))
         {
             arg_length = kConfig[i];
-            DEBUG_PRINTF("i=%u, nArgLength=%u", i, nArgLength);
+            DEBUG_PRINTF("i=%u, arg_length=%u", i, arg_length);
             WriteCommand(&kConfig[i + 1], arg_length);
         }
 
         SetRotation(0);
 
-        WriteCommand(st77xx::cmd::SLPOUT); ///< Sleep Out
-        WriteCommand(st77xx::cmd::DISPON); ///< Display On
+        WriteCommand(st77xx::cmd::kSlpout); ///< Sleep Out
+        WriteCommand(st77xx::cmd::kDispon); ///< Display On
 
         DEBUG_EXIT
     }
@@ -138,37 +135,37 @@ class ST7789 : public ST77XX
 
     void SetRotation(uint32_t rotation)
     {
-        WriteCommand(st77xx::cmd::MADCTL);
+        WriteCommand(st77xx::cmd::kMadctl);
 
         switch (rotation)
         {
             case 0:
-                WriteDataByte(st77xx::data::MADCTL_MX | st77xx::data::MADCTL_MY | st77xx::data::MADCTL_RGB);
+                WriteDataByte(st77xx::data::kMadctlMx | st77xx::data::kMadctlMy | st77xx::data::kMadctlRgb);
                 shift_x_ = st7789::kRotation0ShiftX;
                 shift_y_ = st7789::kRotation0ShiftY;
-                width_ = config::WIDTH;
-                height_ = config::HEIGHT;
+                width_ = config::kWidth;
+                height_ = config::kHeight;
                 break;
             case 1:
-                WriteDataByte(st77xx::data::MADCTL_MY | st77xx::data::MADCTL_MV | st77xx::data::MADCTL_RGB);
+                WriteDataByte(st77xx::data::kMadctlMy | st77xx::data::kMadctlMv | st77xx::data::kMadctlRgb);
                 shift_x_ = st7789::kRotation1ShiftX;
                 shift_y_ = st7789::kRotation1ShiftY;
-                width_ = config::HEIGHT;
-                height_ = config::WIDTH;
+                width_ = config::kHeight;
+                height_ = config::kWidth;
                 break;
             case 2:
-                WriteDataByte(st77xx::data::MADCTL_RGB);
+                WriteDataByte(st77xx::data::kMadctlRgb);
                 shift_x_ = st7789::kRotation2ShiftX;
                 shift_y_ = st7789::kRotation2ShiftY;
-                width_ = config::WIDTH;
-                height_ = config::HEIGHT;
+                width_ = config::kWidth;
+                height_ = config::kHeight;
                 break;
             case 3:
-                WriteDataByte(st77xx::data::MADCTL_MX | st77xx::data::MADCTL_MV | st77xx::data::MADCTL_RGB);
+                WriteDataByte(st77xx::data::kMadctlMx | st77xx::data::kMadctlMv | st77xx::data::kMadctlRgb);
                 shift_x_ = st7789::kRotation3ShiftX;
                 shift_y_ = st7789::kRotation3ShiftY;
-                width_ = config::HEIGHT;
-                height_ = config::WIDTH;
+                width_ = config::kHeight;
+                height_ = config::kWidth;
                 break;
             default:
                 assert(0);

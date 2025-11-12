@@ -72,12 +72,12 @@ class HAL_I2C
     /**
      * @brief Constructs a new HAL_I2C object.
      *
-     * @param nAddress The I2C address of the device.
+     * @param address The I2C address of the device.
      * @param nBaudrate The I2C baud rate (default: `HAL_I2C::FULL_SPEED`).
      *
      * @note The I2C address is 7-bit. Use `HAL_I2C::NORMAL_SPEED` for slower communication.
      */
-    HAL_I2C(uint8_t nAddress, uint32_t nBaudrate = FULL_SPEED) : address_(nAddress), baudrate_(nBaudrate) {}
+    HAL_I2C(uint8_t address, uint32_t nBaudrate = FULL_SPEED) : address_(address), baudrate_(nBaudrate) {}
 
     /**
      * @brief Gets the I2C device address.
@@ -106,11 +106,11 @@ class HAL_I2C
     /**
      * @brief Static method to check if an I2C device is connected.
      *
-     * @param nAddress The I2C address of the device.
+     * @param address The I2C address of the device.
      * @param nBaudrate The I2C baud rate (default: `HAL_I2C::NORMAL_SPEED`).
      * @return `true` if the device acknowledges communication, `false` otherwise.
      */
-    static bool IsConnected(const uint8_t nAddress, uint32_t nBaudrate = NORMAL_SPEED) { return FUNC_PREFIX(I2cIsConnected(nAddress, nBaudrate)); }
+    static bool IsConnected(const uint8_t address, uint32_t nBaudrate = NORMAL_SPEED) { return FUNC_PREFIX(I2cIsConnected(address, nBaudrate)); }
 
     /**
      * @brief Writes a single byte to the I2C device.

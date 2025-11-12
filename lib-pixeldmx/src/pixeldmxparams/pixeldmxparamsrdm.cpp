@@ -1,5 +1,5 @@
 /**
- * @file pixeldmxparamsdmx.cpp
+ * @file pixeldmxparamsrdm.cpp
  *
  */
 /* Copyright (C) 2021-2025 by Arjan van Vught mailto:info@gd32-dmx.org
@@ -23,8 +23,11 @@
  * THE SOFTWARE.
  */
 
-#if defined (DEBUG_PIXELDMX)
-# undef NDEBUG
+
+#undef NDEBUG
+
+#if defined(DEBUG_PIXELDMX)
+#undef NDEBUG
 #endif
 
 #include <cstdint>
@@ -33,59 +36,76 @@
 #include "pixeldmxparamsrdm.h"
 #include "pixeldmxstore.h"
 #include "pixeltype.h"
-
+#include "common/utils/utils_enum.h"
+#include "pixeldmxconfiguration.h"
+#include "rdmdeviceresponder.h"
 #include "debug.h"
 
-void PixelDmxParamsRdm::SetDataImpl([[maybe_unused]] uint32_t nPortIndex, const uint8_t *pData, uint32_t nLength, [[maybe_unused]] const bool doUpdate) {
-	assert(nPortIndex == 0);
+void PixelDmxParamsRdm::SetDataImpl([[maybe_unused]] uint32_t port_index, const uint8_t* data, uint32_t length, [[maybe_unused]] bool do_update)
+{
+    DEBUG_PRINTF("port_index=%u, length=%u", port_index, length);
+    assert(port_index == 0);
 
-	if (nLength < pixeldmx::paramsdmx::DMX_FOOTPRINT) {
-		return;
-	}
+    if (length < pixeldmx::paramsdmx::kDmxFootprint)
+    {
+        return;
+    }
 
-	/*
-	 * Slot 1: nType
-	 * Slot 2: nCount;
-	 * Slot 3: nGroupingCount
-	 * Slot 4: nMap;
-	 * Slot 5: nTestPattern
-	 * Slot 6: Program;
-	 */
+    /*
+     * Slot 1: nType
+     * Slot 2: nCount;
+     * Slot 3: nGroupingCount
+     * Slot 4: nMap;
+     * Slot 5: nTestPattern
+     * Slot 6: Program;
+     */
 
-	assert(pixeldmx::paramsdmx::DMX_FOOTPRINT == 6);
+    assert(pixeldmx::paramsdmx::kDmxFootprint == 6);
 
-	const auto nLastIndex = pixeldmx::paramsdmx::DMX_FOOTPRINT - 1U;
+    const auto kLastIndex = pixeldmx::paramsdmx::kDmxFootprint - 1U;
 
-	if (pData[nLastIndex] == 0x00) {
-		m_Data = 0x00;
-	} else {
-		if ((pData[nLastIndex] == 0xFF) && (m_Data == 0x00)) {
-			DEBUG_PUTS("Program");
-			m_Data = 0xFF;
+    if (data[kLastIndex] == 0x00)
+    {
+        data_ = 0x00;
+    }
+    else
+    {
+        if ((data[kLastIndex] == 0xFF) && (data_ == 0x00))
+        {
+            DEBUG_PUTS("Program");
+            data_ = 0xFF;
 
-			auto nData = pData[static_cast<uint32_t>(pixeldmx::paramsdmx::SlotInfo::TYPE)];
-			auto nUndefined = static_cast<uint8_t>(pixel::Type::UNDEFINED);
-			const auto nType = nData < nUndefined ? nData : nUndefined;
-			dmxled_store::SaveType(nType);
+            auto slot_data = data[static_cast<uint32_t>(pixeldmx::paramsdmx::SlotsInfo::TYPE)];
+            uint8_t undefined = common::ToValue(pixel::Type::UNDEFINED);
+            const auto kType = slot_data < undefined ? slot_data : undefined;
+            slot_data = data[static_cast<uint32_t>(pixeldmx::paramsdmx::SlotsInfo::MAP)];
+            undefined = common::ToValue(pixel::Map::UNDEFINED);
+            const auto kMap = slot_data < undefined ? slot_data : undefined;
+            const auto kCount = data[static_cast<uint32_t>(pixeldmx::paramsdmx::SlotsInfo::COUNT)];
+            const auto kGroupingCount = data[static_cast<uint32_t>(pixeldmx::paramsdmx::SlotsInfo::GROUPING_COUNT)];
 
-			// Validation takes place in class PixelDmxConfiguration
-			dmxled_store::SaveCount(pData[static_cast<uint32_t>(pixeldmx::paramsdmx::SlotInfo::COUNT)]);
-			dmxled_store::SaveGroupingCount(pData[static_cast<uint32_t>(pixeldmx::paramsdmx::SlotInfo::GROUPING_COUNT)]);
+            auto& configuration = PixelDmxConfiguration::Get();
+            configuration.SetType(common::FromValue<pixel::Type>(kType));
+            configuration.SetMap(common::FromValue<pixel::Map>(kMap));
+            configuration.SetCount(kCount);
+            configuration.SetGroupingCount(kGroupingCount);
+            configuration.Validate(1);
 
-			nData = pData[static_cast<uint32_t>(pixeldmx::paramsdmx::SlotInfo::MAP)];
-			nUndefined = static_cast<uint8_t>(pixel::Map::UNDEFINED);
-			const auto nMap = nData < nUndefined ? nData : nUndefined;
-			dmxled_store::SaveMap(nMap);
+            char description[rdm::personality::DESCRIPTION_MAX_LENGTH];
+			pixeldmx::paramsdmx::SetPersonalityDescription(description);
+            auto* personality = RDMDeviceResponder::Get()->GetPersonality(RDM_ROOT_DEVICE, 1);
+            personality->SetDescription(description);
 
-			dmxled_store::SaveTestPattern(pData[static_cast<uint32_t>(pixeldmx::paramsdmx::SlotInfo::TEST_PATTERN)]);
-		}
-	}
+            dmxled_store::SaveType(common::ToValue(configuration.GetType()));
+            dmxled_store::SaveMap(common::ToValue(configuration.GetMap()));
+            dmxled_store::SaveCount(static_cast<uint16_t>(configuration.GetCount()));
+            dmxled_store::SaveGroupingCount(static_cast<uint16_t>(configuration.GetGroupingCount()));
+            dmxled_store::SaveTestPattern(data[static_cast<uint32_t>(pixeldmx::paramsdmx::SlotsInfo::TEST_PATTERN)]);
+        }
+    }
 
-	if ((pData[nLastIndex] == 0x00) || (pData[nLastIndex] == 0xFF)) {
-		Display(pData);
-	}
-}
-
-void PixelDmxParamsRdm::Display([[maybe_unused]] const uint8_t *pData) {
-	// Weak
+    if ((data[kLastIndex] == 0x00) || (data[kLastIndex] == 0xFF))
+    {
+        pixeldmx::paramsdmx::Display(data);
+    }
 }

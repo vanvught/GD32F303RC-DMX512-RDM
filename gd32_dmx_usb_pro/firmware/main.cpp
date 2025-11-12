@@ -24,15 +24,12 @@
  */
 
 #include <cstdio>
-#include <cstdint>
 
 #include "hal.h"
 #include "gd32/hal_watchdog.h"
 #include "hal_boardinfo.h"
-#include "noemac/network.h"
 #include "widget.h"
 #include "widgetparams.h"
-#include "rdmdeviceparams.h"
 #include "configstore.h"
 #include "software_version.h"
 
@@ -40,30 +37,33 @@
 #define ALIGNED __attribute__((aligned(4)))
 #endif
 
-static constexpr char kWidgetModeNames[4][12] ALIGNED = {"DMX_RDM", "DMX", "RDM", "RDM_SNIFFER"};
-static constexpr TRDMDeviceInfoData kDeviceLabel ALIGNED = {const_cast<char*>("GD32F103RC DMX USB Pro"), 22};
+static constexpr char kWidgetModeNames[4][12] ALIGNED = 
+{
+  "DMX_RDM", 
+  "DMX", 
+  "RDM", 
+  "RDM_SNIFFER"
+};
+
+static constexpr TRDMDeviceInfoData kDeviceLabel ALIGNED = 
+{
+  const_cast<char*>("GD32F103RC DMX USB Pro"),
+  22
+};
 
 int main()
 {
     hal::Init();
     ConfigStore config_store;
-    Network nw;
 
     Widget widget;
     widget.SetPortDirection(0, dmx::PortDirection::kInput, false);
 
     WidgetParams widget_params;
-
     widget_params.Load();
     widget_params.Set();
 
     widget.SetLabel(&kDeviceLabel);
-
-    RDMDeviceParams rdm_device_params;
-
-    rdm_device_params.Load();
-    rdm_device_params.Set(&widget);
-
     widget.Init();
 
     const auto* rdm_device_uid = widget.GetUID();

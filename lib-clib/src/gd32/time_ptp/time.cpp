@@ -26,7 +26,6 @@
 #pragma GCC push_options
 #pragma GCC optimize("O2")
 
-#include <cstdint>
 #include <time.h>
 #include <sys/time.h>
 #include <cassert>

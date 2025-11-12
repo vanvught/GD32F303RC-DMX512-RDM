@@ -29,7 +29,7 @@
 #include <cassert>
 
 #include "dmxnode.h"
-
+#include "common/utils/utils_hex.h"
 #include "debug.h"
 
 class DmxSlotInfo
@@ -120,8 +120,6 @@ class DmxSlotInfo
 
         auto* p = to_string_;
 
-#define TO_HEX(i) static_cast<char>(((i) < 10) ? '0' + (i) : 'A' + ((i) - 10))
-
         for (uint32_t i = 0; i < size_; i++)
         {
             if ((mask & 0x1) == 0x1)
@@ -129,20 +127,23 @@ class DmxSlotInfo
                 const auto kType = slot_info_[i].type;
                 const auto kCategory = slot_info_[i].category;
 
-                *p++ = TO_HEX((kType & 0xF0) >> 4);
-                *p++ = TO_HEX(kType & 0x0F);
+                auto append_hex = [&](uint32_t nybble) 
+                { 
+					*p++ = common::hex::ToCharUppercase(nybble); 
+				};
+
+                append_hex((kType & 0xF0) >> 4);
+                append_hex(kType & 0x0F);
                 *p++ = ':';
-                *p++ = TO_HEX((kCategory & 0xF000) >> 12);
-                *p++ = TO_HEX((kCategory & 0x0F00) >> 8);
-                *p++ = TO_HEX((kCategory & 0x00F0) >> 4);
-                *p++ = TO_HEX(kCategory & 0x000F);
+                append_hex((kCategory & 0xF000) >> 12);
+                append_hex((kCategory & 0x0F00) >> 8);
+                append_hex((kCategory & 0x00F0) >> 4);
+                append_hex(kCategory & 0x000F);
                 *p++ = ',';
             }
 
             mask = mask >> 1;
         }
-
-#undef TO_HEX
 
         p--;
         *p = '\0';

@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file storedevice.h
+ * @file configstoredevice.h
  *
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
@@ -26,35 +26,39 @@
 
 #include <cstdint>
 
-namespace storedevice {
-enum class Result {
-	OK, ERROR
+namespace storedevice
+{
+enum class Result
+{
+    kOk,
+    kError
 };
-}  // namespace storedevice
+} // namespace storedevice
 
-#if defined (CONFIG_STORE_USE_I2C)
-# include "i2c/at24cxx.h"
-class StoreDevice: AT24C32 {
-#elif defined (CONFIG_STORE_USE_ROM)
-# include "flashcode.h"
-class StoreDevice: FlashCode {
+#if defined(CONFIG_STORE_USE_I2C)
+#include "i2c/at24cxx.h"
+class StoreDevice : AT24C32
+{
+#elif defined(CONFIG_STORE_USE_ROM)
+#include "flashcode.h"
+class StoreDevice : FlashCode
+{
 #else
-class StoreDevice {
+class StoreDevice
+{
 #endif
-public:
-	StoreDevice();
-	~StoreDevice();
+   public:
+    StoreDevice();
+    ~StoreDevice();
 
-	bool IsDetected() const {
-		return detected_;
-	}
-	uint32_t GetSectorSize() const;
-	uint32_t GetSize() const;
+    bool IsDetected() const { return detected_; }
+    uint32_t GetSectorSize() const;
+    uint32_t GetSize() const;
 
-	bool Read(uint32_t offset, uint32_t length, uint8_t *buffer, storedevice::Result& result);
-	bool Erase(uint32_t offset, uint32_t length, storedevice::Result& result);
-	bool Write(uint32_t offset, uint32_t length, const uint8_t *buffer, storedevice::Result& result);
+    bool Read(uint32_t offset, uint32_t length, uint8_t* buffer, storedevice::Result& result);
+    bool Erase(uint32_t offset, uint32_t length, storedevice::Result& result);
+    bool Write(uint32_t offset, uint32_t length, const uint8_t* buffer, storedevice::Result& result);
 
-private:
-	bool detected_ { false };
+   private:
+    bool detected_{false};
 };

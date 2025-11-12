@@ -3,7 +3,7 @@
  * @file bw.h
  *
  */
-/* Copyright (C) 2020 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2020 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -107,11 +107,11 @@ static constexpr uint8_t reinit_lcd = 0x14;
 class BwSpi : public HAL_SPI
 {
    public:
-    BwSpi(uint8_t nChipSelect, uint8_t nAddress, const char* pIdString) : HAL_SPI(nChipSelect, bw::spi::speed::default_hz), m_nAddress(nAddress)
+    BwSpi(uint8_t nChipSelect, uint8_t address, const char* pIdString) : HAL_SPI(nChipSelect, bw::spi::speed::default_hz), address_(address)
     {
         char spiBuffer[bw::id_string::length + 2];
 
-        spiBuffer[0] = static_cast<char>(m_nAddress | 1);
+        spiBuffer[0] = static_cast<char>(address_ | 1);
         spiBuffer[1] = bw::port::read::id_string;
 
         HAL_SPI::WriteRead(spiBuffer, sizeof(spiBuffer));
@@ -124,6 +124,6 @@ class BwSpi : public HAL_SPI
     }
 
    protected:
-    uint8_t m_nAddress;
+    uint8_t address_;
     bool m_IsConnected = false;
 };

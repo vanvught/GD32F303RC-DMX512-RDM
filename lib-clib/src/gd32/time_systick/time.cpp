@@ -32,7 +32,7 @@
 
 extern volatile uint32_t gv_nSysTickMillis;
 
-static uint32_t nPreviousSysTickMillis;
+static uint32_t previous_systick_millis;
 static struct timeval s_tv;
 
 extern "C"
@@ -50,16 +50,16 @@ extern "C"
 
         uint32_t millis_elapsed;
 
-        if (kCurrentSysTickMillis >= nPreviousSysTickMillis)
+        if (kCurrentSysTickMillis >= previous_systick_millis)
         {
-            millis_elapsed = kCurrentSysTickMillis - nPreviousSysTickMillis;
+            millis_elapsed = kCurrentSysTickMillis - previous_systick_millis;
         }
         else
         {
-            millis_elapsed = (UINT32_MAX - nPreviousSysTickMillis) + kCurrentSysTickMillis + 1;
+            millis_elapsed = (UINT32_MAX - previous_systick_millis) + kCurrentSysTickMillis + 1;
         }
 
-        nPreviousSysTickMillis = kCurrentSysTickMillis;
+        previous_systick_millis = kCurrentSysTickMillis;
 
         const auto kSeconds = millis_elapsed / 1000U;
         const auto kMicroSeconds = (millis_elapsed % 1000U) * 1000U;
@@ -86,7 +86,7 @@ extern "C"
         struct timeval g;
         gettimeofday(&g, nullptr);
 
-        nPreviousSysTickMillis = gv_nSysTickMillis;
+        previous_systick_millis = gv_nSysTickMillis;
 
         s_tv.tv_sec = tv->tv_sec;
         s_tv.tv_usec = tv->tv_usec;

@@ -32,9 +32,7 @@
 
 #include "pixeloutput.h"
 #include "pixelconfiguration.h"
-
 #include "gd32_spi.h"
-
 #include "debug.h"
 
 static uint32_t s_tmp;
@@ -46,9 +44,33 @@ PixelOutput::PixelOutput()
     assert(s_this == nullptr);
     s_this = this;
 
+    i2s::Gd32SpiDmaBegin();
+
+    ApplyConfiguration();
+
+    DEBUG_EXIT
+}
+
+PixelOutput::~PixelOutput()
+{
+    blackout_buffer_ = nullptr;
+    buffer_ = nullptr;
+    s_this = nullptr;
+}
+
+void PixelOutput::ApplyConfiguration()
+{
+    DEBUG_ENTRY
+
     auto& pixel_configuration = PixelConfiguration::Get();
 
     pixel_configuration.Validate();
+
+    if (!pixel_configuration.RefreshNeeded())
+    {
+        DEBUG_EXIT
+        return;
+    }
 
     const auto kCount = pixel_configuration.GetCount();
 
@@ -70,17 +92,9 @@ PixelOutput::PixelOutput()
 
     SetupBuffers();
 
-    i2s::Gd32SpiDmaBegin();
     i2s::Gd32SpiDmaSetSpeedHz(pixel_configuration.GetClockSpeedHz());
 
     DEBUG_EXIT
-}
-
-PixelOutput::~PixelOutput()
-{
-    blackout_buffer_ = nullptr;
-    buffer_ = nullptr;
-    s_this = nullptr;
 }
 
 void PixelOutput::SetupBuffers()

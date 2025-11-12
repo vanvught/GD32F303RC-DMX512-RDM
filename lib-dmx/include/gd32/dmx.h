@@ -108,14 +108,14 @@ class Dmx
     void StartDmxOutput(uint32_t port_index);
 
    private:
-    uint32_t m_nDmxTransmitPeriod{dmx::transmit::PERIOD_DEFAULT};
-    uint32_t m_nDmxTransmitPeriodRequested{dmx::transmit::PERIOD_DEFAULT};
+    uint32_t m_nDmxTransmitPeriod{dmx::transmit::kPeriodDefault};
+    uint32_t m_nDmxTransmitPeriodRequested{dmx::transmit::kPeriodDefault};
     uint32_t m_nDmxTransmissionLength[dmx::config::max::PORTS];
     uint32_t m_nDmxTransmitSlots{dmx::kChannelsMax};
     dmx::PortDirection m_dmxPortDirection[dmx::config::max::PORTS];
     bool m_bHasContinuosOutput{false};
 
-    static Dmx* s_this;
+    inline static Dmx* s_this;
 };
 
 #define DMX_HANDLE_SEND_CASE(i, SC, STYLE) \

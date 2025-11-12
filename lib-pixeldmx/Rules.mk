@@ -1,9 +1,9 @@
 EXTRA_INCLUDES+=../lib-pixel/include
 EXTRA_INCLUDES+=../lib-dmxled/include
-EXTRA_INCLUDES+=../lib-properties/include 
+EXTRA_INCLUDES+=../lib-displayudf/include ../lib-display/include
 EXTRA_INCLUDES+=../lib-network/include
 
-EXTRA_SRCDIR+=src/pixeldmxparams src/json
+EXTRA_SRCDIR+=src/json
 
 ifneq ($(MAKE_FLAGS),)
 	ifeq ($(findstring OUTPUT_DMX_SEND,$(MAKE_FLAGS)), OUTPUT_DMX_SEND)
@@ -12,6 +12,13 @@ ifneq ($(MAKE_FLAGS),)
 	ifneq (,$(findstring CONFIG_RDM_ENABLE_MANUFACTURER_PIDS,$(MAKE_FLAGS)))
 		EXTRA_INCLUDES+=../lib-rdm/include
 		EXTRA_SRCDIR+=src/pixeldmxrdm
+	endif
+	ifeq ($(findstring RDM_RESPONDER,$(MAKE_FLAGS)), RDM_RESPONDER)
+		EXTRA_SRCDIR+=src/pixeldmxparams
+		EXTRA_INCLUDES+=../lib-rdm/include
+	endif
+	ifeq ($(findstring CONFIG_RDM_ENABLE_SENSORS,$(MAKE_FLAGS)), CONFIG_RDM_ENABLE_SENSORS)
+		EXTRA_INCLUDES+=../lib-rdmsensor/include
 	endif
 else
 	DEFINES+=CONFIG_DMXNODE_PIXEL_MAX_PORTS=8

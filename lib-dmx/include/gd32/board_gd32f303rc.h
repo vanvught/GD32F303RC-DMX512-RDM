@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file board_gd32f303r.h
+ * @file board_gd32f303rc.h
  *
  */
 /* Copyright (C) 2022 by Arjan van Vught mailto:info@gd32-dmx.org

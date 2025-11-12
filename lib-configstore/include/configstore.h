@@ -30,8 +30,7 @@
 
 #include "configstoredevice.h"
 #include "configurationstore.h"
-
-#include "utc.h"
+#include "global.h"
 #include "softwaretimers.h"
 
 #include "debug.h"
@@ -90,7 +89,7 @@ class ConfigStore : StoreDevice
 
             storedevice::Result result;
             while (!StoreDevice::Read(s_start_address, kStoreSize, reinterpret_cast<uint8_t*>(&s_store), result));
-            assert(result == storedevice::Result::OK);
+            assert(result == storedevice::Result::kOk);
         }
 
         auto* store = GetStore();
@@ -107,7 +106,7 @@ class ConfigStore : StoreDevice
         }
 
         // Set global
-        hal::utc::SetOffsetIfValid(store->global.utc_offset);
+        Global::Instance().SetUtcOffsetIfValid(store->global.utc_offset);
 
         DEBUG_EXIT
     }
@@ -202,66 +201,69 @@ class ConfigStore : StoreDevice
 
 #undef DEFINE_STORE_UPDATE_HELPERS
 
-    void SetFlagRemoteConfig(uint32_t flag) { SetFlagInternal(GetStore()->remote_config, &common::store::RemoteConfig::set_list, flag); }
-    void SetFlagDisplayUdf(uint32_t flag) { SetFlagInternal(GetStore()->display_udf, &common::store::DisplayUdf::set_list, flag); }
+    void SetFlagRemoteConfig(uint32_t flag) { SetFlagInternal(GetStore()->remote_config, &common::store::RemoteConfig::flags, flag); }
+    void SetFlagNetwork(uint32_t flag) { SetFlagInternal(GetStore()->network, &common::store::Network::flags, flag); }
+    void SetFlagDisplayUdf(uint32_t flag) { SetFlagInternal(GetStore()->display_udf, &common::store::DisplayUdf::flags, flag); }
     void SetFlagDmxNode(uint32_t flag) { SetFlagInternal(GetStore()->dmx_node, &common::store::DmxNode::flags, flag); }
-    void SetFlagOscClient(uint32_t flag) { SetFlagInternal(GetStore()->osc_client, &common::store::OscClient::set_list, flag); }
-    void SetFlagOscServer(uint32_t flag) { SetFlagInternal(GetStore()->osc_server, &common::store::OscServer::set_list, flag); }
+    void SetFlagOscClient(uint32_t flag) { SetFlagInternal(GetStore()->osc_client, &common::store::OscClient::flags, flag); }
+    void SetFlagOscServer(uint32_t flag) { SetFlagInternal(GetStore()->osc_server, &common::store::OscServer::flags, flag); }
     void SetFlagDmxSend(uint32_t flag) { SetFlagInternal(GetStore()->dmx_send, &common::store::DmxSend::flags, flag); }
     void SetFlagDmxLed(uint32_t flag) { SetFlagInternal(GetStore()->dmx_led, &common::store::DmxLed::flags, flag); }
-    void SetFlagDmxPwm(uint32_t flag) { SetFlagInternal(GetStore()->dmx_pwm, &common::store::DmxPwm::set_list, flag); }
+    void SetFlagDmxPwm(uint32_t flag) { SetFlagInternal(GetStore()->dmx_pwm, &common::store::DmxPwm::flags, flag); }
     void SetFlagDmxSerial(uint32_t flag) { SetFlagInternal(GetStore()->dmx_serial, &common::store::DmxSerial::set_list, flag); }
     void SetFlagDmxMonitor(uint32_t flag) { SetFlagInternal(GetStore()->dmx_monitor, &common::store::DmxMonitor::set_list, flag); }
     void SetFlagRdmDevice(uint32_t flag) { SetFlagInternal(GetStore()->rdm_device, &common::store::RdmDevice::set_list, flag); }
     void SetFlagShowFile(uint32_t flag) { SetFlagInternal(GetStore()->show_file, &common::store::ShowFile::flags, flag); }
-    void SetFlagLtc(uint32_t flag) { SetFlagInternal(GetStore()->ltc, &common::store::Ltc::set_list, flag); }
-    void SetFlagLtcDisplay(uint32_t flag) { SetFlagInternal(GetStore()->ltc_display, &common::store::LtcDisplay::set_list, flag); }
+    void SetFlagLtc(uint32_t flag) { SetFlagInternal(GetStore()->ltc, &common::store::Ltc::flags, flag); }
+    void SetFlagLtcDisplay(uint32_t flag) { SetFlagInternal(GetStore()->ltc_display, &common::store::LtcDisplay::flags, flag); }
     void SetFlagLtcEtc(uint32_t flag) { SetFlagInternal(GetStore()->ltc_etc, &common::store::LtcEtc::set_list, flag); }
-    void SetFlagTCNet(uint32_t flag) { SetFlagInternal(GetStore()->tcnet, &common::store::TcNet::set_list, flag); }
-    void SetFlagGps(uint32_t flag) { SetFlagInternal(GetStore()->gps, &common::store::Gps::set_list, flag); }
-    void SetFlagMidi(uint32_t flag) { SetFlagInternal(GetStore()->midi, &common::store::Midi::set_list, flag); }
+    void SetFlagTCNet(uint32_t flag) { SetFlagInternal(GetStore()->tcnet, &common::store::TcNet::flags, flag); }
+    void SetFlagGps(uint32_t flag) { SetFlagInternal(GetStore()->gps, &common::store::Gps::flags, flag); }
+    void SetFlagMidi(uint32_t flag) { SetFlagInternal(GetStore()->midi, &common::store::Midi::flags, flag); }
     void SetFlagRgbPanel(uint32_t flag) { SetFlagInternal(GetStore()->rgb_panel, &common::store::RgbPanel::set_list, flag); }
     void SetFlagWidget(uint32_t flag) { SetFlagInternal(GetStore()->widget, &common::store::Widget::set_list, flag); }
 
-    void ClearFlagRemoteConfig(uint32_t flag) { ClearFlagInternal(GetStore()->remote_config, &common::store::RemoteConfig::set_list, flag); }
-    void ClearFlagDisplayUdf(uint32_t flag) { ClearFlagInternal(GetStore()->display_udf, &common::store::DisplayUdf::set_list, flag); }
+    void ClearFlagRemoteConfig(uint32_t flag) { ClearFlagInternal(GetStore()->remote_config, &common::store::RemoteConfig::flags, flag); }
+    void ClearFlagNetwork(uint32_t flag) { ClearFlagInternal(GetStore()->network, &common::store::Network::flags, flag); }
+    void ClearFlagDisplayUdf(uint32_t flag) { ClearFlagInternal(GetStore()->display_udf, &common::store::DisplayUdf::flags, flag); }
     void ClearFlagDmxNode(uint32_t flag) { ClearFlagInternal(GetStore()->dmx_node, &common::store::DmxNode::flags, flag); }
-    void ClearFlagOscClient(uint32_t flag) { ClearFlagInternal(GetStore()->osc_client, &common::store::OscClient::set_list, flag); }
-    void ClearFlagOscServer(uint32_t flag) { ClearFlagInternal(GetStore()->osc_server, &common::store::OscServer::set_list, flag); }
+    void ClearFlagOscClient(uint32_t flag) { ClearFlagInternal(GetStore()->osc_client, &common::store::OscClient::flags, flag); }
+    void ClearFlagOscServer(uint32_t flag) { ClearFlagInternal(GetStore()->osc_server, &common::store::OscServer::flags, flag); }
     void ClearFlagDmxSend(uint32_t flag) { ClearFlagInternal(GetStore()->dmx_send, &common::store::DmxSend::flags, flag); }
     void ClearFlagDmxLed(uint32_t flag) { ClearFlagInternal(GetStore()->dmx_led, &common::store::DmxLed::flags, flag); }
-    void ClearFlagDmxPwm(uint32_t flag) { ClearFlagInternal(GetStore()->dmx_pwm, &common::store::DmxPwm::set_list, flag); }
+    void ClearFlagDmxPwm(uint32_t flag) { ClearFlagInternal(GetStore()->dmx_pwm, &common::store::DmxPwm::flags, flag); }
     void ClearFlagDmxSerial(uint32_t flag) { ClearFlagInternal(GetStore()->dmx_serial, &common::store::DmxSerial::set_list, flag); }
     void ClearFlagDmxMonitor(uint32_t flag) { ClearFlagInternal(GetStore()->dmx_monitor, &common::store::DmxMonitor::set_list, flag); }
     void ClearFlagRdmDevice(uint32_t flag) { ClearFlagInternal(GetStore()->rdm_device, &common::store::RdmDevice::set_list, flag); }
     void ClearFlagShowFile(uint32_t flag) { ClearFlagInternal(GetStore()->show_file, &common::store::ShowFile::flags, flag); }
-    void ClearFlagLtc(uint32_t flag) { ClearFlagInternal(GetStore()->ltc, &common::store::Ltc::set_list, flag); }
-    void ClearFlagLtcDisplay(uint32_t flag) { ClearFlagInternal(GetStore()->ltc_display, &common::store::LtcDisplay::set_list, flag); }
+    void ClearFlagLtc(uint32_t flag) { ClearFlagInternal(GetStore()->ltc, &common::store::Ltc::flags, flag); }
+    void ClearFlagLtcDisplay(uint32_t flag) { ClearFlagInternal(GetStore()->ltc_display, &common::store::LtcDisplay::flags, flag); }
     void ClearFlagLtcEtc(uint32_t flag) { ClearFlagInternal(GetStore()->ltc_etc, &common::store::LtcEtc::set_list, flag); }
-    void ClearFlagTCNet(uint32_t flag) { ClearFlagInternal(GetStore()->tcnet, &common::store::TcNet::set_list, flag); }
-    void ClearFlagGps(uint32_t flag) { ClearFlagInternal(GetStore()->gps, &common::store::Gps::set_list, flag); }
-    void ClearFlagMidi(uint32_t flag) { ClearFlagInternal(GetStore()->midi, &common::store::Midi::set_list, flag); }
+    void ClearFlagTCNet(uint32_t flag) { ClearFlagInternal(GetStore()->tcnet, &common::store::TcNet::flags, flag); }
+    void ClearFlagGps(uint32_t flag) { ClearFlagInternal(GetStore()->gps, &common::store::Gps::flags, flag); }
+    void ClearFlagMidi(uint32_t flag) { ClearFlagInternal(GetStore()->midi, &common::store::Midi::flags, flag); }
     void ClearFlagRgbPanel(uint32_t flag) { ClearFlagInternal(GetStore()->rgb_panel, &common::store::RgbPanel::set_list, flag); }
     void ClearFlagWidget(uint32_t flag) { ClearFlagInternal(GetStore()->widget, &common::store::Widget::set_list, flag); }
 
-    bool IsFlagSetRemoteConfig(uint32_t flag) const { return IsFlagSetInternal(GetStore()->remote_config, &common::store::RemoteConfig::set_list, flag); }
-    bool IsFlagSetDisplayUdf(uint32_t flag) const { return IsFlagSetInternal(GetStore()->display_udf, &common::store::DisplayUdf::set_list, flag); }
+    bool IsFlagSetRemoteConfig(uint32_t flag) const { return IsFlagSetInternal(GetStore()->remote_config, &common::store::RemoteConfig::flags, flag); }
+    bool IsFlagSetNetwork(uint32_t flag) const { return IsFlagSetInternal(GetStore()->network, &common::store::Network::flags, flag); }
+    bool IsFlagSetDisplayUdf(uint32_t flag) const { return IsFlagSetInternal(GetStore()->display_udf, &common::store::DisplayUdf::flags, flag); }
     bool IsFlagSetDmxNode(uint32_t flag) const { return IsFlagSetInternal(GetStore()->dmx_node, &common::store::DmxNode::flags, flag); }
-    bool IsFlagSetOscClient(uint32_t flag) const { return IsFlagSetInternal(GetStore()->osc_client, &common::store::OscClient::set_list, flag); }
-    bool IsFlagSetOscServer(uint32_t flag) const { return IsFlagSetInternal(GetStore()->osc_server, &common::store::OscServer::set_list, flag); }
+    bool IsFlagSetOscClient(uint32_t flag) const { return IsFlagSetInternal(GetStore()->osc_client, &common::store::OscClient::flags, flag); }
+    bool IsFlagSetOscServer(uint32_t flag) const { return IsFlagSetInternal(GetStore()->osc_server, &common::store::OscServer::flags, flag); }
     bool IsFlagSetDmxSend(uint32_t flag) const { return IsFlagSetInternal(GetStore()->dmx_send, &common::store::DmxSend::flags, flag); }
     bool IsFlagSetDmxLed(uint32_t flag) const { return IsFlagSetInternal(GetStore()->dmx_led, &common::store::DmxLed::flags, flag); }
-    bool IsFlagSetDmxPwm(uint32_t flag) const { return IsFlagSetInternal(GetStore()->dmx_pwm, &common::store::DmxPwm::set_list, flag); }
+    bool IsFlagSetDmxPwm(uint32_t flag) const { return IsFlagSetInternal(GetStore()->dmx_pwm, &common::store::DmxPwm::flags, flag); }
     bool IsFlagSetDmxSerial(uint32_t flag) const { return IsFlagSetInternal(GetStore()->dmx_serial, &common::store::DmxSerial::set_list, flag); }
     bool IsFlagSetDmxMonitor(uint32_t flag) const { return IsFlagSetInternal(GetStore()->dmx_monitor, &common::store::DmxMonitor::set_list, flag); }
     bool IsFlagSetRdmDevice(uint32_t flag) const { return IsFlagSetInternal(GetStore()->rdm_device, &common::store::RdmDevice::set_list, flag); }
     bool IsFlagSetShowFile(uint32_t flag) const { return IsFlagSetInternal(GetStore()->show_file, &common::store::ShowFile::flags, flag); }
-    bool IsFlagSetLtc(uint32_t flag) const { return IsFlagSetInternal(GetStore()->ltc, &common::store::Ltc::set_list, flag); }
-    bool IsFlagSetLtcDisplay(uint32_t flag) const { return IsFlagSetInternal(GetStore()->ltc_display, &common::store::LtcDisplay::set_list, flag); }
+    bool IsFlagSetLtc(uint32_t flag) const { return IsFlagSetInternal(GetStore()->ltc, &common::store::Ltc::flags, flag); }
+    bool IsFlagSetLtcDisplay(uint32_t flag) const { return IsFlagSetInternal(GetStore()->ltc_display, &common::store::LtcDisplay::flags, flag); }
     bool IsFlagSetLtcEtc(uint32_t flag) const { return IsFlagSetInternal(GetStore()->ltc_etc, &common::store::LtcEtc::set_list, flag); }
-    bool IsFlagSetTCNet(uint32_t flag) const { return IsFlagSetInternal(GetStore()->tcnet, &common::store::TcNet::set_list, flag); }
-    bool IsFlagSetGps(uint32_t flag) const { return IsFlagSetInternal(GetStore()->gps, &common::store::Gps::set_list, flag); }
-    bool IsFlagSetMidi(uint32_t flag) const { return IsFlagSetInternal(GetStore()->midi, &common::store::Midi::set_list, flag); }
+    bool IsFlagSetTCNet(uint32_t flag) const { return IsFlagSetInternal(GetStore()->tcnet, &common::store::TcNet::flags, flag); }
+    bool IsFlagSetGps(uint32_t flag) const { return IsFlagSetInternal(GetStore()->gps, &common::store::Gps::flags, flag); }
+    bool IsFlagSetMidi(uint32_t flag) const { return IsFlagSetInternal(GetStore()->midi, &common::store::Midi::flags, flag); }
     bool IsFlagSetRgbPanel(uint32_t flag) const { return IsFlagSetInternal(GetStore()->rgb_panel, &common::store::RgbPanel::set_list, flag); }
     bool IsFlagSetWidget(uint32_t flag) const { return IsFlagSetInternal(GetStore()->widget, &common::store::Widget::set_list, flag); }
 
@@ -270,14 +272,38 @@ class ConfigStore : StoreDevice
         UpdateArray(GetStore()->remote_config, field, reinterpret_cast<const uint8_t*>(src), length);
     }
 
+    template <std::size_t N> void RemoteConfigCopyArray(uint8_t (&dest)[N], const uint8_t (common::store::RemoteConfig::*field)[N]) const
+    {
+        static_assert(N == common::store::remoteconfig::kDisplayNameLength, "Size mismatch");
+        memcpy(dest, (GetStore()->remote_config.*field), N);
+    }
+
     template <std::size_t N> void NetworkUpdateArray(uint8_t (common::store::Network::*field)[N], const char* src, uint32_t length)
     {
         UpdateArray(GetStore()->network, field, reinterpret_cast<const uint8_t*>(src), length);
     }
 
+    template <std::size_t N> void LtcDisplayCopyArray(char (&dest)[N], const char (common::store::LtcDisplay::*field)[N]) const
+    {
+        static_assert(N == common::store::ltc::display::kMaxInfoMessage, "Size mismatch");
+        memcpy(dest, (GetStore()->ltc_display.*field), N);
+    }
+
     template <std::size_t N> void RdmDeviceUpdateArray(uint8_t (common::store::RdmDevice::*field)[N], const char* src, uint32_t length)
     {
         UpdateArray(GetStore()->rdm_device, field, reinterpret_cast<const uint8_t*>(src), length);
+    }
+    
+    uint8_t RdmSensorsIndexedGetType(uint32_t index) const
+    {
+        assert(index < common::store::rdm::sensors::kMaxDevices);
+        return GetStore()->rdm_sensors.entry[index].type;
+    }
+    
+    uint8_t RdmSensorsIndexedGetAddress(uint32_t index) const
+    {
+        assert(index < common::store::rdm::sensors::kMaxDevices);
+        return GetStore()->rdm_sensors.entry[index].address;
     }
 
     template <typename T, std::size_t N> void RdmSensorsUpdateIndexed(T (common::store::RdmSensors::*field)[N], uint32_t index, const T& value)
@@ -335,99 +361,119 @@ class ConfigStore : StoreDevice
         }
     }
 
-    void DmxL6470CopySparkFunGlobal(common::store::l6470::SparkFun* dest) const
+    uint16_t DmxLedIndexedGetStartUniverse(uint32_t index) const
+    {
+        assert(index < 16);
+        return GetStore()->dmx_led.start_universe[index];
+    }
+
+    void DmxL6470CopySparkFunGlobal(common::store::l6470dmx::SparkFun* dest) const
     {
         assert(dest != nullptr);
         *dest = GetStore()->dmx_l6470.spark_fun_global;
     }
 
-    void DmxL6470CopySparkFunIndexed(uint32_t index, common::store::l6470::SparkFun* dest) const
+    void DmxL6470CopySparkFunIndexed(uint32_t index, common::store::l6470dmx::SparkFun* dest) const
     {
-        assert(index < common::store::l6470::kMaxMotors);
+        assert(index < common::store::l6470dmx::kMaxMotors);
         assert(dest != nullptr);
         *dest = GetStore()->dmx_l6470.store[index].spark_fun;
     }
 
-    void DmxL6470CopyModeIndexed(uint32_t index, common::store::l6470::Mode* dest) const
+    void DmxL6470CopyModeIndexed(uint32_t index, common::store::l6470dmx::Mode* dest) const
     {
-        assert(index < common::store::l6470::kMaxMotors);
+        assert(index < common::store::l6470dmx::kMaxMotors);
         assert(dest != nullptr);
         *dest = GetStore()->dmx_l6470.store[index].mode;
     }
 
-    void DmxL6470CopyL6470Indexed(uint32_t index, common::store::l6470::L6470* dest) const
+    void DmxL6470CopyL6470Indexed(uint32_t index, common::store::l6470dmx::L6470* dest) const
     {
-        assert(index < common::store::l6470::kMaxMotors);
+        assert(index < common::store::l6470dmx::kMaxMotors);
         assert(dest != nullptr);
         *dest = GetStore()->dmx_l6470.store[index].l6470;
     }
 
-    void DmxL6470CopyMotorIndexed(uint32_t index, common::store::l6470::Motor* dest) const
+    void DmxL6470CopyMotorIndexed(uint32_t index, common::store::l6470dmx::Motor* dest) const
     {
-        assert(index < common::store::l6470::kMaxMotors);
+        assert(index < common::store::l6470dmx::kMaxMotors);
         assert(dest != nullptr);
         *dest = GetStore()->dmx_l6470.store[index].motor;
     }
 
-    void DmxL6470StoreSparkFunGlobal(const common::store::l6470::SparkFun* src)
+    void DmxL6470StoreSparkFunGlobal(const common::store::l6470dmx::SparkFun* src)
     {
         assert(src != nullptr);
         auto& dest = GetStore()->dmx_l6470.spark_fun_global;
 
-        if (__builtin_memcmp(&dest, src, sizeof(common::store::l6470::SparkFun)) != 0)
+        if (__builtin_memcmp(&dest, src, sizeof(common::store::l6470dmx::SparkFun)) != 0)
         {
-            __builtin_memcpy(&dest, src, sizeof(common::store::l6470::SparkFun));
+            __builtin_memcpy(&dest, src, sizeof(common::store::l6470dmx::SparkFun));
             SetStatusChanged();
         }
     }
 
-    void DmxL6470StoreSparkFunIndexed(uint32_t index, const common::store::l6470::SparkFun* src)
+    void DmxL6470StoreSparkFunIndexed(uint32_t index, const common::store::l6470dmx::SparkFun* src)
     {
-        assert(index < common::store::l6470::kMaxMotors);
+        assert(index < common::store::l6470dmx::kMaxMotors);
         assert(src != nullptr);
         auto& ref = GetStore()->dmx_l6470.store[index].spark_fun;
-        if (__builtin_memcmp(&ref, src, sizeof(common::store::l6470::SparkFun)) != 0)
+        if (__builtin_memcmp(&ref, src, sizeof(common::store::l6470dmx::SparkFun)) != 0)
         {
-            __builtin_memcpy(&ref, src, sizeof(common::store::l6470::SparkFun));
+            __builtin_memcpy(&ref, src, sizeof(common::store::l6470dmx::SparkFun));
             SetStatusChanged();
         }
     }
 
-    void DmxL6470StoreModeIndexed(uint32_t index, const common::store::l6470::Mode* src)
+    void DmxL6470StoreModeIndexed(uint32_t index, const common::store::l6470dmx::Mode* src)
     {
-        assert(index < common::store::l6470::kMaxMotors);
+        assert(index < common::store::l6470dmx::kMaxMotors);
         assert(src != nullptr);
 
         auto& ref = GetStore()->dmx_l6470.store[index].mode;
-        if (__builtin_memcmp(&ref, src, sizeof(common::store::l6470::Mode)) != 0)
+        if (__builtin_memcmp(&ref, src, sizeof(common::store::l6470dmx::Mode)) != 0)
         {
-            __builtin_memcpy(&ref, src, sizeof(common::store::l6470::Mode));
+            __builtin_memcpy(&ref, src, sizeof(common::store::l6470dmx::Mode));
             SetStatusChanged();
         }
     }
 
-    void DmxL6470StoreL6470Indexed(uint32_t index, const common::store::l6470::L6470* src)
+    void DmxL6470StoreL6470Indexed(uint32_t index, const common::store::l6470dmx::L6470* src)
     {
-        assert(index < common::store::l6470::kMaxMotors);
+        assert(index < common::store::l6470dmx::kMaxMotors);
         assert(src != nullptr);
         auto& ref = GetStore()->dmx_l6470.store[index].l6470;
-        if (__builtin_memcmp(&ref, src, sizeof(common::store::l6470::L6470)) != 0)
+        if (__builtin_memcmp(&ref, src, sizeof(common::store::l6470dmx::L6470)) != 0)
         {
-            __builtin_memcpy(&ref, src, sizeof(common::store::l6470::L6470));
+            __builtin_memcpy(&ref, src, sizeof(common::store::l6470dmx::L6470));
             SetStatusChanged();
         }
     }
 
-    void DmxL6470StoreMotorIndexed(uint32_t index, const common::store::l6470::Motor* src)
+    void DmxL6470StoreMotorIndexed(uint32_t index, const common::store::l6470dmx::Motor* src)
     {
-        assert(index < common::store::l6470::kMaxMotors);
+        assert(index < common::store::l6470dmx::kMaxMotors);
         assert(src != nullptr);
         auto& ref = GetStore()->dmx_l6470.store[index].motor;
-        if (__builtin_memcmp(&ref, src, sizeof(common::store::l6470::Motor)) != 0)
+        if (__builtin_memcmp(&ref, src, sizeof(common::store::l6470dmx::Motor)) != 0)
         {
-            __builtin_memcpy(&ref, src, sizeof(common::store::l6470::Motor));
+            __builtin_memcpy(&ref, src, sizeof(common::store::l6470dmx::Motor));
             SetStatusChanged();
         }
+    }
+
+    template <typename TField> 
+    TField DmxL6470GetModeIndexed(uint32_t index, TField common::store::l6470dmx::Mode::* field) const
+    {
+        assert(index < common::store::l6470dmx::kMaxMotors);
+        return (GetStore()->dmx_l6470.store[index].mode).*field;
+    }
+    
+    template <typename TField> 
+    TField DmxL6470GetMotorIndexed(uint32_t index, TField common::store::l6470dmx::Motor::* field) const
+    {
+        assert(index < common::store::l6470dmx::kMaxMotors);
+        return (GetStore()->dmx_l6470.store[index].motor).*field;
     }
 
     static ConfigStore& Instance()
@@ -481,7 +527,7 @@ class ConfigStore : StoreDevice
 
     static void Timer([[maybe_unused]] TimerHandle_t timer_handle)
     {
-//        DEBUG_ENTRY
+        DEBUG_ENTRY
 
         if (!Instance().Commit())
         {
@@ -491,12 +537,13 @@ class ConfigStore : StoreDevice
             return;
         }
 
-//        DEBUG_EXIT
+        DEBUG_EXIT
     }
 
     void TimerStart()
     {
         DEBUG_ENTRY
+       	DEBUG_PRINTF("s_timer_id=%d", s_timer_id);
 
         if (s_timer_id != TIMER_ID_NONE)
         {
@@ -506,12 +553,14 @@ class ConfigStore : StoreDevice
 
         s_timer_id = SoftwareTimerAdd(100, Timer);
 
+		DEBUG_PRINTF("s_timer_id=%d", s_timer_id);
         DEBUG_EXIT
     }
 
     void TimerStop()
     {
         DEBUG_ENTRY
+		DEBUG_PRINTF("s_timer_id=%d", s_timer_id);
 
         if (s_timer_id == TIMER_ID_NONE)
         {
@@ -521,12 +570,13 @@ class ConfigStore : StoreDevice
 
         SoftwareTimerDelete(s_timer_id);
 
+		DEBUG_PRINTF("s_timer_id=%d", s_timer_id);
         DEBUG_EXIT
     }
 
     bool Flash()
     {
-//        DEBUG_PUTS(kStateNames[static_cast<unsigned int>(s_state)]);
+        DEBUG_PUTS(kStateNames[static_cast<unsigned int>(s_state)]);
 
         if (__builtin_expect((s_state == State::kIdle), 1))
         {
@@ -549,7 +599,7 @@ class ConfigStore : StoreDevice
                 {
                     s_state = State::kErasedWaiting;
                 }
-                assert(result == storedevice::Result::OK);
+                assert(result == storedevice::Result::kOk);
                 return true;
             }
             break;
@@ -570,7 +620,7 @@ class ConfigStore : StoreDevice
                     s_state = State::kIdle;
                     return false;
                 }
-                assert(result == storedevice::Result::OK);
+                assert(result == storedevice::Result::kOk);
                 return true;
             }
             break;

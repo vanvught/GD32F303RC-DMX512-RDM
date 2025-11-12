@@ -29,7 +29,6 @@
 #include <cassert>
 
 #include "i2c/ssd1306.h"
-
 #include "displayset.h"
 #include "hal_i2c.h"
 
@@ -670,7 +669,7 @@ void Ssd1306::DumpShadowRam()
 #ifndef NDEBUG
     for (uint32_t i = 0; i < rows_; i++)
     {
-        printf("%d: [%.*s]\n", i, ssd1306::oled::font8x6::COLS, &shadow_ram_[i * ssd1306::oled::font8x6::COLS]);
+        printf("%d: [%.*s]\n", i, ssd1306::oled::font8x6::kCols, &shadow_ram_[i * ssd1306::oled::font8x6::kCols]);
     }
 #endif
 #endif

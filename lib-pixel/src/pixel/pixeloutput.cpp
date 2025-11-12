@@ -75,11 +75,11 @@ void PixelOutput::SetPixel(uint32_t pixel_index, uint8_t red, uint8_t green, uin
     assert(pixel_index < pixel_configuration.GetCount());
 
 #if defined(CONFIG_PIXELDMX_ENABLE_GAMMATABLE)
-    const auto pGammaTable = pixelConfiguration.GetGammaTable();
+    const auto* gamma_table = pixel_configuration.GetGammaTable();
 
-    red = pGammaTable[red];
-    green = pGammaTable[green];
-    blue = pGammaTable[blue];
+    red = gamma_table[red];
+    green = gamma_table[green];
+    blue = gamma_table[blue];
 #endif
 
     if (pixel_configuration.IsRTZProtocol())
@@ -146,12 +146,12 @@ void PixelOutput::SetPixel(uint32_t pixel_index, uint8_t red, uint8_t green, uin
     assert(PixelConfiguration::Get().GetType() == pixel::Type::SK6812W);
 
 #if defined(CONFIG_PIXELDMX_ENABLE_GAMMATABLE)
-    const auto kGammaTable = pixelConfiguration.GetGammaTable();
+    const auto* gamma_table = PixelConfiguration::Get().GetGammaTable();
 
-    red = kGammaTable[red];
-    green = kGammaTable[green];
-    blue = kGammaTable[blue];
-    white = kGammaTable[white];
+    red = gamma_table[red];
+    green = gamma_table[green];
+    blue = gamma_table[blue];
+    white = gamma_table[white];
 #endif
 
     const auto kOffset = pixel_index * 32U;

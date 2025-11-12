@@ -63,11 +63,11 @@ public:
 	}
 
 	bool IsConnected() const {
-		return m_bIsConnected;
+		return is_connected_;
 	}
 
 	void Run(const bool bDoRun) {
-		if (!bDoRun || !m_bIsConnected) {
+		if (!bDoRun || !is_connected_) {
 			return;
 		}
 		Process();
@@ -92,9 +92,9 @@ private:
 private:
 	uint32_t m_nSetDelayMicros { 0 };
 	uint32_t m_nLastHcToSysMillis { 0 };
-	uint8_t m_nAddress { 0 };
+	uint8_t address_ { 0 };
 	rtc::Type m_Type { rtc::Type::UNKNOWN };
-	bool m_bIsConnected { false };
+	bool is_connected_ { false };
 	bool m_bRtcAlarmEnabled { false };
 	bool m_bRtcAlarmPending { false };
 

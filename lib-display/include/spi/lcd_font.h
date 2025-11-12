@@ -38,11 +38,11 @@ OF SUCH DAMAGE.
 
 #include <cstdint>
 
-typedef struct _tFont
+typedef struct TFont
 {
     const uint16_t* table;
-    const uint16_t Width;
-    const uint16_t Height;
+    const uint16_t kWidth;
+    const uint16_t kHeight;
 } sFONT;
 
 extern sFONT Font16x24;
@@ -51,4 +51,4 @@ extern sFONT Font8x16;
 extern sFONT Font8x12;
 extern sFONT Font8x8;
 
-#define LINE(x) ((x) * (((sFONT*)lcd_font_get())->Height))
+#define LINE(x) ((x) * (((sFONT*)lcd_font_get())->kHeight))

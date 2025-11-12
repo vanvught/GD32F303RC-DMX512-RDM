@@ -55,7 +55,8 @@ enum class Pattern
     kLast
 };
 
-inline constexpr char kPatternName[static_cast<uint32_t>(pixelpatterns::Pattern::kLast)][14] = {"None", "Rainbow cycle", "Theater chase", "Colour wipe", "Fade"};
+inline constexpr char kPatternName[static_cast<uint32_t>(pixelpatterns::Pattern::kLast)][14] = {"None", "Rainbow cycle", "Theater chase", "Colour wipe",
+                                                                                                "Fade"};
 
 enum class Direction
 {
@@ -102,7 +103,8 @@ class PixelPatterns
         s_port_config[port_index].direction = direction;
     }
 
-    void TheaterChase(uint32_t port_index, uint32_t colour1, uint32_t colour2, uint32_t interval, pixelpatterns::Direction direction = pixelpatterns::Direction::kForward)
+    void TheaterChase(uint32_t port_index, uint32_t colour1, uint32_t colour2, uint32_t interval,
+                      pixelpatterns::Direction direction = pixelpatterns::Direction::kForward)
     {
         Clear(port_index);
 
@@ -127,7 +129,8 @@ class PixelPatterns
         s_port_config[port_index].direction = direction;
     }
 
-    void Fade(uint32_t port_index, uint32_t colour1, uint32_t colour2, uint32_t steps, uint32_t interval, pixelpatterns::Direction direction = pixelpatterns::Direction::kForward)
+    void Fade(uint32_t port_index, uint32_t colour1, uint32_t colour2, uint32_t steps, uint32_t interval,
+              pixelpatterns::Direction direction = pixelpatterns::Direction::kForward)
     {
         Clear(port_index);
 
@@ -218,16 +221,25 @@ class PixelPatterns
 
     void FadeUpdate(uint32_t port_index)
     {
-        const auto kColour1 = s_port_config[port_index].colour1;
-        const auto kColour2 = s_port_config[port_index].colour2;
-        const auto kTotalSteps = s_port_config[port_index].total_steps;
-        const auto kIndex = s_port_config[port_index].pixel_index;
+        const auto& config = s_port_config[port_index];
 
-        const auto kRed = static_cast<uint8_t>(((pixel::GetRed(kColour1) * (kTotalSteps - kIndex)) + (pixel::GetRed(kColour2) * kIndex)) / kTotalSteps);
-        const auto kGreen = static_cast<uint8_t>(((pixel::GetGreen(kColour1) * (kTotalSteps - kIndex)) + (pixel::GetGreen(kColour2) * kIndex)) / kTotalSteps);
-        const auto kBlue = static_cast<uint8_t>(((pixel::GetBlue(kColour1) * (kTotalSteps - kIndex)) + (pixel::GetBlue(kColour2) * kIndex)) / kTotalSteps);
+        const pixel::PixelColours kColor1(config.colour1);
+        const pixel::PixelColours kColor2(config.colour2);
 
-        pixel::SetPixelColour(port_index, pixel::GetColour(kRed, kGreen, kBlue));
+        const auto kTotalSteps = config.total_steps;
+        const auto kIndex = config.pixel_index;
+        const auto kInvIndex = kTotalSteps - kIndex;
+
+        const auto kInterp = [=](uint8_t a, uint8_t b) -> uint8_t { 
+			return static_cast<uint8_t>((a * kInvIndex + b * kIndex) / kTotalSteps); 
+		};
+
+        const auto kR = kInterp(kColor1.Red(), kColor2.Red());
+        const auto kG = kInterp(kColor1.Green(), kColor2.Green());
+        const auto kB = kInterp(kColor1.Blue(), kColor2.Blue());
+
+        pixel::SetPixelColour(port_index, pixel::GetColour(kR, kG, kB));
+
         Increment(port_index);
     }
 
@@ -319,7 +331,11 @@ class PixelPatterns
         }
     }
 
-    uint32_t DimColour(uint32_t colour) { return pixel::GetColour(static_cast<uint8_t>(pixel::GetRed(colour) >> 1), static_cast<uint8_t>(pixel::GetGreen(colour) >> 1), static_cast<uint8_t>(pixel::GetBlue(colour) >> 1)); }
+    uint32_t DimColour(uint32_t colour)
+    {
+        const pixel::PixelColours kC(colour);
+        return pixel::GetColour(static_cast<uint8_t>(kC.Red() >> 1), static_cast<uint8_t>(kC.Green() >> 1), static_cast<uint8_t>(kC.Blue() >> 1));
+    }
 
     void Clear(uint32_t port_index) { pixel::SetPixelColour(port_index, 0); }
 

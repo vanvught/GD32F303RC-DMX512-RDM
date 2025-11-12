@@ -1,5 +1,5 @@
 /**
- * @file gd32_udelay.cpp
+ * @file udelay.cpp
  *
  */
 /* Copyright (C) 2021-2025 by Arjan van Vught mailto:info@gd32-dmx.org
@@ -23,8 +23,8 @@
  * THE SOFTWARE.
  */
 
-#if defined (DEBUG_UDELAY)
-# undef NDEBUG
+#if defined(DEBUG_UDELAY)
+#undef NDEBUG
 #endif
 
 #include <cstdint>
@@ -34,59 +34,73 @@
 
 static constexpr auto kTicksPerUs = (MCU_CLOCK_FREQ / 1000000U);
 
-void UdelayInit() {
-	assert(MCU_CLOCK_FREQ == SystemCoreClock);
+void UdelayInit()
+{
+    assert(MCU_CLOCK_FREQ == SystemCoreClock);
 
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
     DWT->CYCCNT = 0;
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
 }
 
-void udelay(uint32_t micros, uint32_t offset_micros) {
-	const auto kTicks = micros * kTicksPerUs;
+void udelay(uint32_t micros, uint32_t offset_micros)
+{
+    const auto kTicks = micros * kTicksPerUs;
 
-	uint32_t ticks_count = 0;
+    uint32_t ticks_count = 0;
     uint32_t ticks_previous;
 
-    if (offset_micros == 0) {
-		ticks_previous = DWT->CYCCNT;
-	} else {
-		ticks_previous = offset_micros;
-	}
+    if (offset_micros == 0)
+    {
+        ticks_previous = DWT->CYCCNT;
+    }
+    else
+    {
+        ticks_previous = offset_micros;
+    }
 
-	while (1) {
-		const auto kTicksNow = DWT->CYCCNT;
+    while (1)
+    {
+        const auto kTicksNow = DWT->CYCCNT;
 
-		if (kTicksNow != ticks_previous) {
-			if (kTicksNow > ticks_previous) {
-				ticks_count += kTicksNow - ticks_previous;
-			} else {
-				ticks_count += UINT32_MAX - ticks_previous + kTicksNow;
-			}
+        if (kTicksNow != ticks_previous)
+        {
+            if (kTicksNow > ticks_previous)
+            {
+                ticks_count += kTicksNow - ticks_previous;
+            }
+            else
+            {
+                ticks_count += UINT32_MAX - ticks_previous + kTicksNow;
+            }
 
-			if (ticks_count >= kTicks) {
-				break;
-			}
+            if (ticks_count >= kTicks)
+            {
+                break;
+            }
 
-			ticks_previous = kTicksNow;
-		}
-	}
+            ticks_previous = kTicksNow;
+        }
+    }
 }
-
 
 static uint32_t micros_previous;
 static uint32_t result;
 
-uint32_t Gd32Micros() {
-	const auto kMicros = DWT->CYCCNT / kTicksPerUs;
+uint32_t Gd32Micros()
+{
+    const auto kMicros = DWT->CYCCNT / kTicksPerUs;
 
-	if (kMicros > micros_previous) {
-		result += (kMicros - micros_previous);
-	} else {
-		result += ((UINT32_MAX / kTicksPerUs) - micros_previous + kMicros);
-	}
+    if (kMicros > micros_previous)
+    {
+        result += (kMicros - micros_previous);
+    }
+    else
+    {
+        result += ((UINT32_MAX / kTicksPerUs) - micros_previous + kMicros);
+    }
 
-	micros_previous = kMicros;
+    micros_previous = kMicros;
 
-	return result;
+    return result;
 }

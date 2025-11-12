@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file panel_led.h
+ * @file hal_panelled.h
  *
  */
 /* Copyright (C) 2023-2025 by Arjan van Vught mailto:info@gd32-dmx.org

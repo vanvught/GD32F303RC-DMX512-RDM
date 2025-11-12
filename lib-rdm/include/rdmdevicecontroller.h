@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file rdmdevicecontroller.h
  *
  */
-/* Copyright (C) 2017-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2017-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,21 +24,50 @@
  * THE SOFTWARE.
  */
 
-#ifndef RDMDEVICECONTROLLER_H_
-#define RDMDEVICECONTROLLER_H_
+#include <algorithm>
+#include <cstring>
 
-#include "rdmdevice.h"
-
+#include "hal_serialnumber.h"
+#include "rdmconst.h"
 #include "debug.h"
 
-class RDMDeviceController: public RDMDevice  {
-public:
-	RDMDeviceController() {
-		DEBUG_ENTRY
-		DEBUG_EXIT
-	}
+class RDMDeviceController
+{
+   public:
+    RDMDeviceController()
+    {
+        DEBUG_ENTRY
 
-	~RDMDeviceController() = default;
+        hal::SerialNumber(serial_number_);
+
+        uid_[0] = RDMConst::MANUFACTURER_ID[0];
+        uid_[1] = RDMConst::MANUFACTURER_ID[1];
+        uid_[2] = serial_number_[0];
+        uid_[3] = serial_number_[1];
+        uid_[4] = serial_number_[2];
+        uid_[5] = serial_number_[3];
+
+        DEBUG_EXIT
+    }
+
+    ~RDMDeviceController() = default;
+
+    const uint8_t* GetUID() const { return uid_; }
+
+    const uint8_t* GetSN() const { return serial_number_; }
+
+    void Print()
+    {
+        puts("RDM Device configuration");
+        const auto kLength = static_cast<int>(std::min(static_cast<size_t>(RDM_MANUFACTURER_LABEL_MAX_LENGTH), strlen(RDMConst::MANUFACTURER_NAME)));
+        printf(" Manufacturer Name : %.*s\n", kLength, const_cast<char*>(&RDMConst::MANUFACTURER_NAME[0]));
+        printf(" Manufacturer ID   : %.2X%.2X\n", uid_[0], uid_[1]);
+        printf(" Serial Number     : %.2X%.2X%.2X%.2X\n", serial_number_[3], serial_number_[2], serial_number_[1], serial_number_[0]);
+    }
+
+   private:
+    uint8_t uid_[RDM_UID_SIZE];
+#define DEVICE_SN_LENGTH 4
+    static_assert(DEVICE_SN_LENGTH == hal::kSnSize);
+    uint8_t serial_number_[DEVICE_SN_LENGTH];
 };
-
-#endif /* RDMDEVICECONTROLLER_H_ */

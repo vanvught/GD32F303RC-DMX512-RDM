@@ -2,7 +2,7 @@
  * @file rdmsensorsi7021humidity.h
  *
  */
-/* Copyright (C) 2020 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2020 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,7 @@
 
 class RDMSensorSI7021Humidity: public RDMSensor, sensor::SI7021 {
 public:
-	RDMSensorSI7021Humidity(uint8_t nSensor, uint8_t nAddress = 0) : RDMSensor(nSensor), sensor::SI7021(nAddress) {
+	RDMSensorSI7021Humidity(uint8_t nSensor, uint8_t address = 0) : RDMSensor(nSensor), sensor::SI7021(address) {
 		SetType(E120_SENS_HUMIDITY);
 		SetUnit(E120_UNITS_NONE);
 		SetPrefix(E120_PREFIX_NONE);

@@ -3,7 +3,7 @@
  * @file bwspidimmer.h
  *
  */
-/* Copyright (C) 2020 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2020 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,12 +30,12 @@
 
 class BwSpiDimmer: BwSpi {
 public:
-	explicit BwSpiDimmer(uint8_t nChipSelect = 0, uint8_t nAddress = bw::dimmer::address): BwSpi(nChipSelect, nAddress, bw::dimmer::id_string) {}
+	explicit BwSpiDimmer(uint8_t nChipSelect = 0, uint8_t address = bw::dimmer::address): BwSpi(nChipSelect, address, bw::dimmer::id_string) {}
 
 	void Output(uint8_t nValue) {
 		char cmd[3];
 
-		cmd[0] = static_cast<char>(m_nAddress);
+		cmd[0] = static_cast<char>(address_);
 		cmd[1] = bw::port::write::set_all_outputs;
 		cmd[2] = static_cast<char>(nValue);
 

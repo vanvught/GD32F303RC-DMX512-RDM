@@ -32,7 +32,7 @@
 static void RcuConfig(uint32_t usart_periph)
 {
 #ifndef NDEBUG
-    bool isSet = false;
+    bool is_set = false;
 #endif
     switch (usart_periph)
     {
@@ -40,28 +40,28 @@ static void RcuConfig(uint32_t usart_periph)
             rcu_periph_clock_enable(USART0_RCU_USART0);
             rcu_periph_clock_enable(USART0_RCU_GPIOx);
 #ifndef NDEBUG
-            isSet = true;
+            is_set = true;
 #endif
             break;
         case USART1:
             rcu_periph_clock_enable(USART1_RCU_USART1);
             rcu_periph_clock_enable(USART1_RCU_GPIOx);
 #ifndef NDEBUG
-            isSet = true;
+            is_set = true;
 #endif
             break;
         case USART2:
             rcu_periph_clock_enable(USART2_RCU_USART2);
             rcu_periph_clock_enable(USART2_RCU_GPIOx);
 #ifndef NDEBUG
-            isSet = true;
+            is_set = true;
 #endif
             break;
         case UART3:
             rcu_periph_clock_enable(UART3_RCU_UART3);
             rcu_periph_clock_enable(UART3_RCU_GPIOx);
 #ifndef NDEBUG
-            isSet = true;
+            is_set = true;
 #endif
             break;
         case UART4:
@@ -69,7 +69,7 @@ static void RcuConfig(uint32_t usart_periph)
             rcu_periph_clock_enable(UART4_TX_RCU_GPIOx);
             rcu_periph_clock_enable(UART4_RX_RCU_GPIOx);
 #ifndef NDEBUG
-            isSet = true;
+            is_set = true;
 #endif
             break;
 #if defined(USART5)
@@ -77,7 +77,7 @@ static void RcuConfig(uint32_t usart_periph)
             rcu_periph_clock_enable(USART5_RCU_USART5);
             rcu_periph_clock_enable(USART5_RCU_GPIOx);
 #ifndef NDEBUG
-            isSet = true;
+            is_set = true;
 #endif
             break;
 #endif
@@ -86,7 +86,7 @@ static void RcuConfig(uint32_t usart_periph)
             rcu_periph_clock_enable(UART6_RCU_UART6);
             rcu_periph_clock_enable(UART6_RCU_GPIOx);
 #ifndef NDEBUG
-            isSet = true;
+            is_set = true;
 #endif
             break;
 #endif
@@ -95,7 +95,7 @@ static void RcuConfig(uint32_t usart_periph)
             rcu_periph_clock_enable(UART7_RCU_UART7);
             rcu_periph_clock_enable(UART7_RCU_GPIOx);
 #ifndef NDEBUG
-            isSet = true;
+            is_set = true;
 #endif
             break;
 #endif
@@ -105,7 +105,7 @@ static void RcuConfig(uint32_t usart_periph)
             break;
     }
 
-    assert(isSet);
+    assert(is_set);
 }
 
 #if !(defined(GD32F4XX) || defined(GD32H7XX))

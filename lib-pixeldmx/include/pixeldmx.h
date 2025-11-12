@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file pixeldmx.h
  */
@@ -22,21 +23,18 @@
  * THE SOFTWARE.
  */
 
-#ifndef PIXELDMX_H_
-#define PIXELDMX_H_
-
-#if defined (DEBUG_PIXELDMX)
-# if defined (NDEBUG)
-#  undef NDEBUG
-#  define _NDEBUG
-# endif
+#if defined(DEBUG_PIXELDMX)
+#if defined(NDEBUG)
+#undef NDEBUG
+#define _NDEBUG
+#endif
 #endif
 
 #if defined(__GNUC__) && !defined(__clang__)
-# pragma GCC push_options
-# pragma GCC optimize ("O3")
-# pragma GCC optimize ("no-tree-loop-distribute-patterns")
-# pragma GCC optimize ("-fprefetch-loop-arrays")
+#pragma GCC push_options
+#pragma GCC optimize("O3")
+#pragma GCC optimize("no-tree-loop-distribute-patterns")
+#pragma GCC optimize("-fprefetch-loop-arrays")
 #endif
 
 #include <cstdint>
@@ -46,356 +44,393 @@
 #include "pixeloutput.h"
 #include "pixeldmxconfiguration.h"
 #include "pixeldmxstore.h"
-
-#if defined (PIXELDMXSTARTSTOP_GPIO)
-# include "hal_gpio.h"
+#if defined(PIXELDMXSTARTSTOP_GPIO)
+#include "hal_gpio.h"
 #endif
-
 #include "dmxnode.h"
-
 #include "debug.h"
 
-#if defined (OUTPUT_DMX_PIXEL) && defined(RDM_RESPONDER) && !defined(NODE_ARTNET)
-# include "dmxnodeoutputrdmpixel.h"
-# define OVERRIDE override
-class PixelDmx final : public DmxNodeOutputRdmPixel {
+#if defined(OUTPUT_DMX_PIXEL) && defined(RDM_RESPONDER) && !defined(NODE_ARTNET)
+#include "dmxnodeoutputrdmpixel.h"
+#define OVERRIDE override
+class PixelDmx final : public DmxNodeOutputRdmPixel, public PixelDmxConfiguration
+{
 #else
-# define OVERRIDE
-# define SETDATA
-class PixelDmx {
+#define OVERRIDE
+#define SETDATA
+class PixelDmx final : public PixelDmxConfiguration
+{
 #endif
-public:
-	PixelDmx() {
-		DEBUG_ENTRY
+   public:
+    PixelDmx()
+    {
+        DEBUG_ENTRY
 
-		assert(s_this == nullptr);
-		s_this = this;
+        assert(s_this == nullptr);
+        s_this = this;
 
-		PixelDmxConfiguration::Get().Validate(1);
-
-		m_pOutputType = new OutputType();
-		assert(m_pOutputType != nullptr);
-		m_pOutputType->Blackout();
-
-#if defined (PIXELDMXSTARTSTOP_GPIO)
-		FUNC_PREFIX(GpioFsel(PIXELDMXSTARTSTOP_GPIO, GPIO_FSEL_OUTPUT));
-		FUNC_PREFIX(GpioClr(PIXELDMXSTARTSTOP_GPIO));
+#if defined(PIXELDMXSTARTSTOP_GPIO)
+        FUNC_PREFIX(GpioFsel(PIXELDMXSTARTSTOP_GPIO, GPIO_FSEL_OUTPUT));
+        FUNC_PREFIX(GpioClr(PIXELDMXSTARTSTOP_GPIO));
 #endif
 
-		DEBUG_EXIT
-	}
+        ApplyConfiguration();
 
-	~PixelDmx() OVERRIDE {
-		DEBUG_ENTRY
+        DEBUG_EXIT
+    }
 
-		delete m_pOutputType;
-		m_pOutputType = nullptr;
+    ~PixelDmx() OVERRIDE
+    {
+        DEBUG_ENTRY
 
-		DEBUG_EXIT
-	}
+        delete output_type_;
+        output_type_ = nullptr;
 
-	void Start([[maybe_unused]] uint32_t nPortIndex) OVERRIDE {
-		if (started_) {
-			return;
-		}
+        DEBUG_EXIT
+    }
 
-		started_ = true;
+    void ApplyConfiguration()
+    {
+        DEBUG_ENTRY
+        PixelDmxConfiguration::Validate(1);
 
-#if defined (PIXELDMXSTARTSTOP_GPIO)
-		FUNC_PREFIX(GpioSet(PIXELDMXSTARTSTOP_GPIO));
+#ifndef NDEBUG
+        PixelDmxConfiguration::Print();
 #endif
-	}
 
-	void Stop([[maybe_unused]] uint32_t nPortIndex) OVERRIDE {
-		if (!started_) {
-			return;
-		}
+        if (output_type_ != nullptr)
+        {
+            delete output_type_;
+            output_type_ = nullptr;
+        }
 
-		started_ = false;
+        output_type_ = new PixelOutputType();
+        assert(output_type_ != nullptr);
+        output_type_->Blackout();
 
-#if defined (PIXELDMXSTARTSTOP_GPIO)
-		FUNC_PREFIX(GpioClr(PIXELDMXSTARTSTOP_GPIO));
+        DEBUG_EXIT
+    }
+
+    void Start([[maybe_unused]] uint32_t port_index) OVERRIDE
+    {
+        if (started_)
+        {
+            return;
+        }
+
+        started_ = true;
+
+#if defined(PIXELDMXSTARTSTOP_GPIO)
+        FUNC_PREFIX(GpioSet(PIXELDMXSTARTSTOP_GPIO));
 #endif
-	}
+    }
+
+    void Stop([[maybe_unused]] uint32_t port_index) OVERRIDE
+    {
+        if (!started_)
+        {
+            return;
+        }
+
+        started_ = false;
+
+#if defined(PIXELDMXSTARTSTOP_GPIO)
+        FUNC_PREFIX(GpioClr(PIXELDMXSTARTSTOP_GPIO));
+#endif
+    }
 
 #if defined(SETDATA)
-	template<bool doUpdate>
-	void SetData(uint32_t nPortIndex, const uint8_t *pData, uint32_t nLength)  {
-		SetDataImpl<doUpdate>(nPortIndex, pData, nLength);
-	}
+    template <bool do_update> void SetData(uint32_t port_index, const uint8_t* data, uint32_t length) { SetDataImpl<do_update>(port_index, data, length); }
 
-	template<bool doUpdate>
-	void SetDataImpl([[maybe_unused]] uint32_t nPortIndex, const uint8_t *pData, uint32_t nLength) {
+    template <bool do_update> void SetDataImpl([[maybe_unused]] uint32_t port_index, const uint8_t* data, uint32_t length)
+    {
 #else
-	void SetDataImpl([[maybe_unused]] uint32_t nPortIndex, const uint8_t *pData, uint32_t nLength, const bool doUpdate) OVERRIDE {
+    void SetDataImpl([[maybe_unused]] uint32_t port_index, const uint8_t* data, uint32_t length, bool do_update) OVERRIDE
+    {
 
 #endif
-		assert(pData != nullptr);
-		assert(nLength <= dmxnode::kUniverseSize);
+        assert(data != nullptr);
+        assert(length <= dmxnode::kUniverseSize);
 
-		if (m_pOutputType->IsUpdating()) {
-			return;
-		}
+        if (output_type_->IsUpdating())
+        {
+			puts("output_type_->IsUpdating()");
+            return;
+        }
 
-		auto &pixelDmxConfiguration = PixelDmxConfiguration::Get();
-		auto &portInfo = pixelDmxConfiguration.GetPortInfo();
-		uint32_t d = 0;
+        auto& port_info = PixelDmxConfiguration::GetPortInfo();
+        uint32_t d = 0;
 
 #if !defined(DMXNODE_PORTS)
-		static constexpr uint32_t nSwitch = 0;
+        static constexpr uint32_t kSwitch = 0;
 #else
-		const auto nSwitch = nPortIndex & 0x03;
+        const auto kSwitch = port_index & 0x03;
 #endif
-		const auto nGroups = pixelDmxConfiguration.GetGroups();
+        const auto kGroups = PixelDmxConfiguration::GetGroups();
 #if !defined(DMXNODE_PORTS)
-		static constexpr uint32_t beginIndex = 0;
+        static constexpr uint32_t kBeginIndex = 0;
 #else
-		const auto beginIndex = portInfo.begin_index_port[nSwitch];
+        const auto kBeginIndex = port_info.begin_index_port[kSwitch];
 #endif
-		const auto nChannelsPerPixel = pixelDmxConfiguration.GetLedsPerPixel();
-		const auto endIndex = std::min(nGroups,
-				(beginIndex + (nLength / nChannelsPerPixel)));
+        const auto kChannelsPerPixel = PixelDmxConfiguration::GetLedsPerPixel();
+        const auto kEndIndex = std::min(kGroups, (kBeginIndex + (length / kChannelsPerPixel)));
 
-		if ((nSwitch == 0) && (nGroups < portInfo.begin_index_port[1])) {
-			d = (pixelDmxConfiguration.GetDmxStartAddress() - 1U);
-		}
+        if ((kSwitch == 0) && (kGroups < port_info.begin_index_port[1]))
+        {
+			assert(PixelDmxConfiguration::GetDmxStartAddress() != 0);
+            d = (PixelDmxConfiguration::GetDmxStartAddress() - 1U);
+        }
 
-		const auto nGroupingCount = pixelDmxConfiguration.GetGroupingCount();
+        const auto kGroupingCount = PixelDmxConfiguration::GetGroupingCount();
 
-		if (nChannelsPerPixel == 3) {
-			switch (pixelDmxConfiguration.GetMap()) {
-			case pixel::Map::RGB:
-				for (uint32_t j = beginIndex; (j < endIndex) && (d < nLength); j++) {
-					auto const nPixelIndexStart = (j * nGroupingCount);
-					for (uint32_t k = 0; k < nGroupingCount; k++) {
-						m_pOutputType->SetPixel(nPixelIndexStart + k, pData[d + 0], pData[d + 1], pData[d + 2]);
-					}
-					d = d + 3;
-				}
-				break;
-			case pixel::Map::RBG:
-				for (uint32_t j = beginIndex; (j < endIndex) && (d < nLength);
-						j++) {
-					auto const nPixelIndexStart = (j * nGroupingCount);
-					for (uint32_t k = 0; k < nGroupingCount; k++) {
-						m_pOutputType->SetPixel(nPixelIndexStart + k, pData[d + 0], pData[d + 2], pData[d + 1]);
-					}
-					d = d + 3;
-				}
-				break;
-			case pixel::Map::GRB:
-				for (uint32_t j = beginIndex; (j < endIndex) && (d < nLength);
-						j++) {
-					auto const nPixelIndexStart = (j * nGroupingCount);
-					for (uint32_t k = 0; k < nGroupingCount; k++) {
-						m_pOutputType->SetPixel(nPixelIndexStart + k, pData[d + 1], pData[d + 0], pData[d + 2]);
-					}
-					d = d + 3;
-				}
-				break;
-			case pixel::Map::GBR:
-				for (uint32_t j = beginIndex; (j < endIndex) && (d < nLength);
-						j++) {
-					auto const nPixelIndexStart = (j * nGroupingCount);
-					for (uint32_t k = 0; k < nGroupingCount; k++) {
-						m_pOutputType->SetPixel(nPixelIndexStart + k, pData[d + 2], pData[d + 0], pData[d + 1]);
-					}
-					d = d + 3;
-				}
-				break;
-			case pixel::Map::BRG:
-				for (uint32_t j = beginIndex; (j < endIndex) && (d < nLength);
-						j++) {
-					auto const nPixelIndexStart = (j * nGroupingCount);
-					for (uint32_t k = 0; k < nGroupingCount; k++) {
-						m_pOutputType->SetPixel(nPixelIndexStart + k, pData[d + 1], pData[d + 2], pData[d + 0]);
-					}
-					d = d + 3;
-				}
-				break;
-			case pixel::Map::BGR:
-				for (uint32_t j = beginIndex; (j < endIndex) && (d < nLength); j++) {
-					auto const nPixelIndexStart = (j * nGroupingCount);
-					for (uint32_t k = 0; k < nGroupingCount; k++) {
-						m_pOutputType->SetPixel(nPixelIndexStart + k, pData[d + 2], pData[d + 1], pData[d + 0]);
-					}
-					d = d + 3;
-				}
-				break;
-			default:
-				assert(0);
-				__builtin_unreachable();
-				break;
-			}
-		} else {
-			assert(nChannelsPerPixel == 4);
-			for (auto j = beginIndex; (j < endIndex) && (d < nLength); j++) {
-				auto const nPixelIndexStart = (j * nGroupingCount);
-				for (uint32_t k = 0; k < nGroupingCount; k++) {
-					m_pOutputType->SetPixel(nPixelIndexStart + k, pData[d], pData[d + 1], pData[d + 2], pData[d + 3]);
-				}
-				d = d + 4;
-			}
-		}
+        if (kChannelsPerPixel == 3)
+        {
+            switch (PixelDmxConfiguration::GetMap())
+            {
+                case pixel::Map::RGB:
+                    for (uint32_t j = kBeginIndex; (j < kEndIndex) && (d < length); j++)
+                    {
+                        auto const kPixelIndexStart = (j * kGroupingCount);
+                        for (uint32_t k = 0; k < kGroupingCount; k++)
+                        {
+                            output_type_->SetPixel(kPixelIndexStart + k, data[d + 0], data[d + 1], data[d + 2]);
+                        }
+                        d = d + 3;
+                    }
+                    break;
+                case pixel::Map::RBG:
+                    for (uint32_t j = kBeginIndex; (j < kEndIndex) && (d < length); j++)
+                    {
+                        auto const kPixelIndexStart = (j * kGroupingCount);
+                        for (uint32_t k = 0; k < kGroupingCount; k++)
+                        {
+                            output_type_->SetPixel(kPixelIndexStart + k, data[d + 0], data[d + 2], data[d + 1]);
+                        }
+                        d = d + 3;
+                    }
+                    break;
+                case pixel::Map::GRB:
+                    for (uint32_t j = kBeginIndex; (j < kEndIndex) && (d < length); j++)
+                    {
+                        auto const kPixelIndexStart = (j * kGroupingCount);
+                        for (uint32_t k = 0; k < kGroupingCount; k++)
+                        {
+                            output_type_->SetPixel(kPixelIndexStart + k, data[d + 1], data[d + 0], data[d + 2]);
+                        }
+                        d = d + 3;
+                    }
+                    break;
+                case pixel::Map::GBR:
+                    for (uint32_t j = kBeginIndex; (j < kEndIndex) && (d < length); j++)
+                    {
+                        auto const kPixelIndexStart = (j * kGroupingCount);
+                        for (uint32_t k = 0; k < kGroupingCount; k++)
+                        {
+                            output_type_->SetPixel(kPixelIndexStart + k, data[d + 2], data[d + 0], data[d + 1]);
+                        }
+                        d = d + 3;
+                    }
+                    break;
+                case pixel::Map::BRG:
+                    for (uint32_t j = kBeginIndex; (j < kEndIndex) && (d < length); j++)
+                    {
+                        auto const kPixelIndexStart = (j * kGroupingCount);
+                        for (uint32_t k = 0; k < kGroupingCount; k++)
+                        {
+                            output_type_->SetPixel(kPixelIndexStart + k, data[d + 1], data[d + 2], data[d + 0]);
+                        }
+                        d = d + 3;
+                    }
+                    break;
+                case pixel::Map::BGR:
+                    for (uint32_t j = kBeginIndex; (j < kEndIndex) && (d < length); j++)
+                    {
+                        auto const kPixelIndexStart = (j * kGroupingCount);
+                        for (uint32_t k = 0; k < kGroupingCount; k++)
+                        {
+                            output_type_->SetPixel(kPixelIndexStart + k, data[d + 2], data[d + 1], data[d + 0]);
+                        }
+                        d = d + 3;
+                    }
+                    break;
+                default:
+                    assert(0);
+                    __builtin_unreachable();
+                    break;
+            }
+        }
+        else
+        {
+            assert(kChannelsPerPixel == 4);
+            for (auto j = kBeginIndex; (j < kEndIndex) && (d < length); j++)
+            {
+                auto const kPixelIndexStart = (j * kGroupingCount);
+                for (uint32_t k = 0; k < kGroupingCount; k++)
+                {
+                    output_type_->SetPixel(kPixelIndexStart + k, data[d], data[d + 1], data[d + 2], data[d + 3]);
+                }
+                d = d + 4;
+            }
+        }
 
 #if !defined(DMXNODE_PORTS)
-		if (doUpdate) {
-			if (__builtin_expect((m_bBlackout), 0)) {
-				return;
-			}
-			m_pOutputType->Update();
-		}
+        if (do_update)
+        {
+            if (__builtin_expect((blackout_), 0))
+            {
+                return;
+            }
+            output_type_->Update();
+        }
 #else
-#if !defined (SETDATA)
+#if !defined(SETDATA)
 #error
 #endif
-		if constexpr (doUpdate) {
-			if (nPortIndex == portInfo.protocol_port_index_last) {
-
-				if (__builtin_expect((m_bBlackout), 0)) {
-					return;
-				}
-				m_pOutputType->Update();
-			}
-		}
+        if constexpr (do_update)
+        {
+            if (port_index == port_info.protocol_port_index_last)
+            {
+                if (__builtin_expect((blackout_), 0))
+                {
+                    return;
+                }
+                output_type_->Update();
+            }
+        }
 #endif
-	}
+    }
 
-	void Sync([[maybe_unused]] const uint32_t nPortIndex) {
-	}
+    void Sync([[maybe_unused]] uint32_t port_index) {}
 
-	void Sync() {
-		assert(m_pOutputType != nullptr);
-		m_pOutputType->Update();
-	}
+    void Sync()
+    {
+        assert(output_type_ != nullptr);
+        output_type_->Update();
+    }
 
-#if defined (OUTPUT_HAVE_STYLESWITCH)
-			void SetOutputStyle([[maybe_unused]] const uint32_t nPortIndex, [[maybe_unused]] const dmxnode::OutputStyle outputStyle)  {}
-			dmxnode::OutputStyle GetOutputStyle([[maybe_unused]] const uint32_t nPortIndex) const  {
-				return dmxnode::OutputStyle::kDelta;
-			}
+#if defined(OUTPUT_HAVE_STYLESWITCH)
+    void SetOutputStyle([[maybe_unused]] uint32_t port_index, [[maybe_unused]] dmxnode::OutputStyle output_style) {}
+    dmxnode::OutputStyle GetOutputStyle([[maybe_unused]] uint32_t port_index) const { return dmxnode::OutputStyle::kDelta; }
 #endif
 
-	void Blackout(const bool bBlackout = true) {
-		m_bBlackout = bBlackout;
+    void Blackout(bool blackout = true)
+    {
+        blackout_ = blackout;
 
-		while (m_pOutputType->IsUpdating()) {
-			// wait for completion
-		}
+        while (output_type_->IsUpdating())
+        {
+            // wait for completion
+        }
 
-		if (bBlackout) {
-			m_pOutputType->Blackout();
-		} else {
-			m_pOutputType->Update();
-		}
-	}
+        if (blackout)
+        {
+            output_type_->Blackout();
+        }
+        else
+        {
+            output_type_->Update();
+        }
+    }
 
-	void FullOn() {
-		while (m_pOutputType->IsUpdating()) {
-			// wait for completion
-		}
+    void FullOn()
+    {
+        while (output_type_->IsUpdating())
+        {
+            // wait for completion
+        }
 
-		m_pOutputType->FullOn();
-	}
+        output_type_->FullOn();
+    }
 
-	void Print() OVERRIDE {
-		PixelDmxConfiguration::Get().Print();
-	}
+    void Print() OVERRIDE { PixelDmxConfiguration::Get().Print(); }
 
-	// RDM
-	bool SetDmxStartAddress(uint16_t nDmxStartAddress) OVERRIDE {
-		assert((nDmxStartAddress != 0) && (nDmxStartAddress <= dmxnode::kUniverseSize));
+    // RDM
+    bool SetDmxStartAddress(uint16_t dmx_start_address) OVERRIDE
+    {
+        if (dmx_start_address == PixelDmxConfiguration::GetDmxStartAddress())
+        {
+            return true;
+        }
 
-		auto &pixelDmxConfiguration = PixelDmxConfiguration::Get();
+        if ((dmx_start_address + PixelDmxConfiguration::GetDmxFootprint()) > dmxnode::kUniverseSize)
+        {
+            return false;
+        }
 
-		if (nDmxStartAddress == pixelDmxConfiguration.GetDmxStartAddress()) {
-			return true;
-		}
+        if ((dmx_start_address != 0) && (dmx_start_address <= dmxnode::kUniverseSize))
+        {
+            PixelDmxConfiguration::SetDmxStartAddress(dmx_start_address);
+            dmxled_store::SaveDmxStartAddress(dmx_start_address);
+            return true;
+        }
 
-		if ((nDmxStartAddress + pixelDmxConfiguration.GetDmxFootprint())
-				> dmxnode::kUniverseSize) {
-			return false;
-		}
+        return false;
+    }
 
-		if ((nDmxStartAddress != 0) && (nDmxStartAddress <= dmxnode::kUniverseSize)) {
-			pixelDmxConfiguration.SetDmxStartAddress(nDmxStartAddress);
-			dmxled_store::SaveDmxStartAddress(nDmxStartAddress);
-			return true;
-		}
+    uint16_t GetDmxStartAddress() OVERRIDE { return PixelDmxConfiguration::Get().GetDmxStartAddress(); }
 
-		return false;
-	}
+    uint16_t GetDmxFootprint() OVERRIDE { return PixelDmxConfiguration::Get().GetDmxFootprint(); }
 
-	uint16_t GetDmxStartAddress() OVERRIDE {
-		return PixelDmxConfiguration::Get().GetDmxStartAddress();
-	}
+    bool GetSlotInfo(uint16_t slotoffset, dmxnode::SlotInfo& slotinfo) OVERRIDE
+    {
+        auto& pixeldmx_configuration = PixelDmxConfiguration::Get();
 
-	uint16_t GetDmxFootprint() OVERRIDE {
-		return PixelDmxConfiguration::Get().GetDmxFootprint();
-	}
+        if (slotoffset > pixeldmx_configuration.GetDmxFootprint())
+        {
+            return false;
+        }
 
-	bool GetSlotInfo(uint16_t nSlotOffset, dmxnode::SlotInfo &slotInfo) OVERRIDE
-	{
-		auto &pixelDmxConfiguration = PixelDmxConfiguration::Get();
+        slotinfo.type = 0x00; // ST_PRIMARY
 
-		if (nSlotOffset > pixelDmxConfiguration.GetDmxFootprint()) {
-			return false;
-		}
+        switch (slotoffset % pixeldmx_configuration.GetLedsPerPixel())
+        {
+            case 0:
+                slotinfo.category = 0x0205; // SD_COLOR_ADD_RED
+                break;
+            case 1:
+                slotinfo.category = 0x0206; // SD_COLOR_ADD_GREEN
+                break;
+            case 2:
+                slotinfo.category = 0x0207; // SD_COLOR_ADD_BLUE
+                break;
+            case 3:
+                slotinfo.category = 0x0212; // SD_COLOR_ADD_WHITE
+                break;
+            default:
+                __builtin_unreachable();
+                break;
+        }
 
-		slotInfo.type = 0x00;	// ST_PRIMARY
+        return true;
+    }
 
-		switch (nSlotOffset % pixelDmxConfiguration.GetLedsPerPixel()) {
-		case 0:
-			slotInfo.category = 0x0205; // SD_COLOR_ADD_RED
-			break;
-		case 1:
-			slotInfo.category = 0x0206; // SD_COLOR_ADD_GREEN
-			break;
-		case 2:
-			slotInfo.category = 0x0207; // SD_COLOR_ADD_BLUE
-			break;
-		case 3:
-			slotInfo.category = 0x0212; // SD_COLOR_ADD_WHITE
-			break;
-		default:
-			__builtin_unreachable();
-			break;
-		}
+    /*
+     * Art-Net ArtPollReply
+     */
+    uint32_t GetUserData() { return 0; }
+    uint32_t GetRefreshRate() { return 0; }
 
-		return true;
-	}
+    static PixelDmx& Get()
+    {
+        assert(s_this != nullptr); // Ensure that s_this is valid
+        return *s_this;
+    }
 
-	/*
-	 * Art-Net ArtPollReply
-	 */
-	uint32_t GetUserData() {
-		return 0;
-	}
-	uint32_t GetRefreshRate() {
-		return 0;
-	}
+   private:
+    PixelOutputType* output_type_{nullptr};
 
-	static PixelDmx& Get() {
-		assert(s_this != nullptr); // Ensure that s_this is valid
-		return *s_this;
-	}
+    bool started_{false};
+    bool blackout_{false};
 
-private:
-	OutputType *m_pOutputType { nullptr };
-
-	bool started_ { false };
-	bool m_bBlackout { false };
-
-	static inline PixelDmx *s_this;
+    static inline PixelDmx* s_this;
 };
 
 #undef OVERRIDE
 #undef SETDATA
 #if defined(__GNUC__) && !defined(__clang__)
-# pragma GCC pop_options
+#pragma GCC pop_options
 #endif
-#if defined (_NDEBUG)
-# undef _NDEBUG
-# define NDEBUG
+#if defined(_NDEBUG)
+#undef _NDEBUG
+#define NDEBUG
 #endif
-#endif /* PIXELDMX_H_ */

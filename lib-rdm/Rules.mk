@@ -1,4 +1,4 @@
-EXTRA_INCLUDES=../lib-rdmsensor/include ../lib-rdmsubdevice/include ../lib-dmx/include ../lib-properties/include 
+EXTRA_INCLUDES=../lib-rdmsensor/include ../lib-rdmsubdevice/include ../lib-dmx/include 
 EXTRA_INCLUDES+=../lib-network/include ../lib-display/include
 EXTRA_INCLUDES+=../lib-e131/include
 
@@ -12,7 +12,7 @@ ifneq ($(MAKE_FLAGS),)
   			EXTRA_INCLUDES+=../lib-dmxreceiver/include
   		endif
 	endif
-	
+		
 	ifeq ($(findstring CONFIG_RDM_ENABLE_SUBDEVICES,$(MAKE_FLAGS)), CONFIG_RDM_ENABLE_SUBDEVICES)
 		EXTRA_SRCDIR+=src/subdevice
 	endif

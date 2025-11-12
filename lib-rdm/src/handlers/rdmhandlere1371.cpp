@@ -68,7 +68,7 @@ void RDMHandler::SetIdentifyMode(bool is_broadcast, [[maybe_unused]] uint16_t su
         return;
     }
 
-    RDMIdentify::Get()->SetMode(static_cast<rdm::identify::Mode>(rdm_data_in.param_data[0]));
+    RDMIdentify::Get()->SetMode(static_cast<RDMIdentify::Mode>(rdm_data_in.param_data[0]));
 
     if (is_broadcast)
     {

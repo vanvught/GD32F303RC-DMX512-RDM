@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file dislpayset.h
+ * @file displayset.h
  *
  */
 /* Copyright (C) 2017-2025 by Arjan van Vught mailto:info@gd32-dmx.org
@@ -28,10 +28,10 @@
 
 namespace display::cursor
 {
-static constexpr uint32_t kOff = 0;
-static constexpr uint32_t kOn = (1U << 0);
-static constexpr uint32_t kBlinkOff = 0;
-static constexpr uint32_t kBlinkOn = (1U << 1);
+inline constexpr uint32_t kOff = 0;
+inline constexpr uint32_t kOn = (1U << 0);
+inline constexpr uint32_t kBlinkOff = 0;
+inline constexpr uint32_t kBlinkOn = (1U << 1);
 } // namespace display::cursor
 
 class DisplaySet

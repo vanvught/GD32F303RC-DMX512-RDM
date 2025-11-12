@@ -30,25 +30,28 @@
 
 #include <cstdint>
 
-typedef enum
+namespace console
 {
-    CONSOLE_BLACK = 0,
-    CONSOLE_RED = 1,
-    CONSOLE_GREEN = 2,
-    CONSOLE_YELLOW = 3,
-    CONSOLE_BLUE = 4,
-    CONSOLE_MAGENTA = 5,
-    CONSOLE_CYAN = 6,
-    CONSOLE_WHITE = 7,
-    CONSOLE_DEFAULT = 9
-} _console_colors;
+enum class Colours
+{
+    kConsoleBlack,
+    kConsoleRed,
+    kConsoleGreen,
+    kConsoleYellow,
+    kConsoleBlue,
+    kConsoleMagenta,
+    kConsoleCyan,
+    kConsoleWhite,
+    kConsoleDefault
+};
 
-void ConsoleInit();
-void ConsolePutc(int);
-void ConsolePuts(const char*);
+void Init();
+void Putc(int);
+void Puts(const char*);
 void ConsoleWrite(const char*, unsigned int);
-void ConsoleStatus(uint32_t, const char*);
+void ConsoleStatus(Colours, const char*);
 void ConsoleSetFgColour(uint32_t);
 void ConsoleSetBgColour(uint32_t);
 void ConsoleError(const char*);
 
+} // namespace console

@@ -3,7 +3,7 @@
  * @file max7219.h
  *
  */
-/* Copyright (C) 2020-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2020-2023 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -76,14 +76,14 @@ static constexpr uint8_t BLANK = 0x0F;
 class MAX7219 : public HAL_SPI
 {
    public:
-    explicit MAX7219(uint32_t nSpeedHz = 0)
-        : HAL_SPI(SPI_CS0, nSpeedHz == 0 ? max7219::SPEED_DEFAULT_HZ : (nSpeedHz <= max7219::SPEED_MAX_HZ ? nSpeedHz : max7219::SPEED_MAX_HZ))
+    explicit MAX7219(uint32_t speed_hz = 0)
+        : HAL_SPI(SPI_CS0, speed_hz == 0 ? max7219::SPEED_DEFAULT_HZ : (speed_hz <= max7219::SPEED_MAX_HZ ? speed_hz : max7219::SPEED_MAX_HZ))
     {
     }
 
-    void WriteRegister(uint32_t nRegister, uint32_t nData, const bool bSpiSetup = true)
+    void WriteRegister(uint32_t reg, uint32_t data, bool spi_setup = true)
     {
-        const auto nSpiData = static_cast<uint16_t>(((nRegister & 0xFF) << 8) | (nData & 0xFF));
-        Write(nSpiData, bSpiSetup);
+        const auto kSpiData = static_cast<uint16_t>(((reg & 0xFF) << 8) | (data & 0xFF));
+        Write(kSpiData, spi_setup);
     }
 };

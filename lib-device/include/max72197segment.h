@@ -1,9 +1,9 @@
 #pragma once
 /**
- * @file d8x7segment.h
+ * @file max72197segment.h
  *
  */
-/* Copyright (C) 2020 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2020-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,8 @@
 class Max72197Segment : public MAX7219
 {
    public:
-    Max72197Segment() {}
+    Max72197Segment() = default;
+    ~Max72197Segment() = default;
 
     void Init(uint8_t intensity)
     {
@@ -38,10 +39,14 @@ class Max72197Segment : public MAX7219
         WriteRegister(max7219::reg::DECODE_MODE, max7219::reg::decode_mode::CODEB, false);
         WriteRegister(max7219::reg::SCAN_LIMIT, 7, false);
 
-        WriteRegister(max7219::reg::INTENSITY, intensity & 0x0F, false);
-
+		SetIntensity(intensity);
         Cls();
     }
+    
+    void SetIntensity(uint8_t intensity)
+    {
+        WriteRegister(max7219::reg::INTENSITY, intensity & 0x0F, false);		
+	}
 
     void Cls()
     {

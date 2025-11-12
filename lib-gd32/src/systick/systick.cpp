@@ -29,9 +29,9 @@
 
 volatile uint32_t gv_nSysTickMillis;
 
-void systick_config()
+void SystickConfig()
 {
-    /* Setup systick timer for 1000Hz interrupts */
+    // Setup systick timer for 1000Hz interrupts
     if (SysTick_Config(SystemCoreClock / 1000U))
     {
         while (1)

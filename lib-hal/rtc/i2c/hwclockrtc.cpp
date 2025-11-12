@@ -136,9 +136,9 @@ void HwClock::RtcProbe()
     {
         DEBUG_PUTS("MCP7941X");
 
-        m_bIsConnected = true;
+        is_connected_ = true;
         m_Type = Type::MCP7941X;
-        m_nAddress = i2caddress::MCP7941X;
+        address_ = i2caddress::MCP7941X;
 
         FUNC_PREFIX(I2cReadReg(reg::SECONDS, value));
 
@@ -174,9 +174,9 @@ void HwClock::RtcProbe()
     {
         DEBUG_PUTS("DS3231");
 
-        m_bIsConnected = true;
+        is_connected_ = true;
         m_Type = Type::DS3231;
-        m_nAddress = i2caddress::DS3231;
+        address_ = i2caddress::DS3231;
 
         struct tm tm;
         RtcGet(&tm);
@@ -209,9 +209,9 @@ void HwClock::RtcProbe()
     {
         DEBUG_PUTS("PCF8563");
 
-        m_bIsConnected = true;
+        is_connected_ = true;
         m_Type = Type::PCF8563;
-        m_nAddress = i2caddress::PCF8563;
+        address_ = i2caddress::PCF8563;
 
         FUNC_PREFIX(I2cWriteReg(pcf8563::reg::CONTROL_STATUS1, 0));
         FUNC_PREFIX(I2cWriteReg(pcf8563::reg::CONTROL_STATUS2, 0));
@@ -242,7 +242,7 @@ void HwClock::RtcProbe()
         if ((value & pcf8563::bit::SECONDS_VL) == pcf8563::bit::SECONDS_VL)
         {
             DEBUG_PUTS("Clock is not running -> disconnected");
-            m_bIsConnected = false;
+            is_connected_ = false;
         }
 
         DEBUG_EXIT
@@ -258,7 +258,7 @@ bool HwClock::RtcSet(const struct tm* pTime)
     DEBUG_ENTRY
     assert(pTime != nullptr);
 
-    if (!m_bIsConnected)
+    if (!is_connected_)
     {
         DEBUG_EXIT
         return false;
@@ -305,7 +305,7 @@ bool HwClock::RtcSet(const struct tm* pTime)
         data[0] = reg::SECONDS;
     }
 
-    FUNC_PREFIX(I2cSetAddress(m_nAddress));
+    FUNC_PREFIX(I2cSetAddress(address_));
     FUNC_PREFIX(I2cSetBaudrate(HAL_I2C::FULL_SPEED));
     FUNC_PREFIX(I2cWrite(data, sizeof(data) / sizeof(data[0])));
 
@@ -318,7 +318,7 @@ bool HwClock::RtcGet(struct tm* pTime)
     DEBUG_ENTRY
     assert(pTime != nullptr);
 
-    if (!m_bIsConnected)
+    if (!is_connected_)
     {
         DEBUG_EXIT
         return false;
@@ -335,7 +335,7 @@ bool HwClock::RtcGet(struct tm* pTime)
         registers[0] = reg::SECONDS;
     }
 
-    FUNC_PREFIX(I2cSetAddress(m_nAddress));
+    FUNC_PREFIX(I2cSetAddress(address_));
     FUNC_PREFIX(I2cSetBaudrate(HAL_I2C::FULL_SPEED));
     FUNC_PREFIX(I2cWrite(registers, 1));
     FUNC_PREFIX(I2cRead(registers, sizeof(registers) / sizeof(registers[0])));
@@ -426,7 +426,7 @@ bool HwClock::RtcSetAlarm(const struct tm* pTime)
             auto data = &registers[1];
             data[0] = ds3231::reg::ALARM1_SECONDS;
 
-            FUNC_PREFIX(I2cSetAddress(m_nAddress));
+            FUNC_PREFIX(I2cSetAddress(address_));
             FUNC_PREFIX(I2cSetBaudrate(HAL_I2C::FULL_SPEED));
             FUNC_PREFIX(I2cWrite(data, 1));
             FUNC_PREFIX(I2cRead(data, 9));
@@ -474,7 +474,7 @@ bool HwClock::RtcSetAlarm(const struct tm* pTime)
             data[3] = DEC2BCD(pTime->tm_mday);
             data[4] = pTime->tm_wday & 0x07;
 
-            FUNC_PREFIX(I2cSetAddress(m_nAddress));
+            FUNC_PREFIX(I2cSetAddress(address_));
             FUNC_PREFIX(I2cSetBaudrate(HAL_I2C::FULL_SPEED));
             FUNC_PREFIX(I2cWrite(data, sizeof(data) / sizeof(data[0])));
 
@@ -513,7 +513,7 @@ bool HwClock::RtcGetAlarm(struct tm* pTime)
 
             registers[0] = mcp7941x::reg::CONTROL;
 
-            FUNC_PREFIX(I2cSetAddress(m_nAddress));
+            FUNC_PREFIX(I2cSetAddress(address_));
             FUNC_PREFIX(I2cSetBaudrate(HAL_I2C::FULL_SPEED));
             FUNC_PREFIX(I2cWrite(registers, 1));
             FUNC_PREFIX(I2cRead(registers, sizeof(registers) / sizeof(registers[0])));
@@ -543,7 +543,7 @@ bool HwClock::RtcGetAlarm(struct tm* pTime)
 
             registers[0] = ds3231::reg::ALARM1_SECONDS;
 
-            FUNC_PREFIX(I2cSetAddress(m_nAddress));
+            FUNC_PREFIX(I2cSetAddress(address_));
             FUNC_PREFIX(I2cSetBaudrate(HAL_I2C::FULL_SPEED));
             FUNC_PREFIX(I2cWrite(registers, 1));
             FUNC_PREFIX(I2cRead(registers, sizeof(registers) / sizeof(registers[0])));
@@ -572,7 +572,7 @@ bool HwClock::RtcGetAlarm(struct tm* pTime)
 
             registers[0] = pcf8563::reg::ALARM;
 
-            FUNC_PREFIX(I2cSetAddress(m_nAddress));
+            FUNC_PREFIX(I2cSetAddress(address_));
             FUNC_PREFIX(I2cSetBaudrate(HAL_I2C::FULL_SPEED));
             FUNC_PREFIX(I2cWrite(registers, 1));
             FUNC_PREFIX(I2cRead(registers, sizeof(registers) / sizeof(registers[0])));

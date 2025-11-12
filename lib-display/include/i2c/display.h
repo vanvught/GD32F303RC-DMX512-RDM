@@ -48,10 +48,7 @@
 
 #include "displayset.h"
 #include "console.h"
-
 #include "hal.h"
-
-#include "hal_i2c.h"
 #if defined(DISPLAYTIMEOUT_GPIO)
 #include "hal_gpio.h"
 #endif
@@ -60,33 +57,29 @@ namespace display
 {
 enum class Type
 {
-    PCF8574T_1602,
-    PCF8574T_2004,
-    SSD1306,
-    SSD1311,
-    UNKNOWN
+    kPcf8574T1602,
+    kPcf8574T2004,
+    kSsd1306,
+    kSsd1311,
+    kUnknown
 };
-namespace segment7
-{
-static constexpr uint8_t MCP23017_I2C_ADDRESS = 0x20;
-static constexpr uint8_t MCP23017_IODIRA = 0x00;                   ///< I/O DIRECTION (IODIRA) REGISTER, 1 = Input (default), 0 = Output
-static constexpr uint8_t MCP23017_GPIOA = 0x12;                    ///< PORT (GPIOA) REGISTER, Value on the Port - Writing Sets Bits in the Output Latch
-static constexpr uint8_t I2C_ADDRESS = (MCP23017_I2C_ADDRESS + 1); ///< It must be different from base address
-} // namespace segment7
 } // namespace display
 
 class Display
 {
    public:
     Display();
+   
     explicit Display(uint32_t rows);
     explicit Display(display::Type type);
     Display(const Display&) = delete;
     Display& operator=(const Display&) = delete;
+   
     ~Display()
     {
         s_this = nullptr;
         delete lcd_display_;
+        lcd_display_ = nullptr;
     }
 
     bool IsDetected() const { return lcd_display_ == nullptr ? false : true; }
@@ -223,16 +216,16 @@ class Display
         Write(kRows, text);
     }
 
-    void TextStatus(const char* text, uint32_t console_color)
+    void TextStatus(const char* text, console::Colours colour)
     {
         TextStatus(text);
 
-        if (console_color == UINT32_MAX)
+        if (static_cast<uint32_t>(colour) == UINT32_MAX)
         {
             return;
         }
 
-        ConsoleStatus(console_color, text);
+        console::ConsoleStatus(colour, text);
     }
 
     void SetCursor(uint32_t mode)
@@ -372,7 +365,11 @@ class Display
         }
     }
 
-    static Display* Get() { return s_this; }
+    static Display* Get()
+    {
+        assert(s_this != nullptr);
+        return s_this;
+    }
 
    private:
     void Detect(display::Type display_type);
@@ -380,16 +377,12 @@ class Display
     void SetSleepTimer(bool active);
 
    private:
-    display::Type type_{display::Type::UNKNOWN};
-    HAL_I2C hal_i2c_;
+    display::Type type_{display::Type::kUnknown};
     uint32_t sleep_timeout_{1000 * 60 * display::Defaults::kSleepTimeout};
     uint8_t contrast_{0x7F};
 
     bool is_sleep_{false};
     bool is_flipped_vertically_{false};
-#if defined(CONFIG_DISPLAY_HAVE_7SEGMENT)
-    bool m_bHave7Segment{false};
-#endif
 
     DisplaySet* lcd_display_{nullptr};
     static inline Display* s_this;

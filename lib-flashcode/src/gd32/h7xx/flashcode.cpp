@@ -29,13 +29,9 @@
 #include <cassert>
 
 #include "flashcode.h"
-
 #include "gd32.h"
-
 #include "debug.h"
 
-namespace flashcode
-{
 /* Backwards compatibility with SPI FLASH */
 static constexpr auto kFlashSectorSize = 4096U;
 /* The flash page size is 4KB for bank1 */
@@ -56,9 +52,8 @@ static uint32_t s_page;
 static uint32_t s_length;
 static uint32_t s_address;
 static uint32_t* s_data;
-} // namespace flashcode
 
-using namespace flashcode;
+using flashcode::Result;
 
 uint32_t FlashCode::GetSize() const
 {
@@ -68,10 +63,10 @@ uint32_t FlashCode::GetSize() const
 
 uint32_t FlashCode::GetSectorSize() const
 {
-    return flashcode::kFlashSectorSize;
+    return kFlashSectorSize;
 }
 
-bool FlashCode::Read(uint32_t offset, uint32_t length, uint8_t* buffer, flashcode::result& result)
+bool FlashCode::Read(uint32_t offset, uint32_t length, uint8_t* buffer, Result& result)
 {
     DEBUG_ENTRY
     DEBUG_PRINTF("offset=%p[%d], len=%u[%d], data=%p[%d]", offset, (((uint32_t)(offset) & 0x3) == 0), length, (((uint32_t)(length) & 0x3) == 0), buffer, (((uint32_t)(buffer) & 0x3) == 0));
@@ -85,18 +80,18 @@ bool FlashCode::Read(uint32_t offset, uint32_t length, uint8_t* buffer, flashcod
         length -= 4;
     }
 
-    result = flashcode::result::OK;
+    result = Result::kOk;
 
     DEBUG_EXIT
     return true;
 }
 
-bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::result& result)
+bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::Result& result)
 {
     DEBUG_ENTRY
-    DEBUG_PRINTF("State=%d", static_cast<int>(s_State));
+    DEBUG_PRINTF("State=%d", static_cast<int>(s_state));
 
-    result = result::OK;
+    result = Result::kOk;
 
     switch (s_state)
     {
@@ -130,7 +125,7 @@ bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::result& resul
         case State::ERASE_PROGAM:
             if (s_length > 0)
             {
-                DEBUG_PRINTF("s_nPage=%p", s_nPage);
+                DEBUG_PRINTF("s_nPage=%p", s_page);
 
                 fmc_sector_erase(s_page);
 
@@ -153,22 +148,22 @@ bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::result& resul
     return true;
 }
 
-bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* buffer, flashcode::result& result)
+bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* buffer, flashcode::Result& result)
 {
-    if ((s_state == flashcode::State::WRITE_PROGRAM) || (s_state == flashcode::State::WRITE_BUSY))
+    if ((s_state == State::WRITE_PROGRAM) || (s_state == State::WRITE_BUSY))
     {
     }
     else
     {
         DEBUG_ENTRY
     }
-    result = result::OK;
+    result = Result::kOk;
 
     switch (s_state)
     {
-        case flashcode::State::IDLE:
+        case State::IDLE:
             DEBUG_PUTS("State::IDLE");
-            flashcode::s_address = offset + FLASH_BASE;
+            s_address = offset + FLASH_BASE;
             s_data = const_cast<uint32_t*>(reinterpret_cast<const uint32_t*>(buffer));
             s_length = length;
             fmc_unlock();
@@ -176,7 +171,7 @@ bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* buffer, f
             DEBUG_EXIT
             return false;
             break;
-        case flashcode::State::WRITE_BUSY:
+        case State::WRITE_BUSY:
             if (SET == fmc_flag_get(FMC_FLAG_BUSY))
             {
                 DEBUG_EXIT
@@ -201,10 +196,10 @@ bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* buffer, f
                 return true;
             }
 
-            s_state = flashcode::State::WRITE_PROGRAM;
+            s_state = State::WRITE_PROGRAM;
             return false;
             break;
-        case flashcode::State::WRITE_PROGRAM:
+        case State::WRITE_PROGRAM:
             if (s_length >= 4)
             {
                 if (FMC_READY == fmc_ready_wait(0xFF))
@@ -227,7 +222,7 @@ bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* buffer, f
             {
                 DEBUG_PUTS("Error!");
             }
-            s_state = flashcode::State::WRITE_BUSY;
+            s_state = State::WRITE_BUSY;
             return false;
             break;
         default:

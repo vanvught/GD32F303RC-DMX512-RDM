@@ -22,6 +22,58 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+ 
+ #include <cstdint>
+
+namespace dmxnode
+{
+enum class OutputType
+{
+    kDmx,
+    kDmxRdm,
+    kPixel,
+    kPixelDmx,
+    kPwm,
+    kRgbPanel,
+    kSerial,
+    kOsc,
+    kMonitor,
+    kStepper,
+    kPlayer,
+    kArtNet,
+    kTimeCode,
+    kNone,
+    kUndefined
+};
+
+inline constexpr const char* kOutputTypeNames[static_cast<uint32_t>(OutputType::kUndefined)] = 
+{
+	"DMX", 
+	"DMX/RDM", 
+	"Pixel",
+	"Pixel/DMX", 
+	"PWM", 
+	"RGB Panel", 
+	"Serial", 
+	"OSC", 
+	"Monitor", 
+	"Stepper", 
+	"Player", 
+	"Art-Net", 
+	"Timecode",
+	"None"
+};
+
+inline const char* GetOutputType(OutputType type)
+{
+    if (type < OutputType::kUndefined)
+    {
+        return kOutputTypeNames[static_cast<uint32_t>(type)];
+    }
+
+    return "Undefined";
+}
+}  // namespace dmxnode
 
 #if defined(OUTPUT_DMX_SEND) || defined(OUTPUT_DMX_SEND_MULTI)
 #define DMXNODE_OUTPUT_DMX
@@ -66,11 +118,13 @@ using DmxPixelOutputType = PixelDmxMulti;
 #endif
 
 #if defined(OUTPUT_DMX_PCA9685)
+#define DMXNODE_OUTPUT_PCA9685
 #include "pca9685dmxled.h"
 #include "pca9685dmxservo.h"
 #endif
 
 #if defined(OUTPUT_DMX_SERIAL)
+#define DMXNODE_OUTPUT_SERIAL
 #include "dmxserial.h"
 #endif
 
@@ -120,3 +174,20 @@ using DmxNodeOutputType = TLC59711Dmx;
 #elif defined(OUTPUT_DMX_NULL)
 using DmxNodeOutputType = DmxNodeOutputTypeNull;
 #endif
+
+namespace dmxnode
+{
+#if defined(DMXNODE_OUTPUT_DMX) && defined(RDM_CONTROLLER)
+inline constexpr auto kOutputType = OutputType::kDmxRdm;
+#elif defined(DMXNODE_OUTPUT_DMX)
+inline constexpr auto kOutputType = OutputType::kDmx;
+#elif defined(OUTPUT_DMX_PIXEL) || defined(OUTPUT_DMX_PIXEL_MULTI)
+inline constexpr auto kOutputType = OutputType::kPixel;
+#elif defined(DMXNODE_OUTPUT_PIXEL_DMX)
+inline constexpr auto kOutputType = OutputType::kPixelDmx;
+#elif defined(OUTPUT_DMX_NULL)
+inline constexpr auto kOutputType = OutputType::kNone;
+#else
+inline constexpr auto kOutputType = OutputType::kUndefined;
+#endif
+} // namespace dmxnode

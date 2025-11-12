@@ -1,12 +1,6 @@
+EXTRA_SRCDIR+=src/json
+
 ifneq ($(MAKE_FLAGS),)
-	ifneq (,$(findstring NODE_NODE,$(MAKE_FLAGS)))
-		EXTRA_INCLUDES+=../lib-node/include
-		EXTRA_INCLUDES+=../lib-artnet/include ../lib-e131/include
-		EXTRA_INCLUDES+=../lib-dmx/include
-		EXTRA_INCLUDES+=../lib-rdm/include ../lib-rdmdiscovery/include
-		EXTRA_SRCDIR+=src/node	
-	endif
-	
 	ifneq (,$(findstring NODE_ARTNET,$(MAKE_FLAGS)))
 		EXTRA_INCLUDES+=../lib-artnet/include
 		EXTRA_SRCDIR+=src/artnet	
@@ -35,10 +29,15 @@ ifneq ($(MAKE_FLAGS),)
 	
 	ifneq (,$(findstring RDM_RESPONDER,$(MAKE_FLAGS)))
 		EXTRA_INCLUDES+=../lib-rdmresponder/include ../lib-rdm/include ../lib-rdmsensor/include ../lib-rdmsubdevice/include
+		EXTRA_INCLUDES+=../lib-pixeldmx/include
 		ifneq (,$(findstring NODE_ARTNET,$(MAKE_FLAGS)))
 		else
 			EXTRA_INCLUDES+=../lib-dmxreceiver/include ../lib-dmx/include
 		endif
+	endif
+	
+	ifneq (,$(findstring OUTPUT_DMX_PIXEL,$(MAKE_FLAGS)))
+		EXTRA_INCLUDES+=../lib-dmxled/include
 	endif
 	
 	ifneq (,$(findstring CONFIG_STORE_USE_ROM,$(MAKE_FLAGS)))

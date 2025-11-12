@@ -30,9 +30,7 @@
 
 #include "spi/lcd_font.h"
 #include "spi/spilcd.h"
-
 #include "spi/config.h"
-
 #include "debug.h"
 
 class Paint : public SpiLcd {
@@ -62,8 +60,8 @@ public:
 		ClearCS();
 		SetDC();
 
-		for (uint32_t i = 0; i < config::HEIGHT / kFrameBufferRows; i++) {
-			WriteDataContinue(reinterpret_cast<uint8_t *>(s_FrameBuffer), sizeof(s_FrameBuffer));
+		for (uint32_t i = 0; i < config::kHeight / kFrameBufferRows; i++) {
+			WriteDataContinue(reinterpret_cast<uint8_t *>(s_frame_buffer), sizeof(s_frame_buffer));
 		}
 
 		SetCS();
@@ -83,86 +81,86 @@ public:
 		FillFramebuffer(colour);
 
 		auto pixels = (1 + (y1 - y0)) * (1 + (x1 - x0));
-		const auto kBufferSize = sizeof(s_FrameBuffer) / sizeof(s_FrameBuffer[0]);
+		const auto kBufferSize = sizeof(s_frame_buffer) / sizeof(s_frame_buffer[0]);
 
 		if (pixels > kBufferSize) {
-			WriteDataStart(reinterpret_cast<uint8_t *>(s_FrameBuffer), sizeof(s_FrameBuffer));
+			WriteDataStart(reinterpret_cast<uint8_t *>(s_frame_buffer), sizeof(s_frame_buffer));
 
 			pixels = pixels - kBufferSize;
 
 			while (pixels > kBufferSize) {
-				WriteDataContinue(reinterpret_cast<uint8_t *>(s_FrameBuffer), sizeof(s_FrameBuffer));
+				WriteDataContinue(reinterpret_cast<uint8_t *>(s_frame_buffer), sizeof(s_frame_buffer));
 				pixels = pixels - kBufferSize;
 			}
 
 			if (pixels > 0) {
-				WriteDataEnd(reinterpret_cast<uint8_t *>(s_FrameBuffer), pixels * 2);
+				WriteDataEnd(reinterpret_cast<uint8_t *>(s_frame_buffer), pixels * 2);
 			} else {
 				SetCS();
 			}
 		} else {
-			WriteData(reinterpret_cast<uint8_t *>(s_FrameBuffer), pixels * 2);
+			WriteData(reinterpret_cast<uint8_t *>(s_frame_buffer), pixels * 2);
 		}
 	}
 
-	void DrawPixel(const uint32_t x, const uint32_t y, const uint16_t colour) {
+	void DrawPixel(uint32_t x, uint32_t y, uint16_t colour) {
 		SetAddressWindow(x, y, x, y);
 		WriteDataWord(colour);
 	}
 
 	void DrawChar(uint32_t x0, uint32_t y0, char c, sFONT *font, uint16_t colour_background, uint16_t colour_fore_ground) {
-		const auto kX1 = x0 + font->Width - 1;
-		const auto kY1 = y0 + font->Height - 1;
+		const auto kX1 = x0 + font->kWidth - 1;
+		const auto kY1 = y0 + font->kHeight - 1;
 
 		SetAddressWindow(x0, y0, kX1, kY1);
 
 	    colour_fore_ground = __builtin_bswap16(colour_fore_ground);
 	    colour_background = __builtin_bswap16(colour_background);
 
-	    const auto kCharOffset = (c - ' ') * font->Height;
+	    const auto kCharOffset = (c - ' ') * font->kHeight;
 	    const auto *ptr = &font->table[kCharOffset];
 
-//	    DEBUG_PRINTF("w=%u, h=%u, nCharOffset=%u", font->Width , font->Height, nCharOffset);
+//	    DEBUG_PRINTF("w=%u, h=%u, nCharOffset=%u", font->kWidth , font->kHeight, nCharOffset);
 
 	    uint32_t index = 0;
 
-	    if (font->Width == 8) {
-	    	for (auto page = 0; page < font->Height; page++) {
+	    if (font->kWidth == 8) {
+	    	for (auto page = 0; page < font->kHeight; page++) {
 	    		auto line = *ptr++;
 
-	    		for (auto column = 0; column < font->Width; column++) {
+	    		for (auto column = 0; column < font->kWidth; column++) {
 	    			if ((line & 0x80) != 0) {
-	    				s_FrameBuffer[index++] = colour_fore_ground;
+	    				s_frame_buffer[index++] = colour_fore_ground;
 	    			} else {
-	    				s_FrameBuffer[index++] = colour_background;
+	    				s_frame_buffer[index++] = colour_background;
 	    			}
 
 	    			line = line << 1;
 	    		}
 	    	}
-	    } else if (font->Width < 16) {
-	    	for (auto page = 0; page < font->Height; page++) {
+	    } else if (font->kWidth < 16) {
+	    	for (auto page = 0; page < font->kHeight; page++) {
 	    		auto line = *ptr++;
 
-	    		for (auto column = 0; column < font->Width; column++) {
+	    		for (auto column = 0; column < font->kWidth; column++) {
 	    			if ((line & 0x8000) != 0) {
-	    				s_FrameBuffer[index++] = colour_fore_ground;
+	    				s_frame_buffer[index++] = colour_fore_ground;
 	    			} else {
-	    				s_FrameBuffer[index++] = colour_background;
+	    				s_frame_buffer[index++] = colour_background;
 	    			}
 
 	    			line = line << 1;
 	    		}
 	    	}
 	    } else {
-	    	for (auto page = 0; page < font->Height; page++) {
+	    	for (auto page = 0; page < font->kHeight; page++) {
 	    		auto line = *ptr++;
 
-	    		for (auto column = 0; column < font->Width; column++) {
+	    		for (auto column = 0; column < font->kWidth; column++) {
 	    			if ((line & 0x1) != 0) {
-	    				s_FrameBuffer[index++] = colour_fore_ground;
+	    				s_frame_buffer[index++] = colour_fore_ground;
 	    			} else {
-	    				s_FrameBuffer[index++] = colour_background;
+	    				s_frame_buffer[index++] = colour_background;
 	    			}
 
 	    			line = line >> 1;
@@ -170,7 +168,7 @@ public:
 	    	}
 	    }
 
-	    WriteData(reinterpret_cast<uint8_t *>(s_FrameBuffer), index * 2);
+	    WriteData(reinterpret_cast<uint8_t *>(s_frame_buffer), index * 2);
 	}
 
 	/**
@@ -224,14 +222,14 @@ private:
 	void FillFramebuffer(uint16_t colour) {
 		colour = __builtin_bswap16(colour);
 
-		for (uint32_t i = 0; i < sizeof(s_FrameBuffer) / sizeof(s_FrameBuffer[0]); i++) {
-			s_FrameBuffer[i] = colour;
+		for (uint32_t i = 0; i < sizeof(s_frame_buffer) / sizeof(s_frame_buffer[0]); i++) {
+			s_frame_buffer[i] = colour;
 		}
 	}
 
 protected:
-	uint32_t width_ { config::WIDTH };
-	uint32_t height_ { config::HEIGHT };
+	uint32_t width_ { config::kWidth };
+	uint32_t height_ { config::kHeight };
 	uint32_t rotate_ { 0 };
 
 #if !defined(SPI_LCD_kFrameBufferRows)
@@ -240,5 +238,5 @@ protected:
  static constexpr uint32_t kFrameBufferRows = SPI_LCD_kFrameBufferRows;
 #endif
 
-	static inline uint16_t s_FrameBuffer[config::WIDTH * kFrameBufferRows];
+	static inline uint16_t s_frame_buffer[config::kWidth * kFrameBufferRows];
 };

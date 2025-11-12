@@ -32,7 +32,7 @@
 
 namespace pixel
 {
-static constexpr char kTypes[static_cast<uint32_t>(pixel::Type::UNDEFINED)][pixel::TYPES_MAX_NAME_LENGTH] = {
+static constexpr char kTypes[static_cast<uint32_t>(pixel::Type::UNDEFINED)][pixel::kTypesMaxNameLength] = {
     "WS2801\0",                                                // 1
     "WS2811\0", 
     "WS2812\0", 
@@ -74,9 +74,9 @@ Type GetType(const char* string)
     assert(string != nullptr);
     uint32_t index = 0;
 
-    for (const char(&type)[TYPES_MAX_NAME_LENGTH] : kTypes)
+    for (const char(&type)[kTypesMaxNameLength] : kTypes)
     {
-        if (strcasecmp(string, type) == 0)
+        if (strcasecmp(type, string) == 0)
         {
             return static_cast<Type>(index);
         }
@@ -121,7 +121,7 @@ uint32_t JsonGetTypes(char* out_buffer, uint32_t out_buffer_size)
     const auto kBufferSize = out_buffer_size - 2U;
     auto length = static_cast<uint32_t>(snprintf(out_buffer, kBufferSize, "{\"types\":["));
 
-    for (const char(&type)[::pixel::TYPES_MAX_NAME_LENGTH] : ::pixel::kTypes)
+    for (const char(&type)[::pixel::kTypesMaxNameLength] : ::pixel::kTypes)
     {
         length += static_cast<uint32_t>(snprintf(&out_buffer[length], kBufferSize - length, "\"%s\",", type));
     }

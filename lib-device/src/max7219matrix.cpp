@@ -78,25 +78,9 @@ void Max7219Matrix::Init(uint16_t count, uint8_t intensity)
     WriteAll(max7219::reg::DECODE_MODE, 0);
     WriteAll(max7219::reg::SCAN_LIMIT, 7);
 
-    WriteAll(max7219::reg::INTENSITY, intensity & 0x0F);
+    SetIntensity(intensity);
 
     Max7219Matrix::Cls();
-
-    DEBUG_EXIT
-}
-
-void Max7219Matrix::Cls()
-{
-    DEBUG_ENTRY
-
-    WriteAll(max7219::reg::DIGIT0, 0);
-    WriteAll(max7219::reg::DIGIT1, 0);
-    WriteAll(max7219::reg::DIGIT2, 0);
-    WriteAll(max7219::reg::DIGIT3, 0);
-    WriteAll(max7219::reg::DIGIT4, 0);
-    WriteAll(max7219::reg::DIGIT5, 0);
-    WriteAll(max7219::reg::DIGIT6, 0);
-    WriteAll(max7219::reg::DIGIT7, 0);
 
     DEBUG_EXIT
 }

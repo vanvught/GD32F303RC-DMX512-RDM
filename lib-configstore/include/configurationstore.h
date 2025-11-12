@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file configrationstore.h
+ * @file configurationstore.h
  *
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
@@ -81,7 +81,7 @@ inline constexpr uint32_t kDisplayNameLength = 24;
 
 struct RemoteConfig
 {
-    uint32_t set_list;
+    uint32_t flags;
     uint8_t reserved[4];
     uint8_t display_name[remoteconfig::kDisplayNameLength];
 } PACKED;
@@ -91,26 +91,51 @@ static_assert(sizeof(RemoteConfig) == kRemoteConfigSize);
 namespace network
 {
 inline constexpr uint32_t kHostnameSize = 64;
-}
+
+struct Flags
+{
+    enum class Flag : uint32_t
+    {
+        kUseStaticIp = (1U << 0),
+    };
+
+    static constexpr bool Has(uint32_t value, Flag flag) noexcept { return (value & static_cast<uint32_t>(flag)) != 0; }
+};
+} // namespace network
 
 struct Network
 {
+    uint32_t flags;
     uint32_t local_ip;
     uint32_t netmask;
     uint32_t gateway_ip;
     uint32_t name_server_ip;
     uint32_t ntp_server_ip;
     uint8_t host_name[network::kHostnameSize];
-    uint8_t use_static_ip;
-    uint8_t reserved[11];
+    uint8_t reserved[8];
 } PACKED;
 
 static_assert(sizeof(Network) == kNetworkSize);
 
+namespace displayudf
+{
+inline constexpr uint32_t kLabelIndexSize = 28;
+
+struct Flags
+{
+    enum class Flag : uint32_t
+    {
+        kFlipVertically = (1U << 0),
+    };
+
+    static constexpr bool Has(uint32_t value, Flag flag) noexcept { return (value & static_cast<uint32_t>(flag)) != 0; }
+};
+} // namespace displayudf
+
 struct DisplayUdf
 {
-    uint32_t set_list;
-    uint8_t label_index[28];
+    uint32_t flags;
+    uint8_t label_index[displayudf::kLabelIndexSize];
     uint8_t sleep_timeout;
     uint8_t intensity;
     uint8_t reserved[14];
@@ -169,17 +194,26 @@ inline constexpr uint32_t kCmdCount = 8;
 inline constexpr uint32_t kCmdPathLength = 64;
 inline constexpr uint32_t kLedCount = 8;
 inline constexpr uint32_t kLedPathLength = 48;
+
+struct Flags
+{
+    enum class Flag : uint32_t
+    {
+        kPingDisable = (1U << 0),
+    };
+
+    static constexpr bool Has(uint32_t value, Flag flag) noexcept { return (value & static_cast<uint32_t>(flag)) != 0; }
+};
 } // namespace osc::client
 
 struct OscClient
 {
-    uint32_t set_list;
+    uint32_t flags;
     uint16_t outgoing_port;
     uint16_t incoming_port;
     uint32_t server_ip;
-    uint8_t ping_disable;
     uint8_t ping_delay;
-    uint8_t reserved[2];
+    uint8_t reserved[3];
     char cmd[osc::client::kCmdCount][osc::client::kCmdPathLength];
     char led[osc::client::kLedCount][osc::client::kLedPathLength];
 } PACKED;
@@ -189,11 +223,21 @@ static_assert(sizeof(OscClient) == kOscClientSize);
 namespace osc::server
 {
 inline constexpr uint32_t kPathLength = 128;
-}
+
+struct Flags
+{
+    enum class Flag : uint32_t
+    {
+        kPartialTransmission = (1U << 0),
+    };
+
+    static constexpr bool Has(uint32_t value, Flag flag) noexcept { return (value & static_cast<uint32_t>(flag)) != 0; }
+};
+} // namespace osc::server
 
 struct OscServer
 {
-    uint32_t set_list;
+    uint32_t flags;
     uint16_t outgoing_port;
     uint16_t incoming_port;
     uint8_t output_type;
@@ -221,6 +265,9 @@ static_assert(sizeof(DmxSend) == kDmxSendSize);
 
 namespace dmxled
 {
+
+inline constexpr uint32_t kMaxUniverses = 16;
+
 struct Flags
 {
     enum class Flag : uint32_t
@@ -249,7 +296,7 @@ struct DmxLed
     uint8_t low_code;
     uint8_t high_code;
     uint8_t reserved2[6];
-    uint16_t start_universe[16];
+    uint16_t start_universe[dmxled::kMaxUniverses];
 } PACKED;
 
 static_assert(offsetof(DmxLed, count) % alignof(uint16_t) == 0, "count must be uint16_t-aligned");
@@ -257,9 +304,25 @@ static_assert(offsetof(DmxLed, spi_speed_hz) % alignof(uint32_t) == 0, "spi_spee
 static_assert(offsetof(DmxLed, start_universe) % alignof(uint16_t) == 0, "start_universe must be uint16_t-aligned");
 static_assert(sizeof(DmxLed) == kDmxLedSize);
 
+namespace dmxpwm
+{
+struct Flags
+{
+    enum class Flag : uint32_t
+    {
+        kModeServo = 1U << 0,
+        kUse8Bit = 1U << 1,
+        kLedOutputInvert = 1U << 2,
+        kLedOutputOpendrain = 1U << 3,
+    };
+
+    static constexpr bool Has(uint32_t value, Flag flag) noexcept { return (value & static_cast<uint32_t>(flag)) != 0; }
+};
+} // namespace dmxpwm
+
 struct DmxPwm
 {
-    uint32_t set_list;
+    uint32_t flags;
     uint8_t address;
     uint8_t reserved1;
     uint16_t channel_count;
@@ -377,7 +440,8 @@ struct Flags
         kOptionAutoPlay = 1U << 0,
         kOptionLoop = 1U << 1,
         kOptionDisableSync = 1U << 2,
-        kArtnetDisableUnicast = 1U << 3
+        kOptionArtnetDisableUnicast = 1U << 3,
+        kOptionSacnSyncUniverse = 1U << 4
     };
 };
 } // namespace showfile
@@ -398,15 +462,39 @@ struct ShowFile
 static_assert(offsetof(ShowFile, osc_port_incoming) % alignof(uint16_t) == 0, "osc_port_incoming must be uint16_t-aligned");
 static_assert(sizeof(ShowFile) == kShowSize);
 
+namespace ltc
+{
+struct Flags
+{
+    enum class Flag : uint32_t
+    {
+        kNtpEnable = 1U << 0,
+        kAutoStart = 1U << 1,
+        kIsAltFuntion = 1U << 2,
+        kSkipFree = 1U << 3,
+        kShowSystime = 1U << 4,
+        kTimeSyncDisabled = 1U << 5,
+        kOscEnabled = 1U << 6,
+        kGpsStart = 1U << 7,
+        kIgnoreStart = 1U << 8,
+        kIgnoreStop = 1U << 9,
+        kWS28xxEnable = 1U << 10,
+        kRgbpanelEnable = 1U << 11,
+    };
+
+    static constexpr bool Has(uint32_t value, Flag flag) noexcept { return (value & static_cast<uint32_t>(flag)) != 0; }
+};
+} // namespace ltc
+
 struct Ltc
 {
-    uint32_t set_list;
+    uint32_t flags;
     uint8_t source;
     uint8_t volume;
     uint8_t disabled_outputs;
-    uint8_t year;
-    uint8_t month;
-    uint8_t day;
+    uint8_t ntp_year;
+    uint8_t ntp_month;
+    uint8_t ntp_day;
     uint8_t fps;
     uint8_t start_frame;
     uint8_t start_second;
@@ -418,9 +506,9 @@ struct Ltc
     uint8_t stop_hour;
     uint8_t reserved6;
     uint8_t rgb_led_type;
-    uint8_t alt_function;
+    uint8_t reserved7;
     uint8_t skip_seconds;
-    uint8_t skip_free;
+    uint8_t reserved8;
     uint8_t reserved1[12];
     uint8_t reserved2[2];
     uint16_t osc_port;
@@ -435,11 +523,21 @@ namespace ltc::display
 {
 inline constexpr uint32_t kMaxColours = 6;
 inline constexpr uint32_t kMaxInfoMessage = 8;
+
+struct Flags
+{
+    enum class Flag : uint32_t
+    {
+        kRotaryFullStep = 1U << 0,
+    };
+
+    static constexpr bool Has(uint32_t value, Flag flag) noexcept { return (value & static_cast<uint32_t>(flag)) != 0; }
+};
 } // namespace ltc::display
 
 struct LtcDisplay
 {
-    uint32_t set_list;
+    uint32_t flags;
     uint8_t max7219_type;
     uint8_t max7219_intensity;
     uint8_t ws28xx_type;
@@ -451,8 +549,7 @@ struct LtcDisplay
     uint32_t display_rgb_colour[ltc::display::kMaxColours];
     char info_message[ltc::display::kMaxInfoMessage];
     uint8_t oled_intensity;
-    uint8_t rotary_full_step;
-    uint8_t reserved2[2];
+    uint8_t reserved2[3];
 } PACKED;
 
 static_assert(offsetof(LtcDisplay, display_rgb_colour) % alignof(uint32_t) == 0, "display_rgb_colour must be uint32_t-aligned");
@@ -474,11 +571,21 @@ static_assert(sizeof(LtcEtc) == kLtcEtcSize);
 namespace tcnet
 {
 inline constexpr uint32_t kNodeNameLength = 8;
-}
+
+struct Flags
+{
+    enum class Flag : uint32_t
+    {
+        kUseTimecode = 1U << 0,
+    };
+
+    static constexpr bool Has(uint32_t value, Flag flag) noexcept { return (value & static_cast<uint32_t>(flag)) != 0; }
+};
+} // namespace tcnet
 
 struct TcNet
 {
-    uint32_t set_list;
+    uint32_t flags;
     char node_name[tcnet::kNodeNameLength];
     uint8_t layer;
     uint8_t time_code_type;
@@ -487,9 +594,22 @@ struct TcNet
 
 static_assert(sizeof(TcNet) == kTcNetSize);
 
+namespace gps
+{
+struct Flags
+{
+    enum class Flag : uint32_t
+    {
+        kEnable = 1U << 0,
+    };
+
+    static constexpr bool Has(uint32_t value, Flag flag) noexcept { return (value & static_cast<uint32_t>(flag)) != 0; }
+};
+} // namespace gps
+
 struct Gps
 {
-    uint32_t set_list;
+    uint32_t flags;
     int32_t utc_offset;
     uint8_t module;
     uint8_t reserved[7];
@@ -497,9 +617,21 @@ struct Gps
 
 static_assert(sizeof(Gps) == kGpsSize);
 
+namespace midi {
+struct Flags
+{
+    enum class Flag : uint32_t
+    {
+        kActiveSense = 1U << 0,
+    };
+
+    static constexpr bool Has(uint32_t value, Flag flag) noexcept { return (value & static_cast<uint32_t>(flag)) != 0; }
+};
+}  // namespace midi
+
 struct Midi
 {
-    uint32_t set_list;
+    uint32_t flags;
     uint32_t baudrate;
     uint8_t reserved[8];
 } PACKED;
@@ -531,13 +663,29 @@ struct Widget
 
 static_assert(sizeof(Widget) == kWidgetSize);
 
-namespace l6470
+namespace l6470dmx
 {
 inline constexpr uint32_t kMaxMotors = 8;
 
+namespace sparkfun
+{
+struct Flags
+{
+    enum class Flag : uint32_t
+    {
+        kIsSetPosition = 1U << 0,
+        kIsSetSpiCs = 1U << 1,
+        kIsSetResetPin = 1U << 2,
+        kIsSetBusyPin = 1U << 3,
+    };
+
+    static constexpr bool Has(uint32_t value, Flag flag) noexcept { return (value & static_cast<uint32_t>(flag)) != 0; }
+};
+} // namespace sparkfun
+
 struct SparkFun
 {
-    uint32_t set_list;
+    uint32_t flags;
     uint8_t position;
     uint8_t spi_cs;
     uint8_t reset_pin;
@@ -552,27 +700,63 @@ struct SlotInfo
     uint8_t reserved;
 };
 
+namespace mode
+{
+inline constexpr uint16_t kMaxDmxFootprint = 4;
+	
+struct Flags
+{
+    enum class Flag : uint32_t
+    {
+        kUseSwitch = 1U << 0,
+    };
+
+    static constexpr bool Has(uint32_t value, Flag flag) noexcept { return (value & static_cast<uint32_t>(flag)) != 0; }
+};
+} // namespace mode
+
 struct Mode
 {
-    uint32_t set_list;
+    uint32_t flags;
     uint8_t dmx_mode;
     uint8_t reserved1;
     uint16_t dmx_start_address;
     uint32_t max_steps;
-    float switch_steps_per_sec;
+    uint32_t switch_steps_per_sec;
     uint8_t switch_action;
     uint8_t switch_dir;
     uint8_t reserved2[2];
-    SlotInfo slot_info[4];
+    SlotInfo slot_info[mode::kMaxDmxFootprint];
 } PACKED;
+
+namespace l6470
+{
+struct Flags
+{
+    enum class Flag : uint32_t
+    {
+        kIsSetMinSpeed = 1U << 0,
+        kIsSetMaxSpeed = 1U << 1,
+        kIsSetAcc = 1U << 2,
+        kIsSetDec = 1U << 3,
+        kIsSetKvalHold = 1U << 4,
+        kIsSetKvalRun = 1U << 5,
+        kIsSetKvalAcc = 1U << 6,
+        kIsSetKvalDec = 1U << 7,
+        kIsSetMicroSteps = 1U << 8
+    };
+
+    static constexpr bool Has(uint32_t value, Flag flag) noexcept { return (value & static_cast<uint32_t>(flag)) != 0; }
+};	
+}  // namespace l6470
 
 struct L6470
 {
-    uint32_t set_list;
-    float min_speed;
-    float max_speed;
-    float acc;
-    float dec;
+    uint32_t flags;
+    uint32_t min_speed;
+    uint32_t max_speed;
+    uint32_t acc;
+    uint32_t dec;
     uint8_t kval_hold;
     uint8_t kval_run;
     uint8_t kval_acc;
@@ -593,21 +777,21 @@ struct Motor
 
 struct Store
 {
-    l6470::SparkFun spark_fun;
-    l6470::Mode mode;
-    l6470::L6470 l6470;
-    l6470::Motor motor;
+    l6470dmx::SparkFun spark_fun;
+    l6470dmx::Mode mode;
+    l6470dmx::L6470 l6470;
+    l6470dmx::Motor motor;
 } PACKED;
 
 static_assert(offsetof(Store, mode) % alignof(uint32_t) == 0, "mode must be uint32_t-aligned");
 static_assert(offsetof(Store, l6470) % alignof(uint32_t) == 0, "l6470 must be uint32_t-aligned");
 static_assert(offsetof(Store, motor) % alignof(uint32_t) == 0, "motor must be uint32_t-aligned");
-} // namespace l6470
+}  // namespace l6470dmx
 
 struct DmxL6470
 {
-    l6470::SparkFun spark_fun_global;
-    l6470::Store store[l6470::kMaxMotors];
+    l6470dmx::SparkFun spark_fun_global;
+    l6470dmx::Store store[l6470dmx::kMaxMotors];
 } PACKED;
 
 static_assert(offsetof(DmxL6470, store) % alignof(uint32_t) == 0, "store must be uint32_t-aligned");

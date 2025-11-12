@@ -23,183 +23,136 @@
  */
 
 #include <cstdio>
-#include <cstdint>
 
+#include "gd32/hal.h"
 #include "gd32/hal_watchdog.h"
-#include "network.h"
-#if !defined(NO_EMAC)
-# include "net/apps/mdns.h"
-#endif
-
 #include "displayudf.h"
-#include "displayudfparams.h"
-
+#include "json/displayudfparams.h"
 #include "rdmresponder.h"
 #include "rdmpersonality.h"
-#include "rdmdeviceparams.h"
-#include "rdmsensorsparams.h"
-#if defined (CONFIG_RDM_ENABLE_SUBDEVICES)
-# include "rdmsubdevicesparams.h"
-#endif
-
-#include "pixeltype.h"
-#include "pixeldmx.h"
-#include "pixeldmxparams.h"
+#include "json/pixeldmxparams.h"
 #include "pixeldmxparamsrdm.h"
 #include "pixeltestpattern.h"
-
-#if !defined(NO_EMAC)
-# include "remoteconfig.h"
-# include "remoteconfigparams.h"
-#endif
-
+#include "pixeldmx.h"
+#include "common/firmware/pixeldmx/show.h"
 #include "configstore.h"
-
 #include "firmwareversion.h"
 #include "software_version.h"
-#include "software_version_id.h"
-
 #include "is_config_mode.h"
+#include "common/utils/utils_flags.h"
+#include "configurationstore.h"
+#if !defined(NO_EMAC)
+#include "network.h"
+#include "remoteconfig.h"
+#endif
 
-namespace hal {
-void RebootHandler() {
-	PixelDmx::Get().Blackout();
+namespace hal
+{
+void RebootHandler()
+{
+    PixelDmx::Get().Blackout();
 }
-}  // namespace hal
+} // namespace hal
 
-int main() {
-	hal::Init();
-	DisplayUdf display;
-	ConfigStore configStore;
-#if !defined(NO_EMAC)
-	Network nw;
+int main() // NOLINT
+{
+    hal::Init();
+    DisplayUdf display;
+    ConfigStore config_store;
+#if !defined(NO_EMAC)    
+    Network nw;
+#endif    
+    FirmwareVersion fw(SOFTWARE_VERSION, __DATE__, __TIME__);
+
+    const auto kIsConfigMode = IsConfigMode();
+
+    fw.Print("RDM Responder");
+
+    PixelDmx pixeldmx;
+
+    json::PixelDmxParams pixeldmx_params;
+    pixeldmx_params.Load();
+    pixeldmx_params.Set();
+
+    const auto kTestPattern = common::FromValue<pixelpatterns::Pattern>(ConfigStore::Instance().DmxLedGet(&common::store::DmxLed::test_pattern));
+
+    PixelTestPattern pixel_test_pattern(kTestPattern, 1);
+
+    PixelDmxParamsRdm pixeldmx_paramsrdm;
+
+#if defined(CONFIG_RDM_MANUFACTURER_PIDS_SET)
+    static constexpr auto kPersonalityCount = static_cast<uint32_t>(pixel::Type::UNDEFINED);
+    RDMPersonality* personalities[kPersonalityCount];
+
+    for (uint32_t index = 0; index < kPersonalityCount; index++)
+    {
+        const auto* description = pixel::GetType(static_cast<pixel::Type>(index));
+        personalities[index] = new RDMPersonality(description, &pixeldmx);
+    }
+
+    RDMResponder rdm_responder(personalities, kPersonalityCount, static_cast<uint32_t>(pixeldmx.GetType()) + 1U);
 #else
-	Network nw;
+    char description[rdm::personality::DESCRIPTION_MAX_LENGTH];
+    pixeldmx::paramsdmx::SetPersonalityDescription(description);
+    
+    RDMPersonality* personalities[2] = {new RDMPersonality(description, &pixeldmx), new RDMPersonality("Config mode", &pixeldmx_paramsrdm)};
+    RDMResponder rdm_responder(personalities, 2);
 #endif
-	FirmwareVersion fw(SOFTWARE_VERSION, __DATE__, __TIME__, DEVICE_SOFTWARE_VERSION_ID);
+    rdm_responder.SetProductCategory(E120_PRODUCT_CATEGORY_FIXTURE);
+    rdm_responder.SetProductDetail(E120_PRODUCT_DETAIL_LED);
+    rdm_responder.Init();
+    rdm_responder.Start();
+    rdm_responder.DmxDisableOutput(!kIsConfigMode && (kTestPattern != pixelpatterns::Pattern::kNone));
+    rdm_responder.Print();
 
-	const auto isConfigMode = is_config_mode();
+    if (kIsConfigMode)
+    {
+        pixeldmx_paramsrdm.Print();
+    }
+    else
+    {
+        pixeldmx.Print();
+    }
 
-	fw.Print("RDM Responder");
-
-	PixelDmxConfiguration pixelDmxConfiguration;
-
-	PixelDmxParams pixelDmxParams;
-	pixelDmxParams.Load();
-	pixelDmxParams.Set();
-
-	PixelDmx pixelDmx;
-
-	const auto nTestPattern = static_cast<pixelpatterns::Pattern>(pixelDmxParams.GetTestPattern());
-	PixelTestPattern pixelTestPattern(nTestPattern, 1);
-
-	PixelDmxParamsRdm pixelDmxParamsRdm;
-
-#if defined (CONFIG_RDM_MANUFACTURER_PIDS_SET)
-	static constexpr auto PERSONALITY_COUNT = static_cast<uint32_t>(pixel::Type::UNDEFINED);
-	RDMPersonality *personalities[PERSONALITY_COUNT];
-
-	for (uint32_t nIndex = 0; nIndex < PERSONALITY_COUNT; nIndex++) {
-		const auto description = pixel::GetType(static_cast<pixel::Type>(nIndex));
-		personalities[nIndex] = new RDMPersonality(description, &pixelDmx);
-	}
-
-	RDMResponder rdmResponder(personalities, PERSONALITY_COUNT, static_cast<uint32_t>(pixelDmxConfiguration.GetType()) + 1U);
-#else
-	char aDescription[rdm::personality::DESCRIPTION_MAX_LENGTH];
-	snprintf(aDescription, sizeof(aDescription) - 1U, "%s:%u G%u [%s]",
-			pixel::GetType(pixelDmxConfiguration.GetType()),
-			pixelDmxConfiguration.GetCount(),
-			pixelDmxConfiguration.GetGroupingCount(),
-			pixel::GetMap(pixelDmxConfiguration.GetMap()));
-
-	RDMPersonality *personalities[2] = {
-			new RDMPersonality(aDescription, &pixelDmx),
-			new RDMPersonality("Config mode", &pixelDmxParamsRdm)
-	};
-
-	RDMResponder rdmResponder(personalities, 2);
-#endif
-	rdmResponder.SetProductCategory(E120_PRODUCT_CATEGORY_FIXTURE);
-	rdmResponder.SetProductDetail(E120_PRODUCT_DETAIL_LED);
-
-	RDMSensorsParams rdmSensorsParams;
-
-	rdmSensorsParams.Load();
-	rdmSensorsParams.Set();
-
-#if defined (CONFIG_RDM_ENABLE_SUBDEVICES)
-	RDMSubDevicesParams rdmSubDevicesParams;
-
-	rdmSubDevicesParams.Load();
-	rdmSubDevicesParams.Set();
-#endif
-
-	rdmResponder.Init();
-
-	RDMDeviceParams rdmDeviceParams;
-
-	rdmDeviceParams.Load();
-	rdmDeviceParams.Set(&rdmResponder);
-
-	rdmResponder.Start();
-	rdmResponder.DmxDisableOutput(!isConfigMode && (nTestPattern != pixelpatterns::Pattern::kNone));
-	rdmResponder.Print();
-
-	if (isConfigMode) {
-		pixelDmxParamsRdm.Print();
-	} else {
-		pixelDmx.Print();
-	}
-
-	if (isConfigMode) {
-		puts("Config mode");
-	} else if (nTestPattern != pixelpatterns::Pattern::kNone) {
-		printf("Test pattern : %s [%u]\n", PixelPatterns::GetName(nTestPattern), static_cast<uint32_t>(nTestPattern));
-	}
+    if (kIsConfigMode)
+    {
+        puts("Config mode");
+    }
 
 #if !defined(NO_EMAC)
-	RemoteConfig remoteConfig(remoteconfig::NodeType::RDMRESPONDER, remoteconfig::Output::PIXEL);
-
-	RemoteConfigParams remoteConfigParams;
-	remoteConfigParams.Load();
-	remoteConfigParams.Set();
+    RemoteConfig remote_config(remoteconfig::Output::PIXEL);
 #endif
 
-	display.SetTitle("RDM Responder Pixel 1");
-	display.Set(2, displayudf::Labels::VERSION);
-	display.Set(6, displayudf::Labels::DMX_START_ADDRESS);
+    display.SetTitle("RDM Responder Pixel 1");
+    display.Set(2, displayudf::Labels::kVersion);
+    display.Set(6, displayudf::Labels::kDmxStartAddress);
 
-	DisplayUdfParams displayUdfParams;
-	displayUdfParams.Load();
-	displayUdfParams.Set();
+    json::DisplayUdfParams displayudf_params;
+    displayudf_params.Load();
+    displayudf_params.SetAndShow();
 
-	display.Show();
-	display.Printf(7, "%s:%d G%d %s",
-			pixel::GetType(pixelDmxConfiguration.GetType()),
-			pixelDmxConfiguration.GetCount(),
-			pixelDmxConfiguration.GetGroupingCount(),
-			pixel::GetMap(pixelDmxConfiguration.GetMap()));
+    common::firmware::pixeldmx::Show(7);
 
-	if (isConfigMode) {
-		display.ClearLine(3);
-		display.ClearLine(4);
-		display.Write(4, "Config Mode");
-		display.ClearLine(5);
-	} else if (nTestPattern != pixelpatterns::Pattern::kNone) {
-		display.ClearLine(6);
-		display.Printf(6, "%s:%u", PixelPatterns::GetName(nTestPattern), static_cast<uint32_t>(nTestPattern));
-	}
+    if (kIsConfigMode)
+    {
+        display.ClearLine(3);
+        display.ClearLine(4);
+        display.Write(4, "Config Mode");
+        display.ClearLine(5);
+    }
 
-	hal::WatchdogInit();
+    hal::statusled::SetMode(hal::statusled::Mode::NORMAL);
+    hal::WatchdogInit();
 
-	for(;;) {
-		hal::WatchdogFeed();
-		rdmResponder.Run();
+    for (;;)
+    {
+        hal::WatchdogFeed();
+        rdm_responder.Run();
 #if !defined(NO_EMAC)
-		net::Run();
+        net::Run();
 #endif
-		pixelTestPattern.Run();
-		hal::Run();
-	}
+        pixel_test_pattern.Run();
+        display.Run();
+        hal::Run();
+    }
 }

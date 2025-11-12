@@ -33,8 +33,8 @@ class DmxNodeOutputRdmPixel
     DmxNodeOutputRdmPixel() = default;
     virtual ~DmxNodeOutputRdmPixel() = default;
 
-    virtual void Start(uint32_t port_index);
-    virtual void Stop(uint32_t port_index);
+    virtual void Start(uint32_t port_index) = 0;
+    virtual void Stop(uint32_t port_index) = 0;
 
     template <bool doUpdate> void SetData(uint32_t port_index, const uint8_t* data, uint32_t length) { SetDataImpl(port_index, data, length, doUpdate); }
 

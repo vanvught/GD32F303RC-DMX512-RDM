@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file cputemperature.h
  *
@@ -23,46 +24,44 @@
  * THE SOFTWARE.
  */
 
-#ifndef CPUTEMPERATURE_H_
-#define CPUTEMPERATURE_H_
-
 #include <cstdint>
 
 #include "rdmsensor.h"
 #include "rdm_e120.h"
 #include "hal.h"
-
 #include "debug.h"
 
-class CpuTemperature final: public RDMSensor {
-public:
-	CpuTemperature(uint8_t nSensor): RDMSensor(nSensor) {
-		SetType(E120_SENS_TEMPERATURE);
-		SetUnit(E120_UNITS_CENTIGRADE);
-		SetPrefix(E120_PREFIX_NONE);
-		SetRangeMin(static_cast<int16_t>(hal::kCoreTemperatureMin));
-		SetRangeMax(static_cast<int16_t>(hal::kCoreTemperatureMax));
-		SetNormalMin(static_cast<int16_t>(hal::kCoreTemperatureMin));
-		SetNormalMax(static_cast<int16_t>(hal::kCoreTemperatureMax));
-		SetDescription("CPU");
-	}
+class CpuTemperature final : public RDMSensor
+{
+   public:
+    explicit CpuTemperature(uint8_t sensor) : RDMSensor(sensor)
+    {
+        SetType(E120_SENS_TEMPERATURE);
+        SetUnit(E120_UNITS_CENTIGRADE);
+        SetPrefix(E120_PREFIX_NONE);
+        SetRangeMin(static_cast<int16_t>(hal::kCoreTemperatureMin));
+        SetRangeMax(static_cast<int16_t>(hal::kCoreTemperatureMax));
+        SetNormalMin(static_cast<int16_t>(hal::kCoreTemperatureMin));
+        SetNormalMax(static_cast<int16_t>(hal::kCoreTemperatureMax));
+        SetDescription("CPU");
+    }
 
-	bool Initialize() override {
-		DEBUG_ENTRY
-#if defined (__APPLE__)
-		DEBUG_EXIT
-		return false;
+    bool Initialize() override
+    {
+        DEBUG_ENTRY
+#if defined(__APPLE__)
+        DEBUG_EXIT
+        return false;
 #else
-		DEBUG_EXIT
-		return true;
+        DEBUG_EXIT
+        return true;
 #endif
-	}
+    }
 
-	int16_t GetValue() override {
-		const auto nValue = static_cast<int16_t>(hal::CoreTemperatureCurrent());
-		DEBUG_PRINTF("nValue=%d", nValue);
-		return nValue;
-	}
+    int16_t GetValue() override
+    {
+        const auto kValue = static_cast<int16_t>(hal::CoreTemperatureCurrent());
+        DEBUG_PRINTF("nValue=%d", kValue);
+        return kValue;
+    }
 };
-
-#endif /* CPUTEMPERATURE_H_ */

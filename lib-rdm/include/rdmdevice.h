@@ -25,6 +25,7 @@
  */
 
 #include <cstdint>
+#include <cstdio>
 #include <cstring>
 #include <cassert>
 #include <algorithm>
@@ -32,7 +33,13 @@
 #include "rdmdevicestore.h"
 #include "rdmconst.h"
 #include "rdm_e120.h"
-
+#include "json/rdmdeviceparams.h"
+#if defined(H3)
+#include "h3_board.h"
+#elif defined(GD32)
+#include "gd32_board.h"
+#endif
+#include "hal_serialnumber.h"
 #include "debug.h"
 
 struct TRDMDeviceInfoData
@@ -43,64 +50,91 @@ struct TRDMDeviceInfoData
 
 class RDMDevice
 {
+#if defined(CONFIG_RDM_DEVICE_ROOT_LABEL)
+    static constexpr char kDeviceLabel[] = CONFIG_RDM_DEVICE_ROOT_LABEL;
+#else
+#if defined(H3)
+    static constexpr char kDeviceLabel[] = H3_BOARD_NAME " RDM Device";
+#elif defined(GD32)
+    static constexpr char kDeviceLabel[] = GD32_BOARD_NAME " RDM Device";
+#elif defined(RASPPI)
+    static constexpr char kDeviceLabel[] = "Raspberry Pi RDM Device";
+#elif defined(__linux__)
+    static constexpr char kDeviceLabel[] = "Linux RDM Device";
+#elif defined(__APPLE__)
+    static constexpr char kDeviceLabel[] = "MacOS RDM Device";
+#else
+    static constexpr char kDeviceLabel[] = "RDM Device";
+#endif
+#endif
    public:
-    RDMDevice();
+    RDMDevice()
+    {
+        DEBUG_ENTRY
+        assert(s_this == nullptr);
+        s_this = this;
+
+        hal::SerialNumber(s_serial_number);
+
+        s_uid[0] = RDMConst::MANUFACTURER_ID[0];
+        s_uid[1] = RDMConst::MANUFACTURER_ID[1];
+        s_uid[2] = s_serial_number[0];
+        s_uid[3] = s_serial_number[1];
+        s_uid[4] = s_serial_number[2];
+        s_uid[5] = s_serial_number[3];
+
+        s_factory_root_label_length = sizeof(kDeviceLabel) - 1;
+        memcpy(s_factory_root_label, kDeviceLabel, s_factory_root_label_length);
+
+        DEBUG_EXIT
+    }
 
     void Init()
     {
-        assert(!is_init_);
-        is_init_ = true;
+        DEBUG_ENTRY
+
+        assert(!s_is_init);
 
         RDMDevice::SetFactoryDefaults();
+
+        s_is_init = true;
+
+        json::RdmDeviceParams rdmdevice_params;
+        rdmdevice_params.Load();
+        rdmdevice_params.Set();
+
+        DEBUG_EXIT
     }
 
-    void Print();
+    void Print()
+    {
+        puts("RDM Device configuration");
+        const auto kLength = static_cast<int>(std::min(static_cast<size_t>(RDM_MANUFACTURER_LABEL_MAX_LENGTH), strlen(RDMConst::MANUFACTURER_NAME)));
+        printf(" Manufacturer Name : %.*s\n", kLength, const_cast<char*>(&RDMConst::MANUFACTURER_NAME[0]));
+        printf(" Manufacturer ID   : %.2X%.2X\n", s_uid[0], s_uid[1]);
+        printf(" Serial Number     : %.2X%.2X%.2X%.2X\n", s_serial_number[3], s_serial_number[2], s_serial_number[1], s_serial_number[0]);
+        printf(" Root label        : %.*s\n", s_root_label_length, s_root_label);
+        printf(" Product Category  : %.2X%.2X\n", s_product_category >> 8, s_product_category & 0xFF);
+        printf(" Product Detail    : %.2X%.2X\n", s_product_detail >> 8, s_product_detail & 0xFF);
+    }
 
     void SetFactoryDefaults()
     {
         DEBUG_ENTRY
-        TRDMDeviceInfoData info = {m_aFactoryRootLabel, m_nFactoryRootLabelLength};
 
-        RDMDevice::SetLabel(&info);
+        const struct TRDMDeviceInfoData kInfoData = {.data = s_factory_root_label, .length = s_factory_root_label_length};
+        SetLabel(&kInfoData);
 
-        m_nCheckSum = RDMDevice::CalculateChecksum();
+        s_checksum = RDMDevice::CalculateChecksum();
+
         DEBUG_EXIT
     }
 
-    bool GetFactoryDefaults() { return (m_nCheckSum == RDMDevice::CalculateChecksum()); }
+    bool GetFactoryDefaults() { return (s_checksum == RDMDevice::CalculateChecksum()); }
 
-    const uint8_t* GetUID() const
-    {
-#if defined(NO_EMAC) || !defined(CONFIG_RDMDEVICE_UUID_IP)
-#else
-        const auto nIp = net::GetPrimaryIp();
-#if !defined(CONFIG_RDMDEVICE_REVERSE_UID)
-        m_aUID[5] = static_cast<uint8_t>(nIp >> 24);
-        m_aUID[4] = (nIp >> 16) & 0xFF;
-        m_aUID[3] = (nIp >> 8) & 0xFF;
-        m_aUID[2] = nIp & 0xFF;
-#else
-        m_aUID[2] = static_cast<uint8_t>(nIp >> 24);
-        m_aUID[3] = (nIp >> 16) & 0xFF;
-        m_aUID[4] = (nIp >> 8) & 0xFF;
-        m_aUID[5] = nIp & 0xFF;
-#endif
-#endif
-        return m_aUID;
-    }
+    const uint8_t* GetUID() const { return s_uid; }
 
-    const uint8_t* GetSN() const
-    {
-#if defined(NO_EMAC) || !defined(CONFIG_RDMDEVICE_UUID_IP)
-#else
-        GetUID();
-        m_aSN[0] = m_aUID[5];
-        m_aSN[1] = m_aUID[4];
-        m_aSN[2] = m_aUID[3];
-        m_aSN[3] = m_aUID[2];
-#endif
-        return m_aSN;
-    }
+    const uint8_t* GetSN() const { return s_serial_number; }
 
     void GetManufacturerId(struct TRDMDeviceInfoData* info_data)
     {
@@ -118,62 +152,57 @@ class RDMDevice
     {
         const auto kLength = std::min(static_cast<uint8_t>(RDM_DEVICE_LABEL_MAX_LENGTH), info_data->length);
 
-        if (is_init_)
-        {
-            memcpy(m_aRootLabel, info_data->data, kLength);
-            m_nRootLabelLength = kLength;
+        memcpy(s_root_label, info_data->data, kLength);
+        s_root_label_length = kLength;
 
-            rdmdevice_store::SaveLabel(m_aRootLabel, m_nRootLabelLength);
-        }
-        else
+        if (s_is_init)
         {
-            memcpy(m_aFactoryRootLabel, info_data->data, kLength);
-            m_nFactoryRootLabelLength = kLength;
+            rdmdevice_store::SaveLabel(s_root_label, s_root_label_length);
         }
     }
 
     void GetLabel(struct TRDMDeviceInfoData* info_data)
     {
-        info_data->data = m_aRootLabel;
-        info_data->length = m_nRootLabelLength;
+        info_data->data = s_root_label;
+        info_data->length = s_root_label_length;
     }
 
-    void SetProductCategory(uint16_t product_category) { m_nProductCategory = product_category; }
-    uint16_t GetProductCategory() const { return m_nProductCategory; }
+    void SetProductCategory(uint16_t product_category) { s_product_category = product_category; }
+    uint16_t GetProductCategory() const { return s_product_category; }
 
-    void SetProductDetail(uint16_t product_detail) { m_nProductDetail = product_detail; }
-    uint16_t GetProductDetail() const { return m_nProductDetail; }
+    void SetProductDetail(uint16_t product_detail) { s_product_detail = product_detail; }
+    uint16_t GetProductDetail() const { return s_product_detail; }
 
     static RDMDevice* Get() { return s_this; }
 
    private:
     uint16_t CalculateChecksum()
     {
-        uint16_t checksum = m_nFactoryRootLabelLength;
+        uint16_t checksum = s_root_label_length;
 
-        for (uint32_t i = 0; i < m_nRootLabelLength; i++)
+        for (uint32_t i = 0; i < s_root_label_length; i++)
         {
-            checksum = static_cast<uint16_t>(checksum + m_aRootLabel[i]);
+            checksum = static_cast<uint16_t>(checksum + s_root_label[i]);
         }
 
         return checksum;
     }
 
    private:
-    char m_aFactoryRootLabel[RDM_DEVICE_LABEL_MAX_LENGTH];
-    char m_aRootLabel[RDM_DEVICE_LABEL_MAX_LENGTH];
+    inline static char s_factory_root_label[RDM_DEVICE_LABEL_MAX_LENGTH];
+    inline static char s_root_label[RDM_DEVICE_LABEL_MAX_LENGTH];
 
-    uint16_t m_nProductCategory{E120_PRODUCT_CATEGORY_OTHER};
-    uint16_t m_nProductDetail{E120_PRODUCT_DETAIL_OTHER};
-    uint16_t m_nCheckSum{0};
+    inline static uint16_t s_product_category{E120_PRODUCT_CATEGORY_OTHER};
+    inline static uint16_t s_product_detail{E120_PRODUCT_DETAIL_OTHER};
+    inline static uint16_t s_checksum{0};
 
-    uint8_t m_aUID[RDM_UID_SIZE];
+    inline static uint8_t s_uid[RDM_UID_SIZE];
 #define DEVICE_SN_LENGTH 4
-    uint8_t m_aSN[DEVICE_SN_LENGTH];
-    uint8_t m_nRootLabelLength{0};
-    uint8_t m_nFactoryRootLabelLength{0};
+    inline static uint8_t s_serial_number[DEVICE_SN_LENGTH];
+    inline static uint8_t s_factory_root_label_length{0};
+    inline static uint8_t s_root_label_length{0};
 
-    bool is_init_{false};
+    inline static bool s_is_init{false};
 
-    static inline RDMDevice* s_this;
+    inline static RDMDevice* s_this;
 };

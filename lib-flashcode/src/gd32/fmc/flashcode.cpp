@@ -28,7 +28,6 @@
 #include <cassert>
 
 #include "flashcode.h"
-
 #include "gd32.h"
 
 /**
@@ -49,7 +48,7 @@ namespace flashcode
 /* Backwards compatibility with SPI FLASH */
 static constexpr auto kFlashSectorSize = 4096U;
 /* The flash page size is 2KB for bank0 */
-static constexpr auto BANK0_FLASH_PAGE = (2U * 1024U);
+static constexpr auto kBanK0FlashPage = (2U * 1024U);
 /* The flash page size is 4KB for bank1 */
 static constexpr auto kBanK1FlashPage = (4U * 1024U);
 
@@ -101,7 +100,7 @@ uint32_t FlashCode::GetSectorSize() const
     return kFlashSectorSize;
 }
 
-bool FlashCode::Read(uint32_t offset, uint32_t length, uint8_t* pBuffer, flashcode::result& result)
+bool FlashCode::Read(uint32_t offset, uint32_t length, uint8_t* pBuffer, flashcode::Result& result)
 {
     DEBUG_ENTRY
     DEBUG_PRINTF("offset=%p[%d], len=%u[%d], data=%p[%d]", offset, (((uint32_t)(offset) & 0x3) == 0), length, (((uint32_t)(length) & 0x3) == 0), pBuffer, (((uint32_t)(pBuffer) & 0x3) == 0));
@@ -115,18 +114,18 @@ bool FlashCode::Read(uint32_t offset, uint32_t length, uint8_t* pBuffer, flashco
         length -= 4;
     }
 
-    result = result::OK;
+    result = Result::kOk;
 
     DEBUG_EXIT
     return true;
 }
 
-bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::result& result)
+bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::Result& result)
 {
     DEBUG_ENTRY
-    DEBUG_PRINTF("State=%d", static_cast<int>(s_State));
+    DEBUG_PRINTF("State=%d", static_cast<int>(s_state));
 
-    result = result::OK;
+    result = Result::kOk;
 
     switch (s_state)
     {
@@ -203,8 +202,8 @@ bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::result& resul
                     FMC_ADDR0 = s_page;
                     FMC_CTL0 |= FMC_CTL0_START;
 
-                    s_length -= BANK0_FLASH_PAGE;
-                    s_page += BANK0_FLASH_PAGE;
+                    s_length -= kBanK0FlashPage;
+                    s_page += kBanK0FlashPage;
                 }
                 else
                 {
@@ -252,9 +251,9 @@ bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::result& resul
     return true;
 }
 
-bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* pBuffer, flashcode::result& result)
+bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* pBuffer, flashcode::Result& result)
 {
-    result = result::OK;
+    result = Result::kOk;
 
     switch (s_state)
     {

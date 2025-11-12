@@ -27,37 +27,25 @@
 #include <cstdint>
 #include <cassert>
 
+#include "configurationstore.h"
 #include "rdmsensor.h"
-
 #include "debug.h"
 
-#if defined(__APPLE__) || (defined(__linux__) && !defined(RASPPI))
-#else
-#define RDM_SENSORS_ENABLE
-#endif
-
 #if !defined(__APPLE__)
-#define RDMSENSOR_CPU_ENABLE
+#define CONFIG_RDM_ENABLE_CPU_SENSOR
 #endif
 
 #if defined(NODE_RDMNET_LLRP_ONLY)
-#undef RDM_SENSORS_ENABLE
-#undef RDMSENSOR_CPU_ENABLE
+#undef CONFIG_RDM_ENABLE_SENSORS
+#undef CONFIG_RDM_ENABLE_CPU_SENSOR
 #endif
 
-#if defined(RDMSENSOR_CPU_ENABLE)
+#if defined(CONFIG_RDM_ENABLE_CPU_SENSOR)
 #include "sensor/cputemperature.h"
 #endif
-
-namespace rdm::sensors
-{
-static constexpr auto MAX = 16;
-static constexpr auto STORE = 64; ///< Configuration store in bytes
-namespace devices
-{
-static constexpr auto MAX = 8;
-} // namespace devices
-} // namespace rdm::sensors
+#if defined(CONFIG_RDM_ENABLE_SENSORS)
+#include "json/rdmsensorsparams.h"
+#endif
 
 class RDMSensors
 {
@@ -68,12 +56,17 @@ class RDMSensors
         assert(s_this == nullptr);
         s_this = this;
 
-#if defined(RDM_SENSORS_ENABLE) || defined(RDMSENSOR_CPU_ENABLE)
-        rdm_sensor_ = new RDMSensor*[rdm::sensors::MAX];
+#if defined(CONFIG_RDM_ENABLE_SENSORS) || defined(CONFIG_RDM_ENABLE_CPU_SENSOR)
+        rdm_sensor_ = new RDMSensor*[common::store::rdm::sensors::kMaxSensors];
         assert(rdm_sensor_ != nullptr);
 
-#if defined(RDMSENSOR_CPU_ENABLE)
+#if defined(CONFIG_RDM_ENABLE_CPU_SENSOR)
         Add(new CpuTemperature(count_));
+#endif
+#if defined(CONFIG_RDM_ENABLE_SENSORS)
+        json::RdmSensorsParams params;
+        params.Load();
+        params.Set();
 #endif
 #endif
         DEBUG_EXIT
@@ -105,7 +98,7 @@ class RDMSensors
             return false;
         }
 
-        if (count_ == rdm::sensors::MAX)
+        if (count_ == common::store::rdm::sensors::kMaxSensors)
         {
             DEBUG_EXIT
             return false;
@@ -131,7 +124,6 @@ class RDMSensors
     const struct rdm::sensor::Values* GetValues(uint8_t sensor)
     {
         assert(sensor < count_);
-
         assert(rdm_sensor_[sensor] != nullptr);
         return rdm_sensor_[sensor]->GetValues();
     }

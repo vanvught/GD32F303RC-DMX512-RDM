@@ -28,7 +28,7 @@
 
 namespace pixel
 {
-enum class Type
+enum class Type: uint8_t
 {
     WS2801,
     WS2811,
@@ -46,7 +46,8 @@ enum class Type
     P9813,
     UNDEFINED
 };
-enum class Map
+
+enum class Map: uint8_t
 {
     RGB,
     RBG,
@@ -56,39 +57,40 @@ enum class Map
     BGR,
     UNDEFINED
 };
-static constexpr auto TYPES_MAX_NAME_LENGTH = 8;
+
+inline constexpr auto kTypesMaxNameLength = 8;
 
 namespace max::ledcount
 {
-static constexpr uint32_t RGB = (4 * 170);
-static constexpr uint32_t RGBW = (4 * 128);
+inline constexpr uint32_t RGB = (4 * 170);
+inline constexpr uint32_t RGBW = (4 * 128);
 } // namespace max::ledcount
 
 namespace single
 {
-static constexpr uint32_t RGB = 24;
-static constexpr uint32_t RGBW = 32;
+inline constexpr uint32_t RGB = 24;
+inline constexpr uint32_t RGBW = 32;
 } // namespace single
 
 namespace spi::speed
 {
 namespace ws2801
 {
-static constexpr uint32_t max_hz = 25000000;    ///< 25 MHz
-static constexpr uint32_t default_hz = 4000000; ///< 4 MHz
+inline constexpr uint32_t kMaxHz = 25000000;    ///< 25 MHz
+inline constexpr uint32_t kDefaultHz = 4000000; ///< 4 MHz
 } // namespace ws2801
 namespace p9813
 {
-static constexpr uint32_t max_hz = 15000000;    ///< 15 MHz
-static constexpr uint32_t default_hz = 4000000; ///< 4 MHz
+inline constexpr uint32_t kMaxHz = 15000000;    ///< 15 MHz
+inline constexpr uint32_t kDefaultHz = 4000000; ///< 4 MHz
 } // namespace p9813
 } // namespace spi::speed
 
 namespace defaults
 {
-static constexpr auto TYPE = Type::WS2812B;
-static constexpr auto COUNT = 170;
-static constexpr auto OUTPUT_PORTS = 1;
+inline constexpr auto kType = Type::WS2812B;
+inline constexpr uint32_t kCount = 170;
+inline constexpr uint32_t kOutputPorts = 1;
 } // namespace defaults
 
 inline constexpr auto kFInterval = 0.15625f;

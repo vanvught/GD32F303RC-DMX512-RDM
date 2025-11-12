@@ -1,6 +1,6 @@
 $(info $$MAKE_FLAGS [${MAKE_FLAGS}])
 
-EXTRA_INCLUDES+=../lib-properties/include
+EXTRA_INCLUDES+=
 
 ifneq ($(MAKE_FLAGS),)
 	ifneq (,$(findstring CONFIG_STORE_USE_FILE,$(MAKE_FLAGS)))

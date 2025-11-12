@@ -29,82 +29,96 @@
 
 void uart0_init();
 void uart0_putc(int);
-void uart0_puts(const char *);
+void uart0_puts(const char*);
 
-void ConsolePutc(int c) {
-	uart0_putc(c);
+namespace console
+{
+void Putc(int c)
+{
+    uart0_putc(c);
 }
 
-void ConsolePuts(const char *s) {
-	uart0_puts(s);
+void Puts(const char* s)
+{
+    uart0_puts(s);
 }
 
 // https://github.com/shiena/ansicolor/blob/master/README.md
 
-void ConsoleError(const char *s) {
-	uart0_puts("\x1b[31m");
-	uart0_puts(s);
-	uart0_puts("\x1b[39m");
+void ConsoleError(const char* s)
+{
+    uart0_puts("\x1b[31m");
+    uart0_puts(s);
+    uart0_puts("\x1b[39m");
 }
 
-void ConsoleSetFgColour(uint32_t fg) {
-	switch (fg) {
-	case CONSOLE_BLACK:
-		uart0_puts("\x1b[30m");
-		break;
-	case CONSOLE_RED:
-		uart0_puts("\x1b[31m");
-		break;
-	case CONSOLE_GREEN:
-		uart0_puts("\x1b[32m");
-		break;
-	case CONSOLE_YELLOW:
-		uart0_puts("\x1b[33m");
-		break;
-	case CONSOLE_WHITE:
-		uart0_puts("\x1b[37m");
-		break;
-	default:
-		uart0_puts("\x1b[39m");
-		break;
-	}
+void ConsoleSetFgColour(Colours fg)
+{
+    switch (fg)
+    {
+        case console::Colours::kConsoleBlack:
+            uart0_puts("\x1b[30m");
+            break;
+        case console::Colours::kConsoleRed:
+            uart0_puts("\x1b[31m");
+            break;
+        case console::Colours::kConsoleGreen:
+            uart0_puts("\x1b[32m");
+            break;
+        case console::Colours::kConsoleYellow:
+            uart0_puts("\x1b[33m");
+            break;
+        case console::Colours::kConsoleWhite:
+            uart0_puts("\x1b[37m");
+            break;
+        default:
+            uart0_puts("\x1b[39m");
+            break;
+    }
 }
 
-void ConsoleSetBgColour(uint32_t bg) {
-	switch (bg) {
-	case CONSOLE_BLACK:
-		uart0_puts("\x1b[40m");
-		break;
-	case CONSOLE_RED:
-		uart0_puts("\x1b[41m");
-		break;
-	case CONSOLE_WHITE:
-		uart0_puts("\x1b[47m");
-		break;
-	default:
-		uart0_puts("\x1b[49m");
-		break;
-	}
+void ConsoleSetBgColour(Colours bg)
+{
+    switch (bg)
+    {
+        case console::Colours::kConsoleBlack:
+            uart0_puts("\x1b[40m");
+            break;
+        case console::Colours::kConsoleRed:
+            uart0_puts("\x1b[41m");
+            break;
+        case console::Colours::kConsoleWhite:
+            uart0_puts("\x1b[47m");
+            break;
+        default:
+            uart0_puts("\x1b[49m");
+            break;
+    }
 }
 
-void ConsoleWrite(const char *s, unsigned int n) {
-	char c;
+void ConsoleWrite(const char* s, unsigned int n)
+{
+    char c;
 
-	while (((c = *s++) != 0) && (n-- != 0)) {
-		ConsolePutc(static_cast<int>(c));
-	}
+    while (((c = *s++) != 0) && (n-- != 0))
+    {
+        Putc(static_cast<int>(c));
+    }
 }
 
-void ConsoleStatus(uint32_t nColour, const char *s) {
-	ConsoleSetFgColour(nColour);
-	uart0_puts(s);
-	ConsolePutc('\n');
-	ConsoleSetFgColour(CONSOLE_DEFAULT);
+void ConsoleStatus(Colours colour, const char* s)
+{
+    ConsoleSetFgColour(colour);
+    uart0_puts(s);
+    Putc('\n');
+    ConsoleSetFgColour(console::Colours::kConsoleDefault);
 }
 
-void __attribute__((cold)) ConsoleInit() {
-	uart0_init();
+void __attribute__((cold)) Init()
+{
+    uart0_init();
 
-	ConsoleSetFgColour(CONSOLE_WHITE);
-	ConsoleSetBgColour(CONSOLE_BLACK);
+    ConsoleSetFgColour(console::Colours::kConsoleWhite);
+    ConsoleSetBgColour(console::Colours::kConsoleBlack);
 }
+} // namespace console

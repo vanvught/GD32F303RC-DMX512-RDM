@@ -28,11 +28,14 @@
 
 #include "configstore.h"
 #include "configurationstore.h"
+#include "debug.h"
 
 namespace rdmdevice_store
 {
 inline void SaveLabel(const char* label, uint32_t length)
 {
+	DEBUG_PRINTF("%.*s", length, label);
+
     ConfigStore::Instance().RdmDeviceUpdateArray(&common::store::RdmDevice::device_root_label, label, length);
     ConfigStore::Instance().RdmDeviceUpdate(&common::store::RdmDevice::device_root_label_length, static_cast<uint8_t>(length));
 }

@@ -27,63 +27,68 @@
 
 #include "configstoredevice.h"
 #include "flashcode.h"
-
 #include "debug.h"
 
-StoreDevice::StoreDevice() {
-	DEBUG_ENTRY
+StoreDevice::StoreDevice()
+{
+    DEBUG_ENTRY
 
-	detected_ = FlashCode::IsDetected();
+    detected_ = FlashCode::IsDetected();
 
-	DEBUG_EXIT
+    DEBUG_EXIT
 }
 
-StoreDevice::~StoreDevice() {
-	DEBUG_ENTRY
-
-	DEBUG_EXIT
+StoreDevice::~StoreDevice()
+{
+  DEBUG_ENTRY
+  DEBUG_EXIT
 }
 
-uint32_t StoreDevice::GetSize() const {
-	return FlashCode::GetSize();
+uint32_t StoreDevice::GetSize() const
+{
+    return FlashCode::GetSize();
 }
 
-uint32_t StoreDevice::GetSectorSize() const {
-	return FlashCode::GetSectorSize();
+uint32_t StoreDevice::GetSectorSize() const
+{
+    return FlashCode::GetSectorSize();
 }
 
-bool StoreDevice::Read(uint32_t offset, uint32_t length, uint8_t *pBuffer, storedevice::Result& result) {
-	DEBUG_ENTRY
+bool StoreDevice::Read(uint32_t offset, uint32_t length, uint8_t* buffer, storedevice::Result& result)
+{
+    DEBUG_ENTRY
 
-	flashcode::result flashrom_result;
-	const auto kState = FlashCode::Read(offset, length,  pBuffer, flashrom_result);
+    flashcode::Result flashrom_result;
+    const auto kState = FlashCode::Read(offset, length, buffer, flashrom_result);
 
-	result = static_cast<storedevice::Result>(flashrom_result);
+    result = static_cast<storedevice::Result>(flashrom_result);
 
-	DEBUG_EXIT
-	return kState;
+    DEBUG_EXIT
+    return kState;
 }
 
-bool StoreDevice::Erase(uint32_t offset, uint32_t length, storedevice::Result& result) {
-	DEBUG_ENTRY
+bool StoreDevice::Erase(uint32_t offset, uint32_t length, storedevice::Result& result)
+{
+    DEBUG_ENTRY
 
-	flashcode::result flashrom_result;
-	const auto kState = FlashCode::Erase(offset, length, flashrom_result);
+    flashcode::Result flashrom_result;
+    const auto kState = FlashCode::Erase(offset, length, flashrom_result);
 
-	result = static_cast<storedevice::Result>(flashrom_result);
+    result = static_cast<storedevice::Result>(flashrom_result);
 
-	DEBUG_EXIT
-	return kState;
+    DEBUG_EXIT
+    return kState;
 }
 
-bool StoreDevice::Write(uint32_t offset, uint32_t length, const uint8_t *pBuffer, storedevice::Result& result) {
-	DEBUG_ENTRY
+bool StoreDevice::Write(uint32_t offset, uint32_t length, const uint8_t* buffer, storedevice::Result& result)
+{
+    DEBUG_ENTRY
 
-	flashcode::result flashrom_result;
-	const auto kState = FlashCode::Write(offset, length, pBuffer, flashrom_result);
+    flashcode::Result flashrom_result;
+    const auto kState = FlashCode::Write(offset, length, buffer, flashrom_result);
 
-	result = static_cast<storedevice::Result>(flashrom_result);
+    result = static_cast<storedevice::Result>(flashrom_result);
 
-	DEBUG_EXIT
-	return kState;
+    DEBUG_EXIT
+    return kState;
 }

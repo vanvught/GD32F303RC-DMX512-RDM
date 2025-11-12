@@ -27,7 +27,6 @@
 #include <cstdint>
 
 #include "displayset.h"
-
 #include "hal_i2c.h"
 
 #define OLED_I2C_ADDRESS_DEFAULT 0x3C

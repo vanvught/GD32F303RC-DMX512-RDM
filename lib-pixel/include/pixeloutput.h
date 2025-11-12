@@ -25,15 +25,19 @@
 
 #include <cstdint>
 
-#include "pixelconfiguration.h"
-
-#include "hal_spi.h"
+#if defined(GD32)
+#include "gd32_spi.h"
+#elif defined(H3)
+#include "h3_spi.h"
+#endif
 
 class PixelOutput
 {
    public:
     PixelOutput();
     ~PixelOutput();
+
+    void ApplyConfiguration();
 
     void SetPixel(uint32_t index, uint8_t red, uint8_t green, uint8_t blue);
     void SetPixel(uint32_t index, uint8_t red, uint8_t green, uint8_t blue, uint8_t white);
@@ -72,4 +76,4 @@ class PixelOutput
     static inline PixelOutput* s_this;
 };
 
-using OutputType = PixelOutput;
+using PixelOutputType = PixelOutput;

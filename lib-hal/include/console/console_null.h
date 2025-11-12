@@ -28,24 +28,25 @@
 #error File should not be included
 #endif
 
-#include <cstdint>
-
-typedef enum
+namespace console
 {
-    CONSOLE_BLACK = 0,
-    CONSOLE_RED = 1,
-    CONSOLE_GREEN = 2,
-    CONSOLE_YELLOW = 3,
-    CONSOLE_BLUE = 4,
-    CONSOLE_MAGENTA = 5,
-    CONSOLE_CYAN = 6,
-    CONSOLE_WHITE = 7,
-    CONSOLE_DEFAULT = 9
-} _console_colors;
+enum class Colours
+{
+    kConsoleBlack,
+    kConsoleRed,
+    kConsoleGreen,
+    kConsoleYellow,
+    kConsoleBlue,
+    kConsoleMagenta,
+    kConsoleCyan,
+    kConsoleWhite,
+    kConsoleDefault
+};
 
-inline void ConsoleInit() {}
-inline void ConsolePutc([[maybe_unused]] int i) {}
-inline void ConsolePuts([[maybe_unused]] const char* p) {}
+inline void Init() {}
+inline void Putc([[maybe_unused]] int i) {}
+inline void Puts([[maybe_unused]] const char* p) {}
 inline void ConsoleWrite([[maybe_unused]] const char* p, [[maybe_unused]] unsigned int i) {}
-inline void ConsoleStatus([[maybe_unused]] uint32_t i, [[maybe_unused]] const char* p) {}
+inline void ConsoleStatus([[maybe_unused]] Colours c, [[maybe_unused]] const char* p) {}
 inline void ConsoleError([[maybe_unused]] const char* p) {}
+} // namespace console

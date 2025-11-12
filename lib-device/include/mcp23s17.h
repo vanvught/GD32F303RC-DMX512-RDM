@@ -3,7 +3,7 @@
  * @file mcp23s17.h
  *
  */
-/* Copyright (C) 2020-2023 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2020-2023 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,10 +36,10 @@ namespace gpio
 class MCP23S17 : HAL_SPI
 {
    public:
-    explicit MCP23S17(uint8_t nChipSelect = 0, uint32_t nSpeedHz = mcp23x17::SPI_SPEED_DEFAULT_HZ, uint8_t nAddress = 0)
+    explicit MCP23S17(uint8_t nChipSelect = 0, uint32_t nSpeedHz = mcp23x17::SPI_SPEED_DEFAULT_HZ, uint8_t address = 0)
         : HAL_SPI(nChipSelect, nSpeedHz == 0 ? mcp23x17::SPI_SPEED_DEFAULT_HZ
                                              : (mcp23x17::SPI_SPEED_DEFAULT_HZ <= mcp23x17::SPI_SPEED_MAX_HZ ? nSpeedHz : mcp23x17::SPI_SPEED_MAX_HZ)),
-          m_nAddress(nAddress)
+          address_(address)
     {
         MCP23S17::WriteRegister(mcp23x17::REG_IOCON, mcp23x17::IOCON_HAEN);
     }
@@ -48,7 +48,7 @@ class MCP23S17 : HAL_SPI
     {
         char spiData[3];
 
-        spiData[0] = static_cast<char>(mcp23x17::SPI_CMD_WRITE) | static_cast<char>(m_nAddress << 1);
+        spiData[0] = static_cast<char>(mcp23x17::SPI_CMD_WRITE) | static_cast<char>(address_ << 1);
         spiData[1] = static_cast<char>(nRegister);
         spiData[2] = static_cast<char>(nValue);
 
@@ -59,7 +59,7 @@ class MCP23S17 : HAL_SPI
     {
         char spiData[4];
 
-        spiData[0] = static_cast<char>(mcp23x17::SPI_CMD_WRITE) | static_cast<char>(m_nAddress << 1);
+        spiData[0] = static_cast<char>(mcp23x17::SPI_CMD_WRITE) | static_cast<char>(address_ << 1);
         spiData[1] = static_cast<char>(nRegister);
         spiData[2] = static_cast<char>(nValue);
         spiData[3] = static_cast<char>(nValue >> 8);
@@ -68,7 +68,7 @@ class MCP23S17 : HAL_SPI
     }
 
    private:
-    uint8_t m_nAddress = 0;
+    uint8_t address_ = 0;
 };
 
 } // namespace gpio

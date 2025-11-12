@@ -1,5 +1,5 @@
-EXTRA_INCLUDES+=../lib-dmxled/include
-EXTRA_INCLUDES+=../lib-tlc5971dmx/include
+EXTRA_INCLUDES+=
+EXTRA_INCLUDES+=
 
 ifneq ($(MAKE_FLAGS),)
 

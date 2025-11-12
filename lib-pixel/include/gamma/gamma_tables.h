@@ -42,7 +42,7 @@ namespace gamma
 inline constexpr auto kMin = 20U; ///< 2.0
 inline constexpr auto kMax = 25U; ///< 2.5
 
-inline static const uint8_t* GetTableDefault(pixel::Type type)
+inline const uint8_t* GetTableDefault(pixel::Type type)
 {
     if (type == pixel::Type::WS2801)
     {
@@ -62,12 +62,19 @@ inline static const uint8_t* GetTableDefault(pixel::Type type)
     return gamma22_0;
 }
 
-inline static const uint8_t* GetTable(uint32_t value)
+inline uint32_t GetValidValue(uint32_t value)
 {
     if ((value < kMin) || (value > kMax))
     {
-        return gamma10_0;
+        return 10;
     }
+
+    return value;
+}
+
+inline const uint8_t* GetTable(uint32_t value)
+{
+    value = GetValidValue(value);
 
     switch (value)
     {
@@ -94,4 +101,35 @@ inline static const uint8_t* GetTable(uint32_t value)
             break;
     }
 }
+
+inline uint8_t GetValue(const uint8_t* table)
+{
+    if (table == gamma20_0)
+    {
+        return 20;
+    }
+    else if (table == gamma21_0)
+    {
+        return 21;
+    }
+    else if (table == gamma22_0)
+    {
+        return 22;
+    }
+    else if (table == gamma23_0)
+    {
+        return 23;
+    }
+    else if (table == gamma24_0)
+    {
+        return 24;
+    }
+    else if (table == gamma25_0)
+    {
+        return 25;
+    }
+
+    return 10;
+}
+
 } // namespace gamma

@@ -45,7 +45,7 @@ HwClock::HwClock()
 
 void HwClock::Print()
 {
-    if (!m_bIsConnected)
+    if (!is_connected_)
     {
         puts("No RTC connected");
         return;
@@ -82,7 +82,7 @@ void HwClock::Print()
 void HwClock::HcToSys()
 {
     DEBUG_ENTRY
-    if (!m_bIsConnected)
+    if (!is_connected_)
     {
         DEBUG_EXIT
         return;
@@ -157,7 +157,7 @@ void HwClock::HcToSys()
 void HwClock::SysToHc()
 {
     DEBUG_ENTRY
-    if (!m_bIsConnected)
+    if (!is_connected_)
     {
         DEBUG_EXIT
         return;

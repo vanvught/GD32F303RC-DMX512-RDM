@@ -1,5 +1,5 @@
 /**
- * @file Init.cpp
+ * @file hal_init.cpp
  *
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
@@ -60,10 +60,13 @@ void usb_init();
 #endif
 
 #if defined(CONFIG_HAL_USE_SYSTICK)
-void systick_config();
+void SystickConfig();
 #endif
 
-void ConsoleInit();
+namespace console {
+void Init();
+}
+
 void UdelayInit();
 void Gd32AdcInit();
 
@@ -115,7 +118,7 @@ void Init()
     MpuConfig();
 #endif
 
-    ConsoleInit();
+    console::Init();
 
     /*
      * From here we console output
@@ -235,7 +238,7 @@ void Init()
     Timer5Config();
     Timer6Config();
 #if defined(CONFIG_HAL_USE_SYSTICK)
-    systick_config();
+    SystickConfig();
 #endif
 #if !defined(CONFIG_NET_ENABLE_PTP)
 #if defined(CONFIG_TIME_USE_TIMER)

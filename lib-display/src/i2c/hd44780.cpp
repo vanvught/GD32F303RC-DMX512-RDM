@@ -28,7 +28,6 @@
 #include <cassert>
 
 #include "i2c/hd44780.h"
-
 #include "displayset.h"
 #include "hal_i2c.h"
 

@@ -1,5 +1,5 @@
 EXTRA_INCLUDES+=
-
+EXTRA_SRCDIR+=src/json
 
 ifneq ($(MAKE_FLAGS),)
 else

@@ -9,24 +9,28 @@ LD	 = $(PREFIX)ld
 AR	 = $(PREFIX)ar
 
 BOARD?=BOARD_GD32F303RC
+ENET_PHY?=
+MCU?=GD32F303RC
 
 TARGET=$(FAMILY).bin
 LIST=$(FAMILY).list
 MAP=$(FAMILY).map
 SIZE=$(FAMILY).size
 BUILD=build_gd32/
-
 FIRMWARE_DIR=./../firmware-template-gd32/
+
+PROJECT=$(notdir $(patsubst %/,%,$(CURDIR)))
+$(info $$PROJECT [${PROJECT}])
 
 DEFINES:=$(addprefix -D,$(DEFINES))
 
-include ../firmware-template-gd32/Board.mk
-include ../firmware-template-gd32/Mcu.mk
+include ../common/make/gd32/Board.mk
+include ../common/make/gd32/Mcu.mk
 include ../firmware-template/libs.mk
-include ../firmware-template/DmxNodeNodeType.mk
-include ../firmware-template/DmxNodeOutputType.mk
-include ../firmware-template-gd32/Includes.mk
-include ../firmware-template-gd32/Validate.mk
+include ../common/make/DmxNodeNodeType.mk
+include ../common/make/DmxNodeOutputType.mk
+include ../common/make/gd32/Includes.mk
+include ../common/make/gd32/Validate.mk
 
 LIBS+=gd32 clib
 
@@ -55,15 +59,16 @@ COPS+=-Wall -Werror -Wpedantic -Wextra -Wunused -Wsign-conversion -Wconversion -
 CPPOPS=-std=c++20
 CPPOPS+=-Wnon-virtual-dtor -Woverloaded-virtual -Wnull-dereference -fno-rtti -fno-exceptions -fno-unwind-tables
 CPPOPS+=-Wuseless-cast -Wold-style-cast
+CPPOPS+=-Wshadow -Wshadow=local
 CPPOPS+=-fno-threadsafe-statics
 
 LDOPS=--gc-sections --print-gc-sections --print-memory-usage
 
 PLATFORM_LIBGCC+= -L $(shell dirname `$(CC) $(COPS) -print-libgcc-file-name`)
-PLATFORM_LIBC+= -L $(shell dirname `$(CC) $(COPS) --print-file-name=libc.a`)
+PLATFORM_LIBSTDCPP+= -L $(shell dirname `$(CC) $(COPS) --print-file-name=libstdc++.a`)
 
 $(info $$PLATFORM_LIBGCC [${PLATFORM_LIBGCC}])
-$(info $$PLATFORM_LIBC [${PLATFORM_LIBC}])
+$(info $$PLATFORM_LIBSTDCPP [${PLATFORM_LIBSTDCPP}])
 
 C_OBJECTS=$(foreach sdir,$(SRCDIR),$(patsubst $(sdir)/%.c,$(BUILD)$(sdir)/%.o,$(wildcard $(sdir)/*.c)))
 C_OBJECTS+=$(foreach sdir,$(SRCDIR),$(patsubst $(sdir)/%.cpp,$(BUILD)$(sdir)/%.o,$(wildcard $(sdir)/*.cpp)))
@@ -71,7 +76,8 @@ ASM_OBJECTS=$(foreach sdir,$(SRCDIR),$(patsubst $(sdir)/%.S,$(BUILD)$(sdir)/%.o,
 
 BUILD_DIRS:=$(addprefix $(BUILD),$(SRCDIR))
 
-OBJECTS:=$(ASM_OBJECTS) $(C_OBJECTS)
+include ../common/make/Extra.mk
+OBJECTS:=$(strip $(ASM_OBJECTS) $(C_OBJECTS) $(CPP_OBJECTS) $(EXTRA_C_OBJECTS) $(EXTRA_CPP_OBJECTS))
 
 define compile-objects
 $(BUILD)$1/%.o: $1/%.cpp
@@ -88,8 +94,11 @@ all : builddirs prerequisites $(TARGET)
 
 .PHONY: clean builddirs
 
-builddirs:
-	mkdir -p $(BUILD_DIRS)
+builddirs: 
+	mkdir -p $(BUILD_DIRS) 
+	if [[ -n "${EXTRA_C_BUILD_DIRS}" ]]; then mkdir -p $(EXTRA_C_BUILD_DIRS); fi
+	if [[ -n "${EXTRA_CPP_BUILD_DIRS}" ]]; then mkdir -p $(EXTRA_CPP_BUILD_DIRS); fi
+	mkdir -p lib_gd32
 
 .PHONY:  clean
 
@@ -108,14 +117,11 @@ clean: $(LIBDEP)
 lisdep: $(LIBDEP)
 
 $(LIBDEP):
-	$(MAKE) -f Makefile.GD32 $(MAKECMDGOALS) 'FAMILY=${FAMILY}' 'BOARD=${BOARD}' 'MAKE_FLAGS=$(DEFINES)' -C $@
+	$(MAKE) -f Makefile.GD32 $(MAKECMDGOALS) 'PROJECT=${PROJECT}' 'FAMILY=${FAMILY}' 'MCU=${MCU}' 'BOARD=${BOARD}' 'MAKE_FLAGS=$(DEFINES)' -C $@
 
 #
 # Build bin
 #
-
-$(BUILD_DIRS) :
-	mkdir -p $(BUILD_DIRS)
 
 $(BUILD)startup_$(LINE).o : $(FIRMWARE_DIR)/startup_$(LINE).S
 	$(AS) $(COPS) -D__ASSEMBLY__ -c $(FIRMWARE_DIR)/startup_$(LINE).S -o $(BUILD)startup_$(LINE).o

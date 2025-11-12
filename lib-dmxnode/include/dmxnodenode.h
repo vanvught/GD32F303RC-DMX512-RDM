@@ -24,8 +24,13 @@
  */
 
 #include "dmxnode_nodetype.h"
-#if defined(DMXNODE_NODETYPE_DEFINED)
-#include "dmxnodeparams.h"
+#include "json/dmxnodeparams.h"
+#if defined(DMXNODE_TYPE_ARTNET)
+#include "json/artnetparams.h"
+#endif
+#if defined(DMXNODE_TYPE_E131) || (defined(DMXNODE_TYPE_ARTNET) && (ARTNET_VERSION >= 4))
+#include "json/e131params.h"
+#endif
 
 class DmxNodeNode final : public DmxNodeNodeType
 {
@@ -33,24 +38,23 @@ class DmxNodeNode final : public DmxNodeNodeType
     DmxNodeNode()
     {
         {
-            DmxNodeParams dmxnode_params(dmxnode::Personality::NODE);
+            json::DmxNodeParams dmxnode_params;
             dmxnode_params.Load();
             dmxnode_params.Set();
         }
-#if defined(DMXNODE_TYPE_ARTNETNODE)
+#if defined(DMXNODE_TYPE_ARTNET)
         {
-            DmxNodeParams dmxnode_params(dmxnode::Personality::ARTNET);
-            dmxnode_params.Load();
-            dmxnode_params.Set();
+            json::ArtNetParams artnet_params;
+            artnet_params.Load();
+            artnet_params.Set();
         }
 #endif
-#if defined(DMXNODE_TYPE_E131BRIDGE) || (defined(DMXNODE_TYPE_ARTNETNODE) && (ARTNET_VERSION >= 4))
+#if defined(DMXNODE_TYPE_E131) || (defined(DMXNODE_TYPE_ARTNET) && (ARTNET_VERSION >= 4))
         {
-            DmxNodeParams dmxnode_params(dmxnode::Personality::SACN);
-            dmxnode_params.Load();
-            dmxnode_params.Set();
+            json::E131Params e131_params;
+            e131_params.Load();
+            e131_params.Set();
         }
 #endif
     }
 };
-#endif

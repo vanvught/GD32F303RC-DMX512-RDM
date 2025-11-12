@@ -24,6 +24,7 @@
  */
 
 #include <cstdint>
+#include <cstring>
 
 /**
  * @namespace global
@@ -56,7 +57,20 @@ struct Offset
 /**
  * @brief List of valid fractional UTC offsets.
  */
-constexpr Offset kValidOffsets[] = {{-9, 30}, {-3, 30}, {3, 30}, {4, 30}, {5, 30}, {5, 45}, {6, 30}, {8, 45}, {9, 30}, {10, 30}, {12, 45}};
+constexpr Offset kValidOffsets[] = 
+{
+	{-9, 30}, 
+	{-3, 30}, 
+	{3, 30}, 
+	{4, 30}, 
+	{5, 30}, 
+	{5, 45}, 
+	{6, 30}, 
+	{8, 45}, 
+	{9, 30}, 
+	{10, 30}, 
+	{12, 45}
+	};
 
 /**
  * @brief Validates (hours, minutes) and converts to UTC offset in seconds.
@@ -95,7 +109,8 @@ inline bool IsValidOffset(int32_t utc_offset_seconds)
 {
     if (utc_offset_seconds == 0) return true;
     int32_t hours = utc_offset_seconds / 3600;
-    uint32_t minutes = (utc_offset_seconds >= 0) ? static_cast<uint32_t>(utc_offset_seconds - hours * 3600) / 60 : static_cast<uint32_t>((hours * 3600 - utc_offset_seconds)) / 60;
+    uint32_t minutes = (utc_offset_seconds >= 0) ? static_cast<uint32_t>(utc_offset_seconds - hours * 3600) / 60
+                                                 : static_cast<uint32_t>((hours * 3600 - utc_offset_seconds)) / 60;
 
     if (minutes == 0 && hours >= kUtcOffsetMin && hours <= kUtcOffsetMax)
     {
@@ -104,8 +119,8 @@ inline bool IsValidOffset(int32_t utc_offset_seconds)
 
     for (const auto& offset : kValidOffsets)
     {
-        int32_t offset_seconds =
-            (offset.hours >= 0) ? offset.hours * 3600 + static_cast<int32_t>(offset.minutes * 60) : offset.hours * 3600 - static_cast<int32_t>(offset.minutes * 60);
+        int32_t offset_seconds = (offset.hours >= 0) ? offset.hours * 3600 + static_cast<int32_t>(offset.minutes * 60)
+                                                     : offset.hours * 3600 - static_cast<int32_t>(offset.minutes * 60);
         if (utc_offset_seconds == offset_seconds) return true;
     }
     return false;
@@ -140,7 +155,20 @@ inline void SplitOffset(int32_t utc_offset_seconds, int32_t& hours, uint32_t& mi
  */
 inline bool ParseOffset(const char* buffer, uint32_t buffer_length, int32_t& hours, uint32_t& minutes)
 {
-    if (buffer == nullptr || buffer_length != 6) return false;
+    if (buffer == nullptr) return false;
+
+    if (buffer_length == 5)
+    {
+        static constexpr const char kZeroOffset[5] = {'0', '0', ':', '0', '0'};
+        if (memcmp(kZeroOffset, buffer, sizeof(kZeroOffset)) == 0)
+        {
+            hours = 0;
+            minutes = 0;
+            return true;
+        }
+    }
+
+    if (buffer_length != 6) return false;
     if (buffer[0] != '+' && buffer[0] != '-') return false;
 
     bool negative = (buffer[0] == '-');
@@ -162,55 +190,4 @@ inline bool ParseOffset(const char* buffer, uint32_t buffer_length, int32_t& hou
     int32_t dummy;
     return ValidateOffset(hours, minutes, dummy);
 }
-
-/**
- * @brief Gets the current UTC offset in seconds.
- * @return UTC offset in seconds.
- */
-inline int32_t GetOffset()
-{
-    return ::global::g_nUtcOffset;
-}
-
-/**
- * @brief Gets the current UTC offset as (hours, minutes).
- * @param[out] hours Signed hour component.
- * @param[out] minutes Unsigned minute component.
- */
-inline void GetOffset(int32_t& hours, uint32_t& minutes)
-{
-    SplitOffset(::global::g_nUtcOffset, hours, minutes);
-}
-
-/**
- * @brief Sets the global UTC offset if the value is valid.
- * @param utc_offset_seconds Offset in seconds
- * @return true if successfully set; false otherwise
- */
-inline bool SetOffsetIfValid(int32_t utc_offset_seconds)
-{
-    if (IsValidOffset(utc_offset_seconds))
-    {
-        ::global::g_nUtcOffset = utc_offset_seconds;
-        return true;
-    }
-    return false;
-}
-
-/**
- * @brief Sets the global UTC offset from (hours, minutes) if valid.
- * @param hours Signed hour component
- * @param minutes Unsigned minute component
- * @return true if valid and set; false otherwise
- */
-inline bool SetOffsetIfValid(int32_t hours, uint32_t minutes)
-{
-    int32_t offset_seconds;
-    if (ValidateOffset(hours, minutes, offset_seconds))
-    {
-        return SetOffsetIfValid(offset_seconds);
-    }
-    return false;
-}
-
 } // namespace hal::utc

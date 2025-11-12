@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file rdmddiscovery.h
+ * @file rdmdiscovery.h
  *
  */
 /* Copyright (C) 2023-2025 by Arjan van Vught mailto:info@gd32-dmx.org
@@ -222,17 +222,4 @@ class RDMDiscovery
         bool is_command_running;
         uint8_t uid[RDM_UID_SIZE];
     } quick_find_discovery_;
-
-#ifndef NDEBUG
-    struct
-    {
-        struct
-        {
-            uint64_t lower_bound;
-            uint64_t upper_bound;
-        } tree[1024];
-
-        uint32_t tree_index;
-    } debug_;
-#endif
 };

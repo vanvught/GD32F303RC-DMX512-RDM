@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file pixeldmxsave.h
+ * @file pixeldmxstore.h
  */
 /* Copyright (C) 2018-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *

@@ -31,14 +31,12 @@
 
 #include "dmxnode.h"
 #include "dmxnodedata.h"
-
 #include "dmx.h"
 #if !defined(CONFIG_DMXSEND_DISABLE_CONFIGUDP)
 #include "dmxconfigudp.h"
 #endif
 #include "hal_panelled.h"
 #include "hal.h"
-
 #include "debug.h"
 
 class DmxSend

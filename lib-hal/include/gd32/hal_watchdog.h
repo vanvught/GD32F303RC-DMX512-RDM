@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file watchdog.h
+ * @file hal_watchdog.h
  *
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org

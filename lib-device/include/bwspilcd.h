@@ -3,7 +3,7 @@
  * @file bwspilcd.h
  *
  */
-/* Copyright (C) 2020 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2020 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -44,13 +44,13 @@ class BwSpiLcd : BwSpi
     }
 
    public:
-    explicit BwSpiLcd(uint8_t nChipSelect = 0, uint8_t nAddress = bw::lcd::address) : BwSpi(nChipSelect, nAddress, bw::lcd::id_string) {}
+    explicit BwSpiLcd(uint8_t nChipSelect = 0, uint8_t address = bw::lcd::address) : BwSpi(nChipSelect, address, bw::lcd::id_string) {}
 
     void ReInit()
     {
         char cmd[3];
 
-        cmd[0] = static_cast<char>(m_nAddress);
+        cmd[0] = static_cast<char>(address_);
         cmd[1] = bw::port::write::reinit_lcd;
         cmd[2] = ' ';
 
@@ -61,7 +61,7 @@ class BwSpiLcd : BwSpi
     {
         char cmd[3];
 
-        cmd[0] = static_cast<char>(m_nAddress);
+        cmd[0] = static_cast<char>(address_);
         cmd[1] = bw::port::write::clear_screen;
         cmd[2] = ' ';
 
@@ -72,7 +72,7 @@ class BwSpiLcd : BwSpi
     {
         char cmd[3];
 
-        cmd[0] = static_cast<char>(m_nAddress);
+        cmd[0] = static_cast<char>(address_);
         cmd[1] = bw::port::write::move_cursor;
         cmd[2] = static_cast<char>(((nLine & 0x03) << 5) | (nPosition & 0x1f));
 
@@ -83,7 +83,7 @@ class BwSpiLcd : BwSpi
     {
         char data[bw::lcd::max_characters + 2];
 
-        data[0] = static_cast<char>(m_nAddress);
+        data[0] = static_cast<char>(address_);
         data[1] = bw::port::write::display_data;
 
         if (length > bw::lcd::max_characters)

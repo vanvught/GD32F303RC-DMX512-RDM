@@ -1,5 +1,5 @@
 /**
- * @file i2s_psc_config_dump_cpp
+ * @file i2s_psc_config_dump.cpp
  *
  */
 /* Copyright (C) 2022-2023 by Arjan van Vught mailto:info@gd32-dmx.org

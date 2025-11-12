@@ -27,12 +27,8 @@
 #include <cassert>
 
 #include "flashcode.h"
-
 #include "gd32.h"
-
 #include "debug.h"
-
-FlashCode* FlashCode::s_this;
 
 FlashCode::FlashCode()
 {

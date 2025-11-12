@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file uuid.h
+ * @file hal_uuid.h
  *
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org

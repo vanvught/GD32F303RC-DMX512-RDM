@@ -32,7 +32,6 @@
 
 #include "display.h"
 #include "displayset.h"
-
 #include "i2c/ssd1306.h"
 #if defined(CONFIG_DISPLAY_ENABLE_SSD1311)
 #include "i2c/ssd1311.h"
@@ -40,7 +39,6 @@
 #if defined(CONFIG_DISPLAY_ENABLE_HD44780)
 #include "i2c/hd44780.h"
 #endif
-
 #include "hal_i2c.h"
 #include "hal_gpio.h"
 
@@ -57,18 +55,18 @@ static void GpioInit()
 }
 } // namespace display::timeout
 
-Display::Display() : hal_i2c_(display::segment7::I2C_ADDRESS)
+Display::Display()
 {
     assert(s_this == nullptr);
     s_this = this;
 
 #if defined(CONFIG_DISPLAY_ENABLE_SSD1311)
-    Detect(display::Type::SSD1311);
+    Detect(display::Type::kSsd1311);
 #endif
 
     if (lcd_display_ == nullptr)
     {
-        Detect(display::Type::SSD1306);
+        Detect(display::Type::kSsd1306);
     }
 
     if (lcd_display_ != nullptr)
@@ -79,7 +77,7 @@ Display::Display() : hal_i2c_(display::segment7::I2C_ADDRESS)
     PrintInfo();
 }
 
-Display::Display(uint32_t rows) : hal_i2c_(display::segment7::I2C_ADDRESS)
+Display::Display(uint32_t rows)
 {
     assert(s_this == nullptr);
     s_this = this;
@@ -94,7 +92,7 @@ Display::Display(uint32_t rows) : hal_i2c_(display::segment7::I2C_ADDRESS)
     PrintInfo();
 }
 
-Display::Display(display::Type type) : type_(type), hal_i2c_(display::segment7::I2C_ADDRESS)
+Display::Display(display::Type type) : type_(type)
 {
     assert(s_this == nullptr);
     s_this = this;
@@ -114,27 +112,27 @@ void Display::Detect(display::Type display_type)
     switch (display_type)
     {
 #if defined(CONFIG_DISPLAY_ENABLE_HD44780)
-        case display::Type::PCF8574T_1602:
+        case display::Type::kPcf8574T1602:
             lcd_display_ = new Hd44780(16, 2);
             assert(lcd_display_ != nullptr);
             break;
-        case display::Type::PCF8574T_2004:
+        case display::Type::kPcf8574T2004:
             lcd_display_ = new Hd44780(20, 4);
             assert(lcd_display_ != nullptr);
             break;
 #endif
 #if defined(CONFIG_DISPLAY_ENABLE_SSD1311)
-        case display::Type::SSD1311:
+        case display::Type::kSsd1311:
             lcd_display_ = new Ssd1311;
             assert(lcd_display_ != nullptr);
             break;
 #endif
-        case display::Type::SSD1306:
+        case display::Type::kSsd1306:
             lcd_display_ = new Ssd1306(OledPanel::k128x648Rows);
             assert(lcd_display_ != nullptr);
             break;
-        case display::Type::UNKNOWN:
-            type_ = display::Type::UNKNOWN;
+        case display::Type::kUnknown:
+            type_ = display::Type::kUnknown;
             /* no break */
         default:
             break;
@@ -146,7 +144,7 @@ void Display::Detect(display::Type display_type)
         {
             delete lcd_display_;
             lcd_display_ = nullptr;
-            type_ = display::Type::UNKNOWN;
+            type_ = display::Type::kUnknown;
         }
         else
         {
@@ -172,7 +170,7 @@ void Display::Detect(uint32_t rows)
 
             if (lcd_display_->Start())
             {
-                type_ = display::Type::SSD1311;
+                type_ = display::Type::kSsd1311;
                 Printf(1, "SSD1311");
             }
             else
@@ -190,7 +188,7 @@ void Display::Detect(uint32_t rows)
 
         if (lcd_display_->Start())
         {
-            type_ = display::Type::SSD1306;
+            type_ = display::Type::kSsd1306;
             Printf(1, "SSD1306");
         }
     }
@@ -202,7 +200,7 @@ void Display::Detect(uint32_t rows)
 
         if (lcd_display_->Start())
         {
-            type_ = display::Type::PCF8574T_2004;
+            type_ = display::Type::kPcf8574T2004;
             Printf(1, "TC2004_PCF8574T");
         }
     }
@@ -213,7 +211,7 @@ void Display::Detect(uint32_t rows)
 
         if (lcd_display_->Start())
         {
-            type_ = display::Type::PCF8574T_1602;
+            type_ = display::Type::kPcf8574T1602;
             Printf(1, "TC1602_PCF8574T");
         }
     }

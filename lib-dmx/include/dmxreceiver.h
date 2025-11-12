@@ -28,7 +28,6 @@
 
 #include "dmx.h"
 #include "dmxnode_outputtype.h"
-
 #include "hal_statusled.h"
 
 class DMXReceiver : Dmx
@@ -68,7 +67,27 @@ class DMXReceiver : Dmx
             return nullptr;
         }
 
-        if (Dmx::GetDmxUpdatesPerSecond(0) == 0)
+        const auto* dmx_available = Dmx::GetDmxAvailable(0);
+
+        if (__builtin_expect((dmx_available != nullptr), 0))
+        {
+            const auto* dmx_statistics = reinterpret_cast<const struct Data*>(dmx_available);
+            length = static_cast<int16_t>(dmx_statistics->Statistics.nSlotsInPacket);
+
+            ++dmx_available;
+
+            dmx_node_output_type_->SetData<true>(0, dmx_available, static_cast<uint16_t>(length));
+
+            if (!is_active_)
+            {
+                dmx_node_output_type_->Start(0);
+                is_active_ = true;
+                hal::statusled::SetMode(hal::statusled::Mode::DATA);
+            }
+
+            return const_cast<uint8_t*>(dmx_available);
+        }
+        else if (Dmx::GetDmxUpdatesPerSecond(0) == 0)
         {
             if (is_active_)
             {
@@ -79,29 +98,6 @@ class DMXReceiver : Dmx
 
             length = -1;
             return nullptr;
-        }
-        else
-        {
-            const auto* dmx_available = Dmx::GetDmxAvailable(0);
-
-            if (__builtin_expect((dmx_available != nullptr), 0))
-            {
-                const auto* dmx_statistics = reinterpret_cast<const struct Data*>(dmx_available);
-                length = static_cast<int16_t>(dmx_statistics->Statistics.nSlotsInPacket);
-
-                ++dmx_available;
-
-                dmx_node_output_type_->SetData<true>(0, dmx_available, static_cast<uint16_t>(length));
-
-                if (!is_active_)
-                {
-                    dmx_node_output_type_->Start(0);
-                    is_active_ = true;
-                    hal::statusled::SetMode(hal::statusled::Mode::DATA);
-                }
-
-                return const_cast<uint8_t*>(dmx_available);
-            }
         }
 
         length = 0;

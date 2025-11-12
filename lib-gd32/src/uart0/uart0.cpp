@@ -42,7 +42,7 @@ void uart0_putc(int c)
 #if defined(GD32H7XX)
         USART_TDATA(USART0) = USART_TDATA_TDATA & (uint32_t)'\r';
 #else
-        USART_DATA(USART0) = ((uint16_t)USART_DATA_DATA & static_cast<uint8_t>('\r'));
+        USART_DATA(USART0) = static_cast<uint16_t>(USART_DATA_DATA & static_cast<uint8_t>('\r'));
 #endif
     }
 
@@ -50,7 +50,7 @@ void uart0_putc(int c)
 #if defined(GD32H7XX)
     USART_TDATA(USART0) = USART_TDATA_TDATA & (uint32_t)c;
 #else
-    USART_DATA(USART0) = ((uint16_t)USART_DATA_DATA & static_cast<uint8_t>(c));
+    USART_DATA(USART0) = static_cast<uint16_t>(USART_DATA_DATA & static_cast<uint8_t>(c));
 #endif
 }
 

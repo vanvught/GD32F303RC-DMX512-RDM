@@ -1,5 +1,5 @@
 /**
- * @file ina219.h
+ * @file ina219.cpp
  *
  */
 /* Copyright (C) 2020-2021 by Arjan van Vught mailto:info@orangepi-dmx.nl

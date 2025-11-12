@@ -3,7 +3,7 @@
  * @file rdmsubdevicebwlcd.h
  *
  */
-/* Copyright (C) 2018-2025 by Arjan van Vught mailto:info@orangepi-dmx.nl
+/* Copyright (C) 2018-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,6 +57,6 @@ class RDMSubDeviceBwLcd : public RDMSubDevice
     BwSpiLcd m_BwSpiLcd;
     char m_aText[bw::lcd::max_characters];
     bool m_IsStarted = false;
-    uint8_t m_Data[4];
+    uint8_t data_[4];
     uint32_t m_nLength = 0;
 };

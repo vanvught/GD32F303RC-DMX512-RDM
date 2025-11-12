@@ -1670,8 +1670,6 @@ static void UartDmxConfig(uint32_t usart_periph)
     Gd32UartBegin(usart_periph, 250000U, gd32::kUartBits8, gd32::kUartParityNone, gd32::kUartStop2Bits);
 }
 
-Dmx* Dmx::s_this;
-
 Dmx::Dmx()
 {
     DEBUG_ENTRY
@@ -1679,9 +1677,9 @@ Dmx::Dmx()
     assert(s_this == nullptr);
     s_this = this;
 
-    s_nDmxTransmit.break_time = dmx::transmit::BREAK_TIME_TYPICAL;
-    s_nDmxTransmit.mab_time = dmx::transmit::MAB_TIME_MIN;
-    s_nDmxTransmit.inter_time = dmx::transmit::PERIOD_DEFAULT - s_nDmxTransmit.break_time - s_nDmxTransmit.mab_time - (dmx::kChannelsMax * 44) - 44;
+    s_nDmxTransmit.break_time = dmx::transmit::kBreakTimeTypical;
+    s_nDmxTransmit.mab_time = dmx::transmit::kBreakTimeMin;
+    s_nDmxTransmit.inter_time = dmx::transmit::kPeriodDefault - s_nDmxTransmit.break_time - s_nDmxTransmit.mab_time - (dmx::kChannelsMax * 44) - 44;
 
     for (auto i = 0; i < DMX_MAX_PORTS; i++)
     {
@@ -2006,7 +2004,7 @@ void Dmx::StopData(uint32_t port_index)
 
 void Dmx::SetDmxBreakTime(uint32_t break_time)
 {
-    s_nDmxTransmit.break_time = std::max(dmx::transmit::BREAK_TIME_MIN, break_time);
+    s_nDmxTransmit.break_time = std::max(dmx::transmit::kBreakTimeMin, break_time);
     SetDmxPeriodTime(m_nDmxTransmitPeriodRequested);
 }
 
@@ -2017,7 +2015,7 @@ uint32_t Dmx::GetDmxBreakTime() const
 
 void Dmx::SetDmxMabTime(uint32_t mab_time)
 {
-    s_nDmxTransmit.mab_time = std::max(dmx::transmit::MAB_TIME_MIN, mab_time);
+    s_nDmxTransmit.mab_time = std::max(dmx::transmit::kMabTimeMin, mab_time);
     SetDmxPeriodTime(m_nDmxTransmitPeriodRequested);
 }
 
@@ -2048,8 +2046,8 @@ void Dmx::SetDmxPeriodTime(uint32_t period)
 #else
     if (package_length_micro_seconds > (static_cast<uint16_t>(~0) - 44U))
     {
-        s_nDmxTransmit.break_time = std::min(dmx::transmit::BREAK_TIME_TYPICAL, s_nDmxTransmit.break_time);
-        s_nDmxTransmit.mab_time = dmx::transmit::MAB_TIME_MIN;
+        s_nDmxTransmit.break_time = std::min(dmx::transmit::kBreakTimeTypical, s_nDmxTransmit.break_time);
+        s_nDmxTransmit.mab_time = dmx::transmit::kMabTimeMin;
         package_length_micro_seconds = s_nDmxTransmit.break_time + s_nDmxTransmit.mab_time + (length_max * 44U);
     }
 #endif
@@ -2058,7 +2056,7 @@ void Dmx::SetDmxPeriodTime(uint32_t period)
     {
         if (period < package_length_micro_seconds)
         {
-            m_nDmxTransmitPeriod = std::max(dmx::transmit::BREAK_TO_BREAK_TIME_MIN, package_length_micro_seconds + 44U);
+            m_nDmxTransmitPeriod = std::max(dmx::transmit::kBreakToBreakTimeMin, package_length_micro_seconds + 44U);
         }
         else
         {
@@ -2067,7 +2065,7 @@ void Dmx::SetDmxPeriodTime(uint32_t period)
     }
     else
     {
-        m_nDmxTransmitPeriod = std::max(dmx::transmit::BREAK_TO_BREAK_TIME_MIN, package_length_micro_seconds + 44U);
+        m_nDmxTransmitPeriod = std::max(dmx::transmit::kBreakToBreakTimeMin, package_length_micro_seconds + 44U);
     }
 
     s_nDmxTransmit.inter_time = m_nDmxTransmitPeriod - package_length_micro_seconds;

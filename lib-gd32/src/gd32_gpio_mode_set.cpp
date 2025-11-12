@@ -1,6 +1,6 @@
 #if defined(GD32F4XX) || defined(GD32H7XX)
 /**
- * @file Gd32GpioModeSet.cpp
+ * @file gd32_gpio_mode_set.cpp
  *
  */
 /* Copyright (C) 2024-2025 by Arjan van Vught mailto:info@gd32-dmx.org

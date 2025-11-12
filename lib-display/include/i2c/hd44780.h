@@ -27,7 +27,6 @@
 #include <cstdint>
 
 #include "displayset.h"
-
 #include "hal_i2c.h"
 
 namespace hd44780::pcf8574t

@@ -31,11 +31,9 @@
 #include "rdmhandler.h"
 #include "rdmdeviceresponder.h"
 #include "rdmpersonality.h"
-
 #include "dmxreceiver.h"
-
 #include "dmxnode_outputtype.h"
-
+#include "rdm_message_print.h"
 #include "debug.h"
 
 #if defined(NODE_RDMNET_LLRP_ONLY)
@@ -44,24 +42,22 @@
 
 namespace rdm::responder
 {
-static constexpr int NO_DATA = 0;
-static constexpr int DISCOVERY_RESPONSE = -1;
-static constexpr int INVALID_DATA_RECEIVED = -2;
-static constexpr int INVALID_RESPONSE = -3;
+inline constexpr int kNoData = 0;
+inline constexpr int kDiscoveryResponse = -1;
+inline constexpr int kInvalidDataReceived = -2;
+inline constexpr int kInvalidResponse = -3;
 } // namespace rdm::responder
 
 namespace configstore
 {
-void delay();
+void Delay();
 } // namespace configstore
 
 class RDMResponder final : DMXReceiver, public RDMDeviceResponder, RDMHandler
 {
    public:
-    RDMResponder(RDMPersonality** pRDMPersonalities, uint32_t nPersonalityCount,
-                 const uint32_t nCurrentPersonality = rdm::device::responder::DEFAULT_CURRENT_PERSONALITY)
-        : DMXReceiver(pRDMPersonalities[nCurrentPersonality - 1]->GetDmxNodeOutputType()),
-          RDMDeviceResponder(pRDMPersonalities, nPersonalityCount, nCurrentPersonality)
+    RDMResponder(RDMPersonality** personalities, uint32_t personality_count, uint32_t current_personality = rdm::device::responder::kDefaultCurrentPersonality)
+        : DMXReceiver(personalities[current_personality - 1]->GetDmxNodeOutputType()), RDMDeviceResponder(personalities, personality_count, current_personality)
     {
         assert(s_this == nullptr);
         s_this = this;
@@ -82,25 +78,25 @@ class RDMResponder final : DMXReceiver, public RDMDeviceResponder, RDMHandler
 #if !defined(CONFIG_RDM_ENABLE_SUBDEVICES)
         DMXReceiver::Run(length);
 #else
-        const auto* pDmxDataIn = DMXReceiver::Run(length);
+        const auto* dmx_data_in = DMXReceiver::Run(length);
 
         if (RDMSubDevices::Get()->GetCount() != 0)
         {
             if (length == -1)
             {
-                if (m_IsSubDeviceActive)
+                if (is_sub_device_active)
                 {
                     RDMSubDevices::Get()->Stop();
-                    m_IsSubDeviceActive = false;
+                    is_sub_device_active = false;
                 }
             }
-            else if (pDmxDataIn != nullptr)
+            else if (dmx_data_in != nullptr)
             {
-                RDMSubDevices::Get()->SetData(pDmxDataIn, static_cast<uint16_t>(length));
-                if (!m_IsSubDeviceActive)
+                RDMSubDevices::Get()->SetData(dmx_data_in, static_cast<uint16_t>(length));
+                if (!is_sub_device_active)
                 {
                     RDMSubDevices::Get()->Start();
-                    m_IsSubDeviceActive = true;
+                    is_sub_device_active = true;
                 }
             }
         }
@@ -110,34 +106,34 @@ class RDMResponder final : DMXReceiver, public RDMDeviceResponder, RDMHandler
 
         if (rdm_data_in == nullptr) [[likely]]
         {
-            return rdm::responder::NO_DATA;
+            return rdm::responder::kNoData;
         }
 
 #ifndef NDEBUG
-        rdm::MessagePrint(pRdmDataIn);
+        rdm::MessagePrint(rdm_data_in);
 #endif
 
         if (rdm_data_in[0] == E120_SC_RDM)
         {
-            const auto* rdm_command = reinterpret_cast<const struct TRdmMessage*>(rdm_data_in);
+            const auto* rdm_in = reinterpret_cast<const struct TRdmMessage*>(rdm_data_in);
 
-            switch (rdm_command->command_class)
+            switch (rdm_in->command_class)
             {
                 case E120_DISCOVERY_COMMAND:
                 case E120_GET_COMMAND:
                 case E120_SET_COMMAND:
-                    HandleData(&rdm_data_in[1], reinterpret_cast<uint8_t*>(&s_RdmCommand));
-                    return HandleResponse(reinterpret_cast<uint8_t*>(&s_RdmCommand));
+                    HandleData(&rdm_data_in[1], reinterpret_cast<uint8_t*>(&rdm_command));
+                    return HandleResponse(reinterpret_cast<uint8_t*>(&rdm_command));
                     break;
                 default:
                     DEBUG_PUTS("RDM_RESPONDER_INVALID_DATA_RECEIVED");
-                    return rdm::responder::INVALID_DATA_RECEIVED;
+                    return rdm::responder::kInvalidDataReceived;
                     break;
             }
         }
 
         DEBUG_PUTS("RDM_RESPONDER_DISCOVERY_RESPONSE");
-        return rdm::responder::DISCOVERY_RESPONSE;
+        return rdm::responder::kDiscoveryResponse;
     }
 
     void Print()
@@ -156,13 +152,13 @@ class RDMResponder final : DMXReceiver, public RDMDeviceResponder, RDMHandler
 
     static RDMResponder* Get() { return s_this; }
 
-    void PersonalityUpdate(uint32_t nPersonality) __attribute__((weak));
-    void DmxStartAddressUpdate(uint16_t nDmxStartAddress) __attribute__((weak));
+    void PersonalityUpdate(uint32_t personality) __attribute__((weak));
+    void DmxStartAddressUpdate(uint16_t dmx_start_address) __attribute__((weak));
 
    private:
     int HandleResponse(const uint8_t* response)
     {
-        auto length = rdm::responder::INVALID_RESPONSE;
+        auto length = rdm::responder::kInvalidResponse;
 
         if (response[0] == E120_SC_RDM)
         {
@@ -177,13 +173,13 @@ class RDMResponder final : DMXReceiver, public RDMDeviceResponder, RDMHandler
         }
 
 #ifndef NDEBUG
-        if (length != INVALID_RESPONSE)
+        if (length != rdm::responder::kInvalidResponse)
         {
             rdm::MessagePrint(response);
         }
 #endif
 
-        configstore::delay();
+        configstore::Delay();
         return length;
     }
 
@@ -196,7 +192,8 @@ class RDMResponder final : DMXReceiver, public RDMDeviceResponder, RDMHandler
     void DmxStartAddressUpdate() override { DmxStartAddressUpdate(RDMDeviceResponder::GetDmxStartAddress(RDM_ROOT_DEVICE)); }
 
    private:
+    static inline TRdmMessage rdm_command;
+    static inline bool is_sub_device_active;
+
     static inline RDMResponder* s_this;
-    static inline TRdmMessage s_RdmCommand;
-    static inline bool m_IsSubDeviceActive;
 };

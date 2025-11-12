@@ -51,81 +51,81 @@ inline uint32_t GetColour(uint8_t red, uint8_t green, uint8_t blue, uint8_t whit
     return static_cast<uint32_t>(white << 24) | static_cast<uint32_t>(red << 16) | static_cast<uint32_t>(green << 8) | blue;
 }
 
-inline uint8_t GetWhite(uint32_t colour)
+struct PixelColours
 {
-    return (colour >> 24) & 0xFF;
-}
+    constexpr explicit PixelColours(uint32_t value) : value_(value) {}
 
-inline uint8_t GetRed(uint32_t colour)
-{
-    return (colour >> 16) & 0xFF;
-}
+    constexpr uint8_t White() const { return static_cast<uint8_t>((value_ >> 24) & 0xFF); }
 
-inline uint8_t GetGreen(uint32_t colour)
-{
-    return (colour >> 8) & 0xFF;
-}
+    constexpr uint8_t Red() const { return static_cast<uint8_t>((value_ >> 16) & 0xFF); }
 
-inline uint8_t GetBlue(uint32_t colour)
-{
-    return colour & 0xFF;
-}
+    constexpr uint8_t Green() const { return static_cast<uint8_t>((value_ >> 8) & 0xFF); }
+
+    constexpr uint8_t Blue() const { return static_cast<uint8_t>(value_ & 0xFF); }
+
+    constexpr uint32_t Raw() const { return value_; }
+
+   private:
+    uint32_t value_;
+};
 
 inline void SetPixelColour([[maybe_unused]] uint32_t port_index, uint32_t pixel_index, uint32_t colour)
 {
-    auto* output_type = OutputType::Get();
+    auto* output_type = PixelOutputType::Get();
     assert(output_type != nullptr);
 
-    const auto kRed =GetRed(colour);
-    const auto kGreen = GetGreen(colour);
-    const auto kBlue = GetBlue(colour);
+    const pixel::PixelColours kColours(colour);
 
 #if defined(PIXELPATTERNS_MULTI)
     switch (PixelConfiguration::Get().GetType())
     {
         case pixel::Type::WS2801:
-            output_type->SetColourWS2801(port_index, pixel_index, kRed, kGreen, kBlue);
+            output_type->SetColourWS2801(port_index, pixel_index, kColours.Red(), kColours.Green(), kColours.Blue());
             break;
+
         case pixel::Type::APA102:
         case pixel::Type::SK9822:
-            output_type->SetPixel4Bytes(port_index, pixel_index, 0xFF, kRed, kGreen, kBlue);
+            output_type->SetPixel4Bytes(port_index, pixel_index, 0xFF, kColours.Red(), kColours.Green(), kColours.Blue());
             break;
+
         case pixel::Type::P9813:
         {
-            const auto kFlag = static_cast<uint8_t>(0xC0 | ((~kBlue & 0xC0) >> 2) | ((~kRed & 0xC0) >> 4) | ((~kRed & 0xC0) >> 6));
-            output_type->SetPixel4Bytes(port_index, pixel_index, kFlag, kBlue, kGreen, kRed);
+            const auto kRed = kColours.Red();
+            const auto kBlue = kColours.Blue();
+            const uint8_t kFlag = static_cast<uint8_t>(0xC0 | ((~kBlue & 0xC0) >> 2) | ((~kRed & 0xC0) >> 4) | ((~kRed & 0xC0) >> 6));
+            output_type->SetPixel4Bytes(port_index, pixel_index, kFlag, kBlue, kColours.Green(), kRed);
+            break;
         }
-        break;
+
         case pixel::Type::SK6812W:
-        {
-            const auto kWhite = pixel::GetWhite(colour);
-            output_type->SetColourRTZ(port_index, pixel_index, kRed, kGreen, kBlue, kWhite);
-        }
-        break;
+            output_type->SetColourRTZ(port_index, pixel_index, kColours.Red(), kColours.Green(), kColours.Blue(), kColours.White());
+            break;
+
         default:
-            output_type->SetColourRTZ(port_index, pixel_index, kRed, kGreen, kBlue);
+            output_type->SetColourRTZ(port_index, pixel_index, kColours.Red(), kColours.Green(), kColours.Blue());
             break;
     }
-#else
-    auto& pixelConfiguration = PixelConfiguration::Get();
-    const auto kType = pixelConfiguration.GetType();
+#else // !PIXELPATTERNS_MULTI
+    auto& pixel_configuration = PixelConfiguration::Get();
+    const auto type = pixel_configuration.GetType();
 
-    if (kType != pixel::Type::SK6812W)
+    if (type != pixel::Type::SK6812W)
     {
-        output_type->SetPixel(pixel_index, kRed, kGreen, kBlue);
+        output_type->SetPixel(pixel_index, kColours.Red(), kColours.Green(), kColours.Blue());
     }
     else
     {
-        if ((kRed == kGreen) && (kGreen == kBlue))
+        if ((kColours.Red() == kColours.Green()) && (kColours.Green() == kColours.Blue()))
         {
-            output_type->SetPixel(pixel_index, 0x00, 0x00, 0x00, kRed);
+            output_type->SetPixel(pixel_index, 0x00, 0x00, 0x00, kColours.Red());
         }
         else
         {
-            output_type->SetPixel(pixel_index, kRed, kGreen, kBlue, 0x00);
+            output_type->SetPixel(pixel_index, kColours.Red(), kColours.Green(), kColours.Blue(), 0x00);
         }
     }
-#endif
+
+#endif // PIXELPATTERNS_MULTI
 }
 
 inline void SetPixelColour(uint32_t port_index, uint32_t colour)
@@ -140,16 +140,16 @@ inline void SetPixelColour(uint32_t port_index, uint32_t colour)
 
 inline bool IsUpdating()
 {
-    auto* output_type = OutputType::Get();
+    auto* output_type = PixelOutputType::Get();
     assert(output_type != nullptr);
     return output_type->IsUpdating();
 }
 
 inline void Update()
 {
-    auto* p_output_type = OutputType::Get();
-    assert(p_output_type != nullptr);
-    return p_output_type->Update();
+    auto* output_type = PixelOutputType::Get();
+    assert(output_type != nullptr);
+    return output_type->Update();
 }
 } // namespace pixel
 

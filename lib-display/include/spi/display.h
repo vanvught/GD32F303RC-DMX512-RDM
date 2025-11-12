@@ -86,9 +86,8 @@ class Display : public LcdDriver
         SetFlipVertically(false);
         FillColour(kColorBackground);
 
-        cols_ = (GetWidth() / s_pFONT->Width);
-        rows_ = (GetHeight() / s_pFONT->Height);
-
+        cols_ = (GetWidth() / s_pFONT->kWidth);
+        rows_ = (GetHeight() / s_pFONT->kHeight);
 #if defined(DISPLAYTIMEOUT_GPIO)
         FUNC_PREFIX(GpioFsel(DISPLAYTIMEOUT_GPIO, GPIO_FSEL_INPUT));
         FUNC_PREFIX(GpioSetPud(DISPLAYTIMEOUT_GPIO, GPIO_PULL_UP));
@@ -116,23 +115,23 @@ class Display : public LcdDriver
 
     void Cls() { FillColour(kColorBackground); }
 
-    void SetCursorPos(const uint32_t nCol, const uint32_t nRow)
+    void SetCursorPos(const uint32_t nCol, const uint32_t row)
     {
-        cursor_x_ = nCol * s_pFONT->Width;
-        cursor_y_ = nRow * s_pFONT->Height;
+        cursor_x_ = nCol * s_pFONT->kWidth;
+        cursor_y_ = row * s_pFONT->kHeight;
     }
 
     void PutChar(const int c)
     {
         DrawChar(cursor_x_, cursor_y_, static_cast<char>(c), s_pFONT, kColorBackground, kColorForeground);
 
-        cursor_x_ += s_pFONT->Width;
+        cursor_x_ += s_pFONT->kWidth;
 
         if (cursor_x_ >= GetWidth())
         {
             cursor_x_ = 0;
 
-            cursor_y_ += s_pFONT->Height;
+            cursor_y_ += s_pFONT->kHeight;
 
             if (cursor_y_ >= GetHeight())
             {
@@ -198,9 +197,9 @@ class Display : public LcdDriver
         const auto* p = pText;
         int nCount = 0;
 
-        const auto nColumns = static_cast<int>(cols_);
+        const auto columns = static_cast<int>(cols_);
 
-        while ((*p != 0) && (nCount++ < nColumns))
+        while ((*p != 0) && (nCount++ < columns))
         {
             ++p;
         }

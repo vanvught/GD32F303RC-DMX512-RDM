@@ -225,7 +225,7 @@ class Display
             return;
         }
 
-        console::ConsoleStatus(colour, text);
+        console::Status(colour, text);
     }
 
     void SetCursor(uint32_t mode)

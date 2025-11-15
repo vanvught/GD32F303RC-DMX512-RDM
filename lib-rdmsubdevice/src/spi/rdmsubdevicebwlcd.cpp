@@ -106,7 +106,7 @@ void RDMSubDeviceBwLcd::Data(const uint8_t* pData, uint32_t nLength) {
 		return;
 	}
 
-	m_nLength = nLength;
+	length_ = nLength;
 
 	switch (GetPersonalityCurrent()) {
 		case 1:
@@ -236,13 +236,13 @@ void RDMSubDeviceBwLcd::UpdateEvent(TRDMSubDeviceUpdateEvent tUpdateEvent) {
 		if (m_aText[2] != ' ') {
 			switch (GetPersonalityCurrent()) {
 			case 1:
-				DataHex(data_, m_nLength);
+				DataHex(data_, length_);
 				break;
 			case 2:
-				DataDec(data_, m_nLength);
+				DataDec(data_, length_);
 				break;
 			case 3:
-				DataPct(data_, m_nLength);
+				DataPct(data_, length_);
 				break;
 			default:
 				break;

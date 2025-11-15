@@ -28,31 +28,32 @@
 
 static char s_buffer[128];
 
-extern "C"
+namespace uart0
 {
-    void uart0_putc(int);
+void Putc(int);
 
-    int uart0_printf(const char* fmt, ...)
+int Printf(const char* fmt, ...)
+{
+    va_list arp;
+
+    va_start(arp, fmt);
+
+    int i = vsnprintf(s_buffer, sizeof(s_buffer) - 1, fmt, arp);
+
+    va_end(arp);
+
+    char* s = s_buffer;
+
+    while (*s != '\0')
     {
-        va_list arp;
-
-        va_start(arp, fmt);
-
-        int i = vsnprintf(s_buffer, sizeof(s_buffer) - 1, fmt, arp);
-
-        va_end(arp);
-
-        char* s = s_buffer;
-
-        while (*s != '\0')
+        if (*s == '\n')
         {
-            if (*s == '\n')
-            {
-                uart0_putc('\r');
-            }
-            uart0_putc(*s++);
+            Putc('\r');
         }
 
-        return i;
+        Putc(*s++);
     }
+
+    return i;
 }
+} // namespace uart0

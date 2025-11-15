@@ -58,5 +58,5 @@ class RDMSubDeviceBwLcd : public RDMSubDevice
     char m_aText[bw::lcd::max_characters];
     bool m_IsStarted = false;
     uint8_t data_[4];
-    uint32_t m_nLength = 0;
+    uint32_t length_ = 0;
 };

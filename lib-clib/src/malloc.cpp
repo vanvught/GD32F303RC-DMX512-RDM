@@ -45,7 +45,7 @@
 
 namespace console
 {
-void ConsoleError(const char*);
+void Error(const char*);
 }
 
 void debug_heap();
@@ -150,7 +150,7 @@ extern "C"
 
             if (next > block_limit)
             {
-                console::ConsoleError("malloc: out of memory\n");
+                console::Error("malloc: out of memory\n");
 #ifdef DEBUG_HEAP
                 debug_heap();
 #endif

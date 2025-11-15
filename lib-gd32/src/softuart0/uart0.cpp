@@ -165,7 +165,30 @@ extern "C"
     }
 }
 
-void uart0_init()
+static void PutcTimer(int c)
+{
+    const uint32_t kCurrentHead = s_circular_buffer.head;
+    const uint32_t kNextHead = (kCurrentHead + 1) & (BUFFER_SIZE - 1);
+
+    while (IsCircularBufferFull(kNextHead))
+    {
+        // Wait
+    }
+    s_circular_buffer.buffer[kCurrentHead] = static_cast<uint8_t>(c);
+    s_circular_buffer.head = kNextHead;
+
+    // Start the timer if the UART is idle
+    if (s_state == State::kSoftuartIdle)
+    {
+        timer_counter_value_config(TIMERx, 0);
+        timer_enable(TIMERx);
+        s_state = State::kSoftuartStartBit;
+    }
+}
+
+namespace uart0
+{
+void Init()
 {
     s_state = State::kSoftuartIdle;
     s_circular_buffer.head = 0;
@@ -218,43 +241,33 @@ void uart0_init()
     NVIC_SetPriority(TIMERx_IRQn, 2);
     NVIC_EnableIRQ(TIMERx_IRQn);
 }
-
-static void Putc(int c)
-{
-    const uint32_t kCurrentHead = s_circular_buffer.head;
-    const uint32_t kNextHead = (kCurrentHead + 1) & (BUFFER_SIZE - 1);
-
-    while (IsCircularBufferFull(kNextHead))
-    {
-        // Wait
-    }
-    s_circular_buffer.buffer[kCurrentHead] = static_cast<uint8_t>(c);
-    s_circular_buffer.head = kNextHead;
-
-    // Start the timer if the UART is idle
-    if (s_state == State::kSoftuartIdle)
-    {
-        timer_counter_value_config(TIMERx, 0);
-        timer_enable(TIMERx);
-        s_state = State::kSoftuartStartBit;
-    }
-}
-
-void uart0_putc(int c)
+  
+  
+void Putc(int c)
 {
     if (c == '\n')
     {
-        Putc('\r');
+        PutcTimer('\r');
+
+        do
+        {
+            __DMB();
+        } while (!IsCircularBufferEmpty());
     }
 
-    Putc(c);
+    PutcTimer(c);
+
+    do
+    {
+        __DMB();
+    } while (!IsCircularBufferEmpty());
 }
 
-void uart0_puts(const char* s)
+void Puts(const char* s)
 {
     while (*s != '\0')
     {
-        uart0_putc(*s++);
+        PutcTimer(*s++);
     }
 
     do
@@ -262,3 +275,4 @@ void uart0_puts(const char* s)
         __DMB();
     } while (!IsCircularBufferEmpty());
 }
+} // namespace uart0

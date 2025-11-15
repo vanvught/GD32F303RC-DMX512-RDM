@@ -46,7 +46,7 @@ enum class Colours
 inline void Init() {}
 inline void Putc([[maybe_unused]] int i) {}
 inline void Puts([[maybe_unused]] const char* p) {}
-inline void ConsoleWrite([[maybe_unused]] const char* p, [[maybe_unused]] unsigned int i) {}
-inline void ConsoleStatus([[maybe_unused]] Colours c, [[maybe_unused]] const char* p) {}
-inline void ConsoleError([[maybe_unused]] const char* p) {}
+inline void Write([[maybe_unused]] const char* p, [[maybe_unused]] unsigned int i) {}
+inline void Status([[maybe_unused]] Colours c, [[maybe_unused]] const char* p) {}
+inline void Error([[maybe_unused]] const char* p) {}
 } // namespace console

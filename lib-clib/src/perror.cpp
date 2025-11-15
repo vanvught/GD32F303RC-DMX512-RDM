@@ -28,7 +28,7 @@
 
 namespace console
 {
-void ConsoleError(const char*);
+void Error(const char*);
 int Putc(int);
 int Puts(const char*);
 } // namespace console
@@ -106,11 +106,11 @@ extern "C"
 
         if (s && *s)
         {
-            console::ConsoleError(s);
+            console::Error(s);
             console::Puts(": ");
         }
 
-        console::ConsoleError(ptr);
+        console::Error(ptr);
         console::Putc('\n');
     }
 }

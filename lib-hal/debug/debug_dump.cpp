@@ -27,68 +27,80 @@
 #include <cstdint>
 #include <ctype.h>
 
-#if defined (H3)
-int uart0_printf(const char* fmt, ...);
-# define printf uart0_printf
+#if defined(H3)
+namespace uart0
+{
+int Printf(const char* fmt, ...);
+}
+#define printf uart0::Printf
 #endif
 
-static constexpr uint32_t CHARS_PER_LINE = 16;
+static constexpr uint32_t kCharsPerLine = 16;
 
-void debug_dump(const void *pData, uint32_t nSize) {
-	uint32_t chars = 0;
-	const auto *p = reinterpret_cast<const uint8_t *>(pData);
+void debug_dump(const void* data, uint32_t size)
+{
+    uint32_t chars = 0;
+    const auto* p = reinterpret_cast<const uint8_t*>(data);
 
-	printf("%p:%d\n", pData, nSize);
+    printf("%p:%d\n", data, size);
 
-	do {
-		uint32_t chars_this_line = 0;
+    do
+    {
+        uint32_t chars_this_line = 0;
 
-		printf("%04x ", chars);
+        printf("%04x ", chars);
 
-		const auto *q = p;
+        const auto* q = p;
 
-		while ((chars_this_line < CHARS_PER_LINE) && (chars < nSize)) {
-			if (chars_this_line % 8 == 0) {
-				printf(" ");
-			}
+        while ((chars_this_line < kCharsPerLine) && (chars < size))
+        {
+            if (chars_this_line % 8 == 0)
+            {
+                printf(" ");
+            }
 
-			printf("%02x ", *p);
+            printf("%02x ", *p);
 
-			chars_this_line++;
-			chars++;
-			p++;
-		}
+            chars_this_line++;
+            chars++;
+            p++;
+        }
 
-		auto chars_dot_line = chars_this_line;
+        auto chars_dot_line = chars_this_line;
 
-		for (; chars_this_line < CHARS_PER_LINE; chars_this_line++) {
-			if (chars_this_line % 8 == 0) {
-				printf(" ");
-			}
-			printf("   ");
+        for (; chars_this_line < kCharsPerLine; chars_this_line++)
+        {
+            if (chars_this_line % 8 == 0)
+            {
+                printf(" ");
+            }
+            printf("   ");
+        }
 
-		}
+        chars_this_line = 0;
 
-		chars_this_line = 0;
+        while (chars_this_line < chars_dot_line)
+        {
+            if (chars_this_line % 8 == 0)
+            {
+                printf(" ");
+            }
 
-		while (chars_this_line < chars_dot_line) {
-			if (chars_this_line % 8 == 0) {
-				printf(" ");
-			}
+            int ch = *q;
+            if (isprint(ch))
+            {
+                printf("%c", ch);
+            }
+            else
+            {
+                printf(".");
+            }
 
-			int ch = *q;
-			if (isprint(ch)) {
-				printf("%c", ch);
-			} else {
-				printf(".");
-			}
+            chars_this_line++;
+            q++;
+        }
 
-			chars_this_line++;
-			q++;
-		}
+        puts("");
 
-		puts("");
-
-	} while (chars < nSize);
-
+    } while (chars < size);
 }

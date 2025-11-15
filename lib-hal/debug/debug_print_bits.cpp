@@ -26,23 +26,29 @@
 #include <cstdio>
 #include <cstdint>
 
-#if defined (H3)
-int uart0_printf(const char* fmt, ...);
-# define printf uart0_printf
+#if defined(H3)
+namespace uart0
+{
+int Printf(const char* fmt, ...);
+}
+#define printf uart0::Printf
 #endif
 
-void debug_print_bits(uint32_t u) {
-	uint32_t i;
+void debug_print_bits(uint32_t u)
+{
+    uint32_t i;
 
-	uint32_t b = 1U << 31;
+    uint32_t b = 1U << 31;
 
-	for (i = 0; i < 32; i++) {
-		if ((b & u) == b) {
-			uint32_t bit_number = 31 - i;
-			printf("%-2d ", bit_number);
-		}
-		b = b >> 1;
-	}
+    for (i = 0; i < 32; i++)
+    {
+        if ((b & u) == b)
+        {
+            uint32_t bit_number = 31 - i;
+            printf("%-2d ", bit_number);
+        }
+        b = b >> 1;
+    }
 
-	puts("");
+    puts("");
 }

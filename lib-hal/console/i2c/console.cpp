@@ -26,7 +26,6 @@
 #include <cstdint>
 
 #include "console.h"
-
 #include "hal_i2c.h"
 
 static bool s_is_connected;
@@ -258,7 +257,7 @@ void Puts(const char* s)
     }
 }
 
-void ConsoleWrite(const char* s, unsigned int n)
+void Write(const char* s, unsigned int n)
 {
     if (!s_is_connected)
     {
@@ -281,7 +280,7 @@ void ConsoleWrite(const char* s, unsigned int n)
     }
 }
 
-void ConsoleError(const char* s)
+void Error(const char* s)
 {
     if (!s_is_connected)
     {
@@ -293,7 +292,7 @@ void ConsoleError(const char* s)
     Puts("\x1b[37m");
 }
 
-void ConsoleSetFgColour(Colours fg)
+void SetFgColour(Colours fg)
 {
     switch (fg)
     {
@@ -318,7 +317,7 @@ void ConsoleSetFgColour(Colours fg)
     }
 }
 
-void ConsoleSetBgColour(Colours bg)
+void SetBgColour(Colours bg)
 {
     switch (bg)
     {
@@ -337,17 +336,17 @@ void ConsoleSetBgColour(Colours bg)
     }
 }
 
-void ConsoleStatus(Colours colour, const char* s)
+void Status(Colours colour, const char* s)
 {
     if (!s_is_connected)
     {
         return;
     }
 
-    ConsoleSetFgColour(colour);
-    ConsoleSetBgColour(Colours::kConsoleBlack);
+    SetFgColour(colour);
+    SetBgColour(Colours::kConsoleBlack);
     Puts(s);
     Putc('\n');
-    ConsoleSetFgColour(Colours::kConsoleWhite);
+    SetFgColour(Colours::kConsoleWhite);
 }
 } // namespace console

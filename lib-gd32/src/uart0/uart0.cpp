@@ -29,12 +29,14 @@
 #include "gd32.h"
 #include "gd32_uart.h"
 
-void uart0_init()
+namespace uart0
+{
+void Init()
 {
     Gd32UartBegin(USART0, 115200U, gd32::kUartBits8, gd32::kUartParityNone, gd32::kUartStop1Bit);
 }
 
-void uart0_putc(int c)
+void Putc(int c)
 {
     if (c == '\n')
     {
@@ -54,19 +56,21 @@ void uart0_putc(int c)
 #endif
 }
 
-void uart0_puts(const char* s)
+void Puts(const char* s)
 {
     while (*s != '\0')
     {
         if (*s == '\n')
         {
-            uart0_putc('\r');
+            Putc('\r');
         }
-        uart0_putc(*s++);
+        Putc(*s++);
     }
+
+    Putc('\n');
 }
 
-int uart0_getc()
+int Getc()
 {
     if (__builtin_expect((!Gd32UsartFlagGet<USART_FLAG_RBNE>(USART0)), 1))
     {
@@ -80,8 +84,9 @@ int uart0_getc()
 #endif
 
 #if defined(UART0_ECHO)
-    uart0_putc(c);
+    Putc(c);
 #endif
 
     return kC;
 }
+} // namespace uart0

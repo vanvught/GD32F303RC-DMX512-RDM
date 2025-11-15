@@ -24,10 +24,6 @@
  * THE SOFTWARE.
  */
 
-#include <cstdint>
-
-#define RGB(r, g, b) static_cast<uint16_t>(((((r) & 0xFF) << 16) | (((g) & 0xFF) << 8) | (((b) & 0xFF))))
-
 #if defined(CONSOLE_FB)
 #include "console/console_fb.h"
 #elif defined(CONSOLE_NULL)

@@ -23,80 +23,77 @@
  * THE SOFTWARE.
  */
 
-#include <cstdint>
+#include <cstring>
 
 #include "console.h"
 
-void uart0_init();
-void uart0_putc(int);
-void uart0_puts(const char*);
+namespace uart0
+{
+void Init();
+void Putc(int);
+void Puts(const char*);
+} // namespace uart0
 
 namespace console
 {
+void SetFgColour(Colours fg);
+
 void Putc(int c)
 {
-    uart0_putc(c);
+    uart0::Putc(c);
 }
 
 void Puts(const char* s)
 {
-    uart0_puts(s);
+    uart0::Puts(s);
 }
 
-// https://github.com/shiena/ansicolor/blob/master/README.md
-
-void ConsoleError(const char* s)
-{
-    uart0_puts("\x1b[31m");
-    uart0_puts(s);
-    uart0_puts("\x1b[39m");
-}
-
-void ConsoleSetFgColour(Colours fg)
+void SetFgColour(Colours fg)
 {
     switch (fg)
     {
         case console::Colours::kConsoleBlack:
-            uart0_puts("\x1b[30m");
+            Write(AnsiColours::Fg::kBlack, sizeof(AnsiColours::Fg::kBlack) - 1);
             break;
         case console::Colours::kConsoleRed:
-            uart0_puts("\x1b[31m");
+            Write(AnsiColours::Fg::kRed, sizeof(AnsiColours::Fg::kRed) - 1);
             break;
         case console::Colours::kConsoleGreen:
-            uart0_puts("\x1b[32m");
+            Write(AnsiColours::Fg::kGreen, sizeof(AnsiColours::Fg::kGreen) - 1);
             break;
         case console::Colours::kConsoleYellow:
-            uart0_puts("\x1b[33m");
+            Write(AnsiColours::Fg::kYellow, sizeof(AnsiColours::Fg::kYellow) - 1);
             break;
         case console::Colours::kConsoleWhite:
-            uart0_puts("\x1b[37m");
+            Write(AnsiColours::Fg::kWhite, sizeof(AnsiColours::Fg::kWhite) - 1);
             break;
         default:
-            uart0_puts("\x1b[39m");
+            Write(AnsiColours::Fg::kDefault, sizeof(AnsiColours::Fg::kDefault) - 1);
             break;
     }
 }
 
-void ConsoleSetBgColour(Colours bg)
+void SetBgColour(Colours bg)
 {
     switch (bg)
     {
         case console::Colours::kConsoleBlack:
-            uart0_puts("\x1b[40m");
+            Write(AnsiColours::Bg::kBlack, sizeof(AnsiColours::Bg::kBlack) - 1);
             break;
         case console::Colours::kConsoleRed:
-            uart0_puts("\x1b[41m");
+            Write(AnsiColours::Bg::kRed, sizeof(AnsiColours::Bg::kRed) - 1);
             break;
         case console::Colours::kConsoleWhite:
-            uart0_puts("\x1b[47m");
+            Write(AnsiColours::Bg::kWhite, sizeof(AnsiColours::Bg::kWhite) - 1);
+            ;
             break;
         default:
-            uart0_puts("\x1b[49m");
+            Write(AnsiColours::Bg::kDefault, sizeof(AnsiColours::Bg::kDefault) - 1);
             break;
     }
 }
 
-void ConsoleWrite(const char* s, unsigned int n)
+void Write(const char* s, unsigned int n)
 {
     char c;
 
@@ -106,19 +103,25 @@ void ConsoleWrite(const char* s, unsigned int n)
     }
 }
 
-void ConsoleStatus(Colours colour, const char* s)
+void Error(const char* s)
 {
-    ConsoleSetFgColour(colour);
-    uart0_puts(s);
-    Putc('\n');
-    ConsoleSetFgColour(console::Colours::kConsoleDefault);
+    Write(AnsiColours::Fg::kRed, sizeof(AnsiColours::Fg::kRed) - 1);
+    Write(s, strlen(s));
+    Write(AnsiColours::Fg::kDefault, sizeof(AnsiColours::Fg::kDefault) - 1);
+}
+
+void Status(Colours colour, const char* s)
+{
+    SetFgColour(colour);
+    Write(s, strlen(s));
+    SetFgColour(Colours::kConsoleDefault);
 }
 
 void __attribute__((cold)) Init()
 {
-    uart0_init();
+    uart0::Init();
 
-    ConsoleSetFgColour(console::Colours::kConsoleWhite);
-    ConsoleSetBgColour(console::Colours::kConsoleBlack);
+    SetFgColour(Colours::kConsoleWhite);
+    SetBgColour(Colours::kConsoleBlack);
 }
 } // namespace console

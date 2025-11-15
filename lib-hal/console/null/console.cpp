@@ -29,8 +29,8 @@ namespace console
 {
 void Init() {}
 void Puts([[maybe_unused]] const char* p) {}
-void ConsoleWrite([[maybe_unused]] const char* p, [[maybe_unused]] unsigned int i) {}
-void ConsoleStatus([[maybe_unused]] uint32_t i, [[maybe_unused]] const char* p) {}
-void ConsoleError([[maybe_unused]] const char* p) {}
+void Write([[maybe_unused]] const char* p, [[maybe_unused]] unsigned int i) {}
+void Status([[maybe_unused]] uint32_t i, [[maybe_unused]] const char* p) {}
+void Error([[maybe_unused]] const char* p) {}
 void Putc([[maybe_unused]] int i) {}
 } // namespace console

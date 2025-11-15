@@ -41,9 +41,10 @@
 #include "hal_millis.h"
 #include "debug.h"
 
-namespace console {
-void ConsoleError(const char*);
-}
+namespace console
+{
+void Error(const char*);
+} // namespace console
 
 struct Timer
 {
@@ -71,13 +72,13 @@ static uint32_t s_timer_current = 0;             ///< bRound-robin cursor for So
  */
 TimerHandle_t SoftwareTimerAdd(uint32_t interval_millis, const TimerCallbackFunction_t kCallbackFunction)
 {
-	DEBUG_ENTRY
-	DEBUG_PRINTF("s_timers_count=%u", s_timers_count);
-	
+    DEBUG_ENTRY
+    DEBUG_PRINTF("s_timers_count=%u", s_timers_count);
+
     if (s_timers_count >= hal::SOFTWARE_TIMERS_MAX)
     {
 #ifndef NDEBUG
-        console::ConsoleError("SoftwareTimerAdd: Max timer limit reached\n");
+        console::Error("SoftwareTimerAdd: Max timer limit reached\n");
 #endif
         return -1;
     }
@@ -94,7 +95,7 @@ TimerHandle_t SoftwareTimerAdd(uint32_t interval_millis, const TimerCallbackFunc
 
     s_timers[s_timers_count++] = new_timer;
 
-	DEBUG_EXIT
+    DEBUG_EXIT
     return new_timer.id;
 }
 
@@ -110,9 +111,9 @@ TimerHandle_t SoftwareTimerAdd(uint32_t interval_millis, const TimerCallbackFunc
  */
 bool SoftwareTimerDelete(TimerHandle_t& id)
 {
-	DEBUG_ENTRY
-	DEBUG_PRINTF("s_timers_count=%u", s_timers_count);
-    
+    DEBUG_ENTRY
+    DEBUG_PRINTF("s_timers_count=%u", s_timers_count);
+
     for (uint32_t i = 0; i < s_timers_count; ++i)
     {
         if (s_timers[i].id == id)
@@ -127,17 +128,17 @@ bool SoftwareTimerDelete(TimerHandle_t& id)
             }
 
             id = -1;
-            
+
             DEBUG_ENTRY
             return true;
         }
     }
 
 #ifndef NDEBUG
-    console::ConsoleError("SoftwareTimerDelete: Timer not found\n");
+    console::Error("SoftwareTimerDelete: Timer not found\n");
 #endif
 
-	DEBUG_EXIT
+    DEBUG_EXIT
     return false;
 }
 
@@ -163,7 +164,7 @@ bool SoftwareTimerChange(TimerHandle_t id, uint32_t interval_millis)
     }
 
 #ifndef NDEBUG
-    console::ConsoleError("SoftwareTimerChange: Timer not found\n");
+    console::Error("SoftwareTimerChange: Timer not found\n");
 #endif
 
     return false;
@@ -181,11 +182,11 @@ bool SoftwareTimerChange(TimerHandle_t id, uint32_t interval_millis)
  */
 void SoftwareTimerRun()
 {
-	if (s_timers_count == 0) [[unlikely]]
-	{
-		return;
-	}
-	
+    if (s_timers_count == 0) [[unlikely]]
+    {
+        return;
+    }
+
     const uint32_t kNow = hal::Millis();
     Timer& t = s_timers[s_timer_current];
 

@@ -346,7 +346,6 @@ void Status(Colours colour, const char* s)
     SetFgColour(colour);
     SetBgColour(Colours::kConsoleBlack);
     Puts(s);
-    Putc('\n');
     SetFgColour(Colours::kConsoleWhite);
 }
 } // namespace console

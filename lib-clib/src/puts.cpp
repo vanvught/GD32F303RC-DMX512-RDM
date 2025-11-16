@@ -32,6 +32,5 @@ void Putc(int);
 extern "C" int puts(const char* s) //NOLINT
 {
     console::Puts(s);
-    console::Putc('\n');
     return 1;
 }

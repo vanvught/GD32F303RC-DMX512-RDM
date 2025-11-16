@@ -113,7 +113,7 @@ void Error(const char* s)
 void Status(Colours colour, const char* s)
 {
     SetFgColour(colour);
-    Write(s, strlen(s));
+    Puts(s);
     SetFgColour(Colours::kConsoleDefault);
 }
 

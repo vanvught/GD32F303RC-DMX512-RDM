@@ -37,19 +37,15 @@
 
 #include "dmx.h"
 #include "dmxconst.h"
-
 #include "rdm.h"
 #include "rdm_e120.h"
-
 #include "gd32.h"
 #include "gd32_dma.h"
 #include "gd32_uart.h"
-#include "gd32/dmx_config.h"
+#include "dmx/dmx_config.h"
 #include "gd32/dmx_assert.h"
 #include "dmx_internal.h"
-
 #include "logic_analyzer.h"
-
 #include "debug.h"
 
 extern struct HwTimersSeconds g_Seconds;
@@ -1753,7 +1749,7 @@ void Dmx::SetPortDirection(uint32_t port_index, dmx::PortDirection port_directio
 {
     DEBUG_PRINTF("port_index=%u", port_index);
 
-    DMX_CHECK_PORT_INDEX(port_index);
+    DMX_CHECK_PORT_INDEX_VOID(port_index);
 
     if (m_dmxPortDirection[port_index] != port_direction)
     {
@@ -1958,7 +1954,7 @@ void Dmx::StartDmxOutput(uint32_t port_index)
 
 void Dmx::StopData(uint32_t port_index)
 {
-    DMX_CHECK_PORT_INDEX(port_index);
+    DMX_CHECK_PORT_INDEX_VOID(port_index);
 
     if (sv_PortState[port_index] == dmx::PortState::kIdle)
     {
@@ -2090,7 +2086,7 @@ void Dmx::SetDmxSlots(uint16_t slots)
 
 void Dmx::SetOutputStyle(uint32_t port_index, dmx::OutputStyle output_style)
 {
-    DMX_CHECK_PORT_INDEX(port_index);
+    DMX_CHECK_PORT_INDEX_VOID(port_index);
 
     s_TxBuffer[port_index].output_style = output_style;
 
@@ -2138,13 +2134,13 @@ void Dmx::SetOutputStyle(uint32_t port_index, dmx::OutputStyle output_style)
 
 dmx::OutputStyle Dmx::GetOutputStyle(uint32_t port_index) const
 {
-    DMX_CHECK_PORT_INDEX(port_index);
+    DMX_CHECK_PORT_INDEX_VOID(port_index);
     return s_TxBuffer[port_index].output_style;
 }
 
 template <uint32_t portIndex, bool hasStartCode, dmx::SendStyle dmxSendStyle> void Dmx::SetSendDataInternal(const uint8_t* data, uint32_t length)
 {
-    DMX_CHECK_PORT_INDEX(portIndex);
+    DMX_CHECK_PORT_INDEX_VOID(portIndex);
 
     auto& tx_buffer = s_TxBuffer[portIndex];
     const auto kHasDataPending = tx_buffer.dmx.read_index != tx_buffer.dmx.write_index;
@@ -2233,7 +2229,7 @@ void Dmx::FullOn()
 
 void Dmx::StartOutput(uint32_t port_index)
 {
-    DMX_CHECK_PORT_INDEX(port_index);
+    DMX_CHECK_PORT_INDEX_VOID(port_index);
 
     if ((sv_PortState[port_index] == dmx::PortState::kTx) && (s_TxBuffer[port_index].output_style == dmx::OutputStyle::kDelta) && (s_TxBuffer[port_index].State == dmx::TxRxState::kIdle))
     {
@@ -2267,7 +2263,7 @@ void Dmx::Sync()
 void Dmx::StartData(uint32_t port_index)
 {
     DEBUG_PRINTF("port_index=%u", port_index);
-    DMX_CHECK_PORT_INDEX(port_index);
+    DMX_CHECK_PORT_INDEX_VOID(port_index);
     assert(sv_PortState[port_index] == dmx::PortState::kIdle);
 
     if (m_dmxPortDirection[port_index] == dmx::PortDirection::kOutput)
@@ -2367,7 +2363,7 @@ const uint8_t* Dmx::GetDmxChanged(uint32_t port_index)
 
 const uint8_t* Dmx::GetDmxAvailable([[maybe_unused]] uint32_t port_index)
 {
-    DMX_CHECK_PORT_INDEX(port_index);
+    DMX_CHECK_PORT_INDEX_VOID(port_index);
 #if !defined(CONFIG_DMX_TRANSMIT_ONLY)
 #if defined(CONFIG_DMX_DOUBLE_INPUT_BUFFER)
     auto& dmx_data_buffer = GetReadDmxDataBuffer(port_index);
@@ -2414,7 +2410,7 @@ const uint8_t* Dmx::GetDmxCurrentData(uint32_t port_index)
 
 uint32_t Dmx::GetDmxUpdatesPerSecond([[maybe_unused]] uint32_t port_index)
 {
-    DMX_CHECK_PORT_INDEX(port_index);
+    DMX_CHECK_PORT_INDEX_VOID(port_index);
 #if !defined(CONFIG_DMX_TRANSMIT_ONLY)
     return sv_nRxDmxPackets[port_index].per_second;
 #else
@@ -2426,7 +2422,7 @@ uint32_t Dmx::GetDmxUpdatesPerSecond([[maybe_unused]] uint32_t port_index)
 
 template <uint32_t port_index, uint32_t nUart> static void RdmSendRawImpl(const uint8_t* const kData, uint32_t length)
 {
-    DMX_CHECK_PORT_INDEX(port_index);
+    DMX_CHECK_PORT_INDEX_VOID(port_index);
     assert(kData != nullptr);
     assert(length != 0);
 
@@ -2568,7 +2564,7 @@ template <uint32_t port_index, uint32_t nUart> static void RdmSendRawImpl(const 
 
 void Dmx::RdmSendRaw(uint32_t port_index, const uint8_t* data, uint32_t length)
 {
-    DMX_CHECK_PORT_INDEX(port_index);
+    DMX_CHECK_PORT_INDEX_VOID(port_index);
 
     switch (port_index)
     {
@@ -2617,7 +2613,7 @@ void Dmx::RdmSendRaw(uint32_t port_index, const uint8_t* data, uint32_t length)
 
 void Dmx::RdmSendDiscoveryRespondMessage(uint32_t port_index, const uint8_t* data, uint32_t length)
 {
-    DMX_CHECK_PORT_INDEX(port_index);
+    DMX_CHECK_PORT_INDEX_VOID(port_index);
     assert(data != nullptr);
     assert(length != 0);
 
@@ -2660,7 +2656,7 @@ void Dmx::RdmSendDiscoveryRespondMessage(uint32_t port_index, const uint8_t* dat
 
 const uint8_t* Dmx::RdmReceive(uint32_t port_index)
 {
-    DMX_CHECK_PORT_INDEX(port_index);
+    DMX_CHECK_PORT_INDEX_VOID(port_index);
 
     if ((sv_RxBuffer[port_index].rdm.index & 0x4000) != 0x4000)
     {
@@ -2715,7 +2711,7 @@ const uint8_t* Dmx::RdmReceive(uint32_t port_index)
 
 const uint8_t* Dmx::RdmReceiveTimeOut(uint32_t port_index, uint16_t time_out)
 {
-    DMX_CHECK_PORT_INDEX(port_index);
+    DMX_CHECK_PORT_INDEX_VOID(port_index);
 
     uint8_t* p = nullptr;
     TIMER_CNT(TIMER5) = 0;

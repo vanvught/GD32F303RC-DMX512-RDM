@@ -24,18 +24,45 @@
  * THE SOFTWARE.
  */
 
-#include <cassert>
+#include <cassert> // IWYU pragma: keep
 
-#include "dmx_config.h"
+#include "dmx/dmx_config.h" // IWYU pragma: keep
 
+// For void-returning functions
 #if defined(NDEBUG)
-#define DMX_CHECK_PORT_INDEX(x) ((void)0)
+#define DMX_CHECK_PORT_INDEX_VOID(x) ((void)0)
 #else
-#define DMX_CHECK_PORT_INDEX(x)                          \
+#define DMX_CHECK_PORT_INDEX_VOID(x)                     \
     do                                                   \
     {                                                    \
         assert((x) < dmx::config::max::PORTS);           \
         if ((x) >= dmx::config::max::PORTS) [[unlikely]] \
             return;                                      \
+    } while (0)
+#endif
+
+// For functions that return a value (e.g., enum, int, etc.)
+#if defined(NDEBUG)
+#define DMX_CHECK_PORT_INDEX_RET(x, ret) ((void)0)
+#else
+#define DMX_CHECK_PORT_INDEX_RET(x, ret)                 \
+    do                                                   \
+    {                                                    \
+        assert((x) < dmx::config::max::PORTS);           \
+        if ((x) >= dmx::config::max::PORTS) [[unlikely]] \
+            return ret;                                  \
+    } while (0)
+#endif
+
+// For functions that return pointers
+#if defined(NDEBUG)
+#define DMX_CHECK_PORT_INDEX_PTR(x) ((void)0)
+#else
+#define DMX_CHECK_PORT_INDEX_PTR(x)                      \
+    do                                                   \
+    {                                                    \
+        assert((x) < dmx::config::max::PORTS);           \
+        if ((x) >= dmx::config::max::PORTS) [[unlikely]] \
+            return nullptr;                              \
     } while (0)
 #endif

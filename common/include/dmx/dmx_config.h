@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-#include "gd32.h"
+#include "gd32.h" // IWYU pragma: keep
 
 namespace dmx::config
 {
@@ -64,4 +64,4 @@ namespace dmx::buffer
 static constexpr auto SIZE = 516; // multiple of uint32_t
 } // namespace dmx::buffer
 
-#include "dmx_dma_check.h"
+#include "gd32/dmx_dma_check.h"

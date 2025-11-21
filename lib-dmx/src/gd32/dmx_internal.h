@@ -27,9 +27,7 @@
 #include <cstdint>
 #include <cassert>
 
-#include "gd32.h"
 #include "gd32_gpio.h"
-#include "gd32/dmx_config.h"
 
 #ifdef ALIGNED
 #undef ALIGNED

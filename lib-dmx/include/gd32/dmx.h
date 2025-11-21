@@ -27,7 +27,7 @@
 #include <cstdint>
 
 #include "dmxconst.h"
-#include "dmx_config.h"
+#include "dmx/dmx_config.h"
 #include "dmxstatistics.h"
 
 struct Statistics

@@ -33,6 +33,7 @@
 #endif
 
 #include <cstdint>
+#include <cassert>
 
 #include "gd32.h"
 #include "gd32_i2c.h"

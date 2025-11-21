@@ -55,12 +55,9 @@ using LcdDriver = ST7735S;
 #include "spi/st7789.h"
 using LcdDriver = ST7789;
 #endif
-
 #include "spi/lcd_font.h"
 #include "spi/spilcd.h"
-
 #include "console.h"
-
 #if defined(DISPLAYTIMEOUT_GPIO)
 #include "hal_gpio.h"
 #endif
@@ -240,16 +237,16 @@ class Display : public LcdDriver
         Write(rows_, pText);
     }
 
-    void TextStatus(const char* pText, uint32_t nConsoleColor)
+    void TextStatus(const char* text, console::Colours colour)
     {
-        TextStatus(pText);
+        TextStatus(text);
 
-        if (nConsoleColor == UINT32_MAX)
+        if (static_cast<uint32_t>(colour) == UINT32_MAX)
         {
             return;
         }
 
-        ConsoleStatus(nConsoleColor, pText);
+        console::Status(colour, text);
     }
 
     void Progress()

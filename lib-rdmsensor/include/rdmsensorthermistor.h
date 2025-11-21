@@ -42,7 +42,7 @@ class RDMSensorThermistor final : public RDMSensor, MCP3424
         : RDMSensor(sensor), MCP3424(address), calibration_(calibration), channel_(channel)
     {
         DEBUG_ENTRY
-        DEBUG_PRINTF("nSensor=%u, address=0x%.2x, nChannel=%u, nCalibration=%d", sensor, address, channel, calibration);
+        DEBUG_PRINTF("nSensor=%u, address=0x%.2x, channel=%u, nCalibration=%d", sensor, address, channel, calibration);
 
         SetType(E120_SENS_TEMPERATURE);
         SetUnit(E120_UNITS_CENTIGRADE);

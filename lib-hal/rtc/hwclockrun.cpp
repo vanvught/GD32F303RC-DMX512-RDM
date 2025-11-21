@@ -39,7 +39,7 @@ enum class Status
 };
 
 static Status s_status = Status::kWaiting;
-static time_t nSeconds;
+static time_t seconds;
 static int32_t nSecondsT1;
 static struct tm rtcT1;
 static struct timeval tvT1;
@@ -58,7 +58,7 @@ void HwClock::Process()
             gettimeofday(&tvT1, nullptr);
 
             nSecondsT1 = rtcT1.tm_sec + rtcT1.tm_min * 60;
-            nSeconds = mktime(&rtcT1);
+            seconds = mktime(&rtcT1);
         }
 
         return;
@@ -75,7 +75,7 @@ void HwClock::Process()
             gettimeofday(&tvT2, nullptr);
 
             struct timeval tv;
-            tv.tv_sec = nSeconds;
+            tv.tv_sec = seconds;
 
             if (tvT2.tv_sec == tvT1.tv_sec)
             {

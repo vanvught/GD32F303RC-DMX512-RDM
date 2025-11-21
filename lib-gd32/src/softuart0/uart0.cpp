@@ -241,8 +241,7 @@ void Init()
     NVIC_SetPriority(TIMERx_IRQn, 2);
     NVIC_EnableIRQ(TIMERx_IRQn);
 }
-  
-  
+
 void Putc(int c)
 {
     if (c == '\n')
@@ -269,6 +268,8 @@ void Puts(const char* s)
     {
         PutcTimer(*s++);
     }
+
+    Putc('\n');
 
     do
     {

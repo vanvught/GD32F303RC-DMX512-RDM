@@ -52,7 +52,7 @@ void PixelDmxParamsRdm::SetDataImpl([[maybe_unused]] uint32_t port_index, const 
     }
 
     /*
-     * Slot 1: nType
+     * Slot 1: type
      * Slot 2: nCount;
      * Slot 3: nGroupingCount
      * Slot 4: nMap;

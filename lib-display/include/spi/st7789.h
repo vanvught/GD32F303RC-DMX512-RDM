@@ -31,7 +31,9 @@
 #include "spi/st77xx.h"
 #include "debug.h"
 
-namespace st7789::cmd
+namespace st7789
+{
+namespace cmd
 {
 inline constexpr uint8_t kGctrl = 0xB7;    ///< Gate Control
 inline constexpr uint8_t kVcoms = 0xBB;    ///< VCOM Setting
@@ -41,7 +43,7 @@ inline constexpr uint8_t kVrhs = 0xC3;     ///< VRH Set
 inline constexpr uint8_t kVdvs = 0xC4;     ///< VDV Set
 inline constexpr uint8_t kFrctrL2 = 0xC6;  ///< Frame Rate Control in Normal Mode
 inline constexpr uint8_t kPwctrL1 = 0xD0;  ///< Power Control 1
-} // namespace st7789::cmd
+} // namespace cmd
 #if defined(SPI_LCD_240X240)
 inline constexpr uint32_t kRotation0ShiftX = 0;
 inline constexpr uint32_t kRotation0ShiftY = 80;
@@ -61,7 +63,7 @@ inline constexpr uint32_t kRotation2ShiftY = 0;
 inline constexpr uint32_t kRotation3ShiftX = 0;
 inline constexpr uint32_t kRotation3ShiftY = 0;
 #endif
-
+} // namespace st7789
 
 class ST7789 : public ST77XX
 {

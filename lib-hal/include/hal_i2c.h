@@ -33,7 +33,7 @@
 #endif
 #endif
 
-#include "hal_api.h"
+#include "hal_udelay.h"
 
 #if defined(__linux__) || defined(__APPLE__)
 #include "linux/hal_api.h"
@@ -239,7 +239,7 @@ class HAL_I2C
         return Read16();
     }
 
-    uint16_t ReadRegister16DelayUs(uint8_t reg, uint32_t nDelayUs)
+    uint16_t ReadRegister16DelayUs(uint8_t reg, uint32_t delay_us)
     {
         char buf[2] = {0};
 
@@ -248,7 +248,7 @@ class HAL_I2C
         Setup();
         FUNC_PREFIX(I2cWrite(&buf[0], 1));
 
-        udelay(nDelayUs);
+        udelay(delay_us);
 
         FUNC_PREFIX(I2cRead(buf, 2));
 

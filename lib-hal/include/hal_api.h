@@ -33,11 +33,3 @@
 #else
 #include "rpi/hal_api.h"
 #endif
-
-#ifdef __cplusplus
-#if !defined(UDELAY)
-#define UDELAY
-#include <cstdint>
-void udelay(uint32_t us, uint32_t offset = 0);
-#endif
-#endif

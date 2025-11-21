@@ -27,10 +27,10 @@
 #include <cstdint>
 #include <cassert>
 
+#include "hal_udelay.h" 
+#include "dmx.h" // IWYU pragma: keep
 #include "e120.h"
 #include "rdmconst.h"
-#include "dmx.h"
-#include "hal_api.h"
 
 class Rdm
 {

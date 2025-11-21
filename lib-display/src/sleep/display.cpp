@@ -33,7 +33,7 @@
 
 #include "debug.h"
 
-static TimerHandle_t s_timer_id = TIMER_ID_NONE;
+static TimerHandle_t s_timer_id = kTimerIdNone;
 
 static void SleepTimer([[maybe_unused]] TimerHandle_t handle)
 {
@@ -53,7 +53,7 @@ void Display::SetSleepTimer(bool active)
         return;
     }
 
-    if (s_timer_id == TIMER_ID_NONE)
+    if (s_timer_id == kTimerIdNone)
     {
         s_timer_id = SoftwareTimerAdd(sleep_timeout_, SleepTimer);
         DEBUG_EXIT

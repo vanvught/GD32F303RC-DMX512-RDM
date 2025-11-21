@@ -1,8 +1,9 @@
+#pragma once
 /**
  * @file hwclock.h
  *
  */
-/* Copyright (C) 2020-2023 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2020-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,82 +24,75 @@
  * THE SOFTWARE.
  */
 
-#ifndef HWCLOCK_H_
-#define HWCLOCK_H_
-
 #include <cstdint>
 #include <time.h>
 #include <sys/time.h>
 
-namespace rtc {
-enum class Type : uint8_t {
-	MCP7941X, DS3231, PCF8563, SOC_INTERNAL, UNKNOWN
+namespace rtc
+{
+enum class Type : uint8_t
+{
+    kMcP7941X,
+    kDS3231,
+    kPcF8563,
+    kSocInternal,
+    kUnknown
 };
-}  // namespace rtc
+} // namespace rtc
 
-class HwClock {
-public:
-	HwClock();
-	void RtcProbe();
+class HwClock
+{
+   public:
+    HwClock();
+    void RtcProbe();
 
-	void HcToSys(); // Set the System Clock from the Hardware Clock
-	void SysToHc(); // Set the Hardware Clock from the System Clock
+    void HcToSys(); // Set the System Clock from the Hardware Clock
+    void SysToHc(); // Set the Hardware Clock from the System Clock
 
-	bool Set(const struct tm *pTime);
-	bool Get(struct tm *pTime) {
-		return RtcGet(pTime);
-	}
+    bool Set(const struct tm* time);
+    bool Get(struct tm* time) { return RtcGet(time); }
 
-	bool AlarmSet(const struct tm *pTime) {
-		return RtcSetAlarm(pTime);
-	}
-	bool AlarmGet(struct tm *pTime) {
-		return RtcGetAlarm(pTime);
-	}
-	void AlarmEnable(const bool bEnable) {
-		m_bRtcAlarmEnabled = bEnable;
-	}
-	bool AlarmIsEnabled() const {
-		return m_bRtcAlarmEnabled;
-	}
+    bool AlarmSet(const struct tm* time) { return RtcSetAlarm(time); }
 
-	bool IsConnected() const {
-		return is_connected_;
-	}
+    bool AlarmGet(struct tm* time) { return RtcGetAlarm(time); }
 
-	void Run(const bool bDoRun) {
-		if (!bDoRun || !is_connected_) {
-			return;
-		}
-		Process();
-	}
+    void AlarmEnable(bool enable) { m_bRtcAlarmEnabled = enable; }
 
-	void Print();
+    bool AlarmIsEnabled() const { return m_bRtcAlarmEnabled; }
 
-	static HwClock *Get() {
-		return s_this;
-	}
+    bool IsConnected() const { return is_connected_; }
 
-private:
-	void Process();
-	bool RtcSet(const struct tm *pime);
-	bool RtcGet(struct tm *pTime);
-	bool RtcSetAlarm(const struct tm *pTime);
-	bool RtcGetAlarm(struct tm *pTime);
-	int MCP794xxAlarmWeekday(struct tm *pTime);
-	void PCF8563GetAlarmMode();
-	void PCF8563SetAlarmMode();
+    void Run(bool do_run)
+    {
+        if (!do_run || !is_connected_)
+        {
+            return;
+        }
+        Process();
+    }
 
-private:
-	uint32_t m_nSetDelayMicros { 0 };
-	uint32_t m_nLastHcToSysMillis { 0 };
-	uint8_t address_ { 0 };
-	rtc::Type m_Type { rtc::Type::UNKNOWN };
-	bool is_connected_ { false };
-	bool m_bRtcAlarmEnabled { false };
-	bool m_bRtcAlarmPending { false };
+    void Print();
 
-	static inline HwClock *s_this;
+    static HwClock* Get() { return s_this; }
+
+   private:
+    void Process();
+    bool RtcSet(const struct tm* time);
+    bool RtcGet(struct tm* time);
+    bool RtcSetAlarm(const struct tm* time);
+    bool RtcGetAlarm(struct tm* time);
+    int MCP794xxAlarmWeekday(struct tm* time);
+    void PCF8563GetAlarmMode();
+    void PCF8563SetAlarmMode();
+
+   private:
+    uint32_t m_nSetDelayMicros{0};
+    uint32_t m_nLastHcToSysMillis{0};
+    uint8_t address_{0};
+    rtc::Type m_Type{rtc::Type::kUnknown};
+    bool is_connected_{false};
+    bool m_bRtcAlarmEnabled{false};
+    bool m_bRtcAlarmPending{false};
+
+    static inline HwClock* s_this;
 };
-
-#endif /* HWCLOCK_H_ */

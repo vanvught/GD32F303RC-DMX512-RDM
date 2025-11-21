@@ -35,7 +35,7 @@
 #include "gd32.h"
 #include "debug.h"
 
-static TimerHandle_t s_timer_id = TIMER_ID_NONE;
+static TimerHandle_t s_timer_id = kTimerIdNone;
 
 #if !defined(HAL_HAVE_PORT_BIT_TOGGLE)
 static int32_t s_toggle_led = 1;
@@ -74,7 +74,7 @@ void SetFrequency(uint32_t frequency_hz)
     DEBUG_ENTRY
     DEBUG_PRINTF("s_timer_id=%d, frequency_hz=%u", s_timer_id, frequency_hz);
 
-    if (s_timer_id == TIMER_ID_NONE)
+    if (s_timer_id == kTimerIdNone)
     {
         s_timer_id = SoftwareTimerAdd((1000U / frequency_hz), Ledblink);
         DEBUG_EXIT

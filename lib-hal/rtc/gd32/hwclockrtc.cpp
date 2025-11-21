@@ -32,10 +32,8 @@
 #include <time.h>
 
 #include "hwclock.h"
-
 #include "gd32.h"
 #include "gd32_millis.h"
-
 #include "debug.h"
 
 #define BCD2DEC(val) (((val) & 0x0f) + ((val) >> 4) * 10)
@@ -161,7 +159,7 @@ void HwClock::RtcProbe()
 #endif
     }
 
-    m_Type = rtc::Type::SOC_INTERNAL;
+    m_Type = rtc::Type::kSocInternal;
     is_connected_ = true;
     m_nLastHcToSysMillis = millis();
 

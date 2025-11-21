@@ -27,9 +27,7 @@
 #include <time.h>
 
 #include "hwclock.h"
-
 #include "hal_millis.h"
-
 #include "debug.h"
 
 enum class Status
@@ -39,12 +37,12 @@ enum class Status
 };
 
 static Status s_status = Status::kWaiting;
-static time_t seconds;
-static int32_t nSecondsT1;
-static struct tm rtcT1;
-static struct timeval tvT1;
-static struct tm rtcT2;
-static struct timeval tvT2;
+static time_t s_seconds;
+static int32_t s_seconds_t1;
+static struct tm s_rtc_t1;
+static struct timeval s_tv_t1;
+static struct tm s_rtc_t2;
+static struct timeval s_tv_t2;
 
 void HwClock::Process()
 {
@@ -54,11 +52,11 @@ void HwClock::Process()
         {
             s_status = Status::kSampling;
 
-            RtcGet(&rtcT1);
-            gettimeofday(&tvT1, nullptr);
+            RtcGet(&s_rtc_t1);
+            gettimeofday(&s_tv_t1, nullptr);
 
-            nSecondsT1 = rtcT1.tm_sec + rtcT1.tm_min * 60;
-            seconds = mktime(&rtcT1);
+            s_seconds_t1 = s_rtc_t1.tm_sec + s_rtc_t1.tm_min * 60;
+            s_seconds = mktime(&s_rtc_t1);
         }
 
         return;
@@ -66,30 +64,30 @@ void HwClock::Process()
 
     if (s_status == Status::kSampling)
     {
-        RtcGet(&rtcT2);
+        RtcGet(&s_rtc_t2);
 
-        const auto kSeconds2 = rtcT2.tm_sec + rtcT2.tm_min * 60;
+        const auto kSeconds2 = s_rtc_t2.tm_sec + s_rtc_t2.tm_min * 60;
 
-        if (nSecondsT1 != kSeconds2)
+        if (s_seconds_t1 != kSeconds2)
         {
-            gettimeofday(&tvT2, nullptr);
+            gettimeofday(&s_tv_t2, nullptr);
 
             struct timeval tv;
-            tv.tv_sec = seconds;
+            tv.tv_sec = s_seconds;
 
-            if (tvT2.tv_sec == tvT1.tv_sec)
+            if (s_tv_t2.tv_sec == s_tv_t1.tv_sec)
             {
-                tv.tv_usec = 1000000 - (tvT2.tv_usec - tvT1.tv_usec);
+                tv.tv_usec = 1000000 - (s_tv_t2.tv_usec - s_tv_t1.tv_usec);
             }
             else
             {
-                if (tvT2.tv_usec - tvT1.tv_usec >= 0)
+                if (s_tv_t2.tv_usec - s_tv_t1.tv_usec >= 0)
                 {
-                    tv.tv_usec = tvT2.tv_usec - tvT1.tv_usec;
+                    tv.tv_usec = s_tv_t2.tv_usec - s_tv_t1.tv_usec;
                 }
                 else
                 {
-                    tv.tv_usec = tvT1.tv_usec - tvT2.tv_usec;
+                    tv.tv_usec = s_tv_t1.tv_usec - s_tv_t2.tv_usec;
                 }
             }
 
@@ -98,8 +96,8 @@ void HwClock::Process()
             m_nLastHcToSysMillis = hal::Millis();
             s_status = Status::kWaiting;
 
-            DEBUG_PRINTF("%d:%d (%d %d) (%d %d) -> %d", nSecondsT1, kSeconds2, static_cast<int>(tvT1.tv_sec), static_cast<int>(tvT1.tv_usec),
-                         static_cast<int>(tvT2.tv_sec), static_cast<int>(tvT2.tv_usec), static_cast<int>(tv.tv_usec));
+            DEBUG_PRINTF("%d:%d (%d %d) (%d %d) -> %d", s_seconds_t1, kSeconds2, static_cast<int>(s_tv_t1.tv_sec), static_cast<int>(s_tv_t1.tv_usec),
+                         static_cast<int>(s_tv_t2.tv_sec), static_cast<int>(s_tv_t2.tv_usec), static_cast<int>(tv.tv_usec));
         }
 
         return;

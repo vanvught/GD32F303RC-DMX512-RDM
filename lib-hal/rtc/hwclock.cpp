@@ -55,16 +55,16 @@ void HwClock::Print()
 
     switch (m_Type)
     {
-        case rtc::Type::MCP7941X:
+        case rtc::Type::kMcP7941X:
             type = "MCP7941X";
             break;
-        case rtc::Type::DS3231:
+        case rtc::Type::kDS3231:
             type = "DS3231";
             break;
-        case rtc::Type::PCF8563:
+        case rtc::Type::kPcF8563:
             type = "PCF8563";
             break;
-        case rtc::Type::SOC_INTERNAL:
+        case rtc::Type::kSocInternal:
             type = "SOC_INTERNAL";
             break;
         default:

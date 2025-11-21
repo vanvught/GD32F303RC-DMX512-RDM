@@ -57,20 +57,7 @@ struct Offset
 /**
  * @brief List of valid fractional UTC offsets.
  */
-constexpr Offset kValidOffsets[] = 
-{
-	{-9, 30}, 
-	{-3, 30}, 
-	{3, 30}, 
-	{4, 30}, 
-	{5, 30}, 
-	{5, 45}, 
-	{6, 30}, 
-	{8, 45}, 
-	{9, 30}, 
-	{10, 30}, 
-	{12, 45}
-	};
+constexpr Offset kValidOffsets[] = {{-9, 30}, {-3, 30}, {3, 30}, {4, 30}, {5, 30}, {5, 45}, {6, 30}, {8, 45}, {9, 30}, {10, 30}, {12, 45}};
 
 /**
  * @brief Validates (hours, minutes) and converts to UTC offset in seconds.

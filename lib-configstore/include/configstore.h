@@ -32,7 +32,6 @@
 #include "configurationstore.h"
 #include "global.h"
 #include "softwaretimers.h"
-
 #include "debug.h"
 
 class ConfigStore : StoreDevice
@@ -545,7 +544,7 @@ class ConfigStore : StoreDevice
         DEBUG_ENTRY
        	DEBUG_PRINTF("s_timer_id=%d", s_timer_id);
 
-        if (s_timer_id != TIMER_ID_NONE)
+        if (s_timer_id != kTimerIdNone)
         {
 			DEBUG_EXIT
             return;
@@ -562,7 +561,7 @@ class ConfigStore : StoreDevice
         DEBUG_ENTRY
 		DEBUG_PRINTF("s_timer_id=%d", s_timer_id);
 
-        if (s_timer_id == TIMER_ID_NONE)
+        if (s_timer_id == kTimerIdNone)
         {
             return;
             DEBUG_EXIT
@@ -675,7 +674,7 @@ class ConfigStore : StoreDevice
     static inline uint32_t s_start_address{0};
     static inline bool s_have_device{false};
     static inline State s_state{State::kIdle};
-    static inline TimerHandle_t s_timer_id = TIMER_ID_NONE;
+    static inline TimerHandle_t s_timer_id = kTimerIdNone;
     static inline ConfigStore* s_this;
 };
 

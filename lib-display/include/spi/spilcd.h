@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file spilcd.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SPI_SPILCD_H_
+#define SPI_SPILCD_H_
 
 #include "spi/config.h"
 #include "hal_spi.h"
@@ -145,3 +147,5 @@ class SpiLcd
    private:
     uint32_t cs_;
 };
+
+#endif  // SPI_SPILCD_H_

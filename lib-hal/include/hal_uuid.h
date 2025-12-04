@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_uuid.h
  *
@@ -24,9 +23,14 @@
  * THE SOFTWARE.
  */
 
+#ifndef HAL_UUID_H_
+#define HAL_UUID_H_
+
 #include <uuid/uuid.h>
 
 namespace hal
 {
 void UuidCopy(uuid_t out);
 } // namespace hal
+
+#endif  // HAL_UUID_H_

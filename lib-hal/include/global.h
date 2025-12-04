@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file global.h
  * @brief Defines the Global class for managing UTC offset configuration and validation.
@@ -9,6 +8,9 @@
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
  */
+
+#ifndef GLOBAL_H_
+#define GLOBAL_H_
 
 #include <cstdint>
 
@@ -95,3 +97,5 @@ class Global
     Global(Global&&) = delete;
     Global& operator=(Global&&) = delete;
 };
+
+#endif  // GLOBAL_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_gpio.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef HAL_GPIO_H_
+#define HAL_GPIO_H_
 
 #if defined(__linux__) || defined(__APPLE__)
 #include "linux/hal_gpio.h"
@@ -62,3 +64,5 @@
 #define GPIO_FSEL_INPUT BCM2835_GPIO_FSEL_INPT
 #define GPIO_FSEL_OUTPUT BCM2835_GPIO_FSEL_OUTP
 #endif
+
+#endif  // HAL_GPIO_H_

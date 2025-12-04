@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_panelled.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef GD32_HAL_PANELLED_H_
+#define GD32_HAL_PANELLED_H_
 
 #include <cstdint>
 
@@ -123,3 +125,5 @@ inline void Run()
 #endif
 }
 } // namespace hal::panelled
+
+#endif  // GD32_HAL_PANELLED_H_

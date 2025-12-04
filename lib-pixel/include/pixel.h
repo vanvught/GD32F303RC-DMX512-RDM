@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file pixel.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef PIXEL_H_
+#define PIXEL_H_
 
 #pragma GCC push_options
 #pragma GCC optimize("O3")
@@ -154,3 +156,5 @@ inline void Update()
 } // namespace pixel
 
 #pragma GCC pop_options
+
+#endif  // PIXEL_H_

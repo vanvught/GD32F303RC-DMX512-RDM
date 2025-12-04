@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_watchdog.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef HAL_WATCHDOG_H_
+#define HAL_WATCHDOG_H_
+
 #if defined(__linux__) || defined(__APPLE__)
 #include "linux/hal_watchdog.h"
 #elif defined(H3)
@@ -33,3 +35,5 @@
 #else
 #include "rpi/hal_watchdog.h"
 #endif
+
+#endif  // HAL_WATCHDOG_H_

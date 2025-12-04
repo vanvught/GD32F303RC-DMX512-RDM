@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file st7735s.h
  *
@@ -32,6 +31,9 @@
  * Version 1.1
  * 2011/11
  */
+
+#ifndef SPI_ST7735S_H_
+#define SPI_ST7735S_H_
 
 #include <cstdint>
 #include <cassert>
@@ -172,3 +174,5 @@ class ST7735S : public ST77XX
    private:
     static inline uint32_t s_instance;
 };
+
+#endif  // SPI_ST7735S_H_

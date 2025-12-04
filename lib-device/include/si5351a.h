@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file si5351a.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef SI5351A_H_
+#define SI5351A_H_
+
 #include <cstdint>
 
 #include "hal_i2c.h"
@@ -44,3 +46,5 @@ class SI5351A : HAL_I2C
    private:
     bool is_connected_ = false;
 };
+
+#endif  // SI5351A_H_

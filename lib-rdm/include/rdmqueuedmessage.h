@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmqueuedmessage.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMQUEUEDMESSAGE_H_
+#define RDMQUEUEDMESSAGE_H_
 
 #include <cstdint>
 
@@ -57,3 +59,5 @@ class RDMQueuedMessage
 
     struct TRdmQueuedMessage* queued_message_;
 };
+
+#endif  // RDMQUEUEDMESSAGE_H_

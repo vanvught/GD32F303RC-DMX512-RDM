@@ -1,4 +1,6 @@
-#pragma once
+#ifndef COMMON_UTILS_UTILS_HEX_H_
+#define COMMON_UTILS_UTILS_HEX_H_
+
 /**
  * @file utils_hex.h
  *
@@ -111,3 +113,5 @@ template <size_t N> constexpr uint32_t FromHex(const char (&string)[N])
 }
 
 } // namespace common::hex
+
+#endif  // COMMON_UTILS_UTILS_HEX_H_

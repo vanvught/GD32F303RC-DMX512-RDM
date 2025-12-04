@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsensors.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMSENSORS_H_
+#define RDMSENSORS_H_
 
 #include <cstdint>
 #include <cassert>
@@ -168,3 +170,5 @@ class RDMSensors
 
     inline static RDMSensors* s_this;
 };
+
+#endif  // RDMSENSORS_H_

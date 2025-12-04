@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file widgetparams.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef WIDGETPARAMS_H_
+#define WIDGETPARAMS_H_
 
 #include <cstdint>
 
@@ -53,3 +55,5 @@ class WidgetParams
    private:
     common::store::Widget store_widget_;
 };
+
+#endif  // WIDGETPARAMS_H_

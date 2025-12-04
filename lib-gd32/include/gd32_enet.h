@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file gd32_enet.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef GD32_ENET_H_
+#define GD32_ENET_H_
 
 #include "gd32.h"
 
@@ -309,3 +311,5 @@ inline void Gd32EnetFilterSetHash(uint32_t hash)
     }
 }
 #endif
+
+#endif  // GD32_ENET_H_

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SPI_LCD_FONT_H_
+#define SPI_LCD_FONT_H_
+
 /*!
     \file  lcd_font.h
     \brief the header file of LCD font
@@ -52,3 +54,5 @@ extern sFONT Font8x12;
 extern sFONT Font8x8;
 
 #define LINE(x) ((x) * (((sFONT*)lcd_font_get())->kHeight))
+
+#endif  // SPI_LCD_FONT_H_

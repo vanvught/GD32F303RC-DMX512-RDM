@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file configstore.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef CONFIGSTORE_H_
+#define CONFIGSTORE_H_
 
 #include <cstdint>
 #include <cstring>
@@ -684,3 +686,5 @@ inline void ConfigstoreCommit()
     {
     }
 }
+
+#endif  // CONFIGSTORE_H_

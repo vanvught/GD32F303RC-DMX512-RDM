@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdm_subdevices.h _subdevices.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDM_SUBDEVICES_H_
+#define RDM_SUBDEVICES_H_
 
 #include <cstdint>
 #include <cstring>
@@ -83,3 +85,5 @@ inline Types GetTypeString(const char* string)
 }
 
 } // namespace rdm::subdevices
+
+#endif  // RDM_SUBDEVICES_H_

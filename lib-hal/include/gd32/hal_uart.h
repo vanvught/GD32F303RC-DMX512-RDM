@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_uart.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef GD32_HAL_UART_H_
+#define GD32_HAL_UART_H_
+
 #include "gd32_uart.h"
 
 namespace hal::uart
@@ -38,3 +40,5 @@ inline constexpr auto PARITY_EVEN = gd32::kUartParityEven;
 inline constexpr auto STOP_1BIT = gd32::kUartStop1Bit;
 inline constexpr auto STOP_2BITS = gd32::kUartStop2Bits;
 } // namespace hal::uart
+
+#endif  // GD32_HAL_UART_H_

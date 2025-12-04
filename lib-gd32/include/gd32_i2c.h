@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file gd32_i2c.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef GD32_I2C_H_
+#define GD32_I2C_H_
 
 #include <cstdint>
 
@@ -67,3 +69,5 @@ void Gd32I2c1WriteReg(uint8_t reg, uint8_t value);
 void Gd32I2c1WriteReg(uint8_t address, uint8_t reg, uint8_t value);
 void Gd32I2c1ReadReg(uint8_t reg, uint8_t& value);
 #endif
+
+#endif  // GD32_I2C_H_

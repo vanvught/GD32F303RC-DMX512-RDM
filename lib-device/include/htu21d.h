@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file htu21d.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef HTU21D_H_
+#define HTU21D_H_
 
 #include <cstdint>
 
@@ -64,3 +66,5 @@ class HTU21D : HAL_I2C
 };
 
 } // namespace sensor
+
+#endif  // HTU21D_H_

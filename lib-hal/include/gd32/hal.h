@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef GD32_HAL_H_
+#define GD32_HAL_H_
 
 #include <cstdint>
 
@@ -103,3 +105,5 @@ inline void Run()
 #endif
 }
 } // namespace hal
+
+#endif  // GD32_HAL_H_

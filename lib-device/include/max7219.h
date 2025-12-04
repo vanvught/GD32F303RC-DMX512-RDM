@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file max7219.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef MAX7219_H_
+#define MAX7219_H_
 
 #include <cstdint>
 
@@ -87,3 +89,5 @@ class MAX7219 : public HAL_SPI
         Write(kSpiData, spi_setup);
     }
 };
+
+#endif  // MAX7219_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file bwspi7fets.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef BWSPI7FETS_H_
+#define BWSPI7FETS_H_
 
 #include <cstdint>
 
@@ -57,3 +59,5 @@ class BwSpi7fets : BwSpi
 
     bool IsConnected() { return m_IsConnected; }
 };
+
+#endif  // BWSPI7FETS_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file softwaretimers.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SOFTWARETIMERS_H_
+#define SOFTWARETIMERS_H_
 
 #include <cstdint>
 
@@ -70,3 +72,5 @@ inline bool SoftwareTimerChange(const TimerHandle_t nId, const uint32_t nInterva
 #include "superloop/softwaretimers.h"
 static constexpr TimerHandle_t kTimerIdNone = -1;
 #endif
+
+#endif  // SOFTWARETIMERS_H_

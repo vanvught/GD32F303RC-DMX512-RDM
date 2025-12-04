@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file widget.h
  *
@@ -27,6 +26,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef WIDGET_H_
+#define WIDGET_H_
 
 #include <cstdint>
 
@@ -164,3 +166,5 @@ class Widget : public Dmx, public RDMDevice
 
     inline static Widget* s_this;
 };
+
+#endif  // WIDGET_H_

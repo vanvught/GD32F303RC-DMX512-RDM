@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file displayset.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef DISPLAYSET_H_
+#define DISPLAYSET_H_
 
 #include <cstdint>
 
@@ -69,3 +71,5 @@ class DisplaySet
     uint32_t rows_;
     bool clear_end_of_line_{false};
 };
+
+#endif  // DISPLAYSET_H_

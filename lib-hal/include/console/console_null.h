@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file console_null.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef CONSOLE_CONSOLE_NULL_H_
+#define CONSOLE_CONSOLE_NULL_H_
 
 #if !defined(CONSOLE_NULL)
 #error File should not be included
@@ -50,3 +52,5 @@ inline void Write([[maybe_unused]] const char* p, [[maybe_unused]] unsigned int 
 inline void Status([[maybe_unused]] Colours c, [[maybe_unused]] const char* p) {}
 inline void Error([[maybe_unused]] const char* p) {}
 } // namespace console
+
+#endif  // CONSOLE_CONSOLE_NULL_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file readconfigfile.h
  */
@@ -23,6 +22,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef PARAMS_READCONFIGFILE_H_
+#define PARAMS_READCONFIGFILE_H_
+
 typedef void (*CallbackFunctionPtr)(void*, const char*);
 
 class ReadConfigFile
@@ -40,3 +42,5 @@ class ReadConfigFile
     CallbackFunctionPtr callback_;
     void* m_p;
 };
+
+#endif  // PARAMS_READCONFIGFILE_H_

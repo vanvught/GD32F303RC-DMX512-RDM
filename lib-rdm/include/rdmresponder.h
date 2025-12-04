@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmresponder.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMRESPONDER_H_
+#define RDMRESPONDER_H_
 
 #include <cstdint>
 #include <cassert>
@@ -197,3 +199,5 @@ class RDMResponder final : DMXReceiver, public RDMDeviceResponder, RDMHandler
 
     static inline RDMResponder* s_this;
 };
+
+#endif  // RDMRESPONDER_H_

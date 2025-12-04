@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file bwspilcd.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef BWSPILCD_H_
+#define BWSPILCD_H_
 
 #include <cstdint>
 
@@ -112,3 +114,5 @@ class BwSpiLcd : BwSpi
    private:
     uint32_t m_nSpiWriteUs = hal::Micros();
 };
+
+#endif  // BWSPILCD_H_

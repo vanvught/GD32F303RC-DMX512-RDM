@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file pixeldmxparamsrdm.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef PIXELDMXPARAMSRDM_H_
+#define PIXELDMXPARAMSRDM_H_
 
 #include <cstdint>
 #include <cstdio>
@@ -88,3 +90,5 @@ class PixelDmxParamsRdm final : public DmxNodeOutputRdmPixel
    private:
     uint8_t data_{0};
 };
+
+#endif  // PIXELDMXPARAMSRDM_H_

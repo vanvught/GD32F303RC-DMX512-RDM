@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmdevicecontroller.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMDEVICECONTROLLER_H_
+#define RDMDEVICECONTROLLER_H_
 
 #include <algorithm>
 #include <cstring>
@@ -71,3 +73,5 @@ class RDMDeviceController
     static_assert(DEVICE_SN_LENGTH == hal::kSnSize);
     uint8_t serial_number_[DEVICE_SN_LENGTH];
 };
+
+#endif  // RDMDEVICECONTROLLER_H_

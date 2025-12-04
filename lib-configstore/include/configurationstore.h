@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file configurationstore.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef CONFIGURATIONSTORE_H_
+#define CONFIGURATIONSTORE_H_
 
 #include <cstdint>
 #include <cstddef>
@@ -848,3 +850,5 @@ static_assert(offsetof(ConfigurationStore, global) == 16, "Wrong offset: global"
 #pragma pack()
 #undef PACKED
 #endif
+
+#endif  // CONFIGURATIONSTORE_H_

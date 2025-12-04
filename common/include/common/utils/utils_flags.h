@@ -1,4 +1,6 @@
-#pragma once
+#ifndef COMMON_UTILS_UTILS_FLAGS_H_
+#define COMMON_UTILS_UTILS_FLAGS_H_
+
 /**
  * @file utils_flags.h
  * Generic enum class bitmask helpers (C++20, freestanding-safe, Google Style)
@@ -104,3 +106,5 @@ constexpr bool IsFlagSet(uint32_t flags, E bit) {
 }
 
 } // namespace common
+
+#endif  // COMMON_UTILS_UTILS_FLAGS_H_

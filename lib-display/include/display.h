@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file display.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef DISPLAY_H_
+#define DISPLAY_H_
+
 #include <cstdint>
 
 namespace display
@@ -48,3 +50,5 @@ struct Defaults
 #define EXPAND(x) x
 #include STR(EXPAND(DISPLAY_USE_CUSTOM_INCLUDE)/custom/display.h)
 #endif
+
+#endif  // DISPLAY_H_

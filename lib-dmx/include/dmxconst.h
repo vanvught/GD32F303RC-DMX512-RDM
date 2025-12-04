@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmxconst.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef DMXCONST_H_
+#define DMXCONST_H_
 
 #include <cstdint>
 
@@ -61,3 +63,5 @@ inline constexpr uint32_t kPeriodDefault = (1000000U / kRefreshRateDefault); ///
 inline constexpr uint32_t kBreakToBreakTimeMin = 1204;                     ///< us
 } // namespace transmit
 } // namespace dmx
+
+#endif  // DMXCONST_H_

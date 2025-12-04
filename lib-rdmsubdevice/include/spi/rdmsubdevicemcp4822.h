@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsubdevicemcp4822.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SPI_RDMSUBDEVICEMCP4822_H_
+#define SPI_RDMSUBDEVICEMCP4822_H_
 
 #include <cstdint>
 
@@ -56,3 +58,5 @@ class RDMSubDeviceMCP4822 : public RDMSubDevice
     uint16_t m_nDataA = 0;
     uint16_t m_nDataB = 0;
 };
+
+#endif  // SPI_RDMSUBDEVICEMCP4822_H_

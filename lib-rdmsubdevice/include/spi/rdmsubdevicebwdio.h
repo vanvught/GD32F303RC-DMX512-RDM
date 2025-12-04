@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsubdevicebwdio.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SPI_RDMSUBDEVICEBWDIO_H_
+#define SPI_RDMSUBDEVICEBWDIO_H_
 
 #include <cstdint>
 
@@ -64,3 +66,5 @@ class RDMSubDeviceBwDio : public RDMSubDevice
     BwSpiDio m_BwSpiDio;
     uint8_t m_nData = 0;
 };
+
+#endif  // SPI_RDMSUBDEVICEBWDIO_H_

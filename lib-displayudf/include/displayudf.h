@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file displayudf.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef DISPLAYUDF_H_
+#define DISPLAYUDF_H_
 
 #include <cstdint>
 #include <cstdarg>
@@ -246,3 +248,5 @@ class DisplayUdf final : public Display
 
     inline static DisplayUdf* s_this;
 };
+
+#endif  // DISPLAYUDF_H_

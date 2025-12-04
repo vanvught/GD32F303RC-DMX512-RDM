@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdm_message_print.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef RDM_MESSAGE_PRINT_H_
+#define RDM_MESSAGE_PRINT_H_
+
 #include <cstdint>
 
 namespace rdm
@@ -31,3 +33,5 @@ namespace rdm
 void MessagePrint(const uint8_t* rdm_data);
 void MessagePrintNoStartcode(const uint8_t* rdm_data_no_sc);
 } // namespace rdm
+
+#endif  // RDM_MESSAGE_PRINT_H_

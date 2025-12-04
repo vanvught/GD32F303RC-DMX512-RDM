@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file mcp23x17.h
  *
@@ -21,6 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef MCP23X17_H_
+#define MCP23X17_H_
 
 #include <cstdint>
 
@@ -71,3 +73,5 @@ static constexpr uint32_t SPI_SPEED_DEFAULT_HZ = 2000000; ///< 2 MHz
 static constexpr uint8_t SPI_CMD_WRITE = 0x40;
 static constexpr uint8_t SPI_CMD_READ = 0x41;
 } // namespace mcp23x17
+
+#endif  // MCP23X17_H_

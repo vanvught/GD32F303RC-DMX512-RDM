@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file bh1750.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef BH1750_H_
+#define BH1750_H_
 
 #include <cstdint>
 
@@ -51,3 +53,5 @@ class BH170 : HAL_I2C
 };
 
 } // namespace sensor
+
+#endif  // BH1750_H_

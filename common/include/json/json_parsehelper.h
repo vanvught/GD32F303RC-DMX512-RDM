@@ -1,4 +1,6 @@
-#pragma once
+#ifndef JSON_JSON_PARSEHELPER_H_
+#define JSON_JSON_PARSEHELPER_H_
+
 /**
  * @file json_parsehelper.h
  *
@@ -25,10 +27,7 @@
  */
 
 #include <cstdint>
-#include <cstring>
 #include <type_traits>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 
 namespace json
 {
@@ -130,21 +129,6 @@ template <typename T, typename F> void ParseAndApply(const char* val, uint32_t l
 {
     apply(ParseValue<T>(val, len));
 }
-
-inline uint32_t ParseIpString(const char* val, uint32_t len)
-{
-    char tmp[16]{}; // "255.255.255.255" => 16 bytes
-    if (len >= sizeof(tmp)) len = sizeof(tmp) - 1;
-    memcpy(tmp, val, len);
-    tmp[len] = '\0';
-
-    struct in_addr addr;
-
-    if (inet_aton(tmp, &addr) != 0)
-    {
-        return addr.s_addr;
-    }
-
-    return 0;
-}
 } // namespace json
+
+#endif  // JSON_JSON_PARSEHELPER_H_

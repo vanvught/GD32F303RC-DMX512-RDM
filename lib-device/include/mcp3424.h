@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file mcp3424.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef MCP3424_H_
+#define MCP3424_H_
 
 #include <cstdint>
 
@@ -77,3 +79,5 @@ class MCP3424 : HAL_I2C
     uint8_t m_nConfig;
     double m_lsb;
 };
+
+#endif  // MCP3424_H_

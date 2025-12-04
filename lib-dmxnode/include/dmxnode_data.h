@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmxnode_data.h
  */
@@ -23,6 +22,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef DMXNODE_DATA_H_
+#define DMXNODE_DATA_H_
+
 #include <cstdint>
 #include <cassert>
 
@@ -43,3 +45,5 @@ inline void DataOutput(DmxNodeOutputType* const kDmxNodeOutputType, uint32_t por
     kDmxNodeOutputType->SetData<true>(port_index, dmxnode::Data::Backup(port_index), dmxnode::Data::GetLength(port_index));
 }
 } // namespace dmxnode
+
+#endif  // DMXNODE_DATA_H_

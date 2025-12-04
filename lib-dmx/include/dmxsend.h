@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmxsend.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef DMXSEND_H_
+#define DMXSEND_H_
 
 #include <cstdint>
 #include <climits>
@@ -178,3 +180,5 @@ class DmxSend
 #endif
     uint8_t started_{0};
 };
+
+#endif  // DMXSEND_H_

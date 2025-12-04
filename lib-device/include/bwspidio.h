@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file bwspidio.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef BWSPIDIO_H_
+#define BWSPIDIO_H_
 
 #include <cstdint>
 
@@ -57,3 +59,5 @@ class BwSpiDio : BwSpi
 
     bool IsConnected() { return m_IsConnected; }
 };
+
+#endif  // BWSPIDIO_H_

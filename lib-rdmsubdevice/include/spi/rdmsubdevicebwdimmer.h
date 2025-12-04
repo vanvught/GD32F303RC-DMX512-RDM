@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsubdevicebwdimmer.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SPI_RDMSUBDEVICEBWDIMMER_H_
+#define SPI_RDMSUBDEVICEBWDIMMER_H_
 
 #include <cstdint>
 
@@ -63,3 +65,5 @@ class RDMSubDeviceBwDimmer : public RDMSubDevice
     BwSpiDimmer m_BwSpiDimmer;
     uint8_t m_nData = 0;
 };
+
+#endif  // SPI_RDMSUBDEVICEBWDIMMER_H_

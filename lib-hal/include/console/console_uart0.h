@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file console_uart0.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef CONSOLE_CONSOLE_UART0_H_
+#define CONSOLE_CONSOLE_UART0_H_
 
 #if defined(CONSOLE_FB) || defined(CONSOLE_NULL) || defined(CONSOLE_I2C)
 #error File should not be included
@@ -79,3 +81,5 @@ void SetBgColour(uint32_t);
 void Error(const char*);
 
 } // namespace console
+
+#endif  // CONSOLE_CONSOLE_UART0_H_

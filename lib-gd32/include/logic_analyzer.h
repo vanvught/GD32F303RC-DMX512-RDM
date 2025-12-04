@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file logic_analyzer.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef LOGIC_ANALYZER_H_
+#define LOGIC_ANALYZER_H_
 
 #include "board/logic_analyzer.h"
 #include "gd32.h"
@@ -234,3 +236,5 @@ inline void ch7_set()
 #endif
 }
 } // namespace logic_analyzer
+
+#endif  // LOGIC_ANALYZER_H_

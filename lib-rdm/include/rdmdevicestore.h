@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmdevicestore.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef RDMDEVICESTORE_H_
+#define RDMDEVICESTORE_H_
+
 #include <cstdint>
 
 #include "configstore.h"
@@ -40,3 +42,5 @@ inline void SaveLabel(const char* label, uint32_t length)
     ConfigStore::Instance().RdmDeviceUpdate(&common::store::RdmDevice::device_root_label_length, static_cast<uint8_t>(length));
 }
 } // namespace rdm_device_store
+
+#endif  // RDMDEVICESTORE_H_

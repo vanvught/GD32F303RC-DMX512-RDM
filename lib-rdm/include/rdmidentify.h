@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmidentify.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMIDENTIFY_H_
+#define RDMIDENTIFY_H_
 
 #include <cstdint>
 #include <cassert>
@@ -106,3 +108,5 @@ class RDMIdentify
     static inline Mode s_mode;
     static inline RDMIdentify* s_this;
 };
+
+#endif  // RDMIDENTIFY_H_

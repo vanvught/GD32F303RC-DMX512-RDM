@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmxconfigudp.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef DMXCONFIGUDP_H_
+#define DMXCONFIGUDP_H_
 
 #include <cstdint>
 #include <cstring>
@@ -266,3 +268,5 @@ class DmxConfigUdp
     int32_t handle_{-1};                ///< UDP handle for the network interface.
     static inline DmxConfigUdp* s_this; ///< Static instance pointer for the callback function.
 };
+
+#endif  // DMXCONFIGUDP_H_

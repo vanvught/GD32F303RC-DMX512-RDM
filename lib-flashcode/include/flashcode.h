@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file flashcode.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef FLASHCODE_H_
+#define FLASHCODE_H_
 
 #include <cstdint>
 
@@ -57,3 +59,5 @@ class FlashCode
     bool detected_{false};
     inline static FlashCode* s_this;
 };
+
+#endif  // FLASHCODE_H_

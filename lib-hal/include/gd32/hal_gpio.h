@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_gpio.h
  *
@@ -24,5 +23,10 @@
  * THE SOFTWARE.
  */
 
+#ifndef GD32_HAL_GPIO_H_
+#define GD32_HAL_GPIO_H_
+
 #include "gd32_gpio.h"
 #include "gd32_board.h"
+
+#endif  // GD32_HAL_GPIO_H_

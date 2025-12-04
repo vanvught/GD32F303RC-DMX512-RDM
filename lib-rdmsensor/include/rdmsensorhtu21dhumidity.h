@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsensorhtu21dhumidity.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMSENSORHTU21DHUMIDITY_H_
+#define RDMSENSORHTU21DHUMIDITY_H_
 
 #include <cstdint>
 
@@ -49,3 +51,5 @@ class RDMSensorHTU21DHumidity : public RDMSensor, sensor::HTU21D
 
     int16_t GetValue() override { return static_cast<int16_t>(sensor::HTU21D::GetHumidity()); }
 };
+
+#endif  // RDMSENSORHTU21DHUMIDITY_H_

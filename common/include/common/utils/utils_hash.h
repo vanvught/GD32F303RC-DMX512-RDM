@@ -1,6 +1,8 @@
-#pragma once
+#ifndef COMMON_UTILS_UTILS_HASH_H_
+#define COMMON_UTILS_UTILS_HASH_H_
+
 /**
- * @file format_helpers.h
+ * @file hash.h
  *
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
@@ -24,41 +26,30 @@
  * THE SOFTWARE.
  */
 
-#include <cstdio>
 #include <cstdint>
 
-#include "net/ip4_address.h"
-
-namespace format
+// Compile-time FNV-1a 32-bit hash
+consteval uint32_t Fnv1a32(const char* str, uint8_t length)
 {
-
-constexpr size_t kIpBufferSize = 18;     // For "255.255.255.255" + null
-constexpr size_t kFloatBufferSize = 8;   // For "%.2f", "%.1f"
-constexpr size_t kOffsetBufferSize = 12; // For timezone offsets e.g. "+01:00"
-
-[[nodiscard]] inline const char* FormatIp(uint32_t ip, char (&buf)[kIpBufferSize])
-{
-    snprintf(buf, sizeof(buf) - 1, IPSTR, IP2STR(ip));
-    return buf;
-}
-
-[[nodiscard]] inline const char* FormatFloat(float value, char (&buf)[kFloatBufferSize], const char* fmt = "%.2f")
-{
-    snprintf(buf, sizeof(buf) - 1, fmt, value);
-    return buf;
-}
-
-[[nodiscard]] inline const char* FormatUtcOffset(int32_t hours, uint32_t minutes, char (&buf)[kOffsetBufferSize])
-{
-    if (hours == 0)
+    uint32_t hash = 0x811c9dc5u;
+    for (uint8_t i = 0; i < length; ++i)
     {
-        snprintf(buf, sizeof(buf) - 1, "%.2d:%.2u", hours, minutes);
+        hash ^= static_cast<uint8_t>(str[i]);
+        hash *= 0x01000193u;
     }
-    else
-    {
-        snprintf(buf, sizeof(buf) - 1, "%c%.2d:%.2u", hours < 0 ? '-' : '+', hours, minutes);
-    }
-    return buf;
+    return hash;
 }
 
-} // namespace format
+// Runtime version for raw filenames
+inline uint32_t Fnv1a32Runtime(const char* str, uint32_t length)
+{
+    uint32_t hash = 0x811c9dc5u;
+    for (uint32_t i = 0; i < length; ++i)
+    {
+        hash ^= static_cast<uint8_t>(str[i]);
+        hash *= 0x01000193u;
+    }
+    return hash;
+}
+
+#endif  // COMMON_UTILS_UTILS_HASH_H_

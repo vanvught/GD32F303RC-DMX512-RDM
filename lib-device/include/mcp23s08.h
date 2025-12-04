@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file mcp23s08.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef MCP23S08_H_
+#define MCP23S08_H_
 
 #include <cstdint>
 
@@ -89,3 +91,5 @@ class MCP23S08 : HAL_SPI
 };
 
 } // namespace gpio
+
+#endif  // MCP23S08_H_

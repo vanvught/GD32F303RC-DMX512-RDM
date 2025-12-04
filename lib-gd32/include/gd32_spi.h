@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file gd32_spi.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef GD32_SPI_H_
+#define GD32_SPI_H_
 
 #include <gd32.h>
 
@@ -92,3 +94,5 @@ inline void __attribute__((cold)) Gd32BitbangSpiSetDataMode([[maybe_unused]] uin
 void Gd32BitbangSpiWritenb(const char* tx_buffer, uint32_t length);
 void Gd32BitbangSpiWrite(uint16_t data);
 void Gd32BitbangSpiTransfernb(const char* tx_buffer, char* rx_buffer, uint32_t length);
+
+#endif  // GD32_SPI_H_

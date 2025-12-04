@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hwclock.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef HWCLOCK_H_
+#define HWCLOCK_H_
 
 #include <cstdint>
 #include <time.h>
@@ -96,3 +98,5 @@ class HwClock
 
     static inline HwClock* s_this;
 };
+
+#endif  // HWCLOCK_H_

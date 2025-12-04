@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsensorthermistor.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMSENSORTHERMISTOR_H_
+#define RDMSENSORTHERMISTOR_H_
 
 #include <cstdint>
 
@@ -141,3 +143,5 @@ class RDMSensorThermistor final : public RDMSensor, MCP3424
         return static_cast<uint32_t>(kR);
     }
 };
+
+#endif  // RDMSENSORTHERMISTOR_H_

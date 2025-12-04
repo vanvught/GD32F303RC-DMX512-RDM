@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_statusled.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef HAL_STATUSLED_H_
+#define HAL_STATUSLED_H_
 
 #include <cstdint>
 
@@ -51,3 +53,5 @@ inline Mode GetMode()
 void SetFrequency(uint32_t frequency_hz);
 void Event(Mode mode);
 }  // namespace hal::statusled
+
+#endif  // HAL_STATUSLED_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file display.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SPI_DISPLAY_H_
+#define SPI_DISPLAY_H_
 
 #if !defined(CONFIG_DISPLAY_USE_SPI)
 #error
@@ -353,3 +355,5 @@ class Display : public LcdDriver
 #pragma GCC pop_options
 #endif
 #endif
+
+#endif  // SPI_DISPLAY_H_

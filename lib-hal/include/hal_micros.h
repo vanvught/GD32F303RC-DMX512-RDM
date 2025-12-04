@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_micros.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef HAL_MICROS_H_
+#define HAL_MICROS_H_
+
 #if defined(__linux__) || defined(__APPLE__)
 #include "linux/micros.h"
 #elif defined(H3)
@@ -33,3 +35,5 @@
 #else
 #include "rpi/hal_micros.h"
 #endif
+
+#endif  // HAL_MICROS_H_

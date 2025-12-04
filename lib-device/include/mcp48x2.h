@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file mcp48x2.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef MCP48X2_H_
+#define MCP48X2_H_
 
 #include <cstdint>
 
@@ -103,3 +105,5 @@ class MCP4822 : HAL_SPI
 };
 
 } // namespace dac
+
+#endif  // MCP48X2_H_

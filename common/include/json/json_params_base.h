@@ -1,4 +1,6 @@
-#pragma once
+#ifndef JSON_JSON_PARAMS_BASE_H_
+#define JSON_JSON_PARAMS_BASE_H_
+
 /**
  * @file json_params_base.h
  *
@@ -70,3 +72,5 @@ template <typename Derived> class JsonParamsBase
 };
 
 } // namespace json
+
+#endif  // JSON_JSON_PARAMS_BASE_H_

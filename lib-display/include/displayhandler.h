@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file displayhandler.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef DISPLAYHANDLER_H_
+#define DISPLAYHANDLER_H_
 
 #include "display.h"
 #include "hal_statusled.h"
@@ -64,3 +66,5 @@ void DisplayStatusled(hal::statusled::Mode status_led_mode)
     }
 }
 } // namespace hal
+
+#endif  // DISPLAYHANDLER_H_

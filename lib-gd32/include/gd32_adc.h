@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file gd32_adc.h
  *
@@ -24,8 +23,13 @@
  * THE SOFTWARE.
  */
 
+#ifndef GD32_ADC_H_
+#define GD32_ADC_H_
+
 float G32AdcGetTemp();
 float Gd32AdcGetVref();
 #if defined(GD32F4XX)
 float Gd32AdcGetVbat();
 #endif
+
+#endif  // GD32_ADC_H_

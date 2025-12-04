@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file pixelpatterns.h
  */
@@ -25,6 +24,9 @@
 /**
  * Based on https://learn.adafruit.com/multi-tasking-the-arduino-part-3?view=all
  */
+
+#ifndef PIXELPATTERNS_H_
+#define PIXELPATTERNS_H_
 
 #include <cstdint>
 #include <algorithm>
@@ -356,3 +358,5 @@ class PixelPatterns
 
     static inline PortConfig s_port_config[pixelpatterns::kMaxPorts];
 };
+
+#endif  // PIXELPATTERNS_H_

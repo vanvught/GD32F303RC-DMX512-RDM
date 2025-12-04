@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmxnodedata.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef DMXNODEDATA_H_
+#define DMXNODEDATA_H_
 
 #include <cstdint>
 #include <cstring>
@@ -181,3 +183,5 @@ class Data
     OutputPort output_port_[kPorts];
 };
 } // namespace dmxnode
+
+#endif  // DMXNODEDATA_H_

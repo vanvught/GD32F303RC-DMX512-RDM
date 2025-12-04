@@ -1,4 +1,6 @@
-#pragma once
+#ifndef COMMON_UTILS_UTILS_ENUM_H_
+#define COMMON_UTILS_UTILS_ENUM_H_
+
 /**
  * @file utils_enum.h
  *
@@ -42,3 +44,5 @@ inline Enum FromValue(std::underlying_type_t<Enum> value) noexcept {
 }
 
 } // namespace common
+
+#endif  // COMMON_UTILS_UTILS_ENUM_H_

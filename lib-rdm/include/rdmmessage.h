@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmmessage.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMMESSAGE_H_
+#define RDMMESSAGE_H_
 
 #include <cassert>
 #include <cstring>
@@ -97,3 +99,5 @@ class RDMMessage final : public Rdm
    private:
     struct TRdmMessage message_;
 };
+
+#endif  // RDMMESSAGE_H_

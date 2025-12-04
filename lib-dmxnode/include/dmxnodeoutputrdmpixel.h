@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmxnodeoutputrdmpixel.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef DMXNODEOUTPUTRDMPIXEL_H_
+#define DMXNODEOUTPUTRDMPIXEL_H_
 
 #include <cstdint>
 
@@ -56,3 +58,5 @@ class DmxNodeOutputRdmPixel
    protected:
     virtual void SetDataImpl(uint32_t port_index, const uint8_t* data, uint32_t length, bool do_update) = 0;
 };
+
+#endif  // DMXNODEOUTPUTRDMPIXEL_H_

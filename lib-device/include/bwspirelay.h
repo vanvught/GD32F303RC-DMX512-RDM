@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file bwspirelay.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef BWSPIRELAY_H_
+#define BWSPIRELAY_H_
 
 #include <cstdint>
 
@@ -57,3 +59,5 @@ class BwSpiRelay : BwSpi
 
     bool IsConnected() { return m_IsConnected; }
 };
+
+#endif  // BWSPIRELAY_H_

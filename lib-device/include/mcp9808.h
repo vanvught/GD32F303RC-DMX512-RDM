@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file mcp9808.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef MCP9808_H_
+#define MCP9808_H_
 
 #include <cstdint>
 
@@ -51,3 +53,5 @@ class MCP9808 : HAL_I2C
 };
 
 } // namespace sensor
+
+#endif  // MCP9808_H_

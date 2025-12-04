@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmxnodenode.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef DMXNODENODE_H_
+#define DMXNODENODE_H_
 
 #include "dmxnode_nodetype.h"
 #include "json/dmxnodeparams.h"
@@ -58,3 +60,5 @@ class DmxNodeNode final : public DmxNodeNodeType
 #endif
     }
 };
+
+#endif  // DMXNODENODE_H_

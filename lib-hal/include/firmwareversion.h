@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file firmwareversion.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef FIRMWAREVERSION_H_
+#define FIRMWAREVERSION_H_
 
 #include <cstdint>
 #include <cstring>
@@ -98,3 +100,5 @@ class FirmwareVersion
     static inline char s_print[64];
     static inline FirmwareVersion* s_this;
 };
+
+#endif  // FIRMWAREVERSION_H_

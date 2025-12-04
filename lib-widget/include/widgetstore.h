@@ -1,5 +1,3 @@
-
-#pragma once
 /**
  * @file widgetstore.h
  *
@@ -24,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef WIDGETSTORE_H_
+#define WIDGETSTORE_H_
 
 #include <cstdint>
 
@@ -56,3 +57,5 @@ inline void SaveRefreshRate([[maybe_unused]] uint8_t refresh_rate) {}
 #endif
 
 } // namespace widget_store
+
+#endif  // WIDGETSTORE_H_

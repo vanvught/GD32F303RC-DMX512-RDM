@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmx.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef GD32_DMX_H_
+#define GD32_DMX_H_
 
 #include <cstdint>
 
@@ -185,3 +187,5 @@ template <dmx::SendStyle dmxSendStyle> inline void Dmx::SetSendDataWithoutSC(uin
 }
 
 #undef DMX_HANDLE_SEND_CASE
+
+#endif  // GD32_DMX_H_

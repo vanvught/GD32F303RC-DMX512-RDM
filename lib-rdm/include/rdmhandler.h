@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmhandler.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMHANDLER_H_
+#define RDMHANDLER_H_
 
 #include <cstdint>
 #include <cstddef>
@@ -230,3 +232,5 @@ struct PidDefinition
 	}
 #endif
 };
+
+#endif  // RDMHANDLER_H_

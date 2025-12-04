@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file display.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef I2C_DISPLAY_H_
+#define I2C_DISPLAY_H_
 
 #if defined(CONFIG_DISPLAY_USE_SPI)
 #error
@@ -393,3 +395,5 @@ class Display
 #pragma GCC pop_options
 #endif
 #endif
+
+#endif  // I2C_DISPLAY_H_

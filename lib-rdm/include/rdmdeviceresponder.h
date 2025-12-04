@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmdeviceresponder.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMDEVICERESPONDER_H_
+#define RDMDEVICERESPONDER_H_
 
 #include <cstdint>
 #include <cstring>
@@ -462,3 +464,5 @@ class RDMDeviceResponder : public RDMDevice
 
     static inline RDMDeviceResponder* s_this;
 };
+
+#endif  // RDMDEVICERESPONDER_H_

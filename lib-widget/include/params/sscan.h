@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file sscan.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef PARAMS_SSCAN_H_
+#define PARAMS_SSCAN_H_
 
 #include <cstdint>
 #include <cctype>
@@ -94,3 +96,5 @@ class Sscan
         return Sscan::OK;
     }
 };
+
+#endif  // PARAMS_SSCAN_H_

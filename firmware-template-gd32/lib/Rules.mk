@@ -39,21 +39,12 @@ ifndef FREE_RTOS_PORTABLE
 COPS+=-Wconversion
 endif
 
-CPPOPS=-std=c++20
-CPPOPS+=-Wnon-virtual-dtor -Woverloaded-virtual -Wnull-dereference -fno-rtti -fno-exceptions -fno-unwind-tables
-CPPOPS+=-Wuseless-cast -Wold-style-cast
-CPPOPS+=-Wshadow -Wshadow=local
-CPPOPS+=-fno-threadsafe-statics
+include ../common/make/CppOps.mk
 
 BUILD=build_gd32/
 BUILD_DIRS:=$(addprefix build_gd32/,$(SRCDIR))
 
-C_OBJECTS=$(foreach sdir,$(SRCDIR),$(patsubst $(sdir)/%.c,$(BUILD)$(sdir)/%.o,$(wildcard $(sdir)/*.c)))
-CPP_OBJECTS=$(foreach sdir,$(SRCDIR),$(patsubst $(sdir)/%.cpp,$(BUILD)$(sdir)/%.o,$(wildcard $(sdir)/*.cpp)))
-ASM_OBJECTS=$(foreach sdir,$(SRCDIR),$(patsubst $(sdir)/%.S,$(BUILD)$(sdir)/%.o,$(wildcard $(sdir)/*.S)))
-
-include ../common/make/Extra.mk
-OBJECTS:=$(strip $(ASM_OBJECTS) $(C_OBJECTS) $(CPP_OBJECTS) $(EXTRA_C_OBJECTS) $(EXTRA_CPP_OBJECTS))
+include ../common/make/lib/Objects.mk
 
 CURR_DIR:=$(notdir $(patsubst %/,%,$(CURDIR)))
 LIB_NAME:=$(patsubst lib-%,%,$(CURR_DIR))

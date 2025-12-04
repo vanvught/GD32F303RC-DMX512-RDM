@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_millis.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef GD32_HAL_MILLIS_H_
+#define GD32_HAL_MILLIS_H_
+
 #include <cstdint>
 
 #if defined(CONFIG_HAL_USE_SYSTICK)
@@ -47,3 +49,5 @@ inline uint32_t Millis()
 #endif
 }
 } // namespace hal
+
+#endif  // GD32_HAL_MILLIS_H_

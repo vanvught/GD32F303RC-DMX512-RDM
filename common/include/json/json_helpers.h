@@ -1,4 +1,6 @@
-#pragma once
+#ifndef JSON_JSON_HELPERS_H_
+#define JSON_JSON_HELPERS_H_
+
 /**
  * @file json_helpers.h
  *
@@ -27,7 +29,7 @@
 #include <cstdint>
 #include <cassert>
 
-#include "json/jsondoc.h"
+#include "json/json_jsondoc.h"
 
 namespace json::helpers
 {
@@ -44,3 +46,5 @@ uint32_t Serialize(char* buffer, uint32_t length, Callback&& callback)
     return doc.Size();
 }
 } // namespace json::helpers
+
+#endif  // JSON_JSON_HELPERS_H_

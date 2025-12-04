@@ -1,4 +1,6 @@
-#pragma once
+#ifndef DMX_BOARD_GD32F303RC_H_
+#define DMX_BOARD_GD32F303RC_H_
+
 /**
  * @file board_gd32f303rc.h
  *
@@ -40,3 +42,5 @@ static constexpr auto USART2_PORT = 0;
 
 static constexpr auto DIR_PORT_0_GPIO_PORT = GPIOB;
 static constexpr auto DIR_PORT_0_GPIO_PIN = GPIO_PIN_10;
+
+#endif  // DMX_BOARD_GD32F303RC_H_

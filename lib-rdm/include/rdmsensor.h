@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsensor.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMSENSOR_H_
+#define RDMSENSOR_H_
 
 #include <cstdint>
 #include <cstdio>
@@ -204,3 +206,4 @@ class RDMSensor
     rdm::sensor::Values sensor_values_;
 };
 
+#endif  // RDMSENSOR_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsensorbh1750.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMSENSORBH1750_H_
+#define RDMSENSORBH1750_H_
 
 #include <cstdint>
 
@@ -49,3 +51,5 @@ class RDMSensorBH170 : public RDMSensor, sensor::BH170
 
     int16_t GetValue() override { return static_cast<int16_t>(sensor::BH170::Get() & 0x7FFF); }
 };
+
+#endif  // RDMSENSORBH1750_H_

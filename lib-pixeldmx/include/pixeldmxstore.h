@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file pixeldmxstore.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef PIXELDMXSTORE_H_
+#define PIXELDMXSTORE_H_
 
 #include <cstdint>
 
@@ -60,3 +62,5 @@ inline void SaveDmxStartAddress(uint16_t dmx_start_address)
     ConfigStore::Instance().DmxLedUpdate(&common::store::DmxLed::dmx_start_address, dmx_start_address);
 }
 } // namespace dmxled_store
+
+#endif  // PIXELDMXSTORE_H_

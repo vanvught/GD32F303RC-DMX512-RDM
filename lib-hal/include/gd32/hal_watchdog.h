@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_watchdog.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef GD32_HAL_WATCHDOG_H_
+#define GD32_HAL_WATCHDOG_H_
 
 #include "gd32.h"
 
@@ -58,3 +60,5 @@ inline bool Watchdog()
     return global::watchdog;
 }
 } // namespace hal
+
+#endif  // GD32_HAL_WATCHDOG_H_

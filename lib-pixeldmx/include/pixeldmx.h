@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file pixeldmx.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef PIXELDMX_H_
+#define PIXELDMX_H_
 
 #if defined(DEBUG_PIXELDMX)
 #if defined(NDEBUG)
@@ -434,3 +436,5 @@ class PixelDmx final : public PixelDmxConfiguration
 #undef _NDEBUG
 #define NDEBUG
 #endif
+
+#endif  // PIXELDMX_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file gd32_dma.h
  *

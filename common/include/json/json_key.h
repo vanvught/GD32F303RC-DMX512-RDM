@@ -1,4 +1,6 @@
-#pragma once
+#ifndef JSON_JSON_KEY_H_
+#define JSON_JSON_KEY_H_
+
 /**
  * @file json_key.h
  *
@@ -27,7 +29,7 @@
 #include <cstdint>
 #include <cstddef>
 
-#include "http/hash.h"
+#include "common/utils/utils_hash.h"
 
 namespace json
 {
@@ -96,3 +98,5 @@ constexpr Key MakeKey(void (*set)(const char*, uint32_t, const char*, uint32_t),
     };
 }
 } // namespace json
+
+#endif  // JSON_JSON_KEY_H_

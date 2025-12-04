@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmtod.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMTOD_H_
+#define RDMTOD_H_
 
 #include <cstdint>
 #include <cstring>
@@ -269,3 +271,5 @@ class RDMTod
     uint32_t mutes_[rdmtod::kMutesTableSize];
     rdmtod::Tod tod_[rdmtod::kTodTableSize];
 };
+
+#endif  // RDMTOD_H_

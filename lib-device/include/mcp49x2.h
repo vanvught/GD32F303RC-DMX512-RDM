@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file mcp49x2.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef MCP49X2_H_
+#define MCP49X2_H_
 
 #include <cstdint>
 
@@ -104,3 +106,5 @@ class MCP4902 : HAL_SPI
 };
 
 } // namespace dac
+
+#endif  // MCP49X2_H_

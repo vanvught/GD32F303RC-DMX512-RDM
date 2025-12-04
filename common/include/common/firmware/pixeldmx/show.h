@@ -1,4 +1,6 @@
-#pragma once
+#ifndef COMMON_FIRMWARE_PIXELDMX_SHOW_H_
+#define COMMON_FIRMWARE_PIXELDMX_SHOW_H_
+
 /*
  * display.h
  *
@@ -50,3 +52,5 @@ inline void Show(uint32_t line, pixelpatterns::Pattern pattern = pixelpatterns::
     }
 }
 } // namespace common::firmware::pixeldmx
+
+#endif  // COMMON_FIRMWARE_PIXELDMX_SHOW_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file ili9341.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SPI_ILI9341_H_
+#define SPI_ILI9341_H_
 
 #include <cstdint>
 #include <cassert>
@@ -243,3 +245,5 @@ class ILI9341 : public Paint
     uint32_t shift_x_{0};
     uint32_t shift_y_{0};
 };
+
+#endif  // SPI_ILI9341_H_

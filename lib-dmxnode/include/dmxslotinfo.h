@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmxslotinfo.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef DMXSLOTINFO_H_
+#define DMXSLOTINFO_H_
 
 #include <cstdint>
 #include <cstdio>
@@ -241,3 +243,5 @@ class DmxSlotInfo
     uint32_t size_;
     char* to_string_{nullptr};
 };
+
+#endif  // DMXSLOTINFO_H_

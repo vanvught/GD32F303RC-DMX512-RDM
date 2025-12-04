@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file max72197segment.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef MAX72197SEGMENT_H_
+#define MAX72197SEGMENT_H_
 
 #include "max7219.h"
 
@@ -60,3 +62,5 @@ class Max72197Segment : public MAX7219
         } while (--i > 0);
     }
 };
+
+#endif  // MAX72197SEGMENT_H_

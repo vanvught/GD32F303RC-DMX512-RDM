@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef HAL_H_
+#define HAL_H_
 
 #include <cstdint>
 
@@ -81,3 +83,5 @@ void RebootHandler();
 #include "rpi/hal.h"
 #endif
 #endif
+
+#endif  // HAL_H_

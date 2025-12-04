@@ -1,4 +1,6 @@
-#pragma once
+#ifndef JSON_JSON_TOKENIZER_H_
+#define JSON_JSON_TOKENIZER_H_
+
 /**
  * @file json_tokenizer.h
  *
@@ -75,3 +77,5 @@ struct JsonTokenizer
         return len > 0;
     }
 };
+
+#endif  // JSON_JSON_TOKENIZER_H_

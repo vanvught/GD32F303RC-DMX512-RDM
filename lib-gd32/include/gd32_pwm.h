@@ -38,6 +38,6 @@ enum class Channel {
 }  // namespace pwm
 
 void gd32_pwm_begin();
-void gd32_pwm_set_duty_cycle(const pwm::Channel channel, const uint32_t nDutyCycle);
+void gd32_pwm_set_duty_cycle(pwm::Channel channel, uint32_t duty_cycle);
 
 #endif /* GD32_PWM_H_ */

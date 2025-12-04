@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_serialnumber.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef HAL_SERIALNUMBER_H_
+#define HAL_SERIALNUMBER_H_
+
 #include <cstdint>
 
 namespace hal
@@ -31,3 +33,5 @@ namespace hal
 inline static constexpr uint32_t kSnSize = 4;
 void SerialNumber(uint8_t sn[kSnSize]);
 } // namespace hal
+
+#endif  // HAL_SERIALNUMBER_H_

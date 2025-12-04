@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdm.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDM_H_
+#define RDM_H_
 
 #include <cstdint>
 #include <cassert>
@@ -98,3 +100,5 @@ class Rdm
    private:
     static uint8_t s_transaction_number[dmx::config::max::PORTS];
 };
+
+#endif  // RDM_H_

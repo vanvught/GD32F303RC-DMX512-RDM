@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file utc.h
  * @brief UTC offset handling utilities (validation, conversion, parsing).
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef UTC_H_
+#define UTC_H_
 
 #include <cstdint>
 #include <cstring>
@@ -178,3 +180,5 @@ inline bool ParseOffset(const char* buffer, uint32_t buffer_length, int32_t& hou
     return ValidateOffset(hours, minutes, dummy);
 }
 } // namespace hal::utc
+
+#endif  // UTC_H_

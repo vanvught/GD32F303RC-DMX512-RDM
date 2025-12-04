@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_api.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef HAL_API_H_
+#define HAL_API_H_
+
 #if defined(__linux__) || defined(__APPLE__)
 #include "linux/hal_api.h"
 #elif defined(H3)
@@ -33,3 +35,5 @@
 #else
 #include "rpi/hal_api.h"
 #endif
+
+#endif  // HAL_API_H_

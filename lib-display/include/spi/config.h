@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file config.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SPI_CONFIG_H_
+#define SPI_CONFIG_H_
 
 #include <cstdint>
 
@@ -62,3 +64,5 @@ inline constexpr uint32_t kHeight = 160;
 #define SPI_LCD_CS_GPIO RPI_V2_GPIO_P1_24 // GPIO8 / SPI CS0
 #endif
 #endif
+
+#endif  // SPI_CONFIG_H_

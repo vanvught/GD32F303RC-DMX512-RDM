@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file pixeldmxconfiguration.h
  *
@@ -29,6 +28,9 @@
  * This means that even if multiple threads attempt to access Get() simultaneously,
  * the C++ runtime ensures that the instance is initialized only once.
  */
+
+#ifndef PIXELDMXCONFIGURATION_H_
+#define PIXELDMXCONFIGURATION_H_
 
 #include <cstdint>
 #include <cstdio>
@@ -182,3 +184,5 @@ class PixelDmxConfiguration : public PixelConfiguration
 
     static inline PixelDmxConfiguration* s_this;
 };
+
+#endif  // PIXELDMXCONFIGURATION_H_

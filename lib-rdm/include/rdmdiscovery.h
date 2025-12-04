@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmdiscovery.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMDISCOVERY_H_
+#define RDMDISCOVERY_H_
 
 #include <rdmtod.h>
 #include <cstdint>
@@ -223,3 +225,5 @@ class RDMDiscovery
         uint8_t uid[RDM_UID_SIZE];
     } quick_find_discovery_;
 };
+
+#endif  // RDMDISCOVERY_H_

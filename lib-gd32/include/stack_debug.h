@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file stack_debug.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef STACK_DEBUG_H_
+#define STACK_DEBUG_H_
+
 #include <stdint.h>
 
 extern "C"
@@ -36,3 +38,5 @@ extern "C"
     {                                \
         stack_debug_print(__LINE__); \
     } while (0)
+
+#endif  // STACK_DEBUG_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file e120.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef E120_H_
+#define E120_H_
 
 #include <cstdint>
 
@@ -82,3 +84,5 @@ struct TRdmDiscoveryMsg
     uint8_t masked_device_id[12]; ///<
     uint8_t checksum[4];          ///<
 } PACKED;
+
+#endif  // E120_H_

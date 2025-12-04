@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmslotinfo.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef RDMSLOTINFO_H_
+#define RDMSLOTINFO_H_
+
 #include <cstdint>
 
 class RDMSlotInfo
@@ -36,3 +38,5 @@ class RDMSlotInfo
    private:
     static int Bsearch(uint16_t key);
 };
+
+#endif  // RDMSLOTINFO_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmxstatistics.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef DMXSTATISTICS_H_
+#define DMXSTATISTICS_H_
 
 #include <cstdint>
 
@@ -52,3 +54,5 @@ struct TotalStatistics
     } rdm;
 };
 } // namespace dmx
+
+#endif  // DMXSTATISTICS_H_

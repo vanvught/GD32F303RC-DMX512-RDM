@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_spi.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef HAL_SPI_H_
+#define HAL_SPI_H_
 
 #include "hal_api.h"
 
@@ -88,3 +90,5 @@ class HAL_SPI
     uint8_t mode_;
 };
 #endif
+
+#endif  // HAL_SPI_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file ema.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef EMA_H_
+#define EMA_H_
 
 #ifndef EMA_H_
 #define EMA_H_
@@ -75,3 +77,5 @@ template <uint8_t K> class EMA
 };
 
 #endif /* EMA_H_ */
+
+#endif  // EMA_H_

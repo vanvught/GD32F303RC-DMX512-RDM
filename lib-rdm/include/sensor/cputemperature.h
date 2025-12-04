@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file cputemperature.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SENSOR_CPUTEMPERATURE_H_
+#define SENSOR_CPUTEMPERATURE_H_
 
 #include <cstdint>
 
@@ -65,3 +67,5 @@ class CpuTemperature final : public RDMSensor
         return kValue;
     }
 };
+
+#endif  // SENSOR_CPUTEMPERATURE_H_

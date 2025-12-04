@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hd44780.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef I2C_HD44780_H_
+#define I2C_HD44780_H_
 
 #include <cstdint>
 
@@ -67,3 +69,5 @@ class Hd44780 final : public DisplaySet
    private:
     HAL_I2C hal_i2c_;
 };
+
+#endif  // I2C_HD44780_H_

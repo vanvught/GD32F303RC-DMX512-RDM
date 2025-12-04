@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file gd32_board.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef GD32_BOARD_H_
+#define GD32_BOARD_H_
 
 #if defined(BOARD_GD32F103RC)
 #include "board/gd32f103rc.h"
@@ -89,3 +91,5 @@
 #else
 #define ENETx
 #endif
+
+#endif  // GD32_BOARD_H_

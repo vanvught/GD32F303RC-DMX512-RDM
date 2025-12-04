@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmconst.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMCONST_H_
+#define RDMCONST_H_
 
 #include <cstdint>
 
@@ -98,3 +100,5 @@ struct RDMConst {
 	static const char MANUFACTURER_NAME[];
 	static const uint8_t MANUFACTURER_ID[];
 };
+
+#endif  // RDMCONST_H_

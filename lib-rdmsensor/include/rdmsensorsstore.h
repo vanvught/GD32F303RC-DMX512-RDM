@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsensorsstore.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef RDMSENSORSSTORE_H_
+#define RDMSENSORSSTORE_H_
+
 #include <cstdint>
 #include <cassert>
 
@@ -39,3 +41,5 @@ inline void SaveCalibration(uint32_t sensor, int32_t calibration)
     ConfigStore::Instance().RdmSensorsUpdateIndexed(&common::store::RdmSensors::calibrate, sensor, c);
 }
 } // namespace rdmsensors_store
+
+#endif  // RDMSENSORSSTORE_H_

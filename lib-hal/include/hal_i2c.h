@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_i2c.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef HAL_I2C_H_
+#define HAL_I2C_H_
 
 #if defined(CONFIG_I2C_OPTIMIZE_O2) || defined(CONFIG_I2C_OPTIMIZE_O3)
 #pragma GCC push_options
@@ -283,3 +285,5 @@ class HAL_I2C
 #if defined(CONFIG_I2C_OPTIMIZE_O2) || defined(CONFIG_I2C_OPTIMIZE_O3)
 #pragma GCC pop_options
 #endif
+
+#endif  // HAL_I2C_H_

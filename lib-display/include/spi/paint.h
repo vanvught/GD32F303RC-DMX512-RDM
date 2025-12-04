@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file paint.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SPI_PAINT_H_
+#define SPI_PAINT_H_
 
 #include <cstdint>
 #include <cstdlib>
@@ -240,3 +242,5 @@ protected:
 
 	static inline uint16_t s_frame_buffer[config::kWidth * kFrameBufferRows];
 };
+
+#endif  // SPI_PAINT_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmxnode_nodetype.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef DMXNODE_NODETYPE_H_
+#define DMXNODE_NODETYPE_H_
 
 #include <cstdint>
 
@@ -149,3 +151,5 @@ inline constexpr auto kNodeType = NodeType::kShowfile;
 inline constexpr auto kNodeType = NodeType::kUndefined;
 #endif
 } // namespace dmxnode
+
+#endif  // DMXNODE_NODETYPE_H_

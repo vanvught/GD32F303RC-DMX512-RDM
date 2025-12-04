@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmdevice.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMDEVICE_H_
+#define RDMDEVICE_H_
 
 #include <cstdint>
 #include <cstdio>
@@ -206,3 +208,5 @@ class RDMDevice
 
     inline static RDMDevice* s_this;
 };
+
+#endif  // RDMDEVICE_H_

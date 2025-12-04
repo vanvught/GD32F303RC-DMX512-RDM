@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file widgetconfiguration.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef WIDGETCONFIGURATION_H_
+#define WIDGETCONFIGURATION_H_
 
 #include <cstdint>
 
@@ -121,3 +123,5 @@ struct WidgetConfiguration
     inline static uint8_t s_mab_time{WIDGET_DEFAULT_MAB_TIME}; ///< DMX output Mark After Break time in 10.67 microsecond units. Valid range is 1 to 127.
     inline static uint8_t s_refresh_rate{WIDGET_DEFAULT_REFRESH_RATE}; ///< DMX output rate in packets per second. Valid range is 1 to 40.
 };
+
+#endif  // WIDGETCONFIGURATION_H_

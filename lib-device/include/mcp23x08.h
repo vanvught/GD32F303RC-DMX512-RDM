@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file mcp23x08.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef MCP23X08_H_
+#define MCP23X08_H_
+
 #include <cstdint>
 
 namespace mcp23x08
@@ -40,3 +42,5 @@ static constexpr uint8_t REG_INTCAP = 0x08;
 static constexpr uint8_t REG_GPIO = 0x09;
 static constexpr uint8_t REG_OLAT = 0x0A;
 } // namespace mcp23x08
+
+#endif  // MCP23X08_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file softwaretimers.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef SUPERLOOP_SOFTWARETIMERS_H_
+#define SUPERLOOP_SOFTWARETIMERS_H_
+
 #include <cstdint>
 
 typedef int32_t TimerHandle_t;
@@ -34,3 +36,5 @@ bool SoftwareTimerDelete(TimerHandle_t& id);
 bool SoftwareTimerChange(TimerHandle_t id, uint32_t interval_millis);
 
 void SoftwareTimerRun();
+
+#endif  // SUPERLOOP_SOFTWARETIMERS_H_

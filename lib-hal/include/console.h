@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file console.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef CONSOLE_H_
+#define CONSOLE_H_
+
 #if defined(CONSOLE_FB)
 #include "console/console_fb.h"
 #elif defined(CONSOLE_NULL)
@@ -33,3 +35,5 @@
 #else
 #include "console/console_uart0.h"
 #endif
+
+#endif  // CONSOLE_H_

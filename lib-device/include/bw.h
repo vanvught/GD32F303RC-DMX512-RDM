@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file bw.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef BW_H_
+#define BW_H_
 
 #include <cstdint>
 #include <string.h>
@@ -127,3 +129,5 @@ class BwSpi : public HAL_SPI
     uint8_t address_;
     bool m_IsConnected = false;
 };
+
+#endif  // BW_H_

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef COMMON_UTILS_UTILS_ARRAY_H_
+#define COMMON_UTILS_UTILS_ARRAY_H_
+
 /**
  * @file utils_array.h
  *
@@ -33,3 +35,5 @@ template <typename T, size_t N> constexpr size_t ArraySize(const T (&)[N]) noexc
     return N;
 }
 } // namespace common
+
+#endif  // COMMON_UTILS_UTILS_ARRAY_H_

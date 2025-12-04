@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_api.h
  *
@@ -24,5 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef GD32_HAL_API_H_
+#define GD32_HAL_API_H_
+
 #define FUNC_PREFIX(x) Gd32##x
 
+#endif  // GD32_HAL_API_H_

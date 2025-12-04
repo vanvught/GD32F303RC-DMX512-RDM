@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file pixelconfiguration.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef PIXELCONFIGURATION_H_
+#define PIXELCONFIGURATION_H_
 
 #include <cstdint>
 #include <cstdio>
@@ -326,3 +328,5 @@ class PixelConfiguration
 
     static inline PixelConfiguration* s_this{nullptr};
 };
+
+#endif  // PIXELCONFIGURATION_H_

@@ -1,6 +1,5 @@
-#pragma once
 /**
- * @file port_utils.h
+ * @file dmxnode_utils.h
  *
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef DMXNODE_UTILS_H_
+#define DMXNODE_UTILS_H_
+
 #include <cstdint>
 
 namespace json
@@ -41,3 +43,5 @@ template <class S> static S PortGet(uint32_t port_index, uint16_t n)
     return static_cast<S>((n >> (port_index * 2)) & 0x3);
 }
 } // namespace json
+
+#endif  // DMXNODE_UTILS_H_

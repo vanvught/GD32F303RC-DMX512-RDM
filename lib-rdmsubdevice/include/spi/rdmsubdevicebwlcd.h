@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsubdevicebwlcd.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SPI_RDMSUBDEVICEBWLCD_H_
+#define SPI_RDMSUBDEVICEBWLCD_H_
 
 #include "rdmsubdevice.h"
 
@@ -60,3 +62,5 @@ class RDMSubDeviceBwLcd : public RDMSubDevice
     uint8_t data_[4];
     uint32_t length_ = 0;
 };
+
+#endif  // SPI_RDMSUBDEVICEBWLCD_H_

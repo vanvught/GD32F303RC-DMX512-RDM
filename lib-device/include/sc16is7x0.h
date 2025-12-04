@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file sc16is7x0.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SC16IS7X0_H_
+#define SC16IS7X0_H_
 
 #include <cstdint>
 
@@ -130,3 +132,5 @@ static constexpr uint8_t IER_CTSI = (0x80);  /* Enable CTS interrupt            
  * 8.11 Enhanced Features Register (EFR)
  */
 static constexpr uint8_t EFR_ENABLE_ENHANCED_FUNCTIONS = (1u << 4);
+
+#endif  // SC16IS7X0_H_

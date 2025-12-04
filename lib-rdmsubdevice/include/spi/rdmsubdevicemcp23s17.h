@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsubdevicemcp23s17.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SPI_RDMSUBDEVICEMCP23S17_H_
+#define SPI_RDMSUBDEVICEMCP23S17_H_
 
 #include <cstdint>
 
@@ -59,3 +61,5 @@ class RDMSubDeviceMCP23S17 : public RDMSubDevice
     gpio::MCP23S17 m_MCP23S17;
     uint16_t m_nData = 0;
 };
+
+#endif  // SPI_RDMSUBDEVICEMCP23S17_H_

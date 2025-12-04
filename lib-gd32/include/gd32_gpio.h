@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file gd32_gpio.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef GD32_GPIO_H_
+#define GD32_GPIO_H_
 
 #include <stdint.h>
 #include <assert.h>
@@ -389,3 +391,5 @@ inline void gd32_gpio_init()
 }
 #endif
 #endif
+
+#endif  // GD32_GPIO_H_

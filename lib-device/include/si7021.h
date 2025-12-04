@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file si7021.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SI7021_H_
+#define SI7021_H_
 
 #include <cstdint>
 
@@ -64,3 +66,5 @@ class SI7021 : HAL_I2C
 };
 
 } // namespace sensor
+
+#endif  // SI7021_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdm_sensors.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDM_SENSORS_H_
+#define RDM_SENSORS_H_
 
 #include <cstdint>
 #include <cstring>
@@ -74,3 +76,5 @@ inline Types GetType(const char* string)
     return Types::kUndefined;
 }
 } // namespace rdm::sensors
+
+#endif  // RDM_SENSORS_H_

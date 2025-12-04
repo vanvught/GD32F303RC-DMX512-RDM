@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_micros.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef GD32_HAL_MICROS_H_
+#define GD32_HAL_MICROS_H_
+
 #include <cstdint>
 
 uint32_t Gd32Micros();
@@ -35,3 +37,5 @@ inline uint32_t Micros()
     return Gd32Micros();
 }
 } // namespace hal
+
+#endif  // GD32_HAL_MICROS_H_

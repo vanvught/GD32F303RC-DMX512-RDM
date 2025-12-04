@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file st7789.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SPI_ST7789_H_
+#define SPI_ST7789_H_
 
 #include <cstdint>
 #include <cassert>
@@ -183,3 +185,5 @@ class ST7789 : public ST77XX
     static inline uint32_t s_instance;
 #endif
 };
+
+#endif  // SPI_ST7789_H_

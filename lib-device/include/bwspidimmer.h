@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file bwspidimmer.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef BWSPIDIMMER_H_
+#define BWSPIDIMMER_H_
+
 #include <cstdint>
 
 #include "bw.h"
@@ -46,3 +48,5 @@ public:
 		return m_IsConnected;
 	}
 };
+
+#endif  // BWSPIDIMMER_H_

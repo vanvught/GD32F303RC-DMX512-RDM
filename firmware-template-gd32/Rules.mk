@@ -9,7 +9,6 @@ LD	 = $(PREFIX)ld
 AR	 = $(PREFIX)ar
 
 BOARD?=BOARD_GD32F303RC
-ENET_PHY?=
 MCU?=GD32F303RC
 
 TARGET=$(FAMILY).bin
@@ -31,6 +30,7 @@ include ../common/make/DmxNodeNodeType.mk
 include ../common/make/DmxNodeOutputType.mk
 include ../common/make/gd32/Includes.mk
 include ../common/make/gd32/Validate.mk
+include ../common/make/Timestamp.mk
 
 LIBS+=gd32 clib
 
@@ -55,29 +55,23 @@ COPS+=-Os -nostartfiles -ffreestanding -nostdlib
 COPS+=-fstack-usage
 COPS+=-ffunction-sections -fdata-sections
 COPS+=-Wall -Werror -Wpedantic -Wextra -Wunused -Wsign-conversion -Wconversion -Wduplicated-cond -Wlogical-op
+COPS+=--specs=nosys.specs
 
-CPPOPS=-std=c++20
-CPPOPS+=-Wnon-virtual-dtor -Woverloaded-virtual -Wnull-dereference -fno-rtti -fno-exceptions -fno-unwind-tables
-CPPOPS+=-Wuseless-cast -Wold-style-cast
-CPPOPS+=-Wshadow -Wshadow=local
-CPPOPS+=-fno-threadsafe-statics
+include ../common/make/CppOps.mk
 
 LDOPS=--gc-sections --print-gc-sections --print-memory-usage
 
 PLATFORM_LIBGCC+= -L $(shell dirname `$(CC) $(COPS) -print-libgcc-file-name`)
-PLATFORM_LIBSTDCPP+= -L $(shell dirname `$(CC) $(COPS) --print-file-name=libstdc++.a`)
 
 $(info $$PLATFORM_LIBGCC [${PLATFORM_LIBGCC}])
-$(info $$PLATFORM_LIBSTDCPP [${PLATFORM_LIBSTDCPP}])
 
 C_OBJECTS=$(foreach sdir,$(SRCDIR),$(patsubst $(sdir)/%.c,$(BUILD)$(sdir)/%.o,$(wildcard $(sdir)/*.c)))
-C_OBJECTS+=$(foreach sdir,$(SRCDIR),$(patsubst $(sdir)/%.cpp,$(BUILD)$(sdir)/%.o,$(wildcard $(sdir)/*.cpp)))
+CPP_OBJECTS+=$(foreach sdir,$(SRCDIR),$(patsubst $(sdir)/%.cpp,$(BUILD)$(sdir)/%.o,$(wildcard $(sdir)/*.cpp)))
 ASM_OBJECTS=$(foreach sdir,$(SRCDIR),$(patsubst $(sdir)/%.S,$(BUILD)$(sdir)/%.o,$(wildcard $(sdir)/*.S)))
 
 BUILD_DIRS:=$(addprefix $(BUILD),$(SRCDIR))
 
-include ../common/make/Extra.mk
-OBJECTS:=$(strip $(ASM_OBJECTS) $(C_OBJECTS) $(CPP_OBJECTS) $(EXTRA_C_OBJECTS) $(EXTRA_CPP_OBJECTS))
+OBJECTS:=$(strip $(ASM_OBJECTS) $(C_OBJECTS) $(CPP_OBJECTS))
 
 define compile-objects
 $(BUILD)$1/%.o: $1/%.cpp
@@ -94,11 +88,8 @@ all : builddirs prerequisites $(TARGET)
 
 .PHONY: clean builddirs
 
-builddirs: 
-	mkdir -p $(BUILD_DIRS) 
-	if [[ -n "${EXTRA_C_BUILD_DIRS}" ]]; then mkdir -p $(EXTRA_C_BUILD_DIRS); fi
-	if [[ -n "${EXTRA_CPP_BUILD_DIRS}" ]]; then mkdir -p $(EXTRA_CPP_BUILD_DIRS); fi
-	mkdir -p lib_gd32
+builddirs:
+	mkdir -p $(BUILD_DIRS)
 
 .PHONY:  clean
 

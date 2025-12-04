@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file sc16is740.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SC16IS740_H_
+#define SC16IS740_H_
 
 #include <cstdint>
 
@@ -150,3 +152,5 @@ class SC16IS740 : HAL_I2C
     uint32_t on_board_crystal_hz_;
     bool is_connected_{false};
 };
+
+#endif  // SC16IS740_H_

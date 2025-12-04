@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file gd32_uart.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef GD32_UART_H_
+#define GD32_UART_H_
 
 #if !defined(GD32H7XX)
 #define USART_TDATA USART_DATA
@@ -124,3 +126,5 @@ template <usart_interrupt_flag_enum flag> void Gd32UsartInterruptFlagClear(uint3
 #error
 #endif
 }
+
+#endif  // GD32_UART_H_

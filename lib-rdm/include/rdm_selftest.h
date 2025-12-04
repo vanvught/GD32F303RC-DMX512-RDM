@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdm_selftest.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef RDM_SELFTEST_H_
+#define RDM_SELFTEST_H_
+
 #include <cstdint>
 
 namespace rdm::selftest
@@ -32,3 +34,5 @@ uint8_t Get();
 bool Set(uint8_t self_test);
 const char* GetDescription(uint8_t self_test, uint32_t& length);
 } // namespace rdm::selftest
+
+#endif  // RDM_SELFTEST_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_boardinfo.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef HAL_BOARDINFO_H_
+#define HAL_BOARDINFO_H_
+
 #include <cstdint>
 
 namespace hal
@@ -34,3 +36,5 @@ const char* CpuName(uint8_t& length);
 const char* SysName(uint8_t& length);
 const char* MachineName(uint8_t& length);
 } // namespace hal
+
+#endif  // HAL_BOARDINFO_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmpersonality.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMPERSONALITY_H_
+#define RDMPERSONALITY_H_
 
 #include <cstdint>
 #include <cassert>
@@ -113,3 +115,5 @@ private:
 	char description_[rdm::personality::DESCRIPTION_MAX_LENGTH];
 	uint32_t description_length_ { 0 };
 };
+
+#endif  // RDMPERSONALITY_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsubdevicebw7fets.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SPI_RDMSUBDEVICEBW7FETS_H_
+#define SPI_RDMSUBDEVICEBW7FETS_H_
 
 #include <cstdint>
 
@@ -63,3 +65,5 @@ class RDMSubDeviceBw7fets : public RDMSubDevice
     BwSpi7fets m_BwSpi7fets;
     uint8_t m_nData = 0;
 };
+
+#endif  // SPI_RDMSUBDEVICEBW7FETS_H_

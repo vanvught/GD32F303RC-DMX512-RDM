@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsubdevices.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMSUBDEVICES_H_
+#define RDMSUBDEVICES_H_
 
 #include <cstdint>
 #include <cassert>
@@ -260,3 +262,5 @@ class RDMSubDevices
 
     static inline RDMSubDevices* s_this;
 };
+
+#endif  // RDMSUBDEVICES_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmxnode.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef DMXNODE_H_
+#define DMXNODE_H_
 
 #include <cstdint>
 #include <cstring>
@@ -364,3 +366,5 @@ class DmxNode
         char label[dmxnode::kLabelNameLength];
     } port_[dmxnode::kMaxPorts];
 };
+
+#endif  // DMXNODE_H_

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef JSON_JSON_JSONDOC_H_
+#define JSON_JSON_JSONDOC_H_
+
 /**
  * @file jsondoc.h
  *
@@ -159,3 +161,5 @@ class JsonDoc
     bool first_{true};
     uint32_t pos_{0};
 };
+
+#endif  // JSON_JSON_JSONDOC_H_

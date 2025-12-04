@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file max7219matrix.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef MAX7219MATRIX_H_
+#define MAX7219MATRIX_H_
 
 #include <cstdint>
 
@@ -63,3 +65,5 @@ class Max7219Matrix : public MAX7219
     uint8_t* font_;
     uint16_t count_{4};
 };
+
+#endif  // MAX7219MATRIX_H_

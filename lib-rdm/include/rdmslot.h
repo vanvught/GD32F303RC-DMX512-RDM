@@ -1,4 +1,6 @@
-#pragma once
+#ifndef RDMSLOT_H_
+#define RDMSLOT_H_
+
 // Appendix C: Slot Info (Normative)
 
 // Table C-1: Slot Type
@@ -63,3 +65,5 @@ enum TRdmSlotDefinition
     SD_FOUNTAIN_CONTROL = 0x0508,
     SD_UNDEFINED = 0xFFFF,
 };
+
+#endif  // RDMSLOT_H_

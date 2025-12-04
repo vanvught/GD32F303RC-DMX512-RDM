@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmx.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef DMX_H_
+#define DMX_H_
+
 #if defined(OUTPUT_DMX_SEND_MULTI)
 #if defined(H3)
 #include "h3/multi/dmx.h"
@@ -43,3 +45,5 @@
 #include "linux/dmx.h"
 #endif
 #endif
+
+#endif  // DMX_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file e133.h
  *
@@ -27,6 +26,9 @@
 /**
  * A.3 Root Layer PDU vector
  */
+
+#ifndef E133_H_
+#define E133_H_
 
 #define VECTOR_ROOT_LLRP 			0x0000000A	/* Section 5.4 */
 
@@ -68,3 +70,5 @@
 #define LLRP_COMPONENT_TYPE_RPT_CONTROLLER 0x01	///< The LLRP Target is a Controller
 #define LLRP_COMPONENT_TYPE_BROKER         0x02	///< The LLRP Target is a Broker
 #define LLRP_COMPONENT_TYPE_NON_RDMNET     0xFF	///< The LLRP Target does not implement any RDMnet protocol other than LLRP
+
+#endif  // E133_H_

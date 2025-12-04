@@ -1,4 +1,6 @@
-#pragma once
+#ifndef COMMON_FIRMWARE_JAMSTAPL_HANDLEROLED_H_
+#define COMMON_FIRMWARE_JAMSTAPL_HANDLEROLED_H_
+
 /**
  * @file handleroled.h
  *
@@ -50,3 +52,5 @@ struct HandlerOled : public JamSTAPLDisplay
    private:
     inline static HandlerOled* s_this;
 };
+
+#endif  // COMMON_FIRMWARE_JAMSTAPL_HANDLEROLED_H_

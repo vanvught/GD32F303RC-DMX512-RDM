@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file gd32_dma_memcpy32.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef GD32_DMA_MEMCPY32_H_
+#define GD32_DMA_MEMCPY32_H_
 
 #include <cstdint>
 #include <cassert>
@@ -74,3 +76,5 @@ inline bool Memcpy32IsActive()
 #endif
 }
 } // namespace dma
+
+#endif  // GD32_DMA_MEMCPY32_H_

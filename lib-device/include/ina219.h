@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file ina219.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef INA219_H_
+#define INA219_H_
 
 #include <cstdint>
 
@@ -126,3 +128,5 @@ class INA219 : HAL_I2C
 };
 
 } // namespace sensor
+
+#endif  // INA219_H_

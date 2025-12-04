@@ -1,4 +1,6 @@
-#pragma once
+#ifndef GD32_H_
+#define GD32_H_
+
 #define GD32_H_
 /**
  * @file gd32.h
@@ -122,3 +124,5 @@ typedef enum T_GD32_Port
 } GD32_Port_TypeDef;
 
 #include "gd32_board.h"
+
+#endif  // GD32_H_

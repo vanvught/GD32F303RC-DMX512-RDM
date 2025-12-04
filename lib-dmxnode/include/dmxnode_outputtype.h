@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmxnode_outputtype.h
  */
@@ -23,6 +22,10 @@
  * THE SOFTWARE.
  */
  
+
+#ifndef DMXNODE_OUTPUTTYPE_H_
+#define DMXNODE_OUTPUTTYPE_H_
+
  #include <cstdint>
 
 namespace dmxnode
@@ -191,3 +194,5 @@ inline constexpr auto kOutputType = OutputType::kNone;
 inline constexpr auto kOutputType = OutputType::kUndefined;
 #endif
 } // namespace dmxnode
+
+#endif  // DMXNODE_OUTPUTTYPE_H_

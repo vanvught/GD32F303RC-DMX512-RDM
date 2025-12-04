@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file st77xx.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SPI_ST77XX_H_
+#define SPI_ST77XX_H_
 
 #include <cstdint>
 
@@ -140,3 +142,5 @@ class ST77XX : public Paint
     uint32_t shift_x_{0};
     uint32_t shift_y_{0};
 };
+
+#endif  // SPI_ST77XX_H_

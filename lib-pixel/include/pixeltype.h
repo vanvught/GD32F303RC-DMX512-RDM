@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file pixeltype.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef PIXELTYPE_H_
+#define PIXELTYPE_H_
 
 #include <stdint.h>
 #include <cassert>
@@ -200,3 +202,5 @@ inline Map GetMap(Type type)
     return Map::GRB;
 }
 } // namespace pixel
+
+#endif  // PIXELTYPE_H_

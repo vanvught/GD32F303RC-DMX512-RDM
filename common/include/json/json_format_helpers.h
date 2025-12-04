@@ -1,6 +1,8 @@
-#pragma once
+#ifndef JSON_JSON_FORMAT_HELPERS_H_
+#define JSON_JSON_FORMAT_HELPERS_H_
+
 /**
- * @file hash.h
+ * @file format_helpers.h
  *
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
@@ -24,28 +26,33 @@
  * THE SOFTWARE.
  */
 
+#include <cstdio>
 #include <cstdint>
 
-// Compile-time FNV-1a 32-bit hash
-consteval uint32_t Fnv1a32(const char* str, uint8_t length)
+namespace format
 {
-    uint32_t hash = 0x811c9dc5u;
-    for (uint8_t i = 0; i < length; ++i)
-    {
-        hash ^= static_cast<uint8_t>(str[i]);
-        hash *= 0x01000193u;
-    }
-    return hash;
+constexpr size_t kFloatBufferSize = 8;   // For "%.2f", "%.1f"
+constexpr size_t kOffsetBufferSize = 12; // For timezone offsets e.g. "+01:00"
+
+[[nodiscard]] inline const char* FormatFloat(float value, char (&buf)[kFloatBufferSize], const char* fmt = "%.2f")
+{
+    snprintf(buf, sizeof(buf) - 1, fmt, value);
+    return buf;
 }
 
-// Runtime version for raw filenames
-inline uint32_t Fnv1a32Runtime(const char* str, uint32_t length)
+[[nodiscard]] inline const char* FormatUtcOffset(int32_t hours, uint32_t minutes, char (&buf)[kOffsetBufferSize])
 {
-    uint32_t hash = 0x811c9dc5u;
-    for (uint32_t i = 0; i < length; ++i)
+    if (hours == 0)
     {
-        hash ^= static_cast<uint8_t>(str[i]);
-        hash *= 0x01000193u;
+        snprintf(buf, sizeof(buf) - 1, "%.2d:%.2u", hours, minutes);
     }
-    return hash;
+    else
+    {
+        snprintf(buf, sizeof(buf) - 1, "%c%.2d:%.2u", hours < 0 ? '-' : '+', hours, minutes);
+    }
+    return buf;
 }
+
+} // namespace format
+
+#endif  // JSON_JSON_FORMAT_HELPERS_H_

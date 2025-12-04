@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file gamma_tables.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef GAMMA_GAMMA_TABLES_H_
+#define GAMMA_GAMMA_TABLES_H_
 
 #include <cstdint>
 
@@ -133,3 +135,5 @@ inline uint8_t GetValue(const uint8_t* table)
 }
 
 } // namespace gamma
+
+#endif  // GAMMA_GAMMA_TABLES_H_

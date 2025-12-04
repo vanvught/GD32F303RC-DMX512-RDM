@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsubdevicebwrelay.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef SPI_RDMSUBDEVICEBWRELAY_H_
+#define SPI_RDMSUBDEVICEBWRELAY_H_
 
 #include <cstdint>
 
@@ -63,3 +65,5 @@ class RDMSubDeviceBwRelay : public RDMSubDevice
     BwSpiRelay m_BwSpiRelay;
     uint8_t m_nData = 0;
 };
+
+#endif  // SPI_RDMSUBDEVICEBWRELAY_H_

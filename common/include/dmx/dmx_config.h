@@ -1,4 +1,6 @@
-#pragma once
+#ifndef DMX_DMX_CONFIG_H_
+#define DMX_DMX_CONFIG_H_
+
 /**
  * @file dmx_config.h
  *
@@ -65,3 +67,5 @@ static constexpr auto SIZE = 516; // multiple of uint32_t
 } // namespace dmx::buffer
 
 #include "gd32/dmx_dma_check.h"
+
+#endif  // DMX_DMX_CONFIG_H_

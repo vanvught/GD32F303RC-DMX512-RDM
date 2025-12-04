@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsubdevice.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef RDMSUBDEVICE_H_
+#define RDMSUBDEVICE_H_
 
 #include "rdmdevice.h"
 #include "rdmpersonality.h"
@@ -194,3 +196,5 @@ private:
  TRDMSubDevicesInfo sub_devices_info_;
  char label_factory_default_[RDM_DEVICE_LABEL_MAX_LENGTH];
 };
+
+#endif  // RDMSUBDEVICE_H_

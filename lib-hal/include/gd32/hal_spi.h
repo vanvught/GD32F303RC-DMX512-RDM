@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_spi.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef GD32_HAL_SPI_H_
+#define GD32_HAL_SPI_H_
+
 #include "gd32_spi.h"
 
 #define SPI_MODE0 GD32_SPI_MODE0
@@ -33,3 +35,5 @@
 
 #define SPI_CS0 GD32_SPI_CS0
 #define SPI_CS_NONE GD32_SPI_CS_NONE
+
+#endif  // GD32_HAL_SPI_H_

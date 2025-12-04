@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file ssd1306.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef I2C_SSD1306_H_
+#define I2C_SSD1306_H_
 
 #include <cstdint>
 
@@ -108,3 +110,5 @@ class Ssd1306 final : public DisplaySet
 
     static inline Ssd1306* s_this;
 };
+
+#endif  // I2C_SSD1306_H_

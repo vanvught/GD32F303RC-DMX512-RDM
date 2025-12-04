@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file pixeloutput.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef PIXELOUTPUT_H_
+#define PIXELOUTPUT_H_
 
 #include <cstdint>
 
@@ -77,3 +79,5 @@ class PixelOutput
 };
 
 using PixelOutputType = PixelOutput;
+
+#endif  // PIXELOUTPUT_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file thermistor.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef THERMISTOR_H_
+#define THERMISTOR_H_
 
 #include <cstdint>
 #include <cmath>
@@ -51,3 +53,5 @@ inline float Temperature(uint32_t resistor)
 }
 
 } // namespace sensor::thermistor
+
+#endif  // THERMISTOR_H_

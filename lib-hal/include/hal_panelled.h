@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file hal_panelled.h
  *
@@ -54,6 +53,9 @@
  * }  // namespace hal
  */
 
+#ifndef HAL_PANELLED_H_
+#define HAL_PANELLED_H_
+
 #if defined(__linux__) || defined(__APPLE__)
 #include "linux/hal_panelled.h"
 #else
@@ -65,3 +67,5 @@
 #include "rpi/hal_panelled.h"
 #endif
 #endif
+
+#endif  // HAL_PANELLED_H_

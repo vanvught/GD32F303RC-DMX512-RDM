@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file configstoredevice.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef CONFIGSTOREDEVICE_H_
+#define CONFIGSTOREDEVICE_H_
 
 #include <cstdint>
 
@@ -62,3 +64,5 @@ class StoreDevice
    private:
     bool detected_{false};
 };
+
+#endif  // CONFIGSTOREDEVICE_H_

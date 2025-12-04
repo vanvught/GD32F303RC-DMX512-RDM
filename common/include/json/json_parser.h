@@ -1,4 +1,6 @@
-#pragma once
+#ifndef JSON_JSON_PARSER_H_
+#define JSON_JSON_PARSER_H_
+
 /**
  * @file json_parser.h
  *
@@ -28,7 +30,7 @@
 #include <cstdint>
 #include <cstring>
 
-#include "http/hash.h"
+#include "common/utils/utils_hash.h"
 #include "json/json_key.h"
 #include "json/json_tokenizer.h"
 
@@ -93,3 +95,5 @@ template <size_t N> inline void ParseJsonWithTable(const char* buffer, size_t si
 {
     ParseJsonWithTable(buffer, size, keys, N);
 }
+
+#endif  // JSON_JSON_PARSER_H_

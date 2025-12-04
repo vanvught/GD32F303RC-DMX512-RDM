@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file console_i2c.h
  *
@@ -24,6 +23,11 @@
  * THE SOFTWARE.
  */
 
+#ifndef CONSOLE_CONSOLE_I2C_H_
+#define CONSOLE_CONSOLE_I2C_H_
+
 #if !defined(CONSOLE_I2C)
 #error File should not be included
 #endif
+
+#endif  // CONSOLE_CONSOLE_I2C_H_

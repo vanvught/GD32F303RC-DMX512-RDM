@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmxreceiver.h
  */
@@ -22,6 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef DMXRECEIVER_H_
+#define DMXRECEIVER_H_
 
 #include <cstdint>
 #include <cstdio>
@@ -117,3 +119,5 @@ class DMXReceiver : Dmx
     bool is_active_{false};
     bool disable_output_{false};
 };
+
+#endif  // DMXRECEIVER_H_

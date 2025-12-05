@@ -1,6 +1,3 @@
-#ifndef COMMON_UTILS_UTILS_FLAGS_H_
-#define COMMON_UTILS_UTILS_FLAGS_H_
-
 /**
  * @file utils_flags.h
  * Generic enum class bitmask helpers (C++20, freestanding-safe, Google Style)
@@ -25,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef COMMON_UTILS_UTILS_FLAGS_H_
+#define COMMON_UTILS_UTILS_FLAGS_H_
 
 #include <cstdint>
 #include <type_traits>

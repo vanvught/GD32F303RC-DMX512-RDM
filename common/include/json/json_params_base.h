@@ -1,6 +1,3 @@
-#ifndef JSON_JSON_PARAMS_BASE_H_
-#define JSON_JSON_PARAMS_BASE_H_
-
 /**
  * @file json_params_base.h
  *
@@ -25,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef JSON_JSON_PARAMS_BASE_H_
+#define JSON_JSON_PARAMS_BASE_H_
 
 #include <cassert>
 #include <cstdio>

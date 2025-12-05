@@ -28,10 +28,11 @@
 #include <cassert>
 
 #include "params/readconfigfile.h"
+#include "firmware/debug/debug_dump.h"
 #include "debug.h"
 
 // TODO Check this with GD32 64->128
-static constexpr auto MAX_LINE_LENGTH = 128; // Including '\0'
+static constexpr auto kMaxLineLength = 128; // Including '\0'
 
 ReadConfigFile::ReadConfigFile(CallbackFunctionPtr callBack, void* p)
 {
@@ -53,7 +54,7 @@ bool ReadConfigFile::Read(const char* pFileName)
 {
     assert(pFileName != nullptr);
 
-    char buffer[MAX_LINE_LENGTH];
+    char buffer[kMaxLineLength];
 
     FILE* fp = fopen(pFileName, "r");
 
@@ -94,41 +95,41 @@ bool ReadConfigFile::Read(const char* pFileName)
 }
 #endif
 
-void ReadConfigFile::Read(const char* pBuffer, unsigned nLength)
+void ReadConfigFile::Read(const char* pBuffer, uint32_t length)
 {
     DEBUG_ENTRY
 
     assert(pBuffer != nullptr);
-    assert(nLength != 0);
+    assert(length != 0);
 
-    const auto* pSrc = const_cast<char*>(pBuffer);
-    char buffer[MAX_LINE_LENGTH];
+    const auto* src = const_cast<char*>(pBuffer);
+    char buffer[kMaxLineLength];
     buffer[0] = '\n';
 
-    debug_dump(pBuffer, nLength);
+    debug::Dump(pBuffer, length);
 
-    while (nLength != 0)
+    while (length != 0)
     {
         char* pLine = &buffer[0];
 
-        while ((nLength != 0) && (*pSrc != '\r') && (*pSrc != '\n'))
+        while ((length != 0) && (*src != '\r') && (*src != '\n'))
         {
-            *pLine++ = *pSrc++;
+            *pLine++ = *src++;
 
-            if ((pLine - buffer) >= MAX_LINE_LENGTH)
+            if ((pLine - buffer) >= kMaxLineLength)
             {
                 DEBUG_PRINTF("%128s", &buffer[0]);
                 assert(0);
                 return;
             }
 
-            nLength--;
+            length--;
         }
 
-        while ((nLength != 0) && ((*pSrc == '\r') || (*pSrc == '\n')))
+        while ((length != 0) && ((*src == '\r') || (*src == '\n')))
         {
-            pSrc++;
-            nLength--;
+            src++;
+            length--;
         }
 
         if (buffer[0] >= '0')

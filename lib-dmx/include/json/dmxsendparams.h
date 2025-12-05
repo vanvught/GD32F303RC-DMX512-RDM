@@ -1,8 +1,10 @@
-#pragma once
 /**
  * @file dmxsendparams.h
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org */
+
+#ifndef JSON_DMXSENDPARAMS_H_
+#define JSON_DMXSENDPARAMS_H_
 
 #include "configurationstore.h"
 #include "json/dmxsendparamsconst.h"
@@ -42,8 +44,10 @@ class DmxSendParams : public JsonParamsBase<DmxSendParams>
         MakeKey(SetSlotsCount, DmxSendParamsConst::kSlotsCount)
     };
 
-    inline static common::store::DmxSend store_dmx_send_;
+    inline static common::store::DmxSend store_dmx_send;
 
     friend class JsonParamsBase<DmxSendParams>;
 };
 } // namespace json
+
+#endif  // JSON_DMXSENDPARAMS_H_

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsensorsparamsconst.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef JSON_RDMSENSORSPARAMSCONST_H_
+#define JSON_RDMSENSORSPARAMSCONST_H_
 
 #include "json/json_key.h"
 
@@ -69,3 +71,5 @@ struct RdmSensorsParamsConst
 	};
 };
 } // namespace json
+
+#endif  // JSON_RDMSENSORSPARAMSCONST_H_

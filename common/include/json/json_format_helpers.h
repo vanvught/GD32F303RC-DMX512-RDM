@@ -1,6 +1,3 @@
-#ifndef JSON_JSON_FORMAT_HELPERS_H_
-#define JSON_JSON_FORMAT_HELPERS_H_
-
 /**
  * @file format_helpers.h
  *
@@ -25,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef JSON_JSON_FORMAT_HELPERS_H_
+#define JSON_JSON_FORMAT_HELPERS_H_
 
 #include <cstdio>
 #include <cstdint>

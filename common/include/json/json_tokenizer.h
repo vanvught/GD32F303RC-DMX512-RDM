@@ -1,6 +1,3 @@
-#ifndef JSON_JSON_TOKENIZER_H_
-#define JSON_JSON_TOKENIZER_H_
-
 /**
  * @file json_tokenizer.h
  *
@@ -26,6 +23,10 @@
  * THE SOFTWARE.
  */
  
+
+#ifndef JSON_JSON_TOKENIZER_H_
+#define JSON_JSON_TOKENIZER_H_
+
 #include <cstddef>
 
 struct JsonTokenizer

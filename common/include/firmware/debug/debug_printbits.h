@@ -1,8 +1,8 @@
 /**
- * @file debug_print_bits.cpp
+ * @file debug_print_bits.h
  *
  */
-/* Copyright (C) 2018-2025 by Arjan van Vught mailto:info@gd32-dmx.org
+ /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef COMMON_DEBUG_DEBUG_PRINTBITS_H_
+#define COMMON_DEBUG_DEBUG_PRINTBITS_H_
+
 #include <cstdio>
 #include <cstdint>
 
@@ -31,16 +34,19 @@ namespace uart0
 {
 int Printf(const char* fmt, ...);
 }
-#define printf uart0::Printf
+#define printf uart0::Printf // NOLINT
 #endif
 
-void debug_print_bits(uint32_t u)
+namespace debug
 {
-    uint32_t i;
-
+#ifdef NDEBUG
+inline void PrintBits([[maybe_unused]] uint32_t u) {}
+#else
+inline void PrintBits(uint32_t u)
+{
     uint32_t b = 1U << 31;
 
-    for (i = 0; i < 32; i++)
+    for (uint32_t i = 0; i < 32; i++)
     {
         if ((b & u) == b)
         {
@@ -52,3 +58,7 @@ void debug_print_bits(uint32_t u)
 
     puts("");
 }
+#endif
+} // namespace debug
+
+#endif /* COMMON_DEBUG_DEBUG_PRINTBITS_H_ */

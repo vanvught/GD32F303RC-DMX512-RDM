@@ -1,8 +1,10 @@
-#pragma once
 /**
  * @file pixeldmxparamsconst.h
  *
  */
+
+#ifndef JSON_PIXELDMXPARAMSCONST_H_
+#define JSON_PIXELDMXPARAMSCONST_H_
 
 #include "json/json_key.h"
 
@@ -161,3 +163,5 @@ struct PixelDmxParamsConst
     };
 };
 } // namespace json
+
+#endif  // JSON_PIXELDMXPARAMSCONST_H_

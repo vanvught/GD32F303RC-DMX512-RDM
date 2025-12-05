@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file displayudfparams.h
  *
@@ -23,6 +22,9 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+
+#ifndef JSON_DISPLAYUDFPARAMS_H_
+#define JSON_DISPLAYUDFPARAMS_H_
 
 #include "configurationstore.h"
 #include "json/displayudfparamsconst.h"
@@ -120,3 +122,5 @@ class DisplayUdfParams : public JsonParamsBase<DisplayUdfParams>
     friend class JsonParamsBase<DisplayUdfParams>;
 };
 } // namespace json
+
+#endif  // JSON_DISPLAYUDFPARAMS_H_

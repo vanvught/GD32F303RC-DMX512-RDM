@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmdeviceparams.h
  *
@@ -24,6 +23,10 @@
  * THE SOFTWARE.
  */
  
+
+#ifndef JSON_RDMDEVICEPARAMS_H_
+#define JSON_RDMDEVICEPARAMS_H_
+
  #include "configurationstore.h"
 #include "json/rdmdeviceparamsconst.h"
 #include "json/json_key.h"
@@ -65,3 +68,5 @@ class RdmDeviceParams : public JsonParamsBase<RdmDeviceParams>
     friend class JsonParamsBase<RdmDeviceParams>;
 };
 } // namespace json
+
+#endif  // JSON_RDMDEVICEPARAMS_H_

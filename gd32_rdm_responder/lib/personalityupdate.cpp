@@ -32,7 +32,7 @@
 #include "pixeltestpattern.h"
 #include "pixelpatterns.h"
 #include "displayudf.h"
-#include "common/firmware/pixeldmx/show.h"
+#include "firmware/pixeldmx/show.h"
 #include "debug.h"
 
 void RDMResponder::PersonalityUpdate(uint32_t personality)

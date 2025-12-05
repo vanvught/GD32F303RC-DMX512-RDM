@@ -1,8 +1,10 @@
-#pragma once
 /**
  * @file dmxnodeparams.h
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org */
+
+#ifndef JSON_DMXNODEPARAMS_H_
+#define JSON_DMXNODEPARAMS_H_
 
 #include <cstdint>
 
@@ -107,3 +109,5 @@ class DmxNodeParams : public JsonParamsBase<DmxNodeParams>
     friend class JsonParamsBase<DmxNodeParams>;
 };
 } // namespace json
+
+#endif  // JSON_DMXNODEPARAMS_H_

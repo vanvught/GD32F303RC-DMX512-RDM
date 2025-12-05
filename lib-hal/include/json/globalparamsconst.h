@@ -1,8 +1,10 @@
-#pragma once
 /**
  * @file globalparamsconst.h
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org */
+
+#ifndef JSON_GLOBALPARAMSCONST_H_
+#define JSON_GLOBALPARAMSCONST_H_
 
 #include "json/json_key.h"
 
@@ -19,3 +21,5 @@ struct GlobalParamsConst
 	};
 };
 } // namespace json
+
+#endif  // JSON_GLOBALPARAMSCONST_H_

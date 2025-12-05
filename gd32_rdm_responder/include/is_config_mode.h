@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file is_config_mode.h
  *
@@ -24,6 +23,9 @@
  * THE SOFTWARE.
  */
 
+#ifndef IS_CONFIG_MODE_H_
+#define IS_CONFIG_MODE_H_
+
 #include "gd32.h"
 
 bool IsConfigMode()
@@ -36,3 +38,5 @@ bool IsConfigMode()
 
     return kIsConfigMode;
 }
+
+#endif  // IS_CONFIG_MODE_H_

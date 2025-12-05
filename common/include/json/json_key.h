@@ -1,6 +1,3 @@
-#ifndef JSON_JSON_KEY_H_
-#define JSON_JSON_KEY_H_
-
 /**
  * @file json_key.h
  *
@@ -25,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef JSON_JSON_KEY_H_
+#define JSON_JSON_KEY_H_
 
 #include <cstdint>
 #include <cstddef>

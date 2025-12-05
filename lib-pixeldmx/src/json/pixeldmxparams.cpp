@@ -23,8 +23,6 @@
  * THE SOFTWARE.
  */
 
-#undef NDEBUG
-
 #include <cstdint>
 #include <algorithm>
 
@@ -42,7 +40,7 @@
 #include "gamma/gamma_tables.h"
 #endif
 #include "dmxnode_outputtype.h"
-#include "common/firmware/pixeldmx/show.h"
+#include "firmware/pixeldmx/show.h"
 #include "dmxnode.h"
 #include "dmxnode_nodetype.h"
 
@@ -223,7 +221,9 @@ void PixelDmxParams::Set()
         {
             if (kStartUniverse != 0)
             {
-                DmxNodeNodeType::Get()->SetUniverse(protocol_port_index, dmxnode::PortDirection::kOutput, static_cast<uint16_t>(kStartUniverse + universe));
+                DmxNodeNodeType::Get()->SetUniverse(protocol_port_index, static_cast<uint16_t>(kStartUniverse + universe));
+                DmxNodeNodeType::Get()->SetDirection(protocol_port_index, dmxnode::PortDirection::kOutput);
+
                 char label[dmxnode::kLabelNameLength];
                 snprintf(label, dmxnode::kLabelNameLength - 1, "Pixel %c -> %u:%u", static_cast<char>('A' + pixel_port_index), protocol_port_index,
                          kStartUniverse + universe);
@@ -235,7 +235,7 @@ void PixelDmxParams::Set()
 
     for (; protocol_port_index < dmxnode::kMaxPorts; protocol_port_index++)
     {
-        DmxNodeNodeType::Get()->SetUniverse(protocol_port_index, dmxnode::PortDirection::kDisable, 0);
+        DmxNodeNodeType::Get()->SetDirection(protocol_port_index, dmxnode::PortDirection::kDisable);
         DmxNode::Instance().SetShortNameDefault(protocol_port_index);
     }
 #endif

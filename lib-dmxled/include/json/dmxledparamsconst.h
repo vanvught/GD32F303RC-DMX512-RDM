@@ -1,7 +1,9 @@
-#pragma once
 /**
  * @file dmxledparamsconst.h
  */
+
+#ifndef JSON_DMXLEDPARAMSCONST_H_
+#define JSON_DMXLEDPARAMSCONST_H_
 
 #include "json/json_key.h"
 
@@ -85,3 +87,5 @@ struct DmxLedParamsConst
 	};
 };
 } // namespace json
+
+#endif  // JSON_DMXLEDPARAMSCONST_H_

@@ -1,8 +1,10 @@
-#pragma once
 /**
  * @file globalparams.h
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org */
+
+#ifndef JSON_GLOBALPARAMS_H_
+#define JSON_GLOBALPARAMS_H_
 
 #include "configurationstore.h"
 #include "json/globalparamsconst.h"
@@ -36,8 +38,10 @@ class GlobalParams : public JsonParamsBase<GlobalParams>
 		json::MakeKey(SetUtcOffset, GlobalParamsConst::kUtcOffset), 
 	};
     
-    inline static common::store::Global store_global_;
+    inline static common::store::Global store_global;
 
     friend class JsonParamsBase<GlobalParams>;
 };
 } // namespace json
+
+#endif  // JSON_GLOBALPARAMS_H_

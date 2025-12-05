@@ -30,7 +30,7 @@
 
 #include "hal_millis.h"
 #include "hal_i2c.h"
-
+#include "firmware/debug/debug_printbits.h"
 #include "debug.h"
 
 SC16IS740::SC16IS740(uint8_t address, uint32_t on_board_crystal) :
@@ -72,13 +72,13 @@ SC16IS740::SC16IS740(uint8_t address, uint32_t on_board_crystal) :
 	WriteRegister(SC16IS7X0_IER, static_cast<uint8_t>(IER_ELSI | IER_ERHRI));
 
 	DEBUG_PRINTF("TLR=%.2x", ReadRegister(SC16IS7X0_TLR));
-	debug_print_bits(ReadRegister(SC16IS7X0_TLR));
+	debug::PrintBits(ReadRegister(SC16IS7X0_TLR));
 
 	DEBUG_PRINTF("IER=%.2x", ReadRegister(SC16IS7X0_IER));
-	debug_print_bits(ReadRegister(SC16IS7X0_IER));
+	debug::PrintBits(ReadRegister(SC16IS7X0_IER));
 
 	DEBUG_PRINTF("IIR=%.2x", ReadRegister(SC16IS7X0_IIR));
-	debug_print_bits(ReadRegister(SC16IS7X0_IIR));
+	debug::PrintBits(ReadRegister(SC16IS7X0_IIR));
 }
 
 void SC16IS740::SetFormat(uint32_t bits, SerialParity parity,  uint32_t stop_bits) {

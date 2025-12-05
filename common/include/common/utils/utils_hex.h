@@ -1,6 +1,3 @@
-#ifndef COMMON_UTILS_UTILS_HEX_H_
-#define COMMON_UTILS_UTILS_HEX_H_
-
 /**
  * @file utils_hex.h
  *
@@ -25,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef COMMON_UTILS_UTILS_HEX_H_
+#define COMMON_UTILS_UTILS_HEX_H_
 
 #include <cstdint>
 #include <cstddef>

@@ -38,11 +38,9 @@
 #ifdef NDEBUG
 # define DEBUG_PRINTF(FORMAT, ...)	((void)0)
 # define DEBUG_PUTS(MSG)			((void)0)
-# define debug_dump(x,y)			((void)0)
 # define debug_print_bits(x)		((void)0)
 #else
 # include <cstdint>
-void debug_dump(const void *, uint32_t);
 void debug_print_bits(uint32_t);
 # if defined(__linux__) || defined (__APPLE__)
 #  define DEBUG_PRINTF(FORMAT, ...) \

@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmsensorsparams.h
  *
@@ -23,6 +22,9 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+
+#ifndef JSON_RDMSENSORSPARAMS_H_
+#define JSON_RDMSENSORSPARAMS_H_
 
 #include <cstdint>
 #include "common/utils/utils_array.h"
@@ -77,3 +79,5 @@ class RdmSensorsParams : public JsonParamsBase<RdmSensorsParams>
     friend class JsonParamsBase<RdmSensorsParams>;
 };
 } // namespace json
+
+#endif  // JSON_RDMSENSORSPARAMS_H_

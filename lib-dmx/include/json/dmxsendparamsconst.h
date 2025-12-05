@@ -1,8 +1,10 @@
-#pragma once
 /**
  * @file dmxsendparamsconst.h
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org */
+
+#ifndef JSON_DMXSENDPARAMSCONST_H_
+#define JSON_DMXSENDPARAMSCONST_H_
 
 #include "json/json_key.h"
 
@@ -37,3 +39,5 @@ struct DmxSendParamsConst
 	};
 };
 } // namespace json
+
+#endif  // JSON_DMXSENDPARAMSCONST_H_

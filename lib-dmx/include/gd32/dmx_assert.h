@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file dmx_assert.h
  *
@@ -23,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef GD32_DMX_ASSERT_H_
+#define GD32_DMX_ASSERT_H_
 
 #include <cassert> // IWYU pragma: keep
 
@@ -66,3 +68,5 @@
             return nullptr;                              \
     } while (0)
 #endif
+
+#endif  // GD32_DMX_ASSERT_H_

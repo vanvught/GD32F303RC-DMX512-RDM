@@ -1,6 +1,3 @@
-#ifndef JSON_JSON_PARSER_H_
-#define JSON_JSON_PARSER_H_
-
 /**
  * @file json_parser.h
  *
@@ -25,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+#ifndef JSON_JSON_PARSER_H_
+#define JSON_JSON_PARSER_H_
 
 #include <cstddef>
 #include <cstdint>

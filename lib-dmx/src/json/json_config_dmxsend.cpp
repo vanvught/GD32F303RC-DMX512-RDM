@@ -1,11 +1,7 @@
-#ifndef COMMON_FIRMWARE_JAMSTAPL_HANDLEROLED_H_
-#define COMMON_FIRMWARE_JAMSTAPL_HANDLEROLED_H_
-
 /**
- * @file handleroled.h
- *
+ * @file json_config_dmxsend.cpp
  */
-/* Copyright (C) 2021-2025 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,32 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+ 
+#include <cstdint>
 
-#include "jamstapl.h"
-#include "console.h"
-#include "display.h"
+#include "json/dmxsendparams.h"
+#include "json/dmxsendparamsconst.h"
+#include "json/json_helpers.h"
+#include "dmx.h"
 
-struct HandlerOled : public JamSTAPLDisplay
+namespace json::config
 {
-    HandlerOled() { s_this = this; }
-    ~HandlerOled() override = default;
+uint32_t GetDmxSend(char* buffer, uint32_t length)
+{
+	auto& dmx = *Dmx::Get();
+	const auto kPeriod = dmx.GetDmxPeriodTime();
 
-    // JamSTAPL
-    void JamShowInfo(const char* info) override
-    {
-        Display::Get()->ClearLine(1);
-        Display::Get()->Write(1, info);
-    }
+ 	return json::helpers::Serialize(buffer, length, [&](JsonDoc& doc) {	
+	    doc[DmxSendParamsConst::kBreakTime.name] = dmx.GetDmxBreakTime();
+	    doc[DmxSendParamsConst::kMabTime.name] = dmx.GetDmxMabTime();	
+	    doc[DmxSendParamsConst::kRefreshRate.name] = 1000000U / kPeriod;
+	    doc[DmxSendParamsConst::kSlotsCount.name] = dmx.GetDmxSlots();
+    });
+}
 
-    void JamShowStatus(const char* status, int exit_code) override
-    {
-        Display::Get()->TextStatus(status, exit_code == 0 ? console::Colours::kConsoleGreen : console::Colours::kConsoleRed);
-    }
-
-    static HandlerOled* Get() { return s_this; }
-
-   private:
-    inline static HandlerOled* s_this;
-};
-
-#endif  // COMMON_FIRMWARE_JAMSTAPL_HANDLEROLED_H_
+void SetDmxSend(const char* buffer, uint32_t buffer_size)
+{
+   ::json::DmxSendParams dmx_send_params;
+    dmx_send_params.Store(buffer, buffer_size);
+    dmx_send_params.Set();
+}
+} // namespace json::config

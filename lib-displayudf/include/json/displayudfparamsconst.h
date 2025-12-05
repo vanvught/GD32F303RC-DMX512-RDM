@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file displayudfparamsconst.h
  *
@@ -24,8 +23,13 @@
  * THE SOFTWARE.
  */
 
+#ifndef JSON_DISPLAYUDFPARAMSCONST_H_
+#define JSON_DISPLAYUDFPARAMSCONST_H_
+
 #include "json/json_key.h"
+#if defined (DMXNODE_PORTS) && (DMXNODE_PORTS > 0)
 #include "json/dmxnodeparamsconst.h"
+#endif
 #if defined(NODE_ARTNET) || defined (NODE_ARTNET_MULTI)
 #include "json/artnetparamsconst.h"
 #endif
@@ -163,3 +167,5 @@ struct DisplayUdfParamsConst
 	};
 };
 } // namespace json
+
+#endif  // JSON_DISPLAYUDFPARAMSCONST_H_

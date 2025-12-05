@@ -1,7 +1,7 @@
 /**
  * @file readconfigfile.h
  */
-/* Copyright (C) 2017-2023 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2017-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,8 @@
 #ifndef PARAMS_READCONFIGFILE_H_
 #define PARAMS_READCONFIGFILE_H_
 
+#include <cstdint>
+
 typedef void (*CallbackFunctionPtr)(void*, const char*);
 
 class ReadConfigFile
@@ -36,11 +38,11 @@ class ReadConfigFile
 #if !defined(DISABLE_FS)
     bool Read(const char* filename);
 #endif
-    void Read(const char* buffer, unsigned length);
+    void Read(const char* buffer, uint32_t length);
 
    private:
     CallbackFunctionPtr callback_;
     void* m_p;
 };
 
-#endif  // PARAMS_READCONFIGFILE_H_
+#endif // PARAMS_READCONFIGFILE_H_

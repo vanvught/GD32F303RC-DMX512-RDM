@@ -1,5 +1,5 @@
 /**
- * @file debug_dump.cpp
+ * @file debug_dump.h
  *
  */
 /* Copyright (C) 2018-2025 by Arjan van Vught mailto:info@gd32-dmx.org
@@ -23,8 +23,11 @@
  * THE SOFTWARE.
  */
 
-#include <cstdio>
+#ifndef COMMON_DEBUG_DEBUG_DUMP_H_
+#define COMMON_DEBUG_DEBUG_DUMP_H_
+
 #include <cstdint>
+#include <cstdio>
 #include <ctype.h>
 
 #if defined(H3)
@@ -32,12 +35,19 @@ namespace uart0
 {
 int Printf(const char* fmt, ...);
 }
-#define printf uart0::Printf
+#define printf uart0::Printf // NOLINT
 #endif
 
-static constexpr uint32_t kCharsPerLine = 16;
-
-void debug_dump(const void* data, uint32_t size)
+namespace debug
+{
+namespace dump
+{
+inline constexpr uint32_t kCharsPerLine = 16;
+}
+#ifdef NDEBUG
+inline void Dump([[maybe_unused]] const void* data, [[maybe_unused]] uint32_t size) {}
+#else
+inline void Dump(const void* data, uint32_t size)
 {
     uint32_t chars = 0;
     const auto* p = reinterpret_cast<const uint8_t*>(data);
@@ -52,7 +62,7 @@ void debug_dump(const void* data, uint32_t size)
 
         const auto* q = p;
 
-        while ((chars_this_line < kCharsPerLine) && (chars < size))
+        while ((chars_this_line < dump::kCharsPerLine) && (chars < size))
         {
             if (chars_this_line % 8 == 0)
             {
@@ -68,7 +78,7 @@ void debug_dump(const void* data, uint32_t size)
 
         auto chars_dot_line = chars_this_line;
 
-        for (; chars_this_line < kCharsPerLine; chars_this_line++)
+        for (; chars_this_line < dump::kCharsPerLine; chars_this_line++)
         {
             if (chars_this_line % 8 == 0)
             {
@@ -104,3 +114,7 @@ void debug_dump(const void* data, uint32_t size)
 
     } while (chars < size);
 }
+#endif
+} // namespace debug
+
+#endif /* COMMON_DEBUG_DEBUG_DUMP_H_ */

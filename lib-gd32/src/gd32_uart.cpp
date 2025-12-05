@@ -309,3 +309,39 @@ void Gd32UartSetBaudrate(uint32_t usart_periph, uint32_t baudrate)
 
     USART_CTL0(usart_periph) |= USART_CTL0_UEN;
 }
+
+void Gd32UartTransmit(uint32_t usart_periph, const uint8_t* data, uint32_t length)
+{
+    if (data == nullptr) [[unlikely]]
+    {
+        return;
+    }
+
+    while (length-- != 0)
+    {
+        while (RESET == usart_flag_get(usart_periph, USART_FLAG_TBE));
+#if defined(GD32H7XX)
+        USART_TDATA(usart_periph) = USART_TDATA_TDATA & (uint32_t)*data++;
+#else
+        USART_DATA(usart_periph) = (USART_DATA_DATA & *data++);
+#endif
+    }
+}
+
+void Gd32UartTransmitString(uint32_t usart_periph, const char* data)
+{
+    if (data == nullptr) [[unlikely]]
+    {
+        return;
+    }
+
+    while (*data != '\0')
+    {
+        while (RESET == usart_flag_get(USART0, USART_FLAG_TBE));
+#if defined(GD32H7XX)
+        USART_TDATA(usart_periph) = USART_TDATA_TDATA & (uint32_t)*data++;
+#else
+        USART_DATA(usart_periph) = (USART_DATA_DATA & *data++);
+#endif
+    }
+}

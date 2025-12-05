@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file pixeldmxparams.h
  *
@@ -24,6 +23,10 @@
  * THE SOFTWARE.
  */
  
+
+#ifndef JSON_PIXELDMXPARAMS_H_
+#define JSON_PIXELDMXPARAMS_H_
+
 #include "configurationstore.h"
 #include "json/json_key.h"
 #include "json/dmxledparamsconst.h"
@@ -120,3 +123,5 @@ class PixelDmxParams : public JsonParamsBase<PixelDmxParams>
     friend class JsonParamsBase<PixelDmxParams>;
 };
 } // namespace json
+
+#endif  // JSON_PIXELDMXPARAMS_H_

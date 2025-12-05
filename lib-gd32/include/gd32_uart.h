@@ -50,6 +50,9 @@ inline constexpr uint32_t kUartStop2Bits = 2;
 void Gd32UartBegin(uint32_t usart_periph, uint32_t baudrate, uint32_t bits, uint32_t parity, uint32_t stop_bits);
 void Gd32UartSetBaudrate(uint32_t usart_periph, uint32_t baudrate);
 
+void Gd32UartTransmit(uint32_t usart_periph, const uint8_t* data, uint32_t length);
+void Gd32UartTransmitString(uint32_t usart_periph, const char* data);
+
 inline uint32_t Gd32UartGetRxFifoLevel(__attribute__((unused)) uint32_t usart_periph)
 {
     return 1;

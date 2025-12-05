@@ -34,7 +34,7 @@
 #include "pixeldmxparamsrdm.h"
 #include "pixeltestpattern.h"
 #include "pixeldmx.h"
-#include "common/firmware/pixeldmx/show.h"
+#include "firmware/pixeldmx/show.h"
 #include "configstore.h"
 #include "firmwareversion.h"
 #include "software_version.h"

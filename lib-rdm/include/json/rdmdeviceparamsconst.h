@@ -1,4 +1,3 @@
-#pragma once
 /**
  * @file rdmdeviceparamsconst.h
  *
@@ -24,6 +23,10 @@
  * THE SOFTWARE.
  */
  
+
+#ifndef JSON_RDMDEVICEPARAMSCONST_H_
+#define JSON_RDMDEVICEPARAMSCONST_H_
+
 #include "json/json_key.h"
 
 namespace json
@@ -51,3 +54,5 @@ struct RdmDeviceParamsConst
 	};
 };
 } // namespace json
+
+#endif  // JSON_RDMDEVICEPARAMSCONST_H_

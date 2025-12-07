@@ -85,9 +85,6 @@ class PixelDmx final : public PixelDmxConfiguration
     {
         DEBUG_ENTRY
 
-        delete output_type_;
-        output_type_ = nullptr;
-
         DEBUG_EXIT
     }
 
@@ -100,15 +97,8 @@ class PixelDmx final : public PixelDmxConfiguration
         PixelDmxConfiguration::Print();
 #endif
 
-        if (output_type_ != nullptr)
-        {
-            delete output_type_;
-            output_type_ = nullptr;
-        }
-
-        output_type_ = new PixelOutputType();
-        assert(output_type_ != nullptr);
-        output_type_->Blackout();
+         output_type_.ApplyConfiguration();
+        output_type_.Blackout();
 
         DEBUG_EXIT
     }
@@ -154,9 +144,9 @@ class PixelDmx final : public PixelDmxConfiguration
         assert(data != nullptr);
         assert(length <= dmxnode::kUniverseSize);
 
-        if (output_type_->IsUpdating())
+        if (output_type_.IsUpdating())
         {
-			puts("output_type_->IsUpdating()");
+			puts("output_type_.IsUpdating()");
             return;
         }
 
@@ -195,7 +185,7 @@ class PixelDmx final : public PixelDmxConfiguration
                         auto const kPixelIndexStart = (j * kGroupingCount);
                         for (uint32_t k = 0; k < kGroupingCount; k++)
                         {
-                            output_type_->SetPixel(kPixelIndexStart + k, data[d + 0], data[d + 1], data[d + 2]);
+                            output_type_.SetPixel(kPixelIndexStart + k, data[d + 0], data[d + 1], data[d + 2]);
                         }
                         d = d + 3;
                     }
@@ -206,7 +196,7 @@ class PixelDmx final : public PixelDmxConfiguration
                         auto const kPixelIndexStart = (j * kGroupingCount);
                         for (uint32_t k = 0; k < kGroupingCount; k++)
                         {
-                            output_type_->SetPixel(kPixelIndexStart + k, data[d + 0], data[d + 2], data[d + 1]);
+                            output_type_.SetPixel(kPixelIndexStart + k, data[d + 0], data[d + 2], data[d + 1]);
                         }
                         d = d + 3;
                     }
@@ -217,7 +207,7 @@ class PixelDmx final : public PixelDmxConfiguration
                         auto const kPixelIndexStart = (j * kGroupingCount);
                         for (uint32_t k = 0; k < kGroupingCount; k++)
                         {
-                            output_type_->SetPixel(kPixelIndexStart + k, data[d + 1], data[d + 0], data[d + 2]);
+                            output_type_.SetPixel(kPixelIndexStart + k, data[d + 1], data[d + 0], data[d + 2]);
                         }
                         d = d + 3;
                     }
@@ -228,7 +218,7 @@ class PixelDmx final : public PixelDmxConfiguration
                         auto const kPixelIndexStart = (j * kGroupingCount);
                         for (uint32_t k = 0; k < kGroupingCount; k++)
                         {
-                            output_type_->SetPixel(kPixelIndexStart + k, data[d + 2], data[d + 0], data[d + 1]);
+                            output_type_.SetPixel(kPixelIndexStart + k, data[d + 2], data[d + 0], data[d + 1]);
                         }
                         d = d + 3;
                     }
@@ -239,7 +229,7 @@ class PixelDmx final : public PixelDmxConfiguration
                         auto const kPixelIndexStart = (j * kGroupingCount);
                         for (uint32_t k = 0; k < kGroupingCount; k++)
                         {
-                            output_type_->SetPixel(kPixelIndexStart + k, data[d + 1], data[d + 2], data[d + 0]);
+                            output_type_.SetPixel(kPixelIndexStart + k, data[d + 1], data[d + 2], data[d + 0]);
                         }
                         d = d + 3;
                     }
@@ -250,7 +240,7 @@ class PixelDmx final : public PixelDmxConfiguration
                         auto const kPixelIndexStart = (j * kGroupingCount);
                         for (uint32_t k = 0; k < kGroupingCount; k++)
                         {
-                            output_type_->SetPixel(kPixelIndexStart + k, data[d + 2], data[d + 1], data[d + 0]);
+                            output_type_.SetPixel(kPixelIndexStart + k, data[d + 2], data[d + 1], data[d + 0]);
                         }
                         d = d + 3;
                     }
@@ -269,7 +259,7 @@ class PixelDmx final : public PixelDmxConfiguration
                 auto const kPixelIndexStart = (j * kGroupingCount);
                 for (uint32_t k = 0; k < kGroupingCount; k++)
                 {
-                    output_type_->SetPixel(kPixelIndexStart + k, data[d], data[d + 1], data[d + 2], data[d + 3]);
+                    output_type_.SetPixel(kPixelIndexStart + k, data[d], data[d + 1], data[d + 2], data[d + 3]);
                 }
                 d = d + 4;
             }
@@ -282,7 +272,7 @@ class PixelDmx final : public PixelDmxConfiguration
             {
                 return;
             }
-            output_type_->Update();
+            output_type_.Update();
         }
 #else
 #if !defined(SETDATA)
@@ -296,7 +286,7 @@ class PixelDmx final : public PixelDmxConfiguration
                 {
                     return;
                 }
-                output_type_->Update();
+                output_type_.Update();
             }
         }
 #endif
@@ -306,8 +296,7 @@ class PixelDmx final : public PixelDmxConfiguration
 
     void Sync()
     {
-        assert(output_type_ != nullptr);
-        output_type_->Update();
+        output_type_.Update();
     }
 
 #if defined(OUTPUT_HAVE_STYLESWITCH)
@@ -319,29 +308,29 @@ class PixelDmx final : public PixelDmxConfiguration
     {
         blackout_ = blackout;
 
-        while (output_type_->IsUpdating())
+        while (output_type_.IsUpdating())
         {
             // wait for completion
         }
 
         if (blackout)
         {
-            output_type_->Blackout();
+            output_type_.Blackout();
         }
         else
         {
-            output_type_->Update();
+            output_type_.Update();
         }
     }
 
     void FullOn()
     {
-        while (output_type_->IsUpdating())
+        while (output_type_.IsUpdating())
         {
             // wait for completion
         }
 
-        output_type_->FullOn();
+        output_type_.FullOn();
     }
 
     void Print() OVERRIDE { PixelDmxConfiguration::Get().Print(); }
@@ -419,7 +408,7 @@ class PixelDmx final : public PixelDmxConfiguration
     }
 
    private:
-    PixelOutputType* output_type_{nullptr};
+    PixelOutputType output_type_;
 
     bool started_{false};
     bool blackout_{false};

@@ -2,7 +2,7 @@
  * @file gd32_millis.h
  *
  */
-/* Copyright (C) 2024 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2024-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,20 +28,21 @@
 
 #include <cstdint>
 
-#if defined (USE_FREE_RTOS)
-# include "FreeRTOS.h"
-# include "task.h"
+#if defined(USE_FREE_RTOS)
+#include "FreeRTOS.h"
+#include "task.h"
 #endif
 
-inline uint32_t millis() {
-#if defined (CONFIG_HAL_USE_SYSTICK)
-	extern volatile uint32_t gv_nSysTickMillis;
-	return gv_nSysTickMillis;
-#elif defined (USE_FREE_RTOS)
-	return xTaskGetTickCount();
+inline uint32_t millis()
+{
+#if defined(CONFIG_HAL_USE_SYSTICK)
+    extern volatile uint32_t gv_nSysTickMillis;
+    return gv_nSysTickMillis;
+#elif defined(USE_FREE_RTOS)
+    return xTaskGetTickCount();
 #else
-	uint32_t Timer6GetElapsedMilliseconds();
-	return Timer6GetElapsedMilliseconds();
+    uint32_t Timer6GetElapsedMilliseconds();
+    return Timer6GetElapsedMilliseconds();
 #endif
 }
 

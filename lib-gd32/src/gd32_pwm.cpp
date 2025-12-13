@@ -75,25 +75,25 @@ namespace pwm
 #define PWM_CHANNEL_3_DUTYCYCLE 50
 #endif
 #if defined(PWM_CH0_RCU_GPIOx)
-static constexpr uint32_t DEFAUL_CHANNEL_0_DUTYCYCLE = PWM_CHANNEL_0_DUTYCYCLE;
+static constexpr uint32_t kDefaulChannel0Dutycycle = PWM_CHANNEL_0_DUTYCYCLE;
 #endif
 #if defined(PWM_CH1_RCU_GPIOx)
-static constexpr uint32_t DEFAUL_CHANNEL_1_DUTYCYCLE = PWM_CHANNEL_1_DUTYCYCLE;
+static constexpr uint32_t kDefaulChannel1Dutycycle = PWM_CHANNEL_1_DUTYCYCLE;
 #endif
 #if defined(PWM_CH2_RCU_GPIOx)
-static constexpr uint32_t DEFAUL_CHANNEL_2_DUTYCYCLE = PWM_CHANNEL_2_DUTYCYCLE;
+static constexpr uint32_t kDefaulChannel2Dutycycle = PWM_CHANNEL_2_DUTYCYCLE;
 #endif
 #if defined(PWM_CH3_RCU_GPIOx)
-static constexpr uint32_t DEFAUL_CHANNEL_3_DUTYCYCLE = PWM_CHANNEL_3_DUTYCYCLE;
+static constexpr uint32_t kDefaulChannel3Dutycycle = PWM_CHANNEL_3_DUTYCYCLE;
 #endif
 #if defined(PWM_RCU_TIMERx) && defined(PWM_TIMERx)
-static constexpr uint32_t TIMER_PERIOD = 19999; // 50KHz
+static constexpr uint32_t kTimerPeriod = 19999; // 50KHz
 #endif
 } // namespace pwm
 
 #if defined(PWM_RCU_TIMERx) && defined(PWM_TIMERx)
 
-static void dump()
+static void Dump()
 {
 #if 1
     DEBUG_ENTRY
@@ -199,7 +199,7 @@ static void TimerConfig()
     timer_initpara.prescaler = TIMER_PSC_1MHZ;
     timer_initpara.alignedmode = TIMER_COUNTER_EDGE;
     timer_initpara.counterdirection = TIMER_COUNTER_UP;
-    timer_initpara.period = pwm::TIMER_PERIOD;
+    timer_initpara.period = pwm::kTimerPeriod;
     timer_initpara.clockdivision = TIMER_CKDIV_DIV1;
     timer_initpara.repetitioncounter = 0;
     timer_init(PWM_TIMERx, &timer_initpara);
@@ -247,34 +247,34 @@ void gd32_pwm_begin()
 {
     DEBUG_ENTRY
 
-    dump();
+    Dump();
 
     GpioConfig();
     TimerConfig();
 
 #if defined(PWM_CH0_RCU_GPIOx)
-    gd32_pwm_set_duty_cycle(pwm::Channel::PWM_CHANNEL_0, pwm::DEFAUL_CHANNEL_0_DUTYCYCLE);
+    gd32_pwm_set_duty_cycle(pwm::Channel::PWM_CHANNEL_0, pwm::kDefaulChannel0Dutycycle);
 #endif
 #if defined(PWM_CH1_RCU_GPIOx)
-    gd32_pwm_set_duty_cycle(pwm::Channel::PWM_CHANNEL_1, pwm::DEFAUL_CHANNEL_1_DUTYCYCLE);
+    gd32_pwm_set_duty_cycle(pwm::Channel::PWM_CHANNEL_1, pwm::kDefaulChannel1Dutycycle);
 #endif
 #if defined(PWM_CH2_RCU_GPIOx)
-    gd32_pwm_set_duty_cycle(pwm::Channel::PWM_CHANNEL_2, pwm::DEFAUL_CHANNEL_2_DUTYCYCLE);
+    gd32_pwm_set_duty_cycle(pwm::Channel::PWM_CHANNEL_2, pwm::kDefaulChannel2Dutycycle);
 #endif
 #if defined(PWM_CH3_RCU_GPIOx)
-    gd32_pwm_set_duty_cycle(pwm::Channel::PWM_CHANNEL_3, pwm::DEFAUL_CHANNEL_3_DUTYCYCLE);
+    gd32_pwm_set_duty_cycle(pwm::Channel::PWM_CHANNEL_3, pwm::kDefaulChannel3Dutycycle);
 #endif
 
     DEBUG_EXIT
 }
 
-void gd32_pwm_set_duty_cycle(const pwm::Channel channel, const uint32_t nDutyCycle)
+void gd32_pwm_set_duty_cycle(pwm::Channel channel, uint32_t duty_cycle)
 {
     DEBUG_ENTRY
 
-    const uint32_t nPulse = (nDutyCycle > 100 ? 100 : nDutyCycle) * (pwm::TIMER_PERIOD / 100U);
+    const uint32_t nPulse = (duty_cycle > 100 ? 100 : duty_cycle) * (pwm::kTimerPeriod / 100U);
 
-    DEBUG_PRINTF("Channel=%u, nDutyCycle=%u, nPulse=%u", static_cast<unsigned>(channel), nDutyCycle, static_cast<unsigned>(nPulse));
+    DEBUG_PRINTF("Channel=%u, nDutyCycle=%u, nPulse=%u", static_cast<unsigned>(channel), duty_cycle, static_cast<unsigned>(nPulse));
 
     switch (channel)
     {

@@ -26,7 +26,7 @@
 #ifndef GD32_HAL_I2C_H_
 #define GD32_HAL_I2C_H_
 
-#include "gd32.h"
-#include "gd32_i2c.h"
+#include "gd32.h"     // IWYU pragma: keep
+#include "gd32_i2c.h" // IWYU pragma: keep
 
-#endif  // GD32_HAL_I2C_H_
+#endif // GD32_HAL_I2C_H_

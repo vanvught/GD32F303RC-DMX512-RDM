@@ -49,7 +49,7 @@
  * - **GD32H7XX**: Similar to GD32F4XX but considers the Ethernet peripheral base address.
  */
 #if defined(GD32F10X) || defined(GD32F20X)
-template <enet_descstate_enum info_get> uint32_t gd32_enet_desc_information_get(const enet_descriptors_struct* desc)
+template <enet_descstate_enum info_get> uint32_t Gd32EnetDescInformationGet(const enet_descriptors_struct* desc)
 {
     uint32_t reval = 0xFFFFFFFFU;
 
@@ -87,7 +87,7 @@ template <enet_descstate_enum info_get> uint32_t gd32_enet_desc_information_get(
     return reval;
 }
 #elif defined(GD32F4XX)
-template <enet_descstate_enum info_get> uint32_t gd32_enet_desc_information_get(const enet_descriptors_struct* desc)
+template <enet_descstate_enum info_get> uint32_t Gd32EnetDescInformationGet(const enet_descriptors_struct* desc)
 {
     uint32_t reval = 0xFFFFFFFFU;
 
@@ -130,7 +130,7 @@ template <enet_descstate_enum info_get> uint32_t gd32_enet_desc_information_get(
     return reval;
 }
 #elif defined(GD32H7XX)
-template <enet_descstate_enum info_get> uint32_t gd32_enet_desc_information_get(const enet_descriptors_struct* desc)
+template <enet_descstate_enum info_get> uint32_t Gd32EnetDescInformationGet(const enet_descriptors_struct* desc)
 {
     uint32_t reval = 0xFFFFFFFFU;
 
@@ -184,7 +184,7 @@ template <enet_descstate_enum info_get> uint32_t gd32_enet_desc_information_get(
  * varies based on whether the target platform is GD32H7XX or not.
  */
 #if defined(GD32H7XX)
-inline void gd32_enet_clear_dma_tx_flags_and_resume()
+inline void Gd32EnetClearDmaTxFlagsAndResume()
 {
     const auto dma_tbu_flag = (ENET_DMA_STAT(ENETx) & ENET_DMA_STAT_TBU);
     const auto dma_tu_flag = (ENET_DMA_STAT(ENETx) & ENET_DMA_STAT_TU);
@@ -196,7 +196,7 @@ inline void gd32_enet_clear_dma_tx_flags_and_resume()
     }
 }
 #else
-inline void gd32_enet_clear_dma_tx_flags_and_resume()
+inline void Gd32EnetClearDmaTxFlagsAndResume()
 {
     const auto kDmaTbuFlag = (ENET_DMA_STAT & ENET_DMA_STAT_TBU);
     const auto kDmaTuFlag = (ENET_DMA_STAT & ENET_DMA_STAT_TU);
@@ -221,7 +221,7 @@ inline void gd32_enet_clear_dma_tx_flags_and_resume()
  * caused by the Rx buffer unavailable condition.
  */
 #if defined(GD32H7XX)
-inline void gd32_enet_handle_rx_buffer_unavailable()
+inline void Gd32EnetHandleRxBufferUnavailable()
 {
     if (0 != (ENET_DMA_STAT(ENETx) & ENET_DMA_STAT_RBU))
     {
@@ -230,7 +230,7 @@ inline void gd32_enet_handle_rx_buffer_unavailable()
     }
 }
 #else
-inline void gd32_enet_handle_rx_buffer_unavailable()
+inline void Gd32EnetHandleRxBufferUnavailable()
 {
     if (0 != (ENET_DMA_STAT & ENET_DMA_STAT_RBU))
     {
@@ -247,7 +247,7 @@ inline void gd32_enet_reset_hash()
     ENET_MAC_HLL(ENETx) = 0;
 }
 #else
-inline void gd32_enet_reset_hash()
+inline void Gd32EnetResetHash()
 {
     ENET_MAC_HLH = 0;
     ENET_MAC_HLL = 0;

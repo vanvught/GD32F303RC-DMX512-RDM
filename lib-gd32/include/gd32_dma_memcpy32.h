@@ -31,30 +31,30 @@
 
 #include "gd32.h"
 
-namespace dma
+namespace dma::memcpy32
 {
-void Memcpy32Init();
+void Init();
 
-inline void Memcpy32(const void* destination, const void* source, uint32_t length)
+inline void StartDma(const void* destination, const void* source, uint32_t length)
 {
     assert((reinterpret_cast<uint32_t>(source) & 0x3) == 0);
     assert((reinterpret_cast<uint32_t>(destination) & 0x3) == 0);
 
 #if !defined(GD32F4XX)
-    uint32_t dmaCHCTL = DMA_CHCTL(DMA0, DMA_CH3);
-    dmaCHCTL &= ~DMA_CHXCTL_CHEN;
-    DMA_CHCTL(DMA0, DMA_CH3) = dmaCHCTL;
+    uint32_t dma_chctl = DMA_CHCTL(DMA0, DMA_CH3);
+    dma_chctl &= ~DMA_CHXCTL_CHEN;
+    DMA_CHCTL(DMA0, DMA_CH3) = dma_chctl;
 
     DMA_CHPADDR(DMA0, DMA_CH3) = reinterpret_cast<uint32_t>(source);
     DMA_CHMADDR(DMA0, DMA_CH3) = reinterpret_cast<uint32_t>(destination);
     DMA_CHCNT(DMA0, DMA_CH3) = (length & DMA_CHXCNT_CNT);
 
-    dmaCHCTL |= DMA_CHXCTL_CHEN;
-    DMA_CHCTL(DMA0, DMA_CH3) = dmaCHCTL;
+    dma_chctl |= DMA_CHXCTL_CHEN;
+    DMA_CHCTL(DMA0, DMA_CH3) = dma_chctl;
 #else
-    uint32_t dmaCHCTL = DMA_CHCTL(DMA1, DMA_CH0);
-    dmaCHCTL &= ~DMA_CHXCTL_CHEN;
-    DMA_CHCTL(DMA1, DMA_CH0) = dmaCHCTL;
+    uint32_t dma_chctl = DMA_CHCTL(DMA1, DMA_CH0);
+    dma_chctl &= ~DMA_CHXCTL_CHEN;
+    DMA_CHCTL(DMA1, DMA_CH0) = dma_chctl;
 
     DMA_INTC0(DMA1) |= DMA_FLAG_ADD(DMA_CHINTF_RESET_VALUE, DMA_CH0);
 
@@ -62,12 +62,12 @@ inline void Memcpy32(const void* destination, const void* source, uint32_t lengt
     DMA_CHPADDR(DMA1, DMA_CH0) = reinterpret_cast<uint32_t>(source);
     DMA_CHCNT(DMA1, DMA_CH0) = length;
 
-    dmaCHCTL |= DMA_CHXCTL_CHEN;
-    DMA_CHCTL(DMA1, DMA_CH0) = dmaCHCTL;
+    dma_chctl |= DMA_CHXCTL_CHEN;
+    DMA_CHCTL(DMA1, DMA_CH0) = dma_chctl;
 #endif
 }
 
-inline bool Memcpy32IsActive()
+inline bool IsActive()
 {
 #if !defined(GD32F4XX)
     return DMA_CHCNT(DMA0, DMA_CH3) != 0;
@@ -75,6 +75,6 @@ inline bool Memcpy32IsActive()
     return DMA_CHCNT(DMA1, DMA_CH0) != 0;
 #endif
 }
-} // namespace dma
+} // namespace dma::memcpy32
 
-#endif  // GD32_DMA_MEMCPY32_H_
+#endif // GD32_DMA_MEMCPY32_H_

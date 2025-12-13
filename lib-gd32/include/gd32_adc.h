@@ -32,4 +32,4 @@ float Gd32AdcGetVref();
 float Gd32AdcGetVbat();
 #endif
 
-#endif  // GD32_ADC_H_
+#endif // GD32_ADC_H_

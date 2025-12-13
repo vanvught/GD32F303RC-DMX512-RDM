@@ -31,6 +31,8 @@
 
 namespace uart0
 {
+static char s_buffer[128];
+
 void Init()
 {
     Gd32UartBegin(USART0, 115200U, gd32::kUartBits8, gd32::kUartParityNone, gd32::kUartStop1Bit);
@@ -54,6 +56,31 @@ void Putc(int c)
 #else
     USART_DATA(USART0) = static_cast<uint16_t>(USART_DATA_DATA & static_cast<uint8_t>(c));
 #endif
+}
+
+int Printf(const char* fmt, ...)
+{
+    va_list arp;
+
+    va_start(arp, fmt);
+
+    int i = vsnprintf(s_buffer, sizeof(s_buffer) - 1, fmt, arp);
+
+    va_end(arp);
+
+    char* s = s_buffer;
+
+    while (*s != '\0')
+    {
+        if (*s == '\n')
+        {
+            Putc('\r');
+        }
+
+        Putc(*s++);
+    }
+
+    return i;
 }
 
 void Puts(const char* s)

@@ -23,11 +23,9 @@
  * THE SOFTWARE.
  */
 
-#include <cassert>
-
+#if defined(GD32F4XX) || defined(GD32H7XX)
 #include "gd32.h"
 
-#if defined(GD32F4XX) || defined(GD32H7XX)
 void bkp_data_write(bkp_data_register_enum register_number, uint16_t data)
 {
     switch (register_number)

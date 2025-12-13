@@ -321,8 +321,7 @@ template <uint32_t gpio_periph, uint32_t alt_func_num, uint32_t pin> inline void
     GPIO_AFSEL1(gpio_periph) = afrh;
 }
 #else
-template <uint32_t gpio_periph, uint32_t mode, uint32_t pin, uint32_t speed = GPIO_OSPEED_50MHZ> 
-inline void gd32_gpio_init()
+template <uint32_t gpio_periph, uint32_t mode, uint32_t pin, uint32_t speed = GPIO_OSPEED_50MHZ> inline void gd32_gpio_init()
 {
     /* GPIO mode configuration */
     auto temp_mode = (mode & 0x0F);
@@ -392,4 +391,4 @@ inline void gd32_gpio_init()
 #endif
 #endif
 
-#endif  // GD32_GPIO_H_
+#endif // GD32_GPIO_H_

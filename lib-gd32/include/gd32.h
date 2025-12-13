@@ -1,7 +1,3 @@
-#ifndef GD32_H_
-#define GD32_H_
-
-#define GD32_H_
 /**
  * @file gd32.h
  *
@@ -26,6 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+ 
+ #ifndef GD32_H_
+ #define GD32_H_
 
 #include <stdint.h>
 

@@ -92,4 +92,4 @@
 #define ENETx
 #endif
 
-#endif  // GD32_BOARD_H_
+#endif // GD32_BOARD_H_

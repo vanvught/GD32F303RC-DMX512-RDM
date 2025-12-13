@@ -38,4 +38,4 @@ inline uint32_t Micros()
 }
 } // namespace hal
 
-#endif  // GD32_HAL_MICROS_H_
+#endif // GD32_HAL_MICROS_H_

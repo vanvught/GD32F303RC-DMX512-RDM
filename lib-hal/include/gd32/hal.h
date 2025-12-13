@@ -80,9 +80,9 @@ static constexpr uint32_t kReleaseId =
 #else
     0;
 #endif
-static constexpr const char kWebsite[] = "https://gd32-dmx.org";
-static constexpr float kCoreTemperatureMin = -40.0;
-static constexpr float kCoreTemperatureMax = +85.0;
+inline constexpr const char kWebsite[] = "https://gd32-dmx.org";
+inline constexpr float kCoreTemperatureMin = -40.0;
+inline constexpr float kCoreTemperatureMax = +85.0;
 
 inline void Run()
 {
@@ -106,4 +106,4 @@ inline void Run()
 }
 } // namespace hal
 
-#endif  // GD32_HAL_H_
+#endif // GD32_HAL_H_

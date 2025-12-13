@@ -237,4 +237,4 @@ inline void ch7_set()
 }
 } // namespace logic_analyzer
 
-#endif  // LOGIC_ANALYZER_H_
+#endif // LOGIC_ANALYZER_H_

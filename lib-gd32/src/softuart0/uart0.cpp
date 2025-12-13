@@ -23,11 +23,6 @@
  * THE SOFTWARE.
  */
 
-#if !defined(CONFIG_REMOTECONFIG_MINIMUM)
-#pragma GCC push_options
-#pragma GCC optimize("O2")
-#endif
-
 #include <cstdint>
 
 #include "gd32.h"

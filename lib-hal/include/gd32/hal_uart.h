@@ -41,4 +41,4 @@ inline constexpr auto STOP_1BIT = gd32::kUartStop1Bit;
 inline constexpr auto STOP_2BITS = gd32::kUartStop2Bits;
 } // namespace hal::uart
 
-#endif  // GD32_HAL_UART_H_
+#endif // GD32_HAL_UART_H_

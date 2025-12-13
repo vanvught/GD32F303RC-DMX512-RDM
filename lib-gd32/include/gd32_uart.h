@@ -26,15 +26,16 @@
 #ifndef GD32_UART_H_
 #define GD32_UART_H_
 
+#include <cstdint>
+
+#include "gd32.h"
+
 #if !defined(GD32H7XX)
 #define USART_TDATA USART_DATA
 #define USART_RDATA USART_DATA
 #define USART_TDATA_TDATA USART_DATA_DATA
 #define USART_RDATA_TDATA USART_DATA_DATA
 #endif
-
-#include <cstdint>
-#include "gd32.h"
 
 namespace gd32
 {
@@ -130,4 +131,4 @@ template <usart_interrupt_flag_enum flag> void Gd32UsartInterruptFlagClear(uint3
 #endif
 }
 
-#endif  // GD32_UART_H_
+#endif // GD32_UART_H_

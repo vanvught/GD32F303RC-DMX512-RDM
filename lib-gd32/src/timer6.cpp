@@ -35,14 +35,14 @@ extern "C"
 #if defined(CONFIG_TIMER6_HAVE_NO_IRQ_HANDLER)
     void TIMER6_IRQHandler()
     {
-        const auto nIntFlag = TIMER_INTF(TIMER6);
+        const auto kIntFlag = TIMER_INTF(TIMER6);
 
-        if ((nIntFlag & TIMER_INT_FLAG_UP) == TIMER_INT_FLAG_UP)
+        if ((kIntFlag & TIMER_INT_FLAG_UP) == TIMER_INT_FLAG_UP)
         {
             g_Seconds.nUptime++;
         }
 
-        TIMER_INTF(TIMER6) = static_cast<uint32_t>(~nIntFlag);
+        TIMER_INTF(TIMER6) = static_cast<uint32_t>(~kIntFlag);
     }
 #endif
 }

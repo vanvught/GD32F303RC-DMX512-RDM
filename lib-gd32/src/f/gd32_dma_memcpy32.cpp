@@ -24,10 +24,11 @@
  */
 
 #include "gd32.h"
+#include "gd32_dma.h"
 
-namespace dma
+namespace dma::memcpy32
 {
-void Memcpy32Init()
+void Init()
 {
 #if !defined(GD32F4XX)
     rcu_periph_clock_enable(RCU_DMA0);
@@ -47,6 +48,11 @@ void Memcpy32Init()
     dma_init(DMA0, DMA_CH3, &dma_init_struct);
     dma_circulation_disable(DMA0, DMA_CH3);
     dma_memory_to_memory_enable(DMA0, DMA_CH3);
+
+    Gd32DmaInterruptFlagClear<DMA0, DMA_CH3, (DMA_INT_FLAG_FTF | DMA_INT_FLAG_G)>();
+
+    NVIC_SetPriority(DMA0_Channel3_IRQn, 0);
+//  NVIC_EnableIRQ(DMA0_Channel3_IRQn);
 #else
     rcu_periph_clock_enable(RCU_DMA1);
     dma_deinit(DMA1, DMA_CH0);
@@ -66,6 +72,11 @@ void Memcpy32Init()
     dma_init_parameter.priority = DMA_PRIORITY_ULTRA_HIGH;
 
     dma_multi_data_mode_init(DMA1, DMA_CH0, &dma_init_parameter);
+
+    Gd32DmaInterruptFlagClear<DMA1, DMA_CH3, (DMA_INT_FLAG_FTF | DMA_INT_FLAG_TAE)>();
+
+    NVIC_SetPriority(DMA1_Channel0_IRQn, 0);
+//  NVIC_EnableIRQ(DMA1_Channel0_IRQn);
 #endif
 }
-} // namespace dma
+} // namespace dma::memcpy32

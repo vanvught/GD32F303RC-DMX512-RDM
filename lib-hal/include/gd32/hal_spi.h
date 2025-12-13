@@ -36,4 +36,4 @@
 #define SPI_CS0 GD32_SPI_CS0
 #define SPI_CS_NONE GD32_SPI_CS_NONE
 
-#endif  // GD32_HAL_SPI_H_
+#endif // GD32_HAL_SPI_H_

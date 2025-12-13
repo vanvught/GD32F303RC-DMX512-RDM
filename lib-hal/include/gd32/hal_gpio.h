@@ -2,7 +2,7 @@
  * @file hal_gpio.h
  *
  */
-/* Copyright (C) 2021-2024 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2021-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@
 #ifndef GD32_HAL_GPIO_H_
 #define GD32_HAL_GPIO_H_
 
-#include "gd32_gpio.h"
-#include "gd32_board.h"
+#include "gd32_gpio.h"  // IWYU pragma: keep
+#include "gd32_board.h" // IWYU pragma: keep
 
-#endif  // GD32_HAL_GPIO_H_
+#endif // GD32_HAL_GPIO_H_

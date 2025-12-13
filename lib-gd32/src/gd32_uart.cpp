@@ -26,8 +26,8 @@
 #include <cstdint>
 #include <cassert>
 
-#include "gd32_uart.h"
 #include "gd32.h"
+#include "gd32_uart.h"
 
 static void RcuConfig(uint32_t usart_periph)
 {

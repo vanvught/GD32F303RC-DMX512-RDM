@@ -126,4 +126,4 @@ inline void Run()
 }
 } // namespace hal::panelled
 
-#endif  // GD32_HAL_PANELLED_H_
+#endif // GD32_HAL_PANELLED_H_

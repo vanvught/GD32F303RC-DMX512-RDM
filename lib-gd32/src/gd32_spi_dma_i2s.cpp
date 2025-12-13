@@ -51,7 +51,7 @@ static_assert(I2S_PERIPH != SPI0);
 
 #ifndef NDEBUG
 #if !defined(GD32H7XX)
-void i2s_psc_config_dump(uint32_t spi_periph, uint32_t audiosample, uint32_t frameformat, uint32_t mckout);
+void I2sPscConfigDump(uint32_t spi_periph, uint32_t audiosample, uint32_t frameformat, uint32_t mckout);
 #endif
 #endif
 
@@ -59,7 +59,7 @@ void i2s_psc_config_dump(uint32_t spi_periph, uint32_t audiosample, uint32_t fra
 #define SPI_BUFFER_SIZE ((24 * 1024) / 2)
 #endif
 
-static uint16_t s_TxBuffer[SPI_BUFFER_SIZE] __attribute__((aligned(4)));
+static uint16_t s_tx_buffer[SPI_BUFFER_SIZE] __attribute__((aligned(4)));
 
 static void RcuConfig()
 {
@@ -120,7 +120,7 @@ static void GpioConfig()
 #endif
 }
 
-static void spi_i2s_dma_config()
+static void SpiI2sDmaConfig()
 {
     dma_deinit(I2S_DMAx, I2S_DMA_CHx);
 
@@ -170,49 +170,49 @@ void Gd32SpiDmaBegin()
     i2s_init(I2S_PERIPH, I2S_MODE_MASTERTX, I2S_STD_MSB, I2S_CKPL_LOW);
     i2s_enable(I2S_PERIPH);
 
-    spi_i2s_dma_config();
+    SpiI2sDmaConfig();
 
 #ifndef NDEBUG
-    i2s_psc_config_dump(I2S_PERIPH, 200000, I2S_FRAMEFORMAT_DT16B_CH16B, I2S_MCKOUT_DISABLE);
+    I2sPscConfigDump(I2S_PERIPH, 200000, I2S_FRAMEFORMAT_DT16B_CH16B, I2S_MCKOUT_DISABLE);
 #endif
 }
 
-void Gd32SpiDmaSetSpeedHz(uint32_t nSpeedHz)
+void Gd32SpiDmaSetSpeedHz(uint32_t speed_hz)
 {
-    const auto audiosample = nSpeedHz / 16U / 2U;
+    const auto kAudiosample = speed_hz / 16U / 2U;
 
     i2s_disable(I2S_PERIPH);
-    i2s_psc_config(I2S_PERIPH, audiosample, I2S_FRAMEFORMAT_DT16B_CH16B, I2S_MCKOUT_DISABLE);
+    i2s_psc_config(I2S_PERIPH, kAudiosample, I2S_FRAMEFORMAT_DT16B_CH16B, I2S_MCKOUT_DISABLE);
     i2s_enable(I2S_PERIPH);
 }
 
-const uint8_t* Gd32SpiDmaTxPrepare(uint32_t* nLength)
+const uint8_t* Gd32SpiDmaTxPrepare(uint32_t* length)
 {
-    *nLength = (sizeof(s_TxBuffer) / sizeof(s_TxBuffer[0])) * 2;
-    return (const uint8_t*)s_TxBuffer;
+    *length = (sizeof(s_tx_buffer) / sizeof(s_tx_buffer[0])) * 2;
+    return reinterpret_cast<const uint8_t*>(s_tx_buffer);
 }
 
-void Gd32SpiDmaTxStart(const uint8_t* pTxBuffer, uint32_t nLength)
+void Gd32SpiDmaTxStart(const uint8_t* tx_buffer, uint32_t length)
 {
-    assert(((uint32_t)pTxBuffer & 0x1) != 0x1);
-    assert((uint32_t)pTxBuffer >= (uint32_t)s_TxBuffer);
-    assert(nLength != 0);
+    assert(((uint32_t)tx_buffer & 0x1) != 0x1);
+    assert((uint32_t)tx_buffer >= (uint32_t)s_tx_buffer);
+    assert(length != 0);
 
 #if defined(GD32F4XX) || defined(GD32H7XX)
     dma_flag_clear(I2S_DMAx, I2S_DMA_CHx, DMA_FLAG_FTF);
 #endif
 
-    const auto dma_chcnt = (((nLength + 1) / 2) & DMA_CHXCNT_CNT);
+    const auto kDmaChcnt = (((length + 1) / 2) & DMA_CHXCNT_CNT);
 
-    auto nDmaChCTL = DMA_CHCTL(I2S_DMAx, I2S_DMA_CHx);
-    nDmaChCTL &= ~DMA_CHXCTL_CHEN;
-    DMA_CHCTL(I2S_DMAx, I2S_DMA_CHx) = nDmaChCTL;
+    auto dma_ch_ctl = DMA_CHCTL(I2S_DMAx, I2S_DMA_CHx);
+    dma_ch_ctl &= ~DMA_CHXCTL_CHEN;
+    DMA_CHCTL(I2S_DMAx, I2S_DMA_CHx) = dma_ch_ctl;
 
-    DMA_CHMADDR(I2S_DMAx, I2S_DMA_CHx) = (uint32_t)pTxBuffer;
-    DMA_CHCNT(I2S_DMAx, I2S_DMA_CHx) = dma_chcnt;
+    DMA_CHMADDR(I2S_DMAx, I2S_DMA_CHx) = reinterpret_cast<uint32_t>(tx_buffer);
+    DMA_CHCNT(I2S_DMAx, I2S_DMA_CHx) = kDmaChcnt;
 
-    nDmaChCTL |= DMA_CHXCTL_CHEN;
-    DMA_CHCTL(I2S_DMAx, I2S_DMA_CHx) = nDmaChCTL;
+    dma_ch_ctl |= DMA_CHXCTL_CHEN;
+    DMA_CHCTL(I2S_DMAx, I2S_DMA_CHx) = dma_ch_ctl;
 
     spi_dma_enable(I2S_PERIPH, SPI_DMA_TRANSMIT);
 }

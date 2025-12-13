@@ -61,4 +61,4 @@ inline bool Watchdog()
 }
 } // namespace hal
 
-#endif  // GD32_HAL_WATCHDOG_H_
+#endif // GD32_HAL_WATCHDOG_H_

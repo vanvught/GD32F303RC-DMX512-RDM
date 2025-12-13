@@ -242,4 +242,4 @@ template <uint32_t peripheral, dma_channel_enum channel, uint32_t nSource> inlin
 #error
 #endif
 
-#endif /* GD32_DMA_H_ */
+#endif // GD32_DMA_H_

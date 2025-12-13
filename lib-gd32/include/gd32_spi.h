@@ -65,9 +65,9 @@ void Gd32SpiWritenb(const char* tx_buffer, uint32_t length);
  * DMA support
  */
 
-//const uint8_t* Gd32SpiDmaTxPrepare(uint32_t& length);
-//void Gd32SpiDmaTxStart(const uint8_t* tx_buffer, uint32_t length);
-//bool Gd32SpiDmaTxIsActive();
+// const uint8_t* Gd32SpiDmaTxPrepare(uint32_t& length);
+// void Gd32SpiDmaTxStart(const uint8_t* tx_buffer, uint32_t length);
+// bool Gd32SpiDmaTxIsActive();
 
 /**
  * SPI DMA implementation using I2S.
@@ -95,4 +95,4 @@ void Gd32BitbangSpiWritenb(const char* tx_buffer, uint32_t length);
 void Gd32BitbangSpiWrite(uint16_t data);
 void Gd32BitbangSpiTransfernb(const char* tx_buffer, char* rx_buffer, uint32_t length);
 
-#endif  // GD32_SPI_H_
+#endif // GD32_SPI_H_

@@ -50,4 +50,4 @@ inline uint32_t Millis()
 }
 } // namespace hal
 
-#endif  // GD32_HAL_MILLIS_H_
+#endif // GD32_HAL_MILLIS_H_

@@ -1668,7 +1668,7 @@ static void UartDmxConfig(uint32_t usart_periph)
 
 Dmx::Dmx()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     assert(s_this == nullptr);
     s_this = this;
@@ -1742,7 +1742,7 @@ Dmx::Dmx()
     NVIC_EnableIRQ(UART7_IRQn);
 #endif
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void Dmx::SetPortDirection(uint32_t port_index, dmx::PortDirection port_direction, bool enable_data)
@@ -2184,7 +2184,7 @@ template <uint32_t portIndex, bool hasStartCode, dmx::SendStyle dmxSendStyle> vo
 
 void Dmx::Blackout()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     for (uint32_t port_index = 0; port_index < DMX_MAX_PORTS; port_index++)
     {
@@ -2196,12 +2196,12 @@ void Dmx::Blackout()
         }
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void Dmx::FullOn()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     for (uint32_t port_index = 0; port_index < DMX_MAX_PORTS; port_index++)
     {
@@ -2224,7 +2224,7 @@ void Dmx::FullOn()
         }
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void Dmx::StartOutput(uint32_t port_index)

@@ -26,30 +26,52 @@
 #ifndef DEBUG_H_
 #define DEBUG_H_
 
-#ifndef NDEBUG
-# include <cstdio>
-# define DEBUG_ENTRY	printf("-> %s:%s:%d\n", __FILE__, __func__, __LINE__);
-# define DEBUG_EXIT		printf("<- %s:%s:%d\n", __FILE__, __func__, __LINE__);
+#if !defined(NDEBUG)
+#include <cstdio>
+
+#define DEBUG_ENTRY()                                          \
+    do                                                         \
+    {                                                          \
+        printf("-> %s:%s:%d\n", __FILE__, __func__, __LINE__); \
+    } while (0)
+
+#define DEBUG_EXIT()                                           \
+    do                                                         \
+    {                                                          \
+        printf("<- %s:%s:%d\n", __FILE__, __func__, __LINE__); \
+    } while (0)
+
+#define DEBUG_PRINTF(fmt, ...)                                                                    \
+    do                                                                                            \
+    {                                                                                             \
+        printf("%s() %s:%d: " fmt "\n", __func__, __FILE__, __LINE__ __VA_OPT__(, ) __VA_ARGS__); \
+    } while (0)
+
+#define DEBUG_PUTS(msg)            \
+    do                             \
+    {                              \
+        DEBUG_PRINTF("%s", (msg)); \
+    } while (0)
+
 #else
-# define DEBUG_ENTRY	((void)0);
-# define DEBUG_EXIT		((void)0);
+
+#define DEBUG_ENTRY() \
+    do                \
+    {                 \
+    } while (0)
+#define DEBUG_EXIT() \
+    do               \
+    {                \
+    } while (0)
+#define DEBUG_PRINTF(...) \
+    do                    \
+    {                     \
+    } while (0)
+#define DEBUG_PUTS(...) \
+    do                  \
+    {                   \
+    } while (0)
+
 #endif
 
-#ifdef NDEBUG
-# define DEBUG_PRINTF(FORMAT, ...)	((void)0)
-# define DEBUG_PUTS(MSG)			((void)0)
-# define debug_print_bits(x)		((void)0)
-#else
-# include <cstdint>
-void debug_print_bits(uint32_t);
-# if defined(__linux__) || defined (__APPLE__)
-#  define DEBUG_PRINTF(FORMAT, ...) \
-		fprintf(stderr, "%s() %s, line %i: " FORMAT "\n", __func__, __FILE__, __LINE__, __VA_ARGS__)
-# else
-#  define DEBUG_PRINTF(FORMAT, ...) \
-		printf("%s() %s, line %i: " FORMAT "\n", __func__, __FILE__, __LINE__, __VA_ARGS__)
-# endif
-# define DEBUG_PUTS(MSG) DEBUG_PRINTF("%s", MSG)
-#endif
-
-#endif /* DEBUG_H_ */
+#endif // DEBUG_H_

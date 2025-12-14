@@ -85,7 +85,7 @@ class RDMDeviceResponder : public RDMDevice
                        uint32_t current_personality = rdm::device::responder::kDefaultCurrentPersonality)
         : rdm_personalities_(personalities)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         assert(s_this == nullptr);
         s_this = this;
@@ -105,14 +105,14 @@ class RDMDeviceResponder : public RDMDevice
             dmx_start_address_factory_default_ = dmxnode::kAddressInvalid;
         }
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     virtual ~RDMDeviceResponder() = default;
 
     void Init()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         RDMDevice::Init();
 
@@ -158,7 +158,7 @@ class RDMDeviceResponder : public RDMDevice
 
         checksum_ = CalculateChecksum();
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void Print()
@@ -246,7 +246,7 @@ class RDMDeviceResponder : public RDMDevice
     // E120_FACTORY_DEFAULTS		0x0090
     void SetFactoryDefaults()
     {
-		DEBUG_ENTRY
+		DEBUG_ENTRY();
 		
         RDMDevice::SetFactoryDefaults();
 
@@ -264,7 +264,7 @@ class RDMDeviceResponder : public RDMDevice
 
         configstore::SetFactoryDefaults();
         
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     bool GetFactoryDefaults()
@@ -309,7 +309,7 @@ class RDMDeviceResponder : public RDMDevice
     // E120_DMX_START_ADDRESS		0x00F0
     void SetDmxStartAddress(uint16_t sub_device, uint16_t dmx_start_address)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         if (dmx_start_address == 0 || dmx_start_address > dmxnode::kUniverseSize) return;
 
@@ -335,7 +335,7 @@ class RDMDeviceResponder : public RDMDevice
             DmxStartAddressUpdate();
         }
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     uint16_t GetDmxStartAddress(uint16_t sub_device = RDM_ROOT_DEVICE)

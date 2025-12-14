@@ -46,14 +46,14 @@ class DmxSend
    public:
     void Start(uint32_t port_index)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         DEBUG_PRINTF("port_index=%d", port_index);
 
         assert(port_index < CHAR_BIT);
 
         if (IsStarted(started_, port_index))
         {
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return;
         }
 
@@ -66,19 +66,19 @@ class DmxSend
             hal::panelled::On(hal::panelled::PORT_A_TX << port_index);
         }
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void Stop(uint32_t port_index)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         DEBUG_PRINTF("port_index=%d -> %u", port_index, IsStarted(started_, static_cast<uint8_t>(port_index)));
 
         assert(port_index < CHAR_BIT);
 
         if (!IsStarted(started_, port_index))
         {
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return;
         }
 
@@ -88,7 +88,7 @@ class DmxSend
 
         hal::panelled::Off(hal::panelled::PORT_A_TX << port_index);
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     template <bool doUpdate> void SetData(uint32_t port_index, const uint8_t* data, uint32_t length)

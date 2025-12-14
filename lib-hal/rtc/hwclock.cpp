@@ -81,10 +81,10 @@ void HwClock::Print()
  */
 void HwClock::HcToSys()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     if (!is_connected_)
     {
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
@@ -148,7 +148,7 @@ void HwClock::HcToSys()
         hal::WatchdogInit();
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 /*
@@ -156,10 +156,10 @@ void HwClock::HcToSys()
  */
 void HwClock::SysToHc()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     if (!is_connected_)
     {
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
@@ -191,5 +191,5 @@ void HwClock::SysToHc()
         hal::WatchdogInit();
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }

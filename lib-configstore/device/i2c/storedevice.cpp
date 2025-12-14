@@ -48,7 +48,7 @@ static constexpr auto kRomSize = 4096U;
 
 StoreDevice::StoreDevice() : AT24C32(storedevice::kI2CIndex)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     detected_ = AT24C32::IsConnected();
 
@@ -61,10 +61,10 @@ StoreDevice::StoreDevice() : AT24C32(storedevice::kI2CIndex)
         printf("StoreDevice: AT24C32 total %u bytes [%u kB]\n", GetSize(), GetSize() / 1024U);
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
-StoreDevice::~StoreDevice(){DEBUG_ENTRY DEBUG_EXIT}
+StoreDevice::~StoreDevice(){DEBUG_ENTRY(); DEBUG_EXIT();}
 
 uint32_t StoreDevice::GetSize() const
 {
@@ -78,36 +78,36 @@ uint32_t StoreDevice::GetSectorSize() const
 
 bool StoreDevice::Read(uint32_t offset, uint32_t length, uint8_t* buffer, storedevice::Result& result)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     assert((offset + length) <= storedevice::ROM_SIZE);
 
     AT24C32::Read(offset, buffer, length);
 
     result = storedevice::Result::kOk;
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return true;
 }
 
 bool StoreDevice::Erase([[maybe_unused]] uint32_t offset, [[maybe_unused]] uint32_t length, storedevice::Result& result)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     result = storedevice::Result::kOk;
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return true;
 }
 
 bool StoreDevice::Write(uint32_t offset, uint32_t length, const uint8_t* buffer, storedevice::Result& result)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     assert((offset + length) <= ROM_SIZE);
 
     AT24C32::Write(offset, buffer, length);
 
     result = storedevice::Result::kOk;
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return true;
 }

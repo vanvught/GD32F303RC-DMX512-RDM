@@ -58,17 +58,17 @@ Register static constexpr kRegisters[si5351a::clock_builder::kRegs] = {
 
 SI5351A::SI5351A(uint8_t address) : HAL_I2C(address == 0 ? si5351a::kI2CAddress : address)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     is_connected_ = HAL_I2C::IsConnected();
 
     DEBUG_PRINTF("is_connected_=%d", is_connected_);
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void SI5351A::ClockBuilder()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     assert(is_connected_);
 
     Pre();
@@ -80,7 +80,7 @@ void SI5351A::ClockBuilder()
 
     Post();
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void SI5351A::Pre()

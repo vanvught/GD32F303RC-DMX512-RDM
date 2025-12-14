@@ -32,21 +32,21 @@
 
 FlashCode::FlashCode()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     assert(s_this == nullptr);
     s_this = this;
 
     detected_ = true;
 
     printf("FMC: %s %u [%u]\n", GetName(), static_cast<unsigned int>(GetSize()), static_cast<unsigned int>(GetSize() / 1024U));
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 FlashCode::~FlashCode()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 const char* FlashCode::GetName() const

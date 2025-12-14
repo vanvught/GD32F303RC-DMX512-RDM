@@ -55,12 +55,12 @@ class PixelDmxConfiguration : public PixelConfiguration
    public:
     PixelDmxConfiguration()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         assert(s_this == nullptr);
         s_this = this;
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     ~PixelDmxConfiguration() = default;
@@ -95,7 +95,7 @@ class PixelDmxConfiguration : public PixelConfiguration
 
     void Validate(uint32_t ports_max)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         PixelConfiguration::Validate();
 
@@ -149,7 +149,7 @@ class PixelDmxConfiguration : public PixelConfiguration
 #endif
         }
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void Print()

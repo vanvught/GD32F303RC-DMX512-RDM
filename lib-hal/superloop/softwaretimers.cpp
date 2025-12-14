@@ -72,7 +72,7 @@ static uint32_t s_timer_current = 0;             ///< bRound-robin cursor for So
  */
 TimerHandle_t SoftwareTimerAdd(uint32_t interval_millis, const TimerCallbackFunction_t kCallbackFunction)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("s_timers_count=%u", s_timers_count);
 
     if (s_timers_count >= hal::kSoftwareTimersMax)
@@ -95,7 +95,7 @@ TimerHandle_t SoftwareTimerAdd(uint32_t interval_millis, const TimerCallbackFunc
 
     s_timers[s_timers_count++] = new_timer;
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return new_timer.id;
 }
 
@@ -111,7 +111,7 @@ TimerHandle_t SoftwareTimerAdd(uint32_t interval_millis, const TimerCallbackFunc
  */
 bool SoftwareTimerDelete(TimerHandle_t& id)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("s_timers_count=%u", s_timers_count);
 
     for (uint32_t i = 0; i < s_timers_count; ++i)
@@ -129,7 +129,7 @@ bool SoftwareTimerDelete(TimerHandle_t& id)
 
             id = -1;
 
-            DEBUG_ENTRY
+            DEBUG_ENTRY();
             return true;
         }
     }
@@ -138,7 +138,7 @@ bool SoftwareTimerDelete(TimerHandle_t& id)
     console::Error("SoftwareTimerDelete: Timer not found\n");
 #endif
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return false;
 }
 

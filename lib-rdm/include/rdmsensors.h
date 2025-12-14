@@ -54,7 +54,7 @@ class RDMSensors
    public:
     RDMSensors()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         assert(s_this == nullptr);
         s_this = this;
 
@@ -71,12 +71,12 @@ class RDMSensors
         params.Set();
 #endif
 #endif
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     ~RDMSensors()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         for (uint32_t i = 0; i < count_; i++)
         {
             if (rdm_sensor_[i] != nullptr)
@@ -87,22 +87,22 @@ class RDMSensors
         }
 
         delete[] rdm_sensor_;
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     bool Add(RDMSensor* rdm_sensor)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         if (rdm_sensor_ == nullptr)
         {
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
         }
 
         if (count_ == common::store::rdm::sensors::kMaxSensors)
         {
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
         }
 
@@ -110,7 +110,7 @@ class RDMSensors
         rdm_sensor_[count_++] = rdm_sensor;
 
         DEBUG_PRINTF("count_=%u", count_);
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return true;
     }
 

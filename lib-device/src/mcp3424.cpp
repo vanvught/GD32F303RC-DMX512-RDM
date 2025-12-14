@@ -60,7 +60,7 @@ static constexpr uint8_t CHANNEL(uint32_t channel)
 
 MCP3424::MCP3424(uint8_t address) : HAL_I2C(address == 0 ? adc::mcp3424::kI2CAddress : address)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("address=%x", address);
 
     m_IsConnected = HAL_I2C::IsConnected();
@@ -73,7 +73,7 @@ MCP3424::MCP3424(uint8_t address) : HAL_I2C(address == 0 ? adc::mcp3424::kI2CAdd
     }
 
     DEBUG_PRINTF("m_IsConnected=%u", m_IsConnected);
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void MCP3424::SetGain(adc::mcp3424::Gain gain)

@@ -104,8 +104,8 @@ class ST77XX : public Paint
    public:
     explicit ST77XX(uint32_t cs) : Paint(cs)
     {
-        DEBUG_ENTRY
-        DEBUG_EXIT
+        DEBUG_ENTRY();
+        DEBUG_EXIT();
     }
 
     ~ST77XX() override = default;

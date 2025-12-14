@@ -35,14 +35,14 @@
 class PixelTestPattern final: PixelPatterns {
 public:
 	PixelTestPattern(const pixelpatterns::Pattern Pattern, const uint32_t OutputPorts) : PixelPatterns(OutputPorts) {
-		DEBUG_ENTRY
+		DEBUG_ENTRY();
 
 		assert(s_this == nullptr);
 		s_this = this;
 
 		SetPattern(Pattern);
 
-		DEBUG_EXIT
+		DEBUG_EXIT();
 	}
 
 	bool SetPattern(const pixelpatterns::Pattern Pattern) {

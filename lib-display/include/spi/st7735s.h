@@ -81,7 +81,7 @@ class ST7735S : public ST77XX
    public:
     explicit ST7735S(uint32_t cs) : ST77XX(cs)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         if (s_instance == 0)
         {
@@ -118,14 +118,14 @@ class ST7735S : public ST77XX
         WriteCommand(st77xx::cmd::kSlpout); ///< Sleep Out
         WriteCommand(st77xx::cmd::kDispon); ///< Display On
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     ~ST7735S() override {};
 
     void SetRotation(uint32_t rotation)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         DEBUG_PRINTF("rotation=%u", rotation);
 
         WriteCommand(st77xx::cmd::kMadctl);
@@ -168,7 +168,7 @@ class ST7735S : public ST77XX
 
         rotate_ = rotation;
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
    private:

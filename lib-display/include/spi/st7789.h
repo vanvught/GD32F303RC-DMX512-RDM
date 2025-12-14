@@ -72,7 +72,7 @@ class ST7789 : public ST77XX
    public:
     explicit ST7789(uint32_t cs) : ST77XX(cs)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
 #if defined(SPI_LCD_RST_GPIO)
         if (s_instance == 0)
@@ -132,10 +132,10 @@ class ST7789 : public ST77XX
         WriteCommand(st77xx::cmd::kSlpout); ///< Sleep Out
         WriteCommand(st77xx::cmd::kDispon); ///< Display On
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
-    ~ST7789() override { DEBUG_ENTRY DEBUG_EXIT };
+    ~ST7789() override { DEBUG_ENTRY(); DEBUG_EXIT(); };
 
     void SetRotation(uint32_t rotation)
     {

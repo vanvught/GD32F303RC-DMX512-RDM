@@ -54,7 +54,7 @@ namespace display::timeout
 void irq_init()
 {
 #if defined(DISPLAYTIMEOUT_CONFIG_IRQ) && !defined(CONFIG_USE_EXTI10_15_IRQHandler)
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     rcu_periph_clock_enable(DISPLAYTIMEOUT_GPIO_CLK);
     DISPLAYTIMEOUT_GPIO_CONFIG;
@@ -69,7 +69,7 @@ void irq_init()
     exti_init(DISPLAYTIMEOUT_EXTI_LINE, EXTI_INTERRUPT, EXTI_TRIG_FALLING);
     exti_interrupt_flag_clear(DISPLAYTIMEOUT_EXTI_LINE);
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 #endif
 }
 } // namespace display::timeout

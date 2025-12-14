@@ -1,5 +1,5 @@
 /**
- * @file bkp.cpp
+ * @file gd32_bkp.cpp
  *
  */
 /* Copyright (C) 2022-2025 by Arjan van Vught mailto:info@gd32-dmx.org

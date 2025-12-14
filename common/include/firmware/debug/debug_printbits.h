@@ -1,5 +1,5 @@
 /**
- * @file debug_print_bits.h
+ * @file debug_printbits.h
  *
  */
  /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org

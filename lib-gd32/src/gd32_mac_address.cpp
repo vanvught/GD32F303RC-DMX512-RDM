@@ -1,5 +1,5 @@
 /**
- * @file mac_address.cpp
+ * @file gd32_mac_address.cpp
  *
  */
 /* Copyright (C) 2021-2025 by Arjan van Vught mailto:info@gd32-dmx.org

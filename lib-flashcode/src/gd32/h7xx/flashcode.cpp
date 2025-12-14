@@ -68,7 +68,7 @@ uint32_t FlashCode::GetSectorSize() const
 
 bool FlashCode::Read(uint32_t offset, uint32_t length, uint8_t* buffer, Result& result)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("offset=%p[%d], len=%u[%d], data=%p[%d]", offset, (((uint32_t)(offset) & 0x3) == 0), length, (((uint32_t)(length) & 0x3) == 0), buffer, (((uint32_t)(buffer) & 0x3) == 0));
 
     const auto* src = reinterpret_cast<uint32_t*>(offset + FLASH_BASE);
@@ -82,13 +82,13 @@ bool FlashCode::Read(uint32_t offset, uint32_t length, uint8_t* buffer, Result& 
 
     result = Result::kOk;
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return true;
 }
 
 bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::Result& result)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("State=%d", static_cast<int>(s_state));
 
     result = Result::kOk;
@@ -100,13 +100,13 @@ bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::Result& resul
             s_length = length;
             fmc_unlock();
             s_state = State::ERASE_BUSY;
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
             break;
         case State::ERASE_BUSY:
             if (SET == fmc_flag_get(FMC_FLAG_BUSY))
             {
-                DEBUG_EXIT
+                DEBUG_EXIT();
                 return false;
             }
 
@@ -114,12 +114,12 @@ bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::Result& resul
             {
                 s_state = State::IDLE;
                 fmc_lock();
-                DEBUG_EXIT
+                DEBUG_EXIT();
                 return true;
             }
 
             s_state = State::ERASE_PROGAM;
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
             break;
         case State::ERASE_PROGAM:
@@ -134,7 +134,7 @@ bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::Result& resul
             }
 
             s_state = State::ERASE_BUSY;
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
             break;
         default:
@@ -155,7 +155,7 @@ bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* buffer, f
     }
     else
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
     }
     result = Result::kOk;
 
@@ -168,13 +168,13 @@ bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* buffer, f
             s_length = length;
             fmc_unlock();
             s_state = State::WRITE_BUSY;
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
             break;
         case State::WRITE_BUSY:
             if (SET == fmc_flag_get(FMC_FLAG_BUSY))
             {
-                DEBUG_EXIT
+                DEBUG_EXIT();
                 return false;
             }
 
@@ -192,7 +192,7 @@ bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* buffer, f
                     DEBUG_PUTS("memcmp failed");
                 }
 
-                DEBUG_EXIT
+                DEBUG_EXIT();
                 return true;
             }
 

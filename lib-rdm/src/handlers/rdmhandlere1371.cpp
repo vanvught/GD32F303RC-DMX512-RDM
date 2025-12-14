@@ -36,7 +36,7 @@
 
 void RDMHandler::GetIdentifyMode([[maybe_unused]] uint16_t sub_device)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     auto& rdm_data_out = *reinterpret_cast<struct TRdmMessage*>(m_pRdmDataOut);
 
@@ -45,26 +45,26 @@ void RDMHandler::GetIdentifyMode([[maybe_unused]] uint16_t sub_device)
 
     RespondMessageAck();
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void RDMHandler::SetIdentifyMode(bool is_broadcast, [[maybe_unused]] uint16_t sub_device)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     const auto& rdm_data_in = *reinterpret_cast<const struct TRdmMessageNoSc*>(m_pRdmDataIn);
 
     if (rdm_data_in.param_data_length != 1)
     {
         RespondMessageNack(E120_NR_FORMAT_ERROR);
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
     if ((rdm_data_in.param_data[0] != 0) && (rdm_data_in.param_data[0] != 0xFF))
     {
         RespondMessageNack(E120_NR_DATA_OUT_OF_RANGE);
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
@@ -72,7 +72,7 @@ void RDMHandler::SetIdentifyMode(bool is_broadcast, [[maybe_unused]] uint16_t su
 
     if (is_broadcast)
     {
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
@@ -81,5 +81,5 @@ void RDMHandler::SetIdentifyMode(bool is_broadcast, [[maybe_unused]] uint16_t su
 
     RespondMessageAck();
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }

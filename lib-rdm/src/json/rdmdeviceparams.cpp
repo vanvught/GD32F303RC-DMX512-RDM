@@ -88,7 +88,7 @@ void RdmDeviceParams::Store(const char* buffer, uint32_t buffer_size)
 
 void RdmDeviceParams::Set()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     auto& rdmdevice = *RDMDevice::Get();
 
     struct TRDMDeviceInfoData info_data = 
@@ -105,7 +105,7 @@ void RdmDeviceParams::Set()
 #ifndef NDEBUG
     Dump();
 #endif
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void RdmDeviceParams::Dump()

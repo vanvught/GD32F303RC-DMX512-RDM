@@ -116,7 +116,7 @@ class RDMTod
 
     void Copy(uint8_t* table)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         DEBUG_PRINTF("entries_=%u", static_cast<unsigned int>(entries_));
         assert(table != nullptr);
 
@@ -128,7 +128,7 @@ class RDMTod
             *dst++ = *src++;
         }
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     bool Delete(const uint8_t* uid)

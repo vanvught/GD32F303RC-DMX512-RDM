@@ -39,7 +39,7 @@ class DmxSlotInfo
    public:
     DmxSlotInfo(dmxnode::SlotInfo* slot_info, uint32_t size) : slot_info_(slot_info), size_(size)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         assert(slot_info != nullptr);
         assert(size != 0);
@@ -50,12 +50,12 @@ class DmxSlotInfo
             slot_info_[i].category = 0xFFFF; // SD_UNDEFINED
         }
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     ~DmxSlotInfo()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         if (slot_info_ != nullptr)
         {
@@ -69,7 +69,7 @@ class DmxSlotInfo
             to_string_ = nullptr;
         }
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void FromString(const char* string, uint32_t& mask)

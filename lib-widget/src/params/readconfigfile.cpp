@@ -97,7 +97,7 @@ bool ReadConfigFile::Read(const char* pFileName)
 
 void ReadConfigFile::Read(const char* pBuffer, uint32_t length)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     assert(pBuffer != nullptr);
     assert(length != 0);
@@ -140,5 +140,5 @@ void ReadConfigFile::Read(const char* pBuffer, uint32_t length)
         }
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }

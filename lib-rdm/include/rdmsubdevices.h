@@ -54,7 +54,7 @@ class RDMSubDevices
    public:
     RDMSubDevices()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         assert(s_this == nullptr);
         s_this = this;
 
@@ -66,12 +66,12 @@ class RDMSubDevices
         Add(new RDMSubDeviceDummy);
 #endif
 #endif
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     ~RDMSubDevices()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         for (unsigned i = 0; i < count_; i++)
         {
             delete rdm_sub_device_[i];
@@ -81,12 +81,12 @@ class RDMSubDevices
         delete[] rdm_sub_device_;
 
         count_ = 0;
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     bool Add([[maybe_unused]] RDMSubDevice* rdm_sub_device)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 #if defined(CONFIG_RDM_ENABLE_SUBDEVICES)
         assert(rdm_sub_device_ != nullptr);
 
@@ -97,14 +97,14 @@ class RDMSubDevices
 
         if (count_ == rdm::subdevices::MAX)
         {
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
         }
 
         assert(rdm_sub_device != nullptr);
         rdm_sub_device_[count_++] = rdm_sub_device;
 #endif
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return true;
     }
 
@@ -216,7 +216,7 @@ class RDMSubDevices
 
     void Start()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         for (uint32_t i = 0; i < count_; i++)
         {
             if (rdm_sub_device_[i] != nullptr)
@@ -224,12 +224,12 @@ class RDMSubDevices
                 rdm_sub_device_[i]->Start();
             }
         }
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void Stop()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         for (uint32_t i = 0; i < count_; i++)
         {
             if (rdm_sub_device_[i] != nullptr)
@@ -237,7 +237,7 @@ class RDMSubDevices
                 rdm_sub_device_[i]->Stop();
             }
         }
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
     }
 
     void SetData(const uint8_t* data, uint32_t length)

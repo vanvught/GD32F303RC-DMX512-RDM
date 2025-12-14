@@ -37,7 +37,7 @@ static uint8_t spi_data[64] __attribute__((aligned(4)));
 
 Max7219Matrix::Max7219Matrix() : font_size_(cp437_font_size())
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     font_ = new uint8_t[font_size_ * 8];
     assert(font_ != nullptr);
@@ -52,21 +52,21 @@ Max7219Matrix::Max7219Matrix() : font_size_(cp437_font_size())
         }
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 Max7219Matrix::~Max7219Matrix()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     delete[] font_;
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void Max7219Matrix::Init(uint16_t count, uint8_t intensity)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     constexpr uint16_t kSf = sizeof(spi_data) / 2;
     count_ = std::min(count, kSf);
@@ -82,7 +82,7 @@ void Max7219Matrix::Init(uint16_t count, uint8_t intensity)
 
     Max7219Matrix::Cls();
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void Max7219Matrix::Write(const char* buffer, uint16_t count)
@@ -152,7 +152,7 @@ void Max7219Matrix::UpdateCharacter(uint32_t c, const uint8_t bytes[8])
 
 void Max7219Matrix::WriteAll(uint8_t reg, uint8_t data)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     for (uint32_t i = 0; i < (count_ * 2); i = i + 2)
     {
@@ -162,7 +162,7 @@ void Max7219Matrix::WriteAll(uint8_t reg, uint8_t data)
 
     HAL_SPI::Write(reinterpret_cast<const char*>(spi_data), static_cast<uint32_t>(count_ * 2));
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 uint8_t Max7219Matrix::Rotate(uint32_t r, uint32_t x)

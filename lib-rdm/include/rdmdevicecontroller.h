@@ -38,7 +38,7 @@ class RDMDeviceController
    public:
     RDMDeviceController()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         hal::SerialNumber(serial_number_);
 
@@ -49,7 +49,7 @@ class RDMDeviceController
         uid_[4] = serial_number_[2];
         uid_[5] = serial_number_[3];
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     ~RDMDeviceController() = default;

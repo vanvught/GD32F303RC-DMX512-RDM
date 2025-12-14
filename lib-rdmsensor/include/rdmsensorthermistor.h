@@ -43,7 +43,7 @@ class RDMSensorThermistor final : public RDMSensor, MCP3424
     explicit RDMSensorThermistor(uint8_t sensor, uint8_t address = 0, uint8_t channel = 0, int32_t calibration = 0)
         : RDMSensor(sensor), MCP3424(address), calibration_(calibration), channel_(channel)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         DEBUG_PRINTF("nSensor=%u, address=0x%.2x, channel=%u, nCalibration=%d", sensor, address, channel, calibration);
 
         SetType(E120_SENS_TEMPERATURE);
@@ -55,7 +55,7 @@ class RDMSensorThermistor final : public RDMSensor, MCP3424
         SetNormalMax(rdm::sensor::SafeRangeMax(sensor::thermistor::RANGE_MAX));
         SetDescription(sensor::thermistor::DESCRIPTION);
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     bool Initialize() override { return MCP3424::IsConnected(); }

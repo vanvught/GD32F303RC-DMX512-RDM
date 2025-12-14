@@ -222,18 +222,18 @@ void RdmSensorsParams::Store(const char* buffer, uint32_t buffer_size)
 
 static bool Add(RDMSensor* rdm_sensor)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     if (rdm_sensor->Initialize())
     {
         RDMSensors::Get()->Add(rdm_sensor);
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return true;
     }
 
     delete rdm_sensor;
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return false;
 }
 

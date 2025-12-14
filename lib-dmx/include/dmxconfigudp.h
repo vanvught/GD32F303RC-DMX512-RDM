@@ -100,7 +100,7 @@ class DmxConfigUdp
      */
     DmxConfigUdp()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         assert(s_this == nullptr);
         s_this = this;
@@ -108,7 +108,7 @@ class DmxConfigUdp
         assert(handle_ == -1);
         handle_ = net::udp::Begin(kUdpPort, DmxConfigUdp::StaticCallbackFunction);
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     /**
@@ -116,7 +116,7 @@ class DmxConfigUdp
      */
     ~DmxConfigUdp()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         assert(handle_ != -1);
         net::udp::End(kUdpPort);
@@ -124,7 +124,7 @@ class DmxConfigUdp
 
         s_this = nullptr;
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     /**
@@ -137,17 +137,17 @@ class DmxConfigUdp
      */
     void Input(const uint8_t* buffer, uint32_t size, [[maybe_unused]] uint32_t from_ip, [[maybe_unused]] uint16_t from_port)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         if (!Validate(size, kMinSize, kMaxSize))
         {
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return;
         }
 
         if (memcmp("dmx!", buffer, 4) != 0)
         {
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return;
         }
 
@@ -176,12 +176,12 @@ class DmxConfigUdp
             {
                 (this->*handler.handler)(buffer, size);
 
-                DEBUG_EXIT
+                DEBUG_EXIT();
                 return;
             }
         }
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
    private:

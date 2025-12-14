@@ -38,14 +38,14 @@ static uint32_t s_offset_base;
 
 static bool IsDetected()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("isDetected=%d", s_is_detected);
 
     if (!s_is_detected)
     {
         if (!FlashCode::Get()->IsDetected())
         {
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
         }
 
@@ -62,18 +62,18 @@ static bool IsDetected()
         DEBUG_PRINTF("nOffsetBase=%p", s_offset_base);
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return true;
 }
 
 void WriteStart()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("isDetected=%d", s_is_detected);
 
     if (!IsDetected())
     {
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
@@ -88,18 +88,18 @@ void WriteStart()
     s_is_detected = (result == flashcode::Result::kOk);
 
     DEBUG_PRINTF("result=%d, s_is_detected=%d, timeout=%u", result, s_is_detected, timeout);
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void Write(uint32_t port_index, const uint8_t* data)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     assert(port_index < dmxnode::kMaxPorts);
     assert(data != nullptr);
 
     if (!s_is_detected)
     {
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
@@ -119,43 +119,43 @@ void Write(uint32_t port_index, const uint8_t* data)
 
     assert(result == flashcode::Result::kOk);
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void WriteEnd()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     // No code needed here
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void ReadStart()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("s_is_detected=%d", s_is_detected);
 
     if (!IsDetected())
     {
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
     s_is_detected = true;
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void Read(uint32_t port_index, uint8_t* data)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     assert(port_index < dmxnode::kMaxPorts);
     assert(data != nullptr);
 
     if (!s_is_detected)
     {
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
@@ -175,15 +175,15 @@ void Read(uint32_t port_index, uint8_t* data)
 
     assert(result == flashcode::Result::kOk);
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void ReadEnd()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     // No code needed here
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 } // namespace dmxnode::scenes

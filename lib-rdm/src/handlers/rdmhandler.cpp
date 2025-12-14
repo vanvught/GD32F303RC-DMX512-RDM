@@ -139,7 +139,7 @@ const RDMHandler::PidDefinition RDMHandler::PID_DEFINITION_MANUFACTURER_GENERAL 
 #endif
 
 RDMHandler::RDMHandler(bool bIsRdm): is_rdm_(bIsRdm) {
-	DEBUG_ENTRY
+	DEBUG_ENTRY();
 
 #if defined (CONFIG_RDM_ENABLE_MANUFACTURER_PIDS)
 # ifndef NDEBUG
@@ -149,7 +149,7 @@ RDMHandler::RDMHandler(bool bIsRdm): is_rdm_(bIsRdm) {
 # endif
 #endif
 
-	DEBUG_EXIT
+	DEBUG_EXIT();
 }
 
 void RDMHandler::HandleString(const char *pString, const uint32_t length) {
@@ -226,7 +226,7 @@ void RDMHandler::RespondMessageNack(const uint16_t nReason) {
  * @param pRdmDataOut RDM with the Start Code or it is Discover Message
  */
 void RDMHandler::HandleData(const uint8_t *pRdmDataIn, uint8_t *pRdmDataOut) {
-	DEBUG_ENTRY
+	DEBUG_ENTRY();
 
 	assert(pRdmDataIn != nullptr);
 	assert(pRdmDataOut != nullptr);
@@ -239,7 +239,7 @@ void RDMHandler::HandleData(const uint8_t *pRdmDataIn, uint8_t *pRdmDataOut) {
 	auto *pRdmRequest = reinterpret_cast<struct TRdmMessageNoSc *>(m_pRdmDataIn);
 
 	if ((pRdmRequest->slot16.port_id == 0) || (pRdmRequest->message_count != 0)) {
-		DEBUG_EXIT
+		DEBUG_EXIT();
 		return;
 	}
 
@@ -254,7 +254,7 @@ void RDMHandler::HandleData(const uint8_t *pRdmDataIn, uint8_t *pRdmDataOut) {
 
 	if (!bIsRdmPacketBroadcast) {
 		if (!(memcmp(pRdmRequest->destination_uid, pUID, 2) == 0)) {
-			DEBUG_EXIT
+			DEBUG_EXIT();
 			return;
 		}
 
@@ -299,7 +299,7 @@ void RDMHandler::HandleData(const uint8_t *pRdmDataIn, uint8_t *pRdmDataOut) {
 					p->checksum[2] = static_cast<uint8_t>((rdm_checksum & 0xFF) | 0xAA);
 					p->checksum[3] = static_cast<uint8_t>((rdm_checksum & 0xFF) | 0x55);
 
-					DEBUG_EXIT
+					DEBUG_EXIT();
 					return;
 				}
 			}
@@ -363,15 +363,15 @@ void RDMHandler::HandleData(const uint8_t *pRdmDataIn, uint8_t *pRdmDataOut) {
 		Handlers(bIsRdmPacketBroadcast, nCommandClass, nParamId, pRdmRequest->param_data_length, sub_device);
 	}
 
-	DEBUG_EXIT
+	DEBUG_EXIT();
 }
 
 void RDMHandler::Handlers(bool bIsBroadcast, uint8_t nCommandClass, uint16_t nParamId, uint8_t nParamDataLength, uint16_t sub_device) {
-	DEBUG_ENTRY
+	DEBUG_ENTRY();
 
 	if (nCommandClass != E120_GET_COMMAND && nCommandClass != E120_SET_COMMAND) {
 		RespondMessageNack(E120_NR_UNSUPPORTED_COMMAND_CLASS);
-		DEBUG_EXIT
+		DEBUG_EXIT();
 		return;
 	}
 
@@ -379,7 +379,7 @@ void RDMHandler::Handlers(bool bIsBroadcast, uint8_t nCommandClass, uint16_t nPa
 
 	if ((sub_device > sub_device_count) && (sub_device != E120_SUB_DEVICE_ALL_CALL)) {
 		RespondMessageNack(E120_NR_SUB_DEVICE_OUT_OF_RANGE);
-		DEBUG_EXIT
+		DEBUG_EXIT();
 		return;
 	}
 
@@ -411,45 +411,45 @@ void RDMHandler::Handlers(bool bIsBroadcast, uint8_t nCommandClass, uint16_t nPa
 
 	if (!pid_handler) {
 		RespondMessageNack(E120_NR_UNKNOWN_PID);
-		DEBUG_EXIT
+		DEBUG_EXIT();
 		return;
 	}
 
 	if (is_rdm_) {
 		if (!bRDM) {
 			RespondMessageNack(E120_NR_UNKNOWN_PID);
-			DEBUG_EXIT
+			DEBUG_EXIT();
 			return;
 		}
 	} else {
 		if (!bRDMNet) {
 			RespondMessageNack(E120_NR_UNKNOWN_PID);
-			DEBUG_EXIT
+			DEBUG_EXIT();
 			return;
 		}
 	}
 
 	if (nCommandClass == E120_GET_COMMAND) {
 		if (bIsBroadcast) {
-			DEBUG_EXIT
+			DEBUG_EXIT();
 			return;
 		}
 
 		if (sub_device == E120_SUB_DEVICE_ALL_CALL) {
 			RespondMessageNack(E120_NR_SUB_DEVICE_OUT_OF_RANGE);
-			DEBUG_EXIT
+			DEBUG_EXIT();
 			return;
 		}
 
 		if (!pid_handler->pGetHandler) {
 			RespondMessageNack(E120_NR_UNSUPPORTED_COMMAND_CLASS);
-			DEBUG_EXIT
+			DEBUG_EXIT();
 			return;
 		}
 
 		if (nParamDataLength != pid_handler->nGetArgumentSize) {
 			RespondMessageNack(E120_NR_FORMAT_ERROR);
-			DEBUG_EXIT
+			DEBUG_EXIT();
 			return;
 		}
 
@@ -458,14 +458,14 @@ void RDMHandler::Handlers(bool bIsBroadcast, uint8_t nCommandClass, uint16_t nPa
 
 		if (!pid_handler->pSetHandler) {
 			RespondMessageNack(E120_NR_UNSUPPORTED_COMMAND_CLASS);
-			DEBUG_EXIT
+			DEBUG_EXIT();
 			return;
 		}
 
 		(this->*(pid_handler->pSetHandler))(bIsBroadcast, sub_device);
 	}
 
-	DEBUG_EXIT
+	DEBUG_EXIT();
 }
 
 #if defined (ENABLE_RDM_QUEUED_MSG)

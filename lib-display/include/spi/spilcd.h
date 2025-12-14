@@ -41,7 +41,7 @@ class SpiLcd
    public:
     explicit SpiLcd(uint32_t cs = 0) : cs_(cs)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         DEBUG_PRINTF("cs=%u", cs);
 
         SPI_PREFIX(SpiBegin());
@@ -58,7 +58,7 @@ class SpiLcd
         FUNC_PREFIX(GpioFsel(cs_, GPIO_FSEL_OUTPUT));
 #endif
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void HardwareReset()

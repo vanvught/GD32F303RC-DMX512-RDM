@@ -36,7 +36,7 @@
 
 StoreDevice::StoreDevice()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     if (!spi_flash_probe())
     {
@@ -49,10 +49,10 @@ StoreDevice::StoreDevice()
         detected_ = true;
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
-StoreDevice::~StoreDevice(){DEBUG_ENTRY DEBUG_EXIT}
+StoreDevice::~StoreDevice(){DEBUG_ENTRY(); DEBUG_EXIT();}
 
 uint32_t StoreDevice::GetSize() const
 {
@@ -66,33 +66,33 @@ uint32_t StoreDevice::GetSectorSize() const
 
 bool StoreDevice::Read(uint32_t offset, uint32_t length, uint8_t* buffer, storedevice::Result& result)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     result = spi_flash_cmd_read_fast(offset, length, buffer) ? storedevice::Result::kOk : storedevice::Result::kError;
 
     DEBUG_PRINTF("result=%d", static_cast<int>(result));
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return true;
 }
 
 bool StoreDevice::Erase(uint32_t offset, uint32_t length, storedevice::Result& result)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     result = spi_flash_cmd_erase(offset, length) ? storedevice::Result::kOk : storedevice::Result::kError;
 
     DEBUG_PRINTF("result=%d", static_cast<int>(result));
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return true;
 }
 
 bool StoreDevice::Write(uint32_t offset, uint32_t length, const uint8_t* buffer, storedevice::Result& result)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     result = spi_flash_cmd_write_multi(offset, length, buffer) ? storedevice::Result::kOk : storedevice::Result::kError;
 
     DEBUG_PRINTF("result=%d", static_cast<int>(result));
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return true;
 }

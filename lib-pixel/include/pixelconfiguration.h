@@ -43,12 +43,12 @@ class PixelConfiguration
    public:
     PixelConfiguration()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         assert(s_this == nullptr);
         s_this = this;
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     ~PixelConfiguration() = default;
@@ -131,7 +131,7 @@ class PixelConfiguration
 
     void Validate()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         if (type_ == pixel::Type::SK6812W)
         {
@@ -263,7 +263,7 @@ class PixelConfiguration
         gamma_value_ = gamma::GetValue(gamma_table_);
 #endif
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     bool RefreshNeeded() const { return refresh_needed_; }

@@ -77,7 +77,7 @@ class Display : public LcdDriver
    public:
     Display(uint32_t cs = CS_GPIO) : LcdDriver(cs)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         s_this = this;
 
@@ -93,7 +93,7 @@ class Display : public LcdDriver
 #endif
 
         PrintInfo();
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     ~Display() {}

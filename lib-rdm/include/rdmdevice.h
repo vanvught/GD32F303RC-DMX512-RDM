@@ -72,7 +72,7 @@ class RDMDevice
    public:
     RDMDevice()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         assert(s_this == nullptr);
         s_this = this;
 
@@ -88,12 +88,12 @@ class RDMDevice
         s_factory_root_label_length = sizeof(kDeviceLabel) - 1;
         memcpy(s_factory_root_label, kDeviceLabel, s_factory_root_label_length);
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void Init()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         assert(!s_is_init);
 
@@ -105,7 +105,7 @@ class RDMDevice
         rdmdevice_params.Load();
         rdmdevice_params.Set();
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void Print()
@@ -122,14 +122,14 @@ class RDMDevice
 
     void SetFactoryDefaults()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         const struct TRDMDeviceInfoData kInfoData = {.data = s_factory_root_label, .length = s_factory_root_label_length};
         SetLabel(&kInfoData);
 
         s_checksum = RDMDevice::CalculateChecksum();
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     bool GetFactoryDefaults() { return (s_checksum == RDMDevice::CalculateChecksum()); }

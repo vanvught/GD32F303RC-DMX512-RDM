@@ -65,7 +65,7 @@ WidgetParams::WidgetParams()
 
 void WidgetParams::Load()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     ReadConfigFile configfile(WidgetParams::StaticCallbackFunction, this);
 
@@ -84,7 +84,7 @@ void WidgetParams::Load()
 #ifndef NDEBUG
     Dump();
 #endif
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void WidgetParams::CallbackFunction(const char* line)

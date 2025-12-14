@@ -44,7 +44,7 @@ static FILE* s_file;
 
 void WriteStart()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     if ((s_file = fopen(kFileName, "r+")) == nullptr)
     {
@@ -54,7 +54,7 @@ void WriteStart()
         {
             perror("fopen w+");
 
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return;
         }
 
@@ -70,7 +70,7 @@ void WriteStart()
                 }
 
                 s_file = nullptr;
-                DEBUG_EXIT
+                DEBUG_EXIT();
                 return;
             }
         }
@@ -81,35 +81,35 @@ void WriteStart()
         }
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void Write(uint32_t port_index, const uint8_t* data)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     assert(port_index < dmxnode::kMaxPorts);
     assert(data != nullptr);
 
     if (fseek(s_file, static_cast<long int>(port_index * dmxnode::kUniverseSize), SEEK_SET) != 0)
     {
         perror("fseek");
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
     if (fwrite(data, 1, dmxnode::kUniverseSize, s_file) != dmxnode::kUniverseSize)
     {
         perror("fwrite");
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void WriteEnd()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     if (s_file != nullptr)
     {
@@ -120,54 +120,54 @@ void WriteEnd()
         s_file = nullptr;
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void ReadStart()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     if ((s_file = fopen(kFileName, "r")) == nullptr)
     {
         perror("fopen r");
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void Read(uint32_t port_index, uint8_t* data)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     assert(port_index < dmxnode::kMaxPorts);
     assert(data != nullptr);
 
     if (s_file == nullptr)
     {
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
     if (fseek(s_file, static_cast<long int>(port_index * dmxnode::kUniverseSize), SEEK_SET) != 0)
     {
         perror("fseek");
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
     if (fread(data, 1, dmxnode::kUniverseSize, s_file) != dmxnode::kUniverseSize)
     {
         perror("fread");
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void ReadEnd()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     if (s_file != nullptr)
     {
@@ -178,6 +178,6 @@ void ReadEnd()
         s_file = nullptr;
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 } // namespace dmxnode::scenes

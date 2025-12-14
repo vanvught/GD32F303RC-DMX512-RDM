@@ -34,7 +34,7 @@ static pixelpatterns::Pattern s_pattern;
 
 void RDMIdentify::On(Mode mode)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("Mode=%u, s_isOn=%d", static_cast<uint32_t>(mode), s_is_on);
 
     if ((mode == Mode::kLoud) && (!s_is_on))
@@ -45,12 +45,12 @@ void RDMIdentify::On(Mode mode)
         RDMResponder::Get()->DmxDisableOutput(true);
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void RDMIdentify::Off([[maybe_unused]] Mode mode)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("Mode=%u, s_isOn=%d", static_cast<uint32_t>(mode), s_is_on);
 
     if (s_is_on)
@@ -60,5 +60,5 @@ void RDMIdentify::Off([[maybe_unused]] Mode mode)
         RDMResponder::Get()->DmxDisableOutput(pixelpatterns::Pattern::kNone != s_pattern);
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }

@@ -43,23 +43,23 @@ static void SleepTimer([[maybe_unused]] TimerHandle_t handle)
 
 void Display::SetSleepTimer(bool active)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("active=%d, sleep_timeout_=%u, s_timer_id=%d", active, sleep_timeout_, s_timer_id);
 
     if (!active)
     {
         SoftwareTimerDelete(s_timer_id);
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
     if (s_timer_id == kTimerIdNone)
     {
         s_timer_id = SoftwareTimerAdd(sleep_timeout_, SleepTimer);
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
     SoftwareTimerChange(s_timer_id, sleep_timeout_);
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }

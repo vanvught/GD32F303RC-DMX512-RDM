@@ -102,7 +102,7 @@ uint32_t FlashCode::GetSectorSize() const
 
 bool FlashCode::Read(uint32_t offset, uint32_t length, uint8_t* pBuffer, flashcode::Result& result)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("offset=%p[%d], len=%u[%d], data=%p[%d]", offset, (((uint32_t)(offset) & 0x3) == 0), length, (((uint32_t)(length) & 0x3) == 0), pBuffer, (((uint32_t)(pBuffer) & 0x3) == 0));
 
     const auto* pSrc = reinterpret_cast<uint32_t*>(offset + FLASH_BASE);
@@ -116,13 +116,13 @@ bool FlashCode::Read(uint32_t offset, uint32_t length, uint8_t* pBuffer, flashco
 
     result = Result::kOk;
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return true;
 }
 
 bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::Result& result)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("State=%d", static_cast<int>(s_state));
 
     result = Result::kOk;
@@ -142,7 +142,7 @@ bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::Result& resul
             }
             s_state = State::ERASE_BUSY;
             DEBUG_PRINTF("isBank0=%d", static_cast<int>(s_isBank0));
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
             break;
         case State::ERASE_BUSY:
@@ -150,7 +150,7 @@ bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::Result& resul
             {
                 if (FMC_BUSY == fmc_bank0_state_get())
                 {
-                    DEBUG_EXIT
+                    DEBUG_EXIT();
                     return false;
                 }
             }
@@ -158,7 +158,7 @@ bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::Result& resul
             {
                 if (FMC_BUSY == fmc_bank1_state_get())
                 {
-                    DEBUG_EXIT
+                    DEBUG_EXIT();
                     return false;
                 }
             }
@@ -183,12 +183,12 @@ bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::Result& resul
                     fmc_bank1_lock();
                 }
                 s_state = State::IDLE;
-                DEBUG_EXIT
+                DEBUG_EXIT();
                 return true;
             }
 
             s_state = State::ERASE_PROGAM;
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
             break;
         case State::ERASE_PROGAM:
@@ -221,7 +221,7 @@ bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::Result& resul
             }
 
             s_state = State::ERASE_BUSY;
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
             break;
         case State::WRITE_BUSY:
@@ -237,7 +237,7 @@ bool FlashCode::Erase(uint32_t offset, uint32_t length, flashcode::Result& resul
             /* no break */
         case State::WRITE_PROGRAM:
             s_state = State::IDLE;
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
             break;
         default:
@@ -272,7 +272,7 @@ bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* pBuffer, 
             }
             s_state = State::WRITE_BUSY;
             DEBUG_PRINTF("isBank0=%d", static_cast<int>(s_isBank0));
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
             break;
         case State::WRITE_BUSY:
@@ -280,7 +280,7 @@ bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* pBuffer, 
             {
                 if (FMC_BUSY == fmc_bank0_state_get())
                 {
-                    DEBUG_EXIT
+                    DEBUG_EXIT();
                     return false;
                 }
             }
@@ -288,7 +288,7 @@ bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* pBuffer, 
             {
                 if (FMC_BUSY == fmc_bank1_state_get())
                 {
-                    DEBUG_EXIT
+                    DEBUG_EXIT();
                     return false;
                 }
             }
@@ -313,7 +313,7 @@ bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* pBuffer, 
                     fmc_bank1_lock();
                 }
                 s_state = State::IDLE;
-                DEBUG_EXIT
+                DEBUG_EXIT();
                 return true;
             }
 
@@ -365,7 +365,7 @@ bool FlashCode::Write(uint32_t offset, uint32_t length, const uint8_t* pBuffer, 
             /* no break */
         case State::ERASE_PROGAM:
             s_state = State::IDLE;
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
             break;
         default:

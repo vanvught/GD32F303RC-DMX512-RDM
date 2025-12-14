@@ -96,7 +96,7 @@ static constexpr uint32_t kTimerPeriod = 19999; // 50KHz
 static void Dump()
 {
 #if 1
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 #ifndef NDEBUG
     printf("PWM_TIMERx=0x%.8X\n", PWM_TIMERx - TIMER_BASE);
     printf("PWM_RCU_TIMERx=0x%.8X\n", PWM_RCU_TIMERx);
@@ -128,7 +128,7 @@ static void Dump()
     printf("PWM_CH3_GPIO_PINx=0x%.4X\n", PWM_CH3_GPIO_PINx);
 #endif
 #endif
-    DEBUG_EXIT
+    DEBUG_EXIT();
 #endif
 }
 
@@ -245,7 +245,7 @@ static void TimerConfig()
 
 void gd32_pwm_begin()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     Dump();
 
@@ -265,12 +265,12 @@ void gd32_pwm_begin()
     gd32_pwm_set_duty_cycle(pwm::Channel::PWM_CHANNEL_3, pwm::kDefaulChannel3Dutycycle);
 #endif
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void gd32_pwm_set_duty_cycle(pwm::Channel channel, uint32_t duty_cycle)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     const uint32_t nPulse = (duty_cycle > 100 ? 100 : duty_cycle) * (pwm::kTimerPeriod / 100U);
 
@@ -302,6 +302,6 @@ void gd32_pwm_set_duty_cycle(pwm::Channel channel, uint32_t duty_cycle)
             break;
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 #endif

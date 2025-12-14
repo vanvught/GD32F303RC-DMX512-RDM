@@ -53,12 +53,12 @@ public:
 	}
 
 	RDMPersonality(const char* pDescription, uint16_t nSlots): slots_(nSlots) {
-		DEBUG_ENTRY
+		DEBUG_ENTRY();
 		assert(pDescription != nullptr);
 
 		SetDescription(pDescription);
 
-		DEBUG_EXIT
+		DEBUG_EXIT();
 	}
 
 	uint16_t GetSlots() const {

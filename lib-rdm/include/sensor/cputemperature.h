@@ -50,12 +50,12 @@ class CpuTemperature final : public RDMSensor
 
     bool Initialize() override
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 #if defined(__APPLE__)
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return false;
 #else
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return true;
 #endif
     }

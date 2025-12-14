@@ -37,14 +37,14 @@ static uint32_t s_offset_base;
 
 static bool CheckHaveFlash()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("s_hasFlash=%d", s_has_flash);
 
     if (!s_has_flash)
     {
         if (!spi_flash_probe())
         {
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return false;
         }
 
@@ -61,36 +61,36 @@ static bool CheckHaveFlash()
         DEBUG_PRINTF("nOffsetBase=%p", s_offset_base);
     }
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return true;
 }
 
 void WriteStart()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("s_hasFlash=%d", s_has_flash);
 
     if (!CheckHaveFlash())
     {
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
     s_has_flash = spi_flash_cmd_erase(s_offset_base, spi_flash_get_sector_size());
 
     DEBUG_PRINTF("s_hasFlash=%d", s_has_flash);
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void Write(uint32_t port_index, const uint8_t* data)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     assert(port_index < dmxnode::kMaxPorts);
     assert(data != nullptr);
 
     if (!s_has_flash)
     {
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
@@ -100,43 +100,43 @@ void Write(uint32_t port_index, const uint8_t* data)
 
     spi_flash_cmd_write_multi(kOffset, dmxnode::kUniverseSize, data);
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void WriteEnd()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     // No code needed here
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void ReadStart()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     DEBUG_PRINTF("s_has_flash=%d", s_has_flash);
 
     if (!CheckHaveFlash())
     {
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
     s_has_flash = true;
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void Read(uint32_t port_index, uint8_t* data)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     assert(port_index < dmxnode::kMaxPorts);
     assert(data != nullptr);
 
     if (!s_has_flash)
     {
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
@@ -146,15 +146,15 @@ void Read(uint32_t port_index, uint8_t* data)
 
     spi_flash_cmd_read_fast(kOffset, dmxnode::kUniverseSize, data);
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void ReadEnd()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     // No code needed here
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 } // namespace dmxnode::scenes

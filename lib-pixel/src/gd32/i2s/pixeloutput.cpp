@@ -39,7 +39,7 @@ static uint32_t s_tmp;
 
 PixelOutput::PixelOutput()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     assert(s_this == nullptr);
     s_this = this;
@@ -48,7 +48,7 @@ PixelOutput::PixelOutput()
 
     ApplyConfiguration();
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 PixelOutput::~PixelOutput()
@@ -60,7 +60,7 @@ PixelOutput::~PixelOutput()
 
 void PixelOutput::ApplyConfiguration()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     auto& pixel_configuration = PixelConfiguration::Get();
 
@@ -68,7 +68,7 @@ void PixelOutput::ApplyConfiguration()
 
     if (!pixel_configuration.RefreshNeeded())
     {
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return;
     }
 
@@ -94,12 +94,12 @@ void PixelOutput::ApplyConfiguration()
 
     i2s::Gd32SpiDmaSetSpeedHz(pixel_configuration.GetClockSpeedHz());
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void PixelOutput::SetupBuffers()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     uint32_t size;
 
@@ -117,7 +117,7 @@ void PixelOutput::SetupBuffers()
     buf_size_ = (buf_size_ + 3) & static_cast<uint32_t>(~3);
 
     DEBUG_PRINTF("buf_size_=%u -> %d", buf_size_, buf_size_ - s_tmp);
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void PixelOutput::Update()
@@ -142,7 +142,7 @@ void PixelOutput::Update()
 
 void PixelOutput::Blackout()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     // A blackout can be called any time. Make sure the previous transmit is ended.
     do
@@ -192,12 +192,12 @@ void PixelOutput::Blackout()
 
     buffer_ = buffer;
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 void PixelOutput::FullOn()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
     // Can be called any time. Make sure the previous transmit is ended.
     do
@@ -247,5 +247,5 @@ void PixelOutput::FullOn()
 
     buffer_ = buffer;
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }

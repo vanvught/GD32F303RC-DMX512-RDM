@@ -109,7 +109,7 @@ static bool RtcConfiguration()
 
 void HwClock::RtcProbe()
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
 
 #if defined(GD32F4XX) || defined(GD32H7XX)
 #if defined(RTC_CLOCK_SOURCE_IRC32K)
@@ -132,7 +132,7 @@ void HwClock::RtcProbe()
         {
             is_connected_ = false;
             DEBUG_PUTS("RTC did not start");
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return;
         }
 
@@ -163,7 +163,7 @@ void HwClock::RtcProbe()
     is_connected_ = true;
     m_nLastHcToSysMillis = millis();
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
 }
 
 bool HwClock::RtcSet(const struct tm* tm_time)
@@ -216,7 +216,7 @@ bool HwClock::RtcGet(struct tm* tm_time)
 
 bool HwClock::RtcSetAlarm(const struct tm* tm_time)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     assert(tm_time != nullptr);
 
     DEBUG_PRINTF("secs=%d, mins=%d, hours=%d, mday=%d, mon=%d, year=%d, wday=%d, enabled=%d", tm_time->tm_sec, tm_time->tm_min, tm_time->tm_hour, tm_time->tm_mday, tm_time->tm_mon, tm_time->tm_year, tm_time->tm_wday, m_bRtcAlarmEnabled);
@@ -249,19 +249,19 @@ bool HwClock::RtcSetAlarm(const struct tm* tm_time)
     rtc_alarm_config(mktime(const_cast<struct tm*>(tm_time)));
 #endif
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return true;
 }
 
 bool HwClock::RtcGetAlarm(struct tm* tm_time)
 {
-    DEBUG_ENTRY
+    DEBUG_ENTRY();
     assert(tm_time != nullptr);
 
 #if defined(GD32F4XX) || defined(GD32H7XX)
     if (!RtcGet(tm_time))
     {
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return false;
     }
 
@@ -280,6 +280,6 @@ bool HwClock::RtcGetAlarm(struct tm* tm_time)
 
     DEBUG_PRINTF("secs=%d, mins=%d, hours=%d, mday=%d, mon=%d, year=%d, wday=%d, enabled=%d", tm_time->tm_sec, tm_time->tm_min, tm_time->tm_hour, tm_time->tm_mday, tm_time->tm_mon, tm_time->tm_year, tm_time->tm_wday, m_bRtcAlarmEnabled);
 
-    DEBUG_EXIT
+    DEBUG_EXIT();
     return true;
 }

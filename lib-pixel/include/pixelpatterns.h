@@ -72,12 +72,12 @@ class PixelPatterns
    public:
     explicit PixelPatterns(uint32_t active_ports)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         DEBUG_PRINTF("nActivePorts=%u", active_ports);
 
         active_ports = std::min(pixelpatterns::kMaxPorts, active_ports);
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     ~PixelPatterns() = default;
@@ -147,14 +147,14 @@ class PixelPatterns
 
     void None(uint32_t port_index)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         DEBUG_PRINTF("port_index=%u", port_index);
 
         Clear(port_index);
 
         s_port_config[port_index].active_pattern = pixelpatterns::Pattern::kNone;
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void Run()

@@ -1,5 +1,5 @@
 /**
- * @file hash.h
+ * @file utils_hash.h
  *
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org

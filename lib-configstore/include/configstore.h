@@ -60,7 +60,7 @@ class ConfigStore : StoreDevice
    public:
     ConfigStore()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         assert(s_this == nullptr);
         s_this = this;
@@ -109,7 +109,7 @@ class ConfigStore : StoreDevice
         // Set global
         Global::Instance().SetUtcOffsetIfValid(store->global.utc_offset);
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     ConfigStore(const ConfigStore&) = delete;
@@ -528,51 +528,51 @@ class ConfigStore : StoreDevice
 
     static void Timer([[maybe_unused]] TimerHandle_t timer_handle)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         if (!Instance().Commit())
         {
             Instance().TimerStop();
 
-            DEBUG_EXIT
+            DEBUG_EXIT();
             return;
         }
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void TimerStart()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
        	DEBUG_PRINTF("s_timer_id=%d", s_timer_id);
 
         if (s_timer_id != kTimerIdNone)
         {
-			DEBUG_EXIT
+			DEBUG_EXIT();
             return;
         }
 
         s_timer_id = SoftwareTimerAdd(100, Timer);
 
 		DEBUG_PRINTF("s_timer_id=%d", s_timer_id);
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void TimerStop()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 		DEBUG_PRINTF("s_timer_id=%d", s_timer_id);
 
         if (s_timer_id == kTimerIdNone)
         {
             return;
-            DEBUG_EXIT
+            DEBUG_EXIT();
         }
 
         SoftwareTimerDelete(s_timer_id);
 
 		DEBUG_PRINTF("s_timer_id=%d", s_timer_id);
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     bool Flash()

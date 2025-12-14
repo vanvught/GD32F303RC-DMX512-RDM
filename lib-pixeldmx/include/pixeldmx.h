@@ -66,7 +66,7 @@ class PixelDmx final : public PixelDmxConfiguration
    public:
     PixelDmx()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         assert(s_this == nullptr);
         s_this = this;
@@ -78,19 +78,19 @@ class PixelDmx final : public PixelDmxConfiguration
 
         ApplyConfiguration();
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     ~PixelDmx() OVERRIDE
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void ApplyConfiguration()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         PixelDmxConfiguration::Validate(1);
 
 #ifndef NDEBUG
@@ -100,7 +100,7 @@ class PixelDmx final : public PixelDmxConfiguration
          output_type_.ApplyConfiguration();
         output_type_.Blackout();
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void Start([[maybe_unused]] uint32_t port_index) OVERRIDE

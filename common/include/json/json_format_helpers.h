@@ -1,5 +1,5 @@
 /**
- * @file format_helpers.h
+ * @file json_format_helpers.h
  *
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org

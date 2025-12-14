@@ -63,8 +63,8 @@ class PixelDmxParamsRdm final : public DmxNodeOutputRdmPixel
    public:
     PixelDmxParamsRdm()
     {
-        DEBUG_ENTRY
-        DEBUG_EXIT
+        DEBUG_ENTRY();
+        DEBUG_EXIT();
     }
 
     void Start([[maybe_unused]] uint32_t port_index) override {}

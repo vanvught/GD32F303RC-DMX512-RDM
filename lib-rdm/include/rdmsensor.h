@@ -88,7 +88,7 @@ class RDMSensor
    public:
     explicit RDMSensor(uint8_t sensor) : sensor_(sensor)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         sensor_defintion_.sensor = sensor_;
         sensor_defintion_.type = E120_SENS_OTHER;
@@ -108,7 +108,7 @@ class RDMSensor
         sensor_values_.recorded = 0;
         sensor_values_.sensor_requested = sensor_;
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     virtual ~RDMSensor() = default;
@@ -130,7 +130,7 @@ class RDMSensor
 
     void SetDescription(const char* description)
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
 
         assert(description != nullptr);
         uint32_t i;
@@ -142,7 +142,7 @@ class RDMSensor
 
         sensor_defintion_.length = static_cast<uint8_t>(i);
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void Print()
@@ -160,20 +160,20 @@ class RDMSensor
 
     const struct rdm::sensor::Values* GetValues()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         const auto kValue = this->GetValue();
 
         sensor_values_.present = kValue;
         sensor_values_.lowest_detected = std::min(sensor_values_.lowest_detected, kValue);
         sensor_values_.highest_detected = std::max(sensor_values_.highest_detected, kValue);
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
         return &sensor_values_;
     }
 
     void SetValues()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         const auto kValue = this->GetValue();
 
         sensor_values_.present = kValue;
@@ -181,12 +181,12 @@ class RDMSensor
         sensor_values_.highest_detected = kValue;
         sensor_values_.recorded = kValue;
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     void Record()
     {
-        DEBUG_ENTRY
+        DEBUG_ENTRY();
         const auto kValue = this->GetValue();
 
         sensor_values_.present = kValue;
@@ -194,7 +194,7 @@ class RDMSensor
         sensor_values_.lowest_detected = std::min(sensor_values_.lowest_detected, kValue);
         sensor_values_.highest_detected = std::max(sensor_values_.highest_detected, kValue);
 
-        DEBUG_EXIT
+        DEBUG_EXIT();
     }
 
     virtual bool Initialize() = 0;

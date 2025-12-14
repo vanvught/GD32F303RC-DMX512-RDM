@@ -39,8 +39,8 @@ class Paint : public SpiLcd {
 public:
  explicit Paint(uint32_t cs) : SpiLcd(cs)
  {
-     DEBUG_ENTRY
-     DEBUG_EXIT
+     DEBUG_ENTRY();
+     DEBUG_EXIT();
  }
     virtual ~Paint() = default;
 

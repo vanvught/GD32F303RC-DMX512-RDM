@@ -53,7 +53,7 @@
 #include "hal_panelled.h"
 #include "logic_analyzer.h"
 
-#include "debug.h"
+#include "firmware/debug/debug_debug.h"
 
 #if defined(ENABLE_USB_HOST)
 void usb_init();

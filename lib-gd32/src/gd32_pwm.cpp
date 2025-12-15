@@ -58,7 +58,7 @@
 #include "gd32_pwm.h"
 #include "gd32.h"
 
-#include "debug.h"
+#include "firmware/debug/debug_debug.h"
 
 namespace pwm
 {

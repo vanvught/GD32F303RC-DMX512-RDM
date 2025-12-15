@@ -31,7 +31,7 @@
 #include "rdmsensor.h"
 #include "rdm_e120.h"
 #include "hal.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 class CpuTemperature final : public RDMSensor
 {

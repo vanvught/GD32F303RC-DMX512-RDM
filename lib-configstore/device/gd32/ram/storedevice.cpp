@@ -30,7 +30,7 @@
 #include "configstoredevice.h"
 #include "gd32.h"
 
-#include "debug.h"
+#include "firmware/debug/debug_debug.h"
 
 static constexpr uint32_t kFlashSectorSize = 4096U;
 static constexpr uint32_t kBsramSize = 4096U;

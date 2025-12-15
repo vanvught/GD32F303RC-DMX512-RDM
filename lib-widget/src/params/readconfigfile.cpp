@@ -29,7 +29,7 @@
 
 #include "params/readconfigfile.h"
 #include "firmware/debug/debug_dump.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 // TODO Check this with GD32 64->128
 static constexpr auto kMaxLineLength = 128; // Including '\0'

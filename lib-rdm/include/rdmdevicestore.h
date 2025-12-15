@@ -30,7 +30,7 @@
 
 #include "configstore.h"
 #include "configurationstore.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 namespace rdmdevice_store
 {

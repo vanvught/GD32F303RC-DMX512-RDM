@@ -31,7 +31,7 @@
 
 #include "hal_serialnumber.h"
 #include "rdmconst.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 class RDMDeviceController
 {

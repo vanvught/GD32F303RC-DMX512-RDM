@@ -42,7 +42,7 @@
 #include "gd32_board.h"
 #endif
 #include "hal_serialnumber.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 struct TRDMDeviceInfoData
 {

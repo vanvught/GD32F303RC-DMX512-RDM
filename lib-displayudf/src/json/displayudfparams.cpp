@@ -38,7 +38,7 @@
 #include "common/utils/utils_flags.h"
 #include "common/utils/utils_array.h"
 #include "common/utils/utils_enum.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 #include "displayudf.h"
 
 using common::store::displayudf::Flags;

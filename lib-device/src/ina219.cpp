@@ -29,7 +29,7 @@
 
 #include "hal_i2c.h"
 
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 static float CeilingPos(float f)
 {

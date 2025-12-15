@@ -34,7 +34,7 @@
 #endif
 
 #include "rdmconst.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 namespace rdmtod
 {

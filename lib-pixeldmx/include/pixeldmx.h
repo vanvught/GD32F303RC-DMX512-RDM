@@ -50,7 +50,7 @@
 #include "hal_gpio.h"
 #endif
 #include "dmxnode.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 #if defined(OUTPUT_DMX_PIXEL) && defined(RDM_RESPONDER) && !defined(NODE_ARTNET)
 #include "dmxnodeoutputrdmpixel.h"

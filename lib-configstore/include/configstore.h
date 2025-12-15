@@ -34,7 +34,7 @@
 #include "configurationstore.h"
 #include "global.h"
 #include "softwaretimers.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 class ConfigStore : StoreDevice
 {

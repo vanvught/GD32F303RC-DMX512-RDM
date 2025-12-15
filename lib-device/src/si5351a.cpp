@@ -29,7 +29,7 @@
 #include "si5351a.h"
 #include "hal_i2c.h"
 
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 namespace si5351a
 {

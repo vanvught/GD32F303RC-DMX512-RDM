@@ -31,7 +31,7 @@
 
 #include "dmxnode.h"
 #include "dmxnodeoutputrdmpixel.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 #include "rdmpersonality.h"
 
 namespace pixeldmx::paramsdmx

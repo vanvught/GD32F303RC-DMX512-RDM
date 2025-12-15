@@ -31,7 +31,7 @@
 
 #include "font_cp437.h"
 
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 static uint8_t spi_data[64] __attribute__((aligned(4)));
 

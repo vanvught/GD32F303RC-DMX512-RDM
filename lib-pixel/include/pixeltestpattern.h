@@ -30,7 +30,7 @@
 
 #include "pixelpatterns.h"
 
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 class PixelTestPattern final: PixelPatterns {
 public:

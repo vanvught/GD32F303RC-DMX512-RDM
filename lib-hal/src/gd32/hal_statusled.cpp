@@ -33,7 +33,7 @@
 #include "hal_statusled.h"
 #include "softwaretimers.h"
 #include "gd32.h"
-#include "debug.h"
+#include "firmware/debug/debug_debug.h"
 
 static TimerHandle_t s_timer_id = kTimerIdNone;
 

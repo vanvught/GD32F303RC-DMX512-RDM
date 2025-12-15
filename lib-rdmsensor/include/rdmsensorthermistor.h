@@ -35,7 +35,7 @@
 #include "mcp3424.h"
 #include "thermistor.h"
 
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 class RDMSensorThermistor final : public RDMSensor, MCP3424
 {

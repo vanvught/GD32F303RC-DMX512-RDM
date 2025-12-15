@@ -35,7 +35,7 @@
 #include "hal_watchdog.h"
 #include "hal_millis.h"
 
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 HwClock::HwClock()
 {

@@ -31,7 +31,7 @@
 
 #include "configurationstore.h"
 #include "rdmsensor.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 #if !defined(__APPLE__)
 #define CONFIG_RDM_ENABLE_CPU_SENSOR

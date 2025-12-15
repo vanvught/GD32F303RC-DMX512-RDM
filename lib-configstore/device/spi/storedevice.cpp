@@ -32,7 +32,7 @@
 
 #include "configstoredevice.h"
 #include "spi/spi_flash.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 StoreDevice::StoreDevice()
 {

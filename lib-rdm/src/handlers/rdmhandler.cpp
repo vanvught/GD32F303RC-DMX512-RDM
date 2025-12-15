@@ -42,7 +42,7 @@
 #include "hal.h"
 #include "hal_boardinfo.h"
 #include "display.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 enum class PowerState: uint8_t {
 	FULL_OFF = 0x00,	///< Completely disengages power to device. Device can no longer respond.

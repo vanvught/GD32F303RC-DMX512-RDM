@@ -31,7 +31,7 @@
 #include <cassert>
 
 #include "displayudf.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 DisplayUdf::DisplayUdf()
 {

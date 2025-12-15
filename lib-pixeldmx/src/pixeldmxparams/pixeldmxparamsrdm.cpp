@@ -39,7 +39,7 @@
 #include "common/utils/utils_enum.h"
 #include "pixeldmxconfiguration.h"
 #include "rdmdeviceresponder.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 void PixelDmxParamsRdm::SetDataImpl([[maybe_unused]] uint32_t port_index, const uint8_t* data, uint32_t length, [[maybe_unused]] bool do_update)
 {

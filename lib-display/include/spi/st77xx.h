@@ -31,7 +31,7 @@
 #include "spi/paint.h"
 #include "spi/spilcd.h"
 #include "hal_gpio.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 namespace st77xx
 {

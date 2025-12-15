@@ -29,7 +29,7 @@
 #include <cstdint>
 #include <cstring>
 
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 #include "hal.h"
 #include "rdmconst.h"
 #include "rdmdevice.h"

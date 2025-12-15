@@ -27,7 +27,7 @@
 
 #include "configstoredevice.h"
 #include "flashcode.h"
-#include "debug.h"
+#include "firmware/debug/debug_debug.h"
 
 StoreDevice::StoreDevice()
 {

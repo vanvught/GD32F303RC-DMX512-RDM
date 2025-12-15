@@ -32,7 +32,7 @@
 
 #include "dmxnode.h"
 #include "common/utils/utils_hex.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 class DmxSlotInfo
 {

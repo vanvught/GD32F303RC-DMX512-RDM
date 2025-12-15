@@ -37,7 +37,7 @@
 
 #include "rdmpersonality.h"
 
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 #if defined(NODE_RDMNET_LLRP_ONLY)
 #undef CONFIG_RDM_ENABLE_SUBDEVICES

@@ -39,7 +39,7 @@
 #endif
 #include "hal_panelled.h"
 #include "hal.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 class DmxSend
 {

@@ -33,7 +33,7 @@
 #include "pixeloutput.h"
 #include "pixelconfiguration.h"
 #include "gd32_spi.h"
-#include "debug.h"
+#include "firmware/debug/debug_debug.h"
 
 static uint32_t s_tmp;
 

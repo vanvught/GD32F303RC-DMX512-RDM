@@ -29,7 +29,7 @@
 
 #include <cstdint>
 
-#include "debug.h"
+#include "firmware/debug/debug_debug.h"
 
 void mac_address_get(uint8_t paddr[])
 {

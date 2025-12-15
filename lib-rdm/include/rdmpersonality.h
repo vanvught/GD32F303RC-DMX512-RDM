@@ -30,7 +30,7 @@
 #include <cassert>
 
 #include "dmxnode_outputtype.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 namespace rdm::personality {
 static constexpr auto DESCRIPTION_MAX_LENGTH = 32U;

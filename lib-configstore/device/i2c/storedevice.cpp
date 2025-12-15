@@ -33,7 +33,7 @@
 
 #include "configstoredevice.h"
 #include "i2c/at24cxx.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 namespace storedevice
 {

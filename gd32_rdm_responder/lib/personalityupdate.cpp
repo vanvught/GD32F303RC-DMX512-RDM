@@ -33,7 +33,7 @@
 #include "pixelpatterns.h"
 #include "displayudf.h"
 #include "firmware/pixeldmx/show.h"
-#include "debug.h"
+#include "firmware/debug/debug_debug.h"
 
 void RDMResponder::PersonalityUpdate(uint32_t personality)
 {

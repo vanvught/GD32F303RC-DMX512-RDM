@@ -41,7 +41,7 @@
 #include "hwclock.h"
 #include "hal_millis.h"
 #include "hal_i2c.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 #define BCD2DEC(val) (((val) & 0x0f) + ((val) >> 4) * 10)
 #define DEC2BCD(val) static_cast<char>((((val) / 10) << 4) + (val) % 10)

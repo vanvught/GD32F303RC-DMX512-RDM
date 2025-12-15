@@ -28,7 +28,7 @@
 
 #include "spi/config.h"
 #include "hal_spi.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 #if defined CONFIG_LCD_SPI_BITBANG
 #define SPI_PREFIX(x) FUNC_PREFIX(Bitbang##x);

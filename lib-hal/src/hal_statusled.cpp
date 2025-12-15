@@ -30,7 +30,7 @@
 
 #include "hal_statusled.h"
 
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 namespace hal::statusled
 {

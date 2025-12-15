@@ -70,7 +70,7 @@ inline constexpr uint32_t CS_GPIO = SPI_LCD_CS_GPIO;
 inline constexpr uint32_t CS_GPIO = 0;
 #endif
 
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 class Display : public LcdDriver
 {

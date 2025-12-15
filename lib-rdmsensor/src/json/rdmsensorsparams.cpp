@@ -33,7 +33,7 @@
 #include "json/json_parser.h"
 #include "configstore.h"
 #include "configurationstore.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 #include "rdm_sensors.h"
 #include "common/utils/utils_hex.h"
 #include "rdmsensors.h"

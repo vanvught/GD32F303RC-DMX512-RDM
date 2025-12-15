@@ -34,7 +34,7 @@
 #include "net/udp.h"
 #include "dmx.h"
 
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 /**
  * @class DmxConfigUdp

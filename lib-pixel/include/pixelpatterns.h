@@ -34,7 +34,7 @@
 #include "pixel.h"
 #include "pixelconfiguration.h"
 #include "hal_millis.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 namespace pixelpatterns
 {

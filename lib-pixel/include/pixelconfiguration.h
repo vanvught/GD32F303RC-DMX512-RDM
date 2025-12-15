@@ -36,7 +36,7 @@
 #include "gamma/gamma_tables.h"
 #endif
 
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 class PixelConfiguration
 {

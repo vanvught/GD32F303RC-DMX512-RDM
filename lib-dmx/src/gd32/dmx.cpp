@@ -46,7 +46,7 @@
 #include "gd32/dmx_assert.h"
 #include "dmx_internal.h"
 #include "logic_analyzer.h"
-#include "debug.h"
+#include "firmware/debug/debug_debug.h"
 
 extern struct HwTimersSeconds g_Seconds;
 

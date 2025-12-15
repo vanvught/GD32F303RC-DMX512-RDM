@@ -28,7 +28,7 @@
 
 #include "dmxnode_scenes.h"
 #include "flashcode.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 namespace dmxnode::scenes
 {

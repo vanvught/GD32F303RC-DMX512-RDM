@@ -30,7 +30,7 @@
 #include <cstdio>
 #include <cstdint>
 
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 namespace json
 {

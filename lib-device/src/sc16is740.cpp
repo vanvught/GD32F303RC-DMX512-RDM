@@ -31,7 +31,7 @@
 #include "hal_millis.h"
 #include "hal_i2c.h"
 #include "firmware/debug/debug_printbits.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 SC16IS740::SC16IS740(uint8_t address, uint32_t on_board_crystal) :
 	HAL_I2C(address, HAL_I2C::FULL_SPEED),

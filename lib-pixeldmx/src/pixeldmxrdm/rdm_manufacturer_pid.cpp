@@ -34,7 +34,7 @@
 #include "rdm_e120.h"
 #include "pixeltype.h"
 #include "pixeldmxstore.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 #include "pixeldmxconfiguration.h"
 #include "common/utils/utils_enum.h"
 #include "pixeloutput.h"

@@ -15,7 +15,7 @@
 #include "configstore.h"
 #include "utc.h"
 #include "global.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 namespace json
 {

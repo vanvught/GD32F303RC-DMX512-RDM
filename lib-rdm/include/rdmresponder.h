@@ -36,7 +36,7 @@
 #include "dmxreceiver.h"
 #include "dmxnode_outputtype.h"
 #include "rdm_message_print.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 #if defined(NODE_RDMNET_LLRP_ONLY)
 #error "Cannot be both RDMNet Device and RDM Responder"

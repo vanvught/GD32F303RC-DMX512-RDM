@@ -58,7 +58,7 @@
 #if defined(RDM_RESPONDER) || defined(OUTPUT_DMX_MONITOR) || defined(OUTPUT_DMX_PCA9685) || defined(OUTPUT_DMX_PIXEL) || defined(OUTPUT_DMX_TLC59711)
 #define HAVE_DMX_START_ADDRESS
 #endif
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 namespace displayudf
 {

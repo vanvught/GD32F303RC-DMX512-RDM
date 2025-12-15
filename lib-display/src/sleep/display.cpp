@@ -31,7 +31,7 @@
 
 #include "softwaretimers.h"
 
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 static TimerHandle_t s_timer_id = kTimerIdNone;
 

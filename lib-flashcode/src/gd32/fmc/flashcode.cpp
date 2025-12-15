@@ -41,7 +41,7 @@ extern "C"
 }
 #endif
 
-#include "debug.h"
+#include "firmware/debug/debug_debug.h"
 
 namespace flashcode
 {

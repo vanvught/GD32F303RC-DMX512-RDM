@@ -27,7 +27,7 @@
 #include "rdmresponder.h"
 #include "pixeltestpattern.h"
 
-#include "debug.h"
+#include "firmware/debug/debug_debug.h"
 
 static bool s_is_on = false;
 static pixelpatterns::Pattern s_pattern;

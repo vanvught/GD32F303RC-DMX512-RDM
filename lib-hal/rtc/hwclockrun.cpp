@@ -28,7 +28,7 @@
 
 #include "hwclock.h"
 #include "hal_millis.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 enum class Status
 {

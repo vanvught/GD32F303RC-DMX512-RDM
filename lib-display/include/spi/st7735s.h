@@ -40,7 +40,7 @@
 
 #include "spi/config.h"
 #include "spi/st77xx.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 namespace st7735s
 {

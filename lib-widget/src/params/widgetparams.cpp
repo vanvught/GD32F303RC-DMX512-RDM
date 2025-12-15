@@ -32,7 +32,7 @@
 #include "widgetconfiguration.h"
 #include "params/readconfigfile.h"
 #include "params/sscan.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 struct WidgetParamsMask
 {

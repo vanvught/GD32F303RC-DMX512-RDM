@@ -33,7 +33,7 @@
 #include "spi/lcd_font.h"
 #include "spi/spilcd.h"
 #include "spi/config.h"
-#include "debug.h"
+ #include "firmware/debug/debug_debug.h"
 
 class Paint : public SpiLcd {
 public:

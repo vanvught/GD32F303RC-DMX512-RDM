@@ -32,7 +32,7 @@
 #include "gd32.h"
 #include "gd32_gpio.h"
 
-#include "debug.h"
+#include "firmware/debug/debug_debug.h"
 
 #if defined(DISPLAYTIMEOUT_CONFIG_IRQ) && !defined(CONFIG_USE_EXTI10_15_IRQHandler)
 extern "C"

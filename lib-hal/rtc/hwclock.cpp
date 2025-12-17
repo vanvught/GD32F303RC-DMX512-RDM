@@ -53,7 +53,7 @@ void HwClock::Print()
 
     const char* type = "Unknown";
 
-    switch (m_Type)
+    switch (type_)
     {
         case rtc::Type::kMcP7941X:
             type = "MCP7941X";
@@ -141,7 +141,7 @@ void HwClock::HcToSys()
 
     settimeofday(&tv, nullptr);
 
-    m_nLastHcToSysMillis = hal::Millis();
+    last_hc_to_sys_millis_ = hal::Millis();
 
     if (kIsWatchdog)
     {

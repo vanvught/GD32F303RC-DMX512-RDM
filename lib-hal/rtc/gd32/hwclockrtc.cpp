@@ -159,9 +159,9 @@ void HwClock::RtcProbe()
 #endif
     }
 
-    m_Type = rtc::Type::kSocInternal;
+    type_ = rtc::Type::kSocInternal;
     is_connected_ = true;
-    m_nLastHcToSysMillis = millis();
+    last_hc_to_sys_millis_ = millis();
 
     DEBUG_EXIT();
 }
@@ -219,7 +219,7 @@ bool HwClock::RtcSetAlarm(const struct tm* tm_time)
     DEBUG_ENTRY();
     assert(tm_time != nullptr);
 
-    DEBUG_PRINTF("secs=%d, mins=%d, hours=%d, mday=%d, mon=%d, year=%d, wday=%d, enabled=%d", tm_time->tm_sec, tm_time->tm_min, tm_time->tm_hour, tm_time->tm_mday, tm_time->tm_mon, tm_time->tm_year, tm_time->tm_wday, m_bRtcAlarmEnabled);
+    DEBUG_PRINTF("secs=%d, mins=%d, hours=%d, mday=%d, mon=%d, year=%d, wday=%d, enabled=%d", tm_time->tm_sec, tm_time->tm_min, tm_time->tm_hour, tm_time->tm_mday, tm_time->tm_mon, tm_time->tm_year, tm_time->tm_wday, alarm_enabled_);
 
 #if defined(GD32F4XX) || defined(GD32H7XX)
     rtc_alarm_disable(RTC_ALARM0);
@@ -235,7 +235,7 @@ bool HwClock::RtcSetAlarm(const struct tm* tm_time)
 
     rtc_alarm_config(RTC_ALARM0, &rtc_alarm);
 
-    if (m_bRtcAlarmEnabled)
+    if (alarm_enabled_)
     {
         rtc_interrupt_enable(RTC_INT_ALARM0);
         rtc_alarm_enable(RTC_ALARM0);
@@ -274,11 +274,11 @@ bool HwClock::RtcGetAlarm(struct tm* tm_time)
     tm_time->tm_mday = BCD2DEC(rtc_alarm.alarm_day);
 #else
     const auto kSeconds = static_cast<time_t>((RTC_ALRMH << 16U) | RTC_ALRML);
-    const auto* pTm = localtime(&kSeconds);
-    memcpy(tm_time, pTm, sizeof(struct tm));
+    const auto* lt = localtime(&kSeconds);
+    memcpy(tm_time, lt, sizeof(struct tm));
 #endif
 
-    DEBUG_PRINTF("secs=%d, mins=%d, hours=%d, mday=%d, mon=%d, year=%d, wday=%d, enabled=%d", tm_time->tm_sec, tm_time->tm_min, tm_time->tm_hour, tm_time->tm_mday, tm_time->tm_mon, tm_time->tm_year, tm_time->tm_wday, m_bRtcAlarmEnabled);
+    DEBUG_PRINTF("secs=%d, mins=%d, hours=%d, mday=%d, mon=%d, year=%d, wday=%d, enabled=%d", tm_time->tm_sec, tm_time->tm_min, tm_time->tm_hour, tm_time->tm_mday, tm_time->tm_mon, tm_time->tm_year, tm_time->tm_wday, alarm_enabled_);
 
     DEBUG_EXIT();
     return true;

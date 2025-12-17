@@ -128,7 +128,7 @@ void HwClock::RtcProbe()
 {
     DEBUG_ENTRY();
 
-    m_nLastHcToSysMillis = hal::Millis();
+    last_hc_to_sys_millis_ = hal::Millis();
 
     FUNC_PREFIX(I2cSetBaudrate(HAL_I2C::NORMAL_SPEED));
 
@@ -146,7 +146,7 @@ void HwClock::RtcProbe()
         DEBUG_PUTS("MCP7941X");
 
         is_connected_ = true;
-        m_Type = rtc::Type::kMcP7941X;
+        type_ = rtc::Type::kMcP7941X;
         address_ = rtc::i2caddress::kMcP7941X;
 
         FUNC_PREFIX(I2cReadReg(rtc::reg::kSeconds, value));
@@ -184,7 +184,7 @@ void HwClock::RtcProbe()
         DEBUG_PUTS("DS3231");
 
         is_connected_ = true;
-        m_Type = rtc::Type::kDS3231;
+        type_ = rtc::Type::kDS3231;
         address_ = rtc::i2caddress::kDS3231;
 
         struct tm tm;
@@ -219,7 +219,7 @@ void HwClock::RtcProbe()
         DEBUG_PUTS("PCF8563");
 
         is_connected_ = true;
-        m_Type = rtc::Type::kPcF8563;
+        type_ = rtc::Type::kPcF8563;
         address_ = rtc::i2caddress::kPcF8563;
 
         FUNC_PREFIX(I2cWriteReg(rtc::pcf8563::reg::kControlStatuS1, 0));
@@ -284,7 +284,7 @@ bool HwClock::RtcSet(const struct tm* time)
     registers[rtc::reg::kHours] = DEC2BCD(time->tm_hour & 0x1f);
 
 #if !defined(CONFIG_RTC_DISABLE_PCF8563)
-    if (m_Type == rtc::Type::kPcF8563)
+    if (type_ == rtc::Type::kPcF8563)
     {
         registers[rtc::pcf8563::reg::kWday - rtc::pcf8563::reg::kSeconds] = DEC2BCD(time->tm_wday & 0x07);
         registers[rtc::pcf8563::reg::kMday - rtc::pcf8563::reg::kSeconds] = DEC2BCD(time->tm_mday & 0x3f);
@@ -299,13 +299,13 @@ bool HwClock::RtcSet(const struct tm* time)
     registers[rtc::reg::kMonth] = DEC2BCD((time->tm_mon + 1) & 0x1f);
     registers[rtc::reg::kYear] = DEC2BCD((time->tm_year - 100) & 0xff);
 
-    if (m_Type == rtc::Type::kMcP7941X)
+    if (type_ == rtc::Type::kMcP7941X)
     {
         registers[rtc::reg::kSeconds] |= rtc::mcp7941x::bit::kSt;
         registers[rtc::reg::kWday] |=rtc::mcp7941x::bit::kVbaten;
     }
 
-    if (m_Type == rtc::Type::kPcF8563)
+    if (type_ == rtc::Type::kPcF8563)
     {
         data[0] = rtc::pcf8563::reg::kSeconds;
     }
@@ -335,7 +335,7 @@ bool HwClock::RtcGet(struct tm* time)
 
     char registers[7];
 
-    if (m_Type == rtc::Type::kPcF8563)
+    if (type_ == rtc::Type::kPcF8563)
     {
         registers[0] = rtc::pcf8563::reg::kSeconds;
     }
@@ -354,7 +354,7 @@ bool HwClock::RtcGet(struct tm* time)
     time->tm_hour = BCD2DEC(registers[rtc::reg::kHours] & 0x3f);
 
 #if !defined(CONFIG_RTC_DISABLE_PCF8563)
-    if (m_Type == rtc::Type::kPcF8563)
+    if (type_ == rtc::Type::kPcF8563)
     {
         time->tm_wday = BCD2DEC(registers[rtc::pcf8563::reg::kWday - rtc::pcf8563::reg::kSeconds] & 0x07);
         time->tm_mday = BCD2DEC(registers[rtc::pcf8563::reg::kMday - rtc::pcf8563::reg::kSeconds] & 0x3f);
@@ -384,7 +384,7 @@ bool HwClock::RtcSetAlarm(const struct tm* time)
     DEBUG_PRINTF("secs=%d, mins=%d, hours=%d, mday=%d, mon=%d, year=%d, wday=%d", time->tm_sec, time->tm_min, time->tm_hour, time->tm_mday, time->tm_mon,
                  time->tm_year, time->tm_wday);
 
-    switch (m_Type)
+    switch (type_)
     {
 #if !defined(CONFIG_RTC_DISABLE_MCP7941X)
         case rtc::Type::kMcP7941X:
@@ -416,7 +416,7 @@ bool HwClock::RtcSetAlarm(const struct tm* time)
             registers[0] = rtc::mcp7941x::reg::kControl;
             FUNC_PREFIX(I2cWrite(registers, sizeof(registers) / sizeof(registers[0])));
 
-            if (m_bRtcAlarmEnabled)
+            if (alarm_enabled_)
             {
                 registers[0] = rtc::mcp7941x::reg::kControl;
                 registers[1] |= rtc::mcp7941x::bit::kAlM0En;
@@ -459,7 +459,7 @@ bool HwClock::RtcSetAlarm(const struct tm* time)
             registers[0] = rtc::ds3231::reg::kAlarM1Seconds;
             FUNC_PREFIX(I2cWrite(registers, sizeof(registers) / sizeof(registers[0])));
 
-            if (m_bRtcAlarmEnabled)
+            if (alarm_enabled_)
             {
                 DEBUG_PUTS("Alarm is enabled");
                 registers[0] = rtc::ds3231::reg::kControl;
@@ -513,7 +513,7 @@ bool HwClock::RtcGetAlarm(struct tm* time)
         return false;
     }
 
-    switch (m_Type)
+    switch (type_)
     {
 #if !defined(CONFIG_RTC_DISABLE_MCP7941X)
         case rtc::Type::kMcP7941X:
@@ -534,10 +534,10 @@ bool HwClock::RtcGetAlarm(struct tm* time)
             time->tm_mday = BCD2DEC(registers[7] & 0x3f);
             time->tm_mon = BCD2DEC(registers[8] & 0x1f) - 1;
 
-            m_bRtcAlarmEnabled = registers[0] & rtc::mcp7941x::bit::kAlM0En;
+            alarm_enabled_ = registers[0] & rtc::mcp7941x::bit::kAlM0En;
 
             DEBUG_PRINTF("sec=%d min=%d hour=%d wday=%d mday=%d mon=%d enabled=%d polarity=%d irq=%d match=%u", time->tm_sec, time->tm_min, time->tm_hour,
-                         time->tm_wday, time->tm_mday, time->tm_mon, m_bRtcAlarmEnabled, (registers[6] & rtc::mcp7941x::bit::kAlmxPol),
+                         time->tm_wday, time->tm_mday, time->tm_mon, alarm_enabled_, (registers[6] & rtc::mcp7941x::bit::kAlmxPol),
                          (registers[6] &rtc:: mcp7941x::bit::kAlmxIf), (registers[6] & rtc::mcp7941x::bit::kMskAlmxMatch) >> 4);
 
             DEBUG_EXIT();
@@ -562,11 +562,11 @@ bool HwClock::RtcGetAlarm(struct tm* time)
             time->tm_hour = BCD2DEC(registers[2] & 0x3f);
             time->tm_mday = BCD2DEC(registers[3] & 0x3f);
 
-            m_bRtcAlarmEnabled = (registers[7] & rtc::ds3231::bit::kA1Ie);
-            m_bRtcAlarmPending = (registers[8] & rtc::ds3231::bit::kA1F);
+            alarm_enabled_ = (registers[7] & rtc::ds3231::bit::kA1Ie);
+            alarm_pending_ = (registers[8] & rtc::ds3231::bit::kA1F);
 
             DEBUG_PRINTF("tm is sec=%d, min=%d, hour=%d, mday=%d, enabled=%d, pending=%d", time->tm_sec, time->tm_min, time->tm_hour, time->tm_mday,
-                         m_bRtcAlarmEnabled, m_bRtcAlarmPending);
+                         alarm_enabled_, alarm_pending_);
 
             DEBUG_EXIT();
             return true;
@@ -597,7 +597,7 @@ bool HwClock::RtcGetAlarm(struct tm* time)
             PCF8563GetAlarmMode();
 
             DEBUG_PRINTF("tm is mins=%d, hours=%d, mday=%d, wday=%d, enabled=%d, pending=%d", time->tm_min, time->tm_hour, time->tm_mday, time->tm_wday,
-                         m_bRtcAlarmEnabled, m_bRtcAlarmPending);
+                         alarm_enabled_, alarm_pending_);
 
             DEBUG_EXIT();
             return true;
@@ -616,7 +616,7 @@ int HwClock::MCP794xxAlarmWeekday(struct tm* time)
 {
     DEBUG_ENTRY();
     assert(time != nullptr);
-    assert(m_Type == rtc::Type::kMcP7941X);
+    assert(type_ == rtc::Type::kMcP7941X);
 
     struct tm tm_now;
     RtcGet(&tm_now);
@@ -632,13 +632,13 @@ int HwClock::MCP794xxAlarmWeekday(struct tm* time)
 void HwClock::PCF8563GetAlarmMode()
 {
     DEBUG_ENTRY();
-    assert(m_Type == rtc::Type::kPcF8563);
+    assert(type_ == rtc::Type::kPcF8563);
 
     uint8_t value;
     FUNC_PREFIX(I2cReadReg(rtc::pcf8563::reg::kControlStatuS2, value));
 
-    m_bRtcAlarmEnabled = value & rtc::pcf8563::bit::kStatus2Aie;
-    m_bRtcAlarmPending = value & rtc::pcf8563::bit::kStatus2Af;
+    alarm_enabled_ = value & rtc::pcf8563::bit::kStatus2Aie;
+    alarm_pending_ = value & rtc::pcf8563::bit::kStatus2Af;
 
     DEBUG_EXIT();
 }
@@ -646,7 +646,7 @@ void HwClock::PCF8563GetAlarmMode()
 void HwClock::PCF8563SetAlarmMode()
 {
     DEBUG_ENTRY();
-    assert(m_Type == rtc::Type::kPcF8563);
+    assert(type_ == rtc::Type::kPcF8563);
 
     char data[2];
 
@@ -655,7 +655,7 @@ void HwClock::PCF8563SetAlarmMode()
     FUNC_PREFIX(I2cWrite(&data[1], 1));
     FUNC_PREFIX(I2cRead(&data[1], 1));
 
-    if (m_bRtcAlarmEnabled)
+    if (alarm_enabled_)
     {
         DEBUG_PUTS("Alarm is enabled");
         data[1] |= rtc::pcf8563::bit::kStatus2Aie;

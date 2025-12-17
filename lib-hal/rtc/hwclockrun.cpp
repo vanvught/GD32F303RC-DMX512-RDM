@@ -48,7 +48,7 @@ void HwClock::Process()
 {
     if (s_status == Status::kWaiting)
     {
-        if (__builtin_expect(((hal::Millis() - m_nLastHcToSysMillis) > 7200 * 1000), 0))
+        if (__builtin_expect(((hal::Millis() - last_hc_to_sys_millis_) > 7200 * 1000), 0))
         {
             s_status = Status::kSampling;
 
@@ -93,7 +93,7 @@ void HwClock::Process()
 
             settimeofday(&tv, nullptr);
 
-            m_nLastHcToSysMillis = hal::Millis();
+            last_hc_to_sys_millis_ = hal::Millis();
             s_status = Status::kWaiting;
 
             DEBUG_PRINTF("%d:%d (%d %d) (%d %d) -> %d", s_seconds_t1, kSeconds2, static_cast<int>(s_tv_t1.tv_sec), static_cast<int>(s_tv_t1.tv_usec),

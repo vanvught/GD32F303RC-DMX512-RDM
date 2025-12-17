@@ -136,38 +136,38 @@ void Init()
 #if !defined(GD32H7XX)
     {
         // Clear section .dmx
-        const auto nSize = (&_edmx - &_sdmx);
-        memset(&_sdmx, 0, nSize);
+        const auto kSize = (&_edmx - &_sdmx);
+        memset(&_sdmx, 0, kSize);
 #ifndef NDEBUG
-        printf("Cleared .dmx at %p, size %u\n", &_sdmx, nSize);
+        printf("Cleared .dmx at %p, size %u\n", &_sdmx, kSize);
 #endif
     }
 #endif
 #if defined(GD32F450VI) || defined(GD32H7XX)
     {
         // Clear section .lightset
-        const auto nSize = (&_elightset - &_slightset);
-        memset(&_slightset, 0, nSize);
+        const auto kSize = (&_elightset - &_slightset);
+        memset(&_slightset, 0, kSize);
 #ifndef NDEBUG
-        printf("Cleared .lightset at %p, size %u\n", &_slightset, nSize);
+        printf("Cleared .lightset at %p, size %u\n", &_slightset, kSize);
 #endif
     }
 #endif
     {
         // Clear section .network
-        const auto nSize = (&_enetwork - &_snetwork);
-        memset(&_snetwork, 0, nSize);
+        const auto kSize = (&_enetwork - &_snetwork);
+        memset(&_snetwork, 0, kSize);
 #ifndef NDEBUG
-        printf("Cleared .network at %p, size %u\n", &_snetwork, nSize);
+        printf("Cleared .network at %p, size %u\n", &_snetwork, kSize);
 #endif
     }
 #if !defined(GD32F450VE) && !defined(GD32H7XX)
     {
         // Clear section .pixel
-        const auto nSize = (&_epixel - &_spixel);
-        memset(&_spixel, 0, nSize);
+        const auto kSize = (&_epixel - &_spixel);
+        memset(&_spixel, 0, kSize);
 #ifndef NDEBUG
-        printf("Cleared .pixel at %p, size %u\n", &_spixel, nSize);
+        printf("Cleared .pixel at %p, size %u\n", &_spixel, kSize);
 #endif
     }
 #endif
@@ -176,10 +176,10 @@ void Init()
 #if defined(GD32F20X) || defined(GD32F4XX) || defined(GD32H7XX)
     {
         // clear section .network
-        const auto nSize = (&_enetwork - &_snetwork);
-        memset(&_snetwork, 0, nSize);
+        const auto kSize = (&_enetwork - &_snetwork);
+        memset(&_snetwork, 0, kSize);
 #ifndef NDEBUG
-        printf("Cleared .network at %p, size %u\n", &_snetwork, nSize);
+        printf("Cleared .network at %p, size %u\n", &_snetwork, kSize);
 #endif
     }
 #endif
@@ -311,7 +311,7 @@ void Init()
     usb_init();
 #endif
 
-    logic_analyzer::init();
+    logic_analyzer::Init();
 
 #if !defined(CONFIG_NET_ENABLE_PTP)
     struct tm tmbuf;
@@ -321,9 +321,9 @@ void Init()
     tmbuf.tm_year = _TIME_STAMP_YEAR_ - 1900; // The number of years since 1900.
 
     const auto kSeconds = mktime(&tmbuf);
-    const struct timeval tv = {kSeconds, 0};
+    const struct timeval kTv = {kSeconds, 0};
 
-    settimeofday(&tv, nullptr);
+    settimeofday(&kTv, nullptr);
 #endif
 
 #if !defined(DISABLE_RTC)

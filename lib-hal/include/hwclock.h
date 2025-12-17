@@ -58,9 +58,9 @@ class HwClock
 
     bool AlarmGet(struct tm* time) { return RtcGetAlarm(time); }
 
-    void AlarmEnable(bool enable) { m_bRtcAlarmEnabled = enable; }
+    void AlarmEnable(bool enable) { alarm_enabled_ = enable; }
 
-    bool AlarmIsEnabled() const { return m_bRtcAlarmEnabled; }
+    bool AlarmIsEnabled() const { return alarm_enabled_; }
 
     bool IsConnected() const { return is_connected_; }
 
@@ -88,13 +88,13 @@ class HwClock
     void PCF8563SetAlarmMode();
 
    private:
-    uint32_t m_nSetDelayMicros{0};
-    uint32_t m_nLastHcToSysMillis{0};
+    uint32_t delay_micros_{0};
+    uint32_t last_hc_to_sys_millis_{0};
     uint8_t address_{0};
-    rtc::Type m_Type{rtc::Type::kUnknown};
+    rtc::Type type_{rtc::Type::kUnknown};
     bool is_connected_{false};
-    bool m_bRtcAlarmEnabled{false};
-    bool m_bRtcAlarmPending{false};
+    bool alarm_enabled_{false};
+    bool alarm_pending_{false};
 
     static inline HwClock* s_this;
 };

@@ -4,7 +4,7 @@
  */
 /* Copyright (C) 2022-2025 by Arjan van Vught mailto:info@gd32-dmx.org
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * Permission is hereby granted, free of Charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -31,7 +31,7 @@
 
 namespace logic_analyzer
 {
-inline void init()
+inline void Init()
 {
 #if defined(LOGIC_ANALYZER)
 #if defined(LOGIC_ANALYZER_CH0_GPIO_PINx)
@@ -39,8 +39,8 @@ inline void init()
 #if defined(GPIO_INIT)
     gpio_init(LOGIC_ANALYZER_CH0_GPIOx, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, LOGIC_ANALYZER_CH0_GPIO_PINx);
 #else
-    gpio_mode_set(LOGIC_ANALYZER_CH0_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH0_GPIO_PINx);
-    gpio_output_options_set(LOGIC_ANALYZER_CH0_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH0_GPIO_PINx);
+    gpio_modeSet(LOGIC_ANALYZER_CH0_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH0_GPIO_PINx);
+    gpio_output_optionsSet(LOGIC_ANALYZER_CH0_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH0_GPIO_PINx);
 #endif
     GPIO_BC(LOGIC_ANALYZER_CH0_GPIOx) = LOGIC_ANALYZER_CH0_GPIO_PINx;
 #endif
@@ -50,8 +50,8 @@ inline void init()
 #if defined(GPIO_INIT)
     gpio_init(LOGIC_ANALYZER_CH1_GPIOx, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, LOGIC_ANALYZER_CH1_GPIO_PINx);
 #else
-    gpio_mode_set(LOGIC_ANALYZER_CH1_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH1_GPIO_PINx);
-    gpio_output_options_set(LOGIC_ANALYZER_CH1_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH1_GPIO_PINx);
+    gpio_modeSet(LOGIC_ANALYZER_CH1_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH1_GPIO_PINx);
+    gpio_output_optionsSet(LOGIC_ANALYZER_CH1_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH1_GPIO_PINx);
 #endif
     GPIO_BC(LOGIC_ANALYZER_CH1_GPIOx) = LOGIC_ANALYZER_CH1_GPIO_PINx;
 #endif
@@ -61,8 +61,8 @@ inline void init()
 #if defined(GPIO_INIT)
     gpio_init(LOGIC_ANALYZER_CH2_GPIOx, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, LOGIC_ANALYZER_CH2_GPIO_PINx);
 #else
-    gpio_mode_set(LOGIC_ANALYZER_CH2_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH2_GPIO_PINx);
-    gpio_output_options_set(LOGIC_ANALYZER_CH2_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH2_GPIO_PINx);
+    gpio_modeSet(LOGIC_ANALYZER_CH2_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH2_GPIO_PINx);
+    gpio_output_optionsSet(LOGIC_ANALYZER_CH2_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH2_GPIO_PINx);
 #endif
     GPIO_BC(LOGIC_ANALYZER_CH2_GPIOx) = LOGIC_ANALYZER_CH2_GPIO_PINx;
 #endif
@@ -72,8 +72,8 @@ inline void init()
 #if defined(GPIO_INIT)
     gpio_init(LOGIC_ANALYZER_CH3_GPIOx, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, LOGIC_ANALYZER_CH3_GPIO_PINx);
 #else
-    gpio_mode_set(LOGIC_ANALYZER_CH3_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH3_GPIO_PINx);
-    gpio_output_options_set(LOGIC_ANALYZER_CH3_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH3_GPIO_PINx);
+    gpio_modeSet(LOGIC_ANALYZER_CH3_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH3_GPIO_PINx);
+    gpio_output_optionsSet(LOGIC_ANALYZER_CH3_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH3_GPIO_PINx);
 #endif
     GPIO_BC(LOGIC_ANALYZER_CH3_GPIOx) = LOGIC_ANALYZER_CH3_GPIO_PINx;
 #endif
@@ -83,8 +83,8 @@ inline void init()
 #if defined(GPIO_INIT)
     gpio_init(LOGIC_ANALYZER_CH4_GPIOx, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, LOGIC_ANALYZER_CH4_GPIO_PINx);
 #else
-    gpio_mode_set(LOGIC_ANALYZER_CH4_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH4_GPIO_PINx);
-    gpio_output_options_set(LOGIC_ANALYZER_CH4_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH4_GPIO_PINx);
+    gpio_modeSet(LOGIC_ANALYZER_CH4_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH4_GPIO_PINx);
+    gpio_output_optionsSet(LOGIC_ANALYZER_CH4_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH4_GPIO_PINx);
 #endif
     GPIO_BC(LOGIC_ANALYZER_CH4_GPIOx) = LOGIC_ANALYZER_CH4_GPIO_PINx;
 #endif
@@ -94,8 +94,8 @@ inline void init()
 #if defined(GPIO_INIT)
     gpio_init(LOGIC_ANALYZER_CH5_GPIOx, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, LOGIC_ANALYZER_CH5_GPIO_PINx);
 #else
-    gpio_mode_set(LOGIC_ANALYZER_CH5_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH5_GPIO_PINx);
-    gpio_output_options_set(LOGIC_ANALYZER_CH5_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH5_GPIO_PINx);
+    gpio_modeSet(LOGIC_ANALYZER_CH5_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH5_GPIO_PINx);
+    gpio_output_optionsSet(LOGIC_ANALYZER_CH5_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH5_GPIO_PINx);
 #endif
     GPIO_BC(LOGIC_ANALYZER_CH5_GPIOx) = LOGIC_ANALYZER_CH5_GPIO_PINx;
 #endif
@@ -105,8 +105,8 @@ inline void init()
 #if defined(GPIO_INIT)
     gpio_init(LOGIC_ANALYZER_CH6_GPIOx, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, LOGIC_ANALYZER_CH6_GPIO_PINx);
 #else
-    gpio_mode_set(LOGIC_ANALYZER_CH6_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH6_GPIO_PINx);
-    gpio_output_options_set(LOGIC_ANALYZER_CH6_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH6_GPIO_PINx);
+    gpio_modeSet(LOGIC_ANALYZER_CH6_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH6_GPIO_PINx);
+    gpio_output_optionsSet(LOGIC_ANALYZER_CH6_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH6_GPIO_PINx);
 #endif
     GPIO_BC(LOGIC_ANALYZER_CH6_GPIOx) = LOGIC_ANALYZER_CH6_GPIO_PINx;
 #endif
@@ -116,120 +116,120 @@ inline void init()
 #if defined(GPIO_INIT)
     gpio_init(LOGIC_ANALYZER_CH7_GPIOx, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, LOGIC_ANALYZER_CH7_GPIO_PINx);
 #else
-    gpio_mode_set(LOGIC_ANALYZER_CH7_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH7_GPIO_PINx);
-    gpio_output_options_set(LOGIC_ANALYZER_CH7_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH7_GPIO_PINx);
+    gpio_modeSet(LOGIC_ANALYZER_CH7_GPIOx, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LOGIC_ANALYZER_CH7_GPIO_PINx);
+    gpio_output_optionsSet(LOGIC_ANALYZER_CH7_GPIOx, GPIO_OTYPE_PP, GPIO_OSPEED, LOGIC_ANALYZER_CH7_GPIO_PINx);
 #endif
     GPIO_BC(LOGIC_ANALYZER_CH7_GPIOx) = LOGIC_ANALYZER_CH7_GPIO_PINx;
 #endif
 #endif
 }
 
-inline void ch0_clear()
+inline void Ch0Clear()
 {
 #if defined(LOGIC_ANALYZER_CH0_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BC(LOGIC_ANALYZER_CH0_GPIOx) = LOGIC_ANALYZER_CH0_GPIO_PINx;
 #endif
 }
 
-inline void ch0_set()
+inline void Ch0Set()
 {
 #if defined(LOGIC_ANALYZER_CH0_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BOP(LOGIC_ANALYZER_CH0_GPIOx) = LOGIC_ANALYZER_CH0_GPIO_PINx;
 #endif
 }
 
-inline void ch1_clear()
+inline void Ch1Clear()
 {
 #if defined(LOGIC_ANALYZER_CH1_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BC(LOGIC_ANALYZER_CH1_GPIOx) = LOGIC_ANALYZER_CH1_GPIO_PINx;
 #endif
 }
 
-inline void ch1_set()
+inline void Ch1Set()
 {
 #if defined(LOGIC_ANALYZER_CH1_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BOP(LOGIC_ANALYZER_CH1_GPIOx) = LOGIC_ANALYZER_CH1_GPIO_PINx;
 #endif
 }
 
-inline void ch2_clear()
+inline void Ch2Clear()
 {
 #if defined(LOGIC_ANALYZER_CH2_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BC(LOGIC_ANALYZER_CH2_GPIOx) = LOGIC_ANALYZER_CH2_GPIO_PINx;
 #endif
 }
 
-inline void ch2_set()
+inline void Ch2Set()
 {
 #if defined(LOGIC_ANALYZER_CH2_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BOP(LOGIC_ANALYZER_CH2_GPIOx) = LOGIC_ANALYZER_CH2_GPIO_PINx;
 #endif
 }
 
-inline void ch3_clear()
+inline void Ch3Clear()
 {
 #if defined(LOGIC_ANALYZER_CH3_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BC(LOGIC_ANALYZER_CH3_GPIOx) = LOGIC_ANALYZER_CH3_GPIO_PINx;
 #endif
 }
 
-inline void ch3_set()
+inline void Ch3Set()
 {
 #if defined(LOGIC_ANALYZER_CH3_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BOP(LOGIC_ANALYZER_CH3_GPIOx) = LOGIC_ANALYZER_CH3_GPIO_PINx;
 #endif
 }
 
-inline void ch4_clear()
+inline void Ch4Clear()
 {
 #if defined(LOGIC_ANALYZER_CH4_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BC(LOGIC_ANALYZER_CH4_GPIOx) = LOGIC_ANALYZER_CH4_GPIO_PINx;
 #endif
 }
 
-inline void ch4_set()
+inline void Ch4Set()
 {
 #if defined(LOGIC_ANALYZER_CH4_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BOP(LOGIC_ANALYZER_CH4_GPIOx) = LOGIC_ANALYZER_CH4_GPIO_PINx;
 #endif
 }
 
-inline void ch5_clear()
+inline void Ch5Clear()
 {
 #if defined(LOGIC_ANALYZER_CH5_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BC(LOGIC_ANALYZER_CH5_GPIOx) = LOGIC_ANALYZER_CH5_GPIO_PINx;
 #endif
 }
 
-inline void ch5_set()
+inline void Ch5Set()
 {
 #if defined(LOGIC_ANALYZER_CH5_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BOP(LOGIC_ANALYZER_CH5_GPIOx) = LOGIC_ANALYZER_CH5_GPIO_PINx;
 #endif
 }
 
-inline void ch6_clear()
+inline void Ch6Clear()
 {
 #if defined(LOGIC_ANALYZER_CH6_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BC(LOGIC_ANALYZER_CH6_GPIOx) = LOGIC_ANALYZER_CH6_GPIO_PINx;
 #endif
 }
 
-inline void ch6_set()
+inline void Ch6Set()
 {
 #if defined(LOGIC_ANALYZER_CH6_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BOP(LOGIC_ANALYZER_CH6_GPIOx) = LOGIC_ANALYZER_CH6_GPIO_PINx;
 #endif
 }
 
-inline void ch7_clear()
+inline void Ch7Clear()
 {
 #if defined(LOGIC_ANALYZER_CH7_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BC(LOGIC_ANALYZER_CH7_GPIOx) = LOGIC_ANALYZER_CH7_GPIO_PINx;
 #endif
 }
 
-inline void ch7_set()
+inline void Ch7Set()
 {
 #if defined(LOGIC_ANALYZER_CH7_GPIO_PINx) && defined(LOGIC_ANALYZER)
     GPIO_BOP(LOGIC_ANALYZER_CH7_GPIOx) = LOGIC_ANALYZER_CH7_GPIO_PINx;

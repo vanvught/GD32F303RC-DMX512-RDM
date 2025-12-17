@@ -24,6 +24,7 @@
  */
 
 #if defined(GD32F4XX) || defined(GD32H7XX)
+#include <cassert>
 #include "gd32.h"
 
 void bkp_data_write(bkp_data_register_enum register_number, uint16_t data)

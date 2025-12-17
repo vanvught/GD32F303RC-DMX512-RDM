@@ -64,7 +64,8 @@ int Printf(const char* fmt, ...)
 
     va_start(arp, fmt);
 
-    int i = vsnprintf(s_buffer, sizeof(s_buffer) - 1, fmt, arp);
+    int i = vsnprintf(s_buffer, sizeof(s_buffer), fmt, arp);
+    s_buffer[sizeof(s_buffer) - 1] = '\0';
 
     va_end(arp);
 

@@ -30,7 +30,8 @@
 #include <cstring>
 #include <climits>
 
-namespace console {
+namespace console
+{
 void Putc(int);
 }
 
@@ -553,25 +554,14 @@ extern "C"
         return i;
     }
 
-    int snprintf(char* str, size_t size, const char* fmt, ...) // NOLINT
-    {
-        va_list arp;
-
-        outptr = str;
-        va_start(arp, fmt);
-
-        auto i = Vprintf((int)size, fmt, arp);
-
-        va_end(arp);
-
-        *outptr = 0;
-        outptr = nullptr;
-
-        return i;
-    }
-
     int vsnprintf(char* str, size_t size, const char* fmt, va_list ap) // NOLINT
     {
+        if (size == 0)
+        {
+            outptr = nullptr;           // don't write anywhere
+            return Vprintf(0, fmt, ap); // just count
+        }
+
         outptr = str;
 
         auto i = Vprintf((int)size, fmt, ap);
@@ -579,6 +569,15 @@ extern "C"
         *outptr = 0;
         outptr = nullptr;
 
+        return i;
+    }
+
+    int snprintf(char* str, size_t size, const char* fmt, ...) // NOLINT
+    {
+        va_list ap;
+        va_start(ap, fmt);
+        int i = vsnprintf(str, size, fmt, ap);
+        va_end(ap);
         return i;
     }
 }

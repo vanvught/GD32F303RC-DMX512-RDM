@@ -150,7 +150,7 @@ extern "C"
 
             if (next > block_limit)
             {
-                console::Error("malloc: out of memory\n");
+                console::Error("malloc: out of memory");
 #ifdef DEBUG_HEAP
                 debug_heap();
 #endif

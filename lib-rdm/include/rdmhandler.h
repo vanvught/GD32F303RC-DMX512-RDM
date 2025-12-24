@@ -183,7 +183,7 @@ private:
 	void SetIdentifyMode(bool is_broadcast, uint16_t subdevice);
 	// ANSI E1.37-2 – 2015
 	void SetDHCPMode(bool is_broadcast, uint16_t subdevice);
-	void SetZeroconf(bool is_broadcast, uint16_t subdevice);
+	void SetAutoIp(bool is_broadcast, uint16_t subdevice);
 	void RenewDhcp(bool is_broadcast, uint16_t subdevice);
 	void SetStaticAddress(bool is_broadcast, uint16_t subdevice);
 	void SetDefaultRoute(bool is_broadcast, uint16_t subdevice);

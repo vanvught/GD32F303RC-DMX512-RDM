@@ -52,7 +52,7 @@ void Init()
     Gd32DmaInterruptFlagClear<DMA0, DMA_CH3, (DMA_INT_FLAG_FTF | DMA_INT_FLAG_G)>();
 
     NVIC_SetPriority(DMA0_Channel3_IRQn, 0);
-//  NVIC_EnableIRQ(DMA0_Channel3_IRQn);
+    NVIC_EnableIRQ(DMA0_Channel3_IRQn);
 #else
     rcu_periph_clock_enable(RCU_DMA1);
     dma_deinit(DMA1, DMA_CH0);
@@ -76,7 +76,7 @@ void Init()
     Gd32DmaInterruptFlagClear<DMA1, DMA_CH3, (DMA_INT_FLAG_FTF | DMA_INT_FLAG_TAE)>();
 
     NVIC_SetPriority(DMA1_Channel0_IRQn, 0);
-//  NVIC_EnableIRQ(DMA1_Channel0_IRQn);
+    NVIC_EnableIRQ(DMA1_Channel0_IRQn);
 #endif
 }
 } // namespace dma::memcpy32

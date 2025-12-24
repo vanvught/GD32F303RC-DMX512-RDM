@@ -40,6 +40,7 @@
 #include "e120.h"
 #include "rdm_message_print.h"
 #include "hal.h"
+#include "hal_rtc.h"
 #include "hal_boardinfo.h"
 #include "display.h"
  #include "firmware/debug/debug_debug.h"
@@ -105,7 +106,7 @@ const RDMHandler::PidDefinition RDMHandler::PID_DEFINITIONS[] {
 	{E137_2_INTERFACE_LABEL,			&RDMHandler::GetInterfaceName,				nullptr,							4, false, false, true },
 	{E137_2_INTERFACE_HARDWARE_ADDRESS_TYPE1,&RDMHandler::GetHardwareAddress,		nullptr,							4, false, false, true },
 	{E137_2_IPV4_DHCP_MODE,				&RDMHandler::GetDHCPMode,					&RDMHandler::SetDHCPMode,			4, false, false, true },
-	{E137_2_IPV4_ZEROCONF_MODE,			&RDMHandler::GetZeroconf,					&RDMHandler::SetZeroconf,			4, false, false, true },
+	{E137_2_IPV4_ZEROCONF_MODE,			&RDMHandler::GetZeroconf,					&RDMHandler::SetAutoIp,			4, false, false, true },
 	{E137_2_IPV4_CURRENT_ADDRESS,		&RDMHandler::GetAddressNetmask,				nullptr,							4, false, false, true },
 	{E137_2_INTERFACE_RENEW_DHCP, 		nullptr,									&RDMHandler::RenewDhcp,				4, false, false, true },
 	{E137_2_IPV4_STATIC_ADDRESS,		&RDMHandler::GetStaticAddress,				&RDMHandler::SetStaticAddress,		4, false, false, true },
@@ -1231,7 +1232,7 @@ void RDMHandler::SetRealTimeClock(bool is_broadcast, [[maybe_unused]] uint16_t s
 	tTime.tm_min = pRdmDataIn->param_data[5];
 	tTime.tm_sec = pRdmDataIn->param_data[6];
 
-	if ((!is_broadcast) && (!hal::SetRtc(&tTime))) {
+	if ((!is_broadcast) && (!hal::rtc::Set(&tTime))) {
 		RespondMessageNack(E120_NR_WRITE_PROTECT);
 	}
 

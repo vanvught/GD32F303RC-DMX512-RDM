@@ -75,12 +75,12 @@ static void GpioConfig()
 #if defined(GPIO_INIT)
 #if defined(SPI_REMAP_GPIO)
     gpio_pin_remap_config(SPI_REMAP_GPIO, ENABLE);
-    if (SPI_PERIPH == SPI0)
+    if constexpr (SPI_PERIPH == SPI0)
     {
         gpio_pin_remap_config(GPIO_SWJ_DISABLE_REMAP, ENABLE);
     }
 #else
-    if (SPI_PERIPH == SPI2)
+    if constexpr (SPI_PERIPH == SPI2)
     {
         gpio_pin_remap_config(GPIO_SWJ_DISABLE_REMAP, ENABLE);
     }

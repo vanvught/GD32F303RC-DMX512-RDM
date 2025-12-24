@@ -1,5 +1,5 @@
 /**
- * @file hal.h
+ * @file hal_rtc.h
  *
  */
 /* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
@@ -23,50 +23,26 @@
  * THE SOFTWARE.
  */
 
-#ifndef HAL_H_
-#define HAL_H_
+#ifndef HAL_RTC_H_
+#define HAL_RTC_H_
 
-#include <cstdint>
+#if !defined(DISABLE_RTC)
+#include <cassert>
+#include "hwclock.h"
+#endif
 
-namespace hal
+namespace hal::rtc
 {
-enum class BootDevice
+inline bool Set([[maybe_unused]] const struct tm* rtc_time)
 {
-    UNKOWN,
-    FEL,
-    MMC0,
-    SPI,
-    HDD,
-    FLASH,
-    RAM
-};
-
-BootDevice GetBootDevice();
-
-void Init();
-
-uint32_t Uptime();
-
-float CoreTemperatureCurrent();
-
-bool Reboot();
-void RebootHandler();
-} // namespace hal
-
-#if defined(__linux__) || defined(__APPLE__)
-#if defined(CONFIG_HAL_USE_MINIMUM)
-#include "linux/minimum/hal.h"
+#if !defined(DISABLE_RTC)
+    assert(HwClock::Get() != nullptr);
+    HwClock::Get()->Set(rtc_time);
+    return true;
 #else
-#include "linux/hal.h"
+    return false;
 #endif
-#else
-#if defined(H3)
-#include "h3/hal.h"
-#elif defined(GD32)
-#include "gd32/hal.h"
-#else
-#include "rpi/hal.h"
-#endif
-#endif
+}
+} // namespace hal::rtc
 
-#endif  // HAL_H_
+#endif // _HAL_RTC_H_

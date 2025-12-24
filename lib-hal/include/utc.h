@@ -181,4 +181,4 @@ inline bool ParseOffset(const char* buffer, uint32_t buffer_length, int32_t& hou
 }
 } // namespace hal::utc
 
-#endif  // UTC_H_
+#endif // UTC_H_

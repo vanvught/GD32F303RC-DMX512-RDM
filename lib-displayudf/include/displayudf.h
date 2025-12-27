@@ -32,8 +32,7 @@
 #include "display.h"
 #include "firmwareversion.h"
 #if !defined(NO_EMAC)
-#include "net.h"
-#include "netif.h"
+#include "network.h"
 #include "net/protocol/dhcp.h"
 #endif
 #if defined(NODE_ARTNET_MULTI)
@@ -180,7 +179,7 @@ class DisplayUdf final : public Display
     {
         ClearEndOfLine();
         Printf(labels_[static_cast<uint32_t>(displayudf::Labels::kIp)], "" IPSTR "/%d %c", IP2STR(net::GetPrimaryIp()), net::GetNetmaskCIDR(),
-               netif::GetAddressingMode());
+               network::iface::AddressingMode());
     }
 
     void ShowNetmask()
@@ -199,7 +198,7 @@ class DisplayUdf final : public Display
     void ShowHostName()
     {
         ClearEndOfLine();
-        Write(labels_[static_cast<uint32_t>(displayudf::Labels::kHostname)], netif::GetHostName());
+        Write(labels_[static_cast<uint32_t>(displayudf::Labels::kHostname)],  network::iface::GetHostName());
     }
 
     void ShowDhcpStatus(net::dhcp::State state)

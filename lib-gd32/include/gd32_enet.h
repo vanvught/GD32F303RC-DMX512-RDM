@@ -204,7 +204,7 @@ inline void Gd32EnetClearDmaTxFlagsAndResume()
     if ((0 != kDmaTbuFlag) || (0 != kDmaTuFlag))
     {
         ENET_DMA_STAT = (kDmaTbuFlag | kDmaTuFlag); ///< Clear TBU and TU flags
-        ENET_DMA_TPEN = 0;                            ///< Resume DMA transmission
+        ENET_DMA_TPEN = 0;                          ///< Resume DMA transmission
     }
 }
 #endif
@@ -241,7 +241,7 @@ inline void Gd32EnetHandleRxBufferUnavailable()
 #endif
 
 #if defined(GD32H7XX)
-inline void gd32_enet_reset_hash()
+inline void Gd32EnetResetHash()
 {
     ENET_MAC_HLH(ENETx) = 0;
     ENET_MAC_HLL(ENETx) = 0;
@@ -312,4 +312,4 @@ inline void Gd32EnetFilterSetHash(uint32_t hash)
 }
 #endif
 
-#endif  // GD32_ENET_H_
+#endif // GD32_ENET_H_

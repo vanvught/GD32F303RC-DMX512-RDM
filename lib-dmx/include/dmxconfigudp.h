@@ -31,7 +31,7 @@
 #include <cassert>
 
 #include "dmxconst.h"
-#include "net/udp.h"
+#include "network.h"
 #include "dmx.h"
 
  #include "firmware/debug/debug_debug.h"

@@ -62,7 +62,7 @@ inline void StartDma(const void* destination, const void* source, uint32_t lengt
     DMA_CHPADDR(DMA1, DMA_CH0) = reinterpret_cast<uint32_t>(source);
     DMA_CHCNT(DMA1, DMA_CH0) = length;
 
-    dma_chctl |= (DMA_CHXCTL_CHEN | DMA_INT_FTF);
+    dma_chctl |= (DMA_CHXCTL_CHEN | DMA_CHXCTL_FTFIE);
     DMA_CHCTL(DMA1, DMA_CH0) = dma_chctl;
 #endif
 }

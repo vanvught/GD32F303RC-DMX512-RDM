@@ -28,6 +28,7 @@
 #include "hal.h"
 #include "gd32/hal_watchdog.h"
 #include "hal_boardinfo.h"
+#include "rdmdevice.h"
 #include "widget.h"
 #include "widgetparams.h"
 #include "configstore.h"
@@ -45,13 +46,13 @@ static constexpr char kWidgetModeNames[4][12] ALIGNED =
   "RDM_SNIFFER"
 };
 
-static constexpr TRDMDeviceInfoData kDeviceLabel ALIGNED = 
+static constexpr rdm::DeviceInfoData kDeviceLabel ALIGNED = 
 {
   const_cast<char*>("GD32F103RC DMX USB Pro"),
   22
 };
 
-int main()
+int main() // NOLINT
 {
     hal::Init();
     ConfigStore config_store;
@@ -63,12 +64,13 @@ int main()
     widget_params.Load();
     widget_params.Set();
 
-    widget.SetLabel(&kDeviceLabel);
-    widget.Init();
+    auto& rdm_device = RdmDevice::Get();
+    rdm_device.SetLabel(&kDeviceLabel);
+    rdm_device.Init();
 
-    const auto* rdm_device_uid = widget.GetUID();
-    TRDMDeviceInfoData rdm_device_label;
-    widget.GetLabel(&rdm_device_label);
+    const auto* rdm_device_uid = rdm_device.GetUID();
+    struct rdm::DeviceInfoData rdm_device_label;
+    rdm_device.GetLabel(&rdm_device_label);
     const auto kWidgetMode = widget_params.GetMode();
 
     uint8_t hw_text_length;

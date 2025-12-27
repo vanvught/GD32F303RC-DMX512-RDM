@@ -28,6 +28,7 @@
 #include "gd32/hal_watchdog.h"
 #include "displayudf.h"
 #include "json/displayudfparams.h"
+#include "rdmdevice.h"
 #include "rdmresponder.h"
 #include "rdmpersonality.h"
 #include "json/pixeldmxparams.h"
@@ -60,7 +61,7 @@ int main() // NOLINT
     DisplayUdf display;
     ConfigStore config_store;
 #if !defined(NO_EMAC)    
-    Network nw;
+    network::Init();
 #endif    
     FirmwareVersion fw(SOFTWARE_VERSION, __DATE__, __TIME__);
 
@@ -79,6 +80,10 @@ int main() // NOLINT
     PixelTestPattern pixel_test_pattern(kTestPattern, 1);
 
     PixelDmxParamsRdm pixeldmx_paramsrdm;
+    
+    auto& rdm_device = RdmDevice::Get();
+    rdm_device.SetProductCategory(E120_PRODUCT_CATEGORY_FIXTURE);
+    rdm_device.SetProductDetail(E120_PRODUCT_DETAIL_LED);
 
 #if defined(CONFIG_RDM_MANUFACTURER_PIDS_SET)
     static constexpr auto kPersonalityCount = static_cast<uint32_t>(pixel::Type::UNDEFINED);
@@ -98,8 +103,6 @@ int main() // NOLINT
     RDMPersonality* personalities[2] = {new RDMPersonality(description, &pixeldmx), new RDMPersonality("Config mode", &pixeldmx_paramsrdm)};
     RDMResponder rdm_responder(personalities, 2);
 #endif
-    rdm_responder.SetProductCategory(E120_PRODUCT_CATEGORY_FIXTURE);
-    rdm_responder.SetProductDetail(E120_PRODUCT_DETAIL_LED);
     rdm_responder.Init();
     rdm_responder.Start();
     rdm_responder.DmxDisableOutput(!kIsConfigMode && (kTestPattern != pixelpatterns::Pattern::kNone));
@@ -149,7 +152,7 @@ int main() // NOLINT
         hal::WatchdogFeed();
         rdm_responder.Run();
 #if !defined(NO_EMAC)
-        net::Run();
+        network::Run();
 #endif
         pixel_test_pattern.Run();
         display.Run();

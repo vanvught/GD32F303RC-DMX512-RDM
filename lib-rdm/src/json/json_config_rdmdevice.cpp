@@ -35,20 +35,23 @@ namespace json::config
 {
 uint32_t GetRdmDevice(char* buffer, uint32_t length)
 {
-    auto& rdmdevice = *RDMDevice::Get();
+    auto& rdmdevice = RdmDevice::Get();
 
-    struct TRDMDeviceInfoData info_data;
+    struct rdm::DeviceInfoData info_data;
     rdmdevice.GetLabel(&info_data);
     char label[RDM_DEVICE_LABEL_MAX_LENGTH + 1];
     memcpy(label, info_data.data, info_data.length);
     label[info_data.length] = '\0';
 
-    return json::helpers::Serialize(buffer, length, [&](JsonDoc& doc) {    
-	    doc[json::RdmDeviceParamsConst::kLabel.name] = label; 
-		char product[5];
-	    doc[json::RdmDeviceParamsConst::kProductCategory.name] = common::hex::ToStringLower<4>(product, rdmdevice.GetProductCategory());
-	    doc[json::RdmDeviceParamsConst::kProductDetail.name] = common::hex::ToStringLower<4>(product, rdmdevice.GetProductDetail()); 
-	});
+    return json::helpers::Serialize(
+        buffer, length,
+        [&](JsonDoc& doc)
+        {
+            doc[json::RdmDeviceParamsConst::kLabel.name] = label;
+            char product[5];
+            doc[json::RdmDeviceParamsConst::kProductCategory.name] = common::hex::ToStringLower<4>(product, rdmdevice.GetProductCategory());
+            doc[json::RdmDeviceParamsConst::kProductDetail.name] = common::hex::ToStringLower<4>(product, rdmdevice.GetProductDetail());
+        });
 }
 
 void SetRdmDevice(const char* buffer, uint32_t buffer_size)

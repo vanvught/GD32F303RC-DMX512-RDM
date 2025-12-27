@@ -81,7 +81,7 @@ Widget::Widget()
  */
 void Widget::GetParamsReply()
 {
-#if !defined(NO_HDMI_OUTPUT)	
+#if !defined(NO_HDMI_OUTPUT)
     WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "GET_WIDGET_PARAMS_REPLY");
     WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
 #endif
@@ -104,7 +104,7 @@ void Widget::SetParams()
 #if !defined(NO_HDMI_OUTPUT)
     WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "SET_WIDGET_PARAMS");
     WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
-#endif 
+#endif
 
     SetPortDirection(0, dmx::PortDirection::kInput, false);
 
@@ -163,7 +163,7 @@ void Widget::ReceivedDmxPacket()
     WidgetMonitor::Line(widgetmonitor::MonitorLine::kLabel, "RECEIVED_DMX_PACKET");
     WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "Send DMX data to HOST, %d", kLength);
     WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
-#endif 
+#endif
 
     SendHeader(RECEIVED_DMX_PACKET, static_cast<uint16_t>(kLength + 1));
     usb_send_byte(0); // DMX Receive status
@@ -303,7 +303,7 @@ void Widget::SendRdmPacketRequest(uint16_t data_length)
 
 #if !defined(NO_HDMI_OUTPUT)
     WidgetMonitor::RdmData(widgetmonitor::MonitorLine::kRdmData, data_length, data_, true);
-#endif    
+#endif
 }
 
 /**
@@ -407,7 +407,7 @@ void Widget::GetSnReply()
 
     Dmx::SetPortDirection(0, dmx::PortDirection::kInput, false);
 
-    SendMessage(GET_WIDGET_SN_REPLY, GetSN(), DEVICE_SN_LENGTH);
+    SendMessage(GET_WIDGET_SN_REPLY, RdmDevice::Get().GetSN(), DEVICE_SN_LENGTH);
 
     Dmx::SetPortDirection(0, dmx::PortDirection::kInput, true);
 
@@ -474,11 +474,11 @@ void Widget::GetManufacturerReply()
     WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
 #endif
 
-    TRDMDeviceInfoData manufacturer_name;
-    GetManufacturerName(&manufacturer_name);
+    struct rdm::DeviceInfoData manufacturer_name;
+    RdmDevice::Get().GetManufacturerName(&manufacturer_name);
 
-    TRDMDeviceInfoData manufacturer_id;
-    GetManufacturerId(&manufacturer_id);
+    struct rdm::DeviceInfoData manufacturer_id;
+    RdmDevice::Get().GetManufacturerId(&manufacturer_id);
 
     Dmx::SetPortDirection(0, dmx::PortDirection::kInput, false);
 
@@ -500,13 +500,13 @@ void Widget::GetManufacturerReply()
  */
 void Widget::GetNameReply()
 {
-#if !defined(NO_HDMI_OUTPUT)	
+#if !defined(NO_HDMI_OUTPUT)
     WidgetMonitor::Line(widgetmonitor::MonitorLine::kInfo, "GET_WIDGET_NAME_LABEL");
     WidgetMonitor::Line(widgetmonitor::MonitorLine::kStatus, nullptr);
 #endif
 
-    TRDMDeviceInfoData widget_label;
-    GetLabel(&widget_label);
+    struct rdm::DeviceInfoData widget_label;
+    RdmDevice::Get().GetLabel(&widget_label);
 
     TWidgetConfigurationData widget_type_id;
     WidgetConfiguration::GetTypeId(&widget_type_id);

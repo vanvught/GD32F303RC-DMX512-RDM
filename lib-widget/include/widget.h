@@ -67,12 +67,12 @@ struct TRdmStatistics
     uint32_t set_requests;
 };
 
-class Widget : public Dmx, public RDMDevice
+class Widget : public Dmx
 {
    public:
     Widget();
 
-    void Init() { RDMDevice::Init(); }
+    void Init() { RdmDevice::Get().Init(); }
 
     widget::SendState GetReceiveDmxOnChange() const { return send_state_; }
 
@@ -167,4 +167,4 @@ class Widget : public Dmx, public RDMDevice
     inline static Widget* s_this;
 };
 
-#endif  // WIDGET_H_
+#endif // WIDGET_H_

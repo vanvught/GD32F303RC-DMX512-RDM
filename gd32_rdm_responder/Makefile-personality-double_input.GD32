@@ -1,0 +1,17 @@
+DEFINES=RDM_RESPONDER 
+DEFINES+=CONFIG_RDM_MANUFACTURER_PIDS_SET
+
+DEFINES+=CONFIG_DMX_DOUBLE_INPUT_BUFFER
+
+DEFINES+=CONFIG_DISPLAY_FIX_FLIP_VERTICALLY
+
+DEFINES+=NDEBUG
+
+SRCDIR=firmware lib
+
+include Common.mk
+include ../firmware-template-gd32/Rules.mk
+
+prerequisites:
+	mkdir -p ./include
+	@echo "constexpr uint32_t DEVICE_SOFTWARE_VERSION_ID="$(shell date "+%s")";" > ./include/software_version_id.h

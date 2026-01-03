@@ -32,6 +32,8 @@
 
 #include <stdint.h>
 
+#define BITBAND_SRAM_BASE	(uint32_t)0x22000000
+
 #define MCU_CLOCK_FREQ		(uint32_t)(120000000)
 #define AHB_CLOCK_FREQ		(uint32_t)(120000000)
 #define APB1_CLOCK_FREQ		(uint32_t)(60000000)
@@ -263,6 +265,13 @@
 
 #define SPI2_DMAx			DMA1
 #define SPI2_TX_DMA_CHx		DMA_CH1
+
+#define TIMER4_RCU_DMAx     RCU_DMA1
+#define TIMER4_DMAx         DMA1
+#define TIMER4_CH0_DMA_CHx  DMA_CH4
+#define TIMER4_CH1_DMA_CHx  DMA_CH3
+#define TIMER4_CH2_DMA_CHx  DMA_CH1
+#define TIMER4_CH3_DMA_CHx  DMA_CH0
 
 #define TIMER7_RCU_DMAx		RCU_DMA1
 #define TIMER7_DMAx			DMA1

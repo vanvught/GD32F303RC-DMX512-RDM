@@ -77,3 +77,6 @@ Artnet*.*
 do-tftp.sh
 udp_send
 
+/lib-pixel/jbc
+/.cache
+compile_commands.json

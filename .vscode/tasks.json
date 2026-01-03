@@ -1,0 +1,47 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build RDM Responder",
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "command": "make -f Makefile.GD32",
+            "options": {
+                "cwd": "${workspaceFolder}/gd32_rdm_responder/"
+            }
+        },
+        {
+            "label": "Clean RDM Responder",
+            "type": "shell",
+            "command": "make -f Makefile.GD32 clean",
+            "options": {
+                "cwd": "${workspaceFolder}/gd32_rdm_responder/"
+            }
+        },
+        {
+            "label": "Build DMX USB PRO",
+            "type": "shell",
+            "group": {
+                "kind": "build"
+            },
+            "command": "make -f Makefile.GD32",
+            "options": {
+                "cwd": "${workspaceFolder}/gd32_dmx_usb_pro/"
+            }
+        },
+        {
+            "label": "Clean DMX USB PRO",
+            "type": "shell",
+            "group": {
+                "kind": "build"
+            },
+            "command": "make -f Makefile.GD32 clean",
+            "options": {
+                "cwd": "${workspaceFolder}/gd32_dmx_usb_pro/"
+            }
+        }
+    ]
+}

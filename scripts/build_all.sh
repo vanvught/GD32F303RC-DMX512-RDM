@@ -32,17 +32,17 @@ do
 			
 				if [ $SUFFIX1 == 'Makefile' ]
 				then
-					cp gd32f30x.bin /tmp/$f/$i
+					cp gd32f303rc.bin /tmp/$f/$i
 				else
 					echo "[" $SUFFIX1 "][" $SUFFIX2 "]"
 					
 					if [ -z "$SUFFIX2" ]
 					then
 						mkdir /tmp/$f/$i/$SUFFIX1/
-						cp gd32f30x.bin /tmp/$f/$i/$SUFFIX1
+						cp gd32f303rc.bin /tmp/$f/$i/$SUFFIX1
 					else
 						mkdir -p /tmp/$f/$i/$SUFFIX1/$SUFFIX2/
-						cp gd32f30x.bin /tmp/$f/$i/$SUFFIX1/$SUFFIX2/
+						cp gd32f303rc.bin /tmp/$f/$i/$SUFFIX1/$SUFFIX2/
 					fi
 				fi
 							
@@ -52,5 +52,5 @@ do
 	fi
 done
 
-find . -name gd32f30x.bin | sort | xargs ls -al
-find . -name gd32f30x.bin | xargs ls -al | wc -l
+find . -name gd32f303rc.bin | sort | xargs ls -al
+find . -name gd32f303rc.bin | xargs ls -al | wc -l

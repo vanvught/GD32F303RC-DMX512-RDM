@@ -80,3 +80,4 @@ udp_send
 /lib-pixel/jbc
 /.cache
 compile_commands.json
+/common/scripts/gd32/venv

@@ -1,6 +1,3 @@
-#ifndef DMX_BOARD_GD32F303RC_H_
-#define DMX_BOARD_GD32F303RC_H_
-
 /**
  * @file board_gd32f303rc.h
  *
@@ -26,21 +23,25 @@
  * THE SOFTWARE.
  */
 
+#ifndef DMX_BOARD_GD32F303RC_H_
+#define DMX_BOARD_GD32F303RC_H_
+
 #include <cstdint>
-#include "gd32_board.h"
+
+#include "gd32.h" // IWYU pragma: keep
 
 #define DMX_MAX_PORTS 1
 
-namespace max
-{
-static constexpr uint32_t PORTS = DMX_MAX_PORTS;
+namespace dmx::config {
+namespace max {
+inline constexpr uint32_t kPorts = DMX_MAX_PORTS;
 } // namespace max
 
 #define DMX_USE_USART2
 
-static constexpr auto USART2_PORT = 0;
+inline constexpr auto USART2_PORT = 0;
 
-static constexpr auto DIR_PORT_0_GPIO_PORT = GPIOB;
-static constexpr auto DIR_PORT_0_GPIO_PIN = GPIO_PIN_10;
-
-#endif  // DMX_BOARD_GD32F303RC_H_
+inline constexpr auto DIR_PORT_0_GPIO_PORT = GPIOB;
+inline constexpr auto DIR_PORT_0_GPIO_PIN = GPIO_PIN_10;
+} // namespace dmx::config
+#endif // DMX_BOARD_GD32F303RC_H_

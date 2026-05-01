@@ -27,6 +27,7 @@
 #include "gd32/hal.h"
 #include "gd32/hal_watchdog.h"
 #include "displayudf.h"
+#include "hal_statusled.h"
 #include "json/displayudfparams.h"
 #include "rdmdevice.h"
 #include "rdmresponder.h"
@@ -132,7 +133,7 @@ int main() // NOLINT
         display.ClearLine(5);
     }
 
-    hal::statusled::SetMode(hal::statusled::Mode::NORMAL);
+    hal::statusled::SetMode(hal::statusled::Mode::kNormal);
     hal::WatchdogInit();
 
     for (;;) {

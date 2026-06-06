@@ -22,6 +22,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+ 
+#if defined(DEBUG_PIXELDMXPARAMS)
+#undef NDEBUG
+#endif
 
 #include <cstdint>
 #include <algorithm>
@@ -173,6 +177,7 @@ void PixelDmxParams::Store(const char* buffer, uint32_t buffer_size) {
 }
 
 void PixelDmxParams::Set() {
+	DEBUG_ENTRY();
     auto& pixel_configuration = PixelConfiguration::Get();
 
     pixel_configuration.SetType(common::FromValue<pixel::LedType>(store_dmxled.type));
@@ -208,7 +213,7 @@ void PixelDmxParams::Set() {
         for (uint32_t universe = 0; universe < kUniverses; universe++) {
             if (kStartUniverse != 0) {
                 DmxNodeNodeType::Get()->SetUniverse(protocol_port_index, static_cast<uint16_t>(kStartUniverse + universe));
-                DmxNodeNodeType::Get()->SetDirection(protocol_port_index, dmxnode::PortDirection::kOutput);
+                DmxNodeNodeType::Get()->SetDirection(protocol_port_index, dmxnode::Direction::kOutput);
 
                 char label[dmxnode::kPortNameLength];
                 snprintf(label, dmxnode::kPortNameLength - 1, "Pixel %c -> %u:%u", static_cast<char>('A' + pixel_port_index), protocol_port_index, kStartUniverse + universe);
@@ -219,7 +224,7 @@ void PixelDmxParams::Set() {
     }
 
     for (; protocol_port_index < dmxnode::kMaxPorts; protocol_port_index++) {
-        DmxNodeNodeType::Get()->SetDirection(protocol_port_index, dmxnode::PortDirection::kDisable);
+        DmxNodeNodeType::Get()->SetDirection(protocol_port_index, dmxnode::Direction::kDisable);
         DmxNode::Instance().SetShortNameDefault(protocol_port_index);
     }
 #endif
@@ -249,6 +254,8 @@ void PixelDmxParams::Set() {
     }
 
     common::firmware::pixeldmx::Show(7, kTestPattern);
+	
+	DEBUG_EXIT();
 }
 
 void PixelDmxParams::Dump() {

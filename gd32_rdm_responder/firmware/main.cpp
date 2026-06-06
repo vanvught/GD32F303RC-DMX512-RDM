@@ -25,7 +25,7 @@
 #include <cstdio>
 
 #include "gd32/hal.h"
-#include "gd32/hal_watchdog.h"
+#include "watchdog.h"
 #include "displayudf.h"
 #include "hal_statusled.h"
 #include "json/displayudfparams.h"
@@ -69,32 +69,31 @@ int main() // NOLINT
     fw.Print("RDM Responder");
 
     PixelDmx pixeldmx;
+    PixelTestPattern pixel_test_pattern(pixelpatterns::Pattern::kNone, 1);
 
     json::PixelDmxParams pixeldmx_params;
     pixeldmx_params.Load();
     pixeldmx_params.Set();
 
-    const auto kTestPattern = common::FromValue<pixelpatterns::Pattern>(ConfigStore::Instance().DmxLedGet(&common::store::DmxLed::test_pattern));
-
-    PixelTestPattern pixel_test_pattern(kTestPattern, 1);
+    const auto kTestPattern = pixel_test_pattern.GetPattern();
 
     PixelDmxParamsRdm pixeldmx_paramsrdm;
 
 #if defined(CONFIG_RDM_MANUFACTURER_PIDS_SET)
     static constexpr auto kPersonalityCount = static_cast<uint32_t>(pixel::LedType::kUndefined);
-    RDMPersonality* personalities[kPersonalityCount];
+    RdmPersonality* personalities[kPersonalityCount];
 
     for (uint32_t index = 0; index < kPersonalityCount; index++) {
         const auto* description = pixel::GetTypeName(static_cast<pixel::LedType>(index));
-        personalities[index] = new RDMPersonality(description, &pixeldmx);
+        personalities[index] = new RdmPersonality(description, &pixeldmx);
     }
 
     RDMResponder rdm_responder(personalities, kPersonalityCount, static_cast<uint32_t>(pixeldmx.GetType()) + 1U);
 #else
-    char description[rdm::personality::DESCRIPTION_MAX_LENGTH];
+    char description[rdm::personality::kDescriptionMaxLength];
     pixeldmx::paramsdmx::SetPersonalityDescription(description);
 
-    RDMPersonality* personalities[2] = {new RDMPersonality(description, &pixeldmx), new RDMPersonality("Config mode", &pixeldmx_paramsrdm)};
+    RdmPersonality* personalities[2] = {new RdmPersonality(description, &pixeldmx), new RdmPersonality("Config mode", &pixeldmx_paramsrdm)};
     RDMResponder rdm_responder(personalities, 2);
 #endif
     rdm_responder.Init();
@@ -124,7 +123,7 @@ int main() // NOLINT
     displayudf_params.Load();
     displayudf_params.SetAndShow();
 
-    common::firmware::pixeldmx::Show(7);
+    common::firmware::pixeldmx::Show(7, kTestPattern);
 
     if (kIsConfigMode) {
         display.ClearLine(3);
@@ -134,10 +133,10 @@ int main() // NOLINT
     }
 
     hal::statusled::SetMode(hal::statusled::Mode::kNormal);
-    hal::WatchdogInit();
+    watchdog::Init();
 
     for (;;) {
-        hal::WatchdogFeed();
+        watchdog::Feed();
         rdm_responder.Run();
 #if !defined(NO_EMAC)
         network::Run();

@@ -1,8 +1,8 @@
 /**
- * @file timer5.cpp
+ * @file board.cpp
  *
  */
-/* Copyright (C) 2025-2026 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2026 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,18 +23,41 @@
  * THE SOFTWARE.
  */
 
-#include "gd32.h" // IWYU pragma: keep
+#include "gd32_board.h"
 
-void Timer5Config() {
-    rcu_periph_clock_enable(RCU_TIMER5);
+namespace board {
+static constexpr float kCoreTemperatureMin = -40.0;
+static constexpr float kCoreTemperatureMax = +85.0;
+static constexpr const char kWebsite[] = "https://gd32-dmx.org";
 
-    timer_deinit(TIMER5);
-
-    timer_parameter_struct timer_initpara;
-    timer_struct_para_init(&timer_initpara);
-
-    timer_initpara.prescaler = TIMER_PSC_1MHZ;
-    timer_initpara.period = UINT32_MAX;
-    timer_init(TIMER5, &timer_initpara);
-    timer_enable(TIMER5);
+const char* Website() {
+    return kWebsite;
 }
+
+float CoreTemperatureMin() {
+    return kCoreTemperatureMin;
+}
+float CoreTemperatureMax() {
+    return kCoreTemperatureMax;
+}
+
+const char* BoardName(uint8_t& length) {
+    length = sizeof(GD32_BOARD_NAME) - 1U;
+    return GD32_BOARD_NAME;
+}
+
+const char* SocName(uint8_t& length) {
+    length = 4;
+    return "GD32";
+}
+
+const char* CpuName(uint8_t& length) {
+    length = sizeof(GD32_MCU_NAME) - 1U;
+    return GD32_MCU_NAME;
+}
+
+const char* SysName(uint8_t& length) {
+    length = 8;
+    return "Embedded";
+}
+} // namespace board

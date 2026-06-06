@@ -1,8 +1,8 @@
 /**
- * @file hal_micros.h
+ * @file panelled.cpp
  *
  */
-/* Copyright (C) 2025-2026 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2023-2026 by Arjan van Vught mailto:infogd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +23,8 @@
  * THE SOFTWARE.
  */
 
-#ifndef GD32_HAL_MICROS_H_
-#define GD32_HAL_MICROS_H_
-
 #include <cstdint>
 
-uint32_t Gd32Micros();
-
-namespace hal {
-inline uint32_t Micros() {
-    return Gd32Micros();
-}
-} // namespace hal
-
-#endif // GD32_HAL_MICROS_H_
+namespace panelled::global {
+uint32_t data;
+} // namespace panelled::global

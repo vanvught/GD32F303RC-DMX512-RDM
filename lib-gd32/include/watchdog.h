@@ -1,8 +1,8 @@
 /**
- * @file hal_rtc.h
+ * @file watchdog.h
  *
  */
-/* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2025-2026 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,26 +23,35 @@
  * THE SOFTWARE.
  */
 
-#ifndef HAL_RTC_H_
-#define HAL_RTC_H_
+#ifndef GD32_WATCHDOG_H_
+#define GD32_WATCHDOG_H_
 
-#if !defined(DISABLE_RTC)
-#include <cassert>
-#include "hwclock.h"
-#endif
+#include "gd32.h" // IWYU pragma: keep
 
-namespace hal::rtc
-{
-inline bool Set([[maybe_unused]] const struct tm* rtc_time)
-{
-#if !defined(DISABLE_RTC)
-    assert(HwClock::Get() != nullptr);
-    HwClock::Get()->Set(rtc_time);
-    return true;
-#else
-    return false;
-#endif
+namespace watchdog {
+namespace global {
+extern bool watchdog;
 }
-} // namespace hal::rtc
+inline void Init() {
+    global::watchdog = (SUCCESS == fwdgt_config(0xFFFF, FWDGT_PSC_DIV16));
 
-#endif // _HAL_RTC_H_
+    if (global::watchdog) {
+        fwdgt_enable();
+    }
+}
+
+inline void Feed() {
+    fwdgt_counter_reload();
+}
+
+inline void Stop() {
+    global::watchdog = false;
+    fwdgt_config(0xFFFF, FWDGT_PSC_DIV64);
+}
+
+inline bool Watchdog() {
+    return global::watchdog;
+}
+} // namespace watchdog
+
+#endif // GD32_WATCHDOG_H_

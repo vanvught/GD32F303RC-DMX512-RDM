@@ -1,8 +1,8 @@
 /**
- * @file hal_watchdog.h
+ * @file timing.h
  *
  */
-/* Copyright (C) 2025-2026 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2026 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,35 +23,40 @@
  * THE SOFTWARE.
  */
 
-#ifndef GD32_HAL_WATCHDOG_H_
-#define GD32_HAL_WATCHDOG_H_
+#ifndef GD32_TIMING_H_
+#define GD32_TIMING_H_
 
-#include "gd32.h" // IWYU pragma: keep
+#include <cstdint>
 
-namespace hal {
-namespace global {
-extern bool watchdog;
-}
-inline void WatchdogInit() {
-    global::watchdog = (SUCCESS == fwdgt_config(0xFFFF, FWDGT_PSC_DIV16));
+#if defined(CONFIG_HAL_USE_SYSTICK)
+extern volatile uint32_t gv_nSysTickMillis;
+#elif defined(USE_FREE_RTOS)
+#include "FreeRTOS.h"
+#include "task.h"
+#else
+uint32_t Timer6GetElapsedMilliseconds();
+#endif
 
-    if (global::watchdog) {
-        fwdgt_enable();
-    }
-}
+uint32_t Gd32Micros();
 
-inline void WatchdogFeed() {
-    fwdgt_counter_reload();
-}
-
-inline void WatchdogStop() {
-    global::watchdog = false;
-    fwdgt_config(0xFFFF, FWDGT_PSC_DIV64);
+namespace timing {
+[[nodiscard]] inline uint32_t Micros() {
+    return Gd32Micros();
 }
 
-inline bool Watchdog() {
-    return global::watchdog;
+[[nodiscard]] inline uint32_t Millis() {
+#if defined(CONFIG_HAL_USE_SYSTICK)
+    return gv_nSysTickMillis;
+#elif defined(USE_FREE_RTOS)
+    return xTaskGetTickCount();
+#else
+    return Timer6GetElapsedMilliseconds();
+#endif
 }
-} // namespace hal
 
-#endif // GD32_HAL_WATCHDOG_H_
+void DelayUs(uint32_t us, uint32_t offset = 0);
+
+[[nodiscard]] uint32_t UpTime();
+} // namespace timing
+
+#endif // GD32_TIMING_H_

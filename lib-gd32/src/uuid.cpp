@@ -1,14 +1,14 @@
 /**
- * @file hal_millis.h
+ * @file uuid.cpp
  *
  */
-/* Copyright (C) 2025-2026 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2024-2026 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * copies of thnDmxDataDirecte Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
 
  * The above copyright notice and this permission notice shall be included in
@@ -23,29 +23,41 @@
  * THE SOFTWARE.
  */
 
-#ifndef GD32_HAL_MILLIS_H_
-#define GD32_HAL_MILLIS_H_
+#if !defined(__clang__)
+#pragma GCC push_options
+#pragma GCC optimize("O2")
+#pragma GCC optimize("no-tree-loop-distribute-patterns")
+#pragma GCC optimize("-funroll-loops")
+#endif
 
 #include <cstdint>
+#include <cstring>
+#include <uuid/uuid.h>
 
-#if defined(CONFIG_HAL_USE_SYSTICK)
-extern volatile uint32_t gv_nSysTickMillis;
-#elif defined(USE_FREE_RTOS)
-#include "FreeRTOS.h"
-#include "task.h"
-#endif
+#include "gd32.h" // IWYU pragma: keep
 
-namespace hal {
-inline uint32_t Millis() {
-#if defined(CONFIG_HAL_USE_SYSTICK)
-    return gv_nSysTickMillis;
-#elif defined(USE_FREE_RTOS)
-    return xTaskGetTickCount();
+typedef union pcast32 {
+    uuid_t uuid;
+    uint32_t u32[4];
+} _pcast32;
+
+void UuidCopy(uuid_t out) {
+    _pcast32 cast;
+
+#if defined(GD32H7XX)
+    cast.u32[0] = REG32(0x1FF0F7E8);
+    cast.u32[1] = REG32(0x1FF0F7EC);
+    cast.u32[2] = REG32(0x1FF0F7F0);
+#elif defined(GD32F4XX)
+    cast.u32[0] = REG32(0x1FFF7A10);
+    cast.u32[1] = REG32(0x1FFF7A14);
+    cast.u32[2] = REG32(0x1FFF7A18);
 #else
-    uint32_t Timer6GetElapsedMilliseconds();
-    return Timer6GetElapsedMilliseconds();
+    cast.u32[0] = REG32(0x1FFFF7E8);
+    cast.u32[1] = REG32(0x1FFFF7EC);
+    cast.u32[2] = REG32(0x1FFFF7F0);
 #endif
-}
-} // namespace hal
+    cast.u32[3] = cast.u32[0] + cast.u32[1] + cast.u32[2];
 
-#endif // GD32_HAL_MILLIS_H_
+    memcpy(out, cast.uuid, sizeof(uuid_t));
+}

@@ -1,8 +1,8 @@
 /**
- * @file hal_millis.h
+ * @file serialnumber.h
  *
  */
-/* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2026 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+ 
+#ifndef GD32_SERIALNUMBER_H_
+#define GD32_SERIALNUMBER_H_
 
-#ifndef HAL_MILLIS_H_
-#define HAL_MILLIS_H_
+#include <cstdint>
 
-#if defined(__linux__) || defined(__APPLE__)
-#include "linux/hal_millis.h"
-#elif defined(H3)
-#include "h3/hal_millis.h"
-#elif defined(GD32)
-#include "gd32/hal_millis.h"
-#else
-#include "rpi/hal_millis.h"
-#endif
+inline constexpr uint32_t kSnSize = 4;
+void SerialNumber(uint8_t sn[kSnSize]);
 
-#endif  // HAL_MILLIS_H_
+#endif // GD32_SERIALNUMBER_H_

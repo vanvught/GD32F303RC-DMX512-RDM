@@ -1,8 +1,8 @@
 /**
- * @file hal_serialnumber.h
+ * @file watchdog.cpp
  *
  */
-/* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2026 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,6 @@
  * THE SOFTWARE.
  */
 
-#ifndef HAL_SERIALNUMBER_H_
-#define HAL_SERIALNUMBER_H_
-
-#include <cstdint>
-
-namespace hal
-{
-inline static constexpr uint32_t kSnSize = 4;
-void SerialNumber(uint8_t sn[kSnSize]);
-} // namespace hal
-
-#endif  // HAL_SERIALNUMBER_H_
+namespace watchdog::global {
+bool watchdog;
+} // namespace watchdog::global

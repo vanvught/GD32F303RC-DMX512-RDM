@@ -1,8 +1,8 @@
 /**
- * @file hal_micros.h
+ * @file uptime.cpp
  *
  */
-/* Copyright (C) 2025 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2026 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+ 
+ #include <cstdint>
 
-#ifndef HAL_MICROS_H_
-#define HAL_MICROS_H_
+ #include "gd32.h"
 
-#if defined(__linux__) || defined(__APPLE__)
-#include "linux/micros.h"
-#elif defined(H3)
-#include "h3/hal_micros.h"
-#elif defined(GD32)
-#include "gd32/hal_micros.h"
-#else
-#include "rpi/hal_micros.h"
-#endif
+ extern struct HwTimersSeconds gv_seconds;
 
-#endif  // HAL_MICROS_H_
+ namespace timing {
+ uint32_t UpTime() {
+     return gv_seconds.uptime;
+ }
+ } // namespace timing

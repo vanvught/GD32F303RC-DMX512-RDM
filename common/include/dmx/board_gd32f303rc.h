@@ -2,7 +2,7 @@
  * @file board_gd32f303rc.h
  *
  */
-/* Copyright (C) 2022 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2022-2026 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,9 +39,9 @@ inline constexpr uint32_t kPorts = DMX_MAX_PORTS;
 
 #define DMX_USE_USART2
 
-inline constexpr auto USART2_PORT = 0;
+inline constexpr auto kUsart2Port = 0;
 
-inline constexpr auto DIR_PORT_0_GPIO_PORT = GPIOB;
-inline constexpr auto DIR_PORT_0_GPIO_PIN = GPIO_PIN_10;
+inline constexpr auto kDirPort0GpioPort = GPIOB;
+inline constexpr auto kDirPort0GpioPin = GPIO_PIN_10;
 } // namespace dmx::config
 #endif // DMX_BOARD_GD32F303RC_H_

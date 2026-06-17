@@ -50,7 +50,6 @@
 #include "gd32_uart.h"
 #include "gd32_gpio.h"
 #include "dmx_internal.h"
-#include "gd32/dmx_dma_check.h" // IWYU pragma: keep // Do not reorder/move
 #if defined(LOGIC_ANALYZER)
 #include "logic_analyzer.h" // IWYU pragma: keep
 #endif

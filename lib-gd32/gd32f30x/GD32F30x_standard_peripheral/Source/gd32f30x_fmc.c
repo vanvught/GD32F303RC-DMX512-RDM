@@ -2,14 +2,11 @@
     \file    gd32f30x_fmc.c
     \brief   FMC driver
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2026, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -176,6 +173,8 @@ fmc_state_enum fmc_page_erase(uint32_t page_address)
                 FMC_CTL0 |= FMC_CTL0_PER;
                 FMC_ADDR0 = page_address;
                 FMC_CTL0 |= FMC_CTL0_START;
+                __NOP();
+                __NOP();
                 /* wait for the FMC ready */
                 fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
                 /* reset the PER bit */
@@ -192,6 +191,8 @@ fmc_state_enum fmc_page_erase(uint32_t page_address)
                     FMC_ADDR0 = page_address;
                 }
                 FMC_CTL1 |= FMC_CTL1_START;
+                __NOP();
+                __NOP();
                 /* wait for the FMC ready */
                 fmc_state = fmc_bank1_ready_wait(FMC_TIMEOUT_COUNT);
                 /* reset the PER bit */
@@ -205,6 +206,8 @@ fmc_state_enum fmc_page_erase(uint32_t page_address)
             FMC_CTL0 |= FMC_CTL0_PER;
             FMC_ADDR0 = page_address;
             FMC_CTL0 |= FMC_CTL0_START;
+            __NOP();
+            __NOP();
             /* wait for the FMC ready */
             fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
             /* reset the PER bit */
@@ -224,6 +227,8 @@ fmc_state_enum fmc_page_erase(uint32_t page_address)
 fmc_state_enum fmc_mass_erase(void)
 {
     fmc_state_enum fmc_state;
+    fmc_state_enum fmc_state_bank1;
+    
     if(FMC_BANK0_SIZE < FMC_SIZE){
         /* wait for the FMC ready */
         fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
@@ -233,21 +238,22 @@ fmc_state_enum fmc_mass_erase(void)
             FMC_CTL0 |= FMC_CTL0_START;
             /* wait for the FMC ready */
             fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
-            if(FMC_READY != fmc_state){
-                return fmc_state;
-            }
             /* reset the MER bit */
             FMC_CTL0 &= ~FMC_CTL0_MER;
         }
-        fmc_state = fmc_bank1_ready_wait(FMC_TIMEOUT_COUNT);
-        if(FMC_READY == fmc_state){
+        fmc_state_bank1 = fmc_bank1_ready_wait(FMC_TIMEOUT_COUNT);
+        if(FMC_READY == fmc_state_bank1){
             /* start whole chip erase */
             FMC_CTL1 |= FMC_CTL1_MER;
             FMC_CTL1 |= FMC_CTL1_START;
             /* wait for the FMC ready */
-            fmc_state = fmc_bank1_ready_wait(FMC_TIMEOUT_COUNT);
+            fmc_state_bank1 = fmc_bank1_ready_wait(FMC_TIMEOUT_COUNT);
             /* reset the MER bit */
             FMC_CTL1 &= ~FMC_CTL1_MER;
+        }
+        /* return bank1 state if bank0 is ready, otherwise return bank0 state */
+        if(FMC_READY == fmc_state){
+            fmc_state = fmc_state_bank1;
         }
     }else{
         fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
@@ -778,6 +784,7 @@ FlagStatus ob_spc_get(void)
     }else{
         spc_state = RESET;
     }
+    
     return spc_state;
 }
 
@@ -829,11 +836,15 @@ void fmc_interrupt_disable(uint32_t interrupt)
 */
 FlagStatus fmc_flag_get(uint32_t flag)
 {
+    FlagStatus flag_status = RESET;
+    
     if(RESET != (FMC_REG_VAL(flag) & BIT(FMC_BIT_POS(flag)))){
-        return SET;
+        flag_status = SET;
     }else{
-        return RESET;
+        flag_status = RESET;
     }
+    
+    return flag_status;
 }
 
 /*!
@@ -871,24 +882,27 @@ FlagStatus fmc_interrupt_flag_get(fmc_interrupt_flag_enum flag)
 {
     FlagStatus ret1 = RESET;
     FlagStatus ret2 = RESET;
+    FlagStatus result = RESET;
     
     if(FMC_STAT0_REG_OFFSET == FMC_REG_OFFSET_GET(flag)){
-        /* get the staus of interrupt flag */
+        /* get the status of interrupt flag */
         ret1 = (FlagStatus)(FMC_REG_VALS(flag) & BIT(FMC_BIT_POS0(flag)));
-        /* get the staus of interrupt enale bit */
+        /* get the status of interrupt enable bit */
         ret2 = (FlagStatus)(FMC_CTL0 & BIT(FMC_BIT_POS1(flag)));
     }else{
-        /* get the staus of interrupt flag */
+        /* get the status of interrupt flag */
         ret1 = (FlagStatus)(FMC_REG_VALS(flag) & BIT(FMC_BIT_POS0(flag)));
-        /* get the staus of interrupt enale bit */
+        /* get the status of interrupt enable bit */
         ret2 = (FlagStatus)(FMC_CTL1 & BIT(FMC_BIT_POS1(flag)));
     }
 
     if(ret1 && ret2){
-        return SET;
+        result = SET;
     }else{
-        return RESET;
+        result = RESET;
     }
+    
+    return result;
 }
 
 /*!

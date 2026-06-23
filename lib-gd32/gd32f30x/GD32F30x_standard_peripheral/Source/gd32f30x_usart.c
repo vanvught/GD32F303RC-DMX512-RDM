@@ -2,14 +2,11 @@
     \file    gd32f30x_usart.c
     \brief   USART driver
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2025, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -744,11 +741,13 @@ void usart_dma_transmit_config(uint32_t usart_periph, uint8_t dmacmd)
 */
 FlagStatus usart_flag_get(uint32_t usart_periph, usart_flag_enum flag)
 {
+    FlagStatus retval = RESET;
     if(RESET != (USART_REG_VAL(usart_periph, flag) & BIT(USART_BIT_POS(flag)))){
-        return SET;
+        retval = SET;
     }else{
-        return RESET;
+        retval = RESET;
     }
+    return retval;
 }
 
 /*!
@@ -839,6 +838,7 @@ void usart_interrupt_disable(uint32_t usart_periph, usart_interrupt_enum interru
 */
 FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, usart_interrupt_flag_enum int_flag)
 {
+    FlagStatus retval = RESET;
     uint32_t intenable = 0U, flagstatus = 0U;
     /* get the interrupt enable bit status */
     intenable = (USART_REG_VAL(usart_periph, int_flag) & BIT(USART_BIT_POS(int_flag)));
@@ -846,10 +846,11 @@ FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, usart_interrupt_flag_
     flagstatus = (USART_REG_VAL2(usart_periph, int_flag) & BIT(USART_BIT_POS2(int_flag)));
 
     if((0U != flagstatus) && (0U != intenable)){
-        return SET;
+        retval = SET;
     }else{
-        return RESET; 
+        retval = RESET;
     }
+    return retval;
 }
 
 /*!

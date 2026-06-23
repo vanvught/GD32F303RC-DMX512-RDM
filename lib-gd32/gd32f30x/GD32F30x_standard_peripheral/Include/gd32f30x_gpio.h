@@ -2,14 +2,11 @@
     \file    gd32f30x_gpio.h
     \brief   definitions for the GPIO
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2026, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -260,8 +257,7 @@ OF SUCH DAMAGE.
 #define AFIO_PCF0_ENET_PHY_SEL           BIT(23)             /*!< ethernet MII or RMII PHY selection */
 #define AFIO_PCF0_SWJ_CFG                BITS(24,26)         /*!< serial wire JTAG configuration */
 #define AFIO_PCF0_SPI2_REMAP             BIT(28)             /*!< SPI2/I2S2 remapping */
-#define AFIO_PCF0_TIMER1ITR0_REMAP       BIT(29)             /*!< TIMER1 internal trigger 0 remapping */
-#define AFIO_PCF0_TIMER1ITI1_REMAP       BIT(29)             /*!< TIMER1 internal trigger 0 remapping */
+#define AFIO_PCF0_TIMER1ITI1_REMAP       BIT(29)             /*!< TIMER1 internal trigger 1 remapping */
 #define AFIO_PCF0_PTP_PPS_REMAP          BIT(30)             /*!< ethernet PTP PPS remapping */
 
 #else 
@@ -279,9 +275,9 @@ OF SUCH DAMAGE.
 #define AFIO_PCF0_PD01_REMAP             BIT(15)             /*!< port D0/port D1 mapping on OSC_IN/OSC_OUT */
 #define AFIO_PCF0_TIMER4CH3_IREMAP       BIT(16)             /*!< TIMER4 channel3 internal remapping */
 #define AFIO_PCF0_ADC0_ETRGINS_REMAP     BIT(17)             /*!< ADC 0 external trigger inserted conversion remapping */
-#define AFIO_PCF0_ADC0_ETRGREG_REMAP     BIT(18)             /*!< ADC 0 external trigger regular conversion remapping */
+#define AFIO_PCF0_ADC0_ETRGROU_REMAP     BIT(18)             /*!< ADC 0 external trigger routine conversion remapping */
 #define AFIO_PCF0_ADC1_ETRGINS_REMAP     BIT(19)             /*!< ADC 1 external trigger inserted conversion remapping */
-#define AFIO_PCF0_ADC1_ETRGREG_REMAP     BIT(20)             /*!< ADC 1 external trigger regular conversion remapping */
+#define AFIO_PCF0_ADC1_ETRGROU_REMAP     BIT(20)             /*!< ADC 1 external trigger routine conversion remapping */
 #define AFIO_PCF0_SWJ_CFG                BITS(24,26)         /*!< serial wire JTAG configuration */
 #define AFIO_PCF0_SPI2_REMAP             BIT(28)             /*!< SPI2/I2S2 remapping */
 #endif /* GD32F30X_CL */
@@ -449,9 +445,9 @@ typedef FlagStatus bit_status;
 #endif /* GD32F30X_HD||GD32F30X_XD */
 #if (defined(GD32F30X_HD) || defined(GD32F30X_XD))
 #define GPIO_ADC0_ETRGINS_REMAP          ((uint32_t)0x00200000U | (AFIO_PCF0_ADC0_ETRGINS_REMAP >> 16))   /*!< ADC0 external trigger inserted conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
-#define GPIO_ADC0_ETRGREG_REMAP          ((uint32_t)0x00200000U | (AFIO_PCF0_ADC0_ETRGREG_REMAP >> 16))   /*!< ADC0 external trigger regular conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
+#define GPIO_ADC0_ETRGREG_REMAP          ((uint32_t)0x00200000U | (AFIO_PCF0_ADC0_ETRGROU_REMAP >> 16))   /*!< ADC0 external trigger routine conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
 #define GPIO_ADC1_ETRGINS_REMAP          ((uint32_t)0x00200000U | (AFIO_PCF0_ADC1_ETRGINS_REMAP >> 16))   /*!< ADC1 external trigger inserted conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
-#define GPIO_ADC1_ETRGREG_REMAP          ((uint32_t)0x00200000U | (AFIO_PCF0_ADC1_ETRGREG_REMAP >> 16))   /*!< ADC1 external trigger regular conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
+#define GPIO_ADC1_ETRGREG_REMAP          ((uint32_t)0x00200000U | (AFIO_PCF0_ADC1_ETRGROU_REMAP >> 16))   /*!< ADC1 external trigger routine conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices) */
 #endif /* GD32F30X_HD||GD32F30X_XD */
 #define GPIO_SWJ_NONJTRST_REMAP          ((uint32_t)0x00300000U | (PCF0_SWJ_CFG(1) >> 16))                /*!< full SWJ(JTAG-DP + SW-DP),but without NJTRST */
 #define GPIO_SWJ_SWDPENABLE_REMAP        ((uint32_t)0x00300000U | (PCF0_SWJ_CFG(2) >> 16))                /*!< JTAG-DP disabled and SW-DP enabled */
@@ -462,7 +458,7 @@ typedef FlagStatus bit_status;
 #define GPIO_CAN0_FULL_REMAP             ((uint32_t)0x001D0000U | PCF0_CAN_REMAP(3))                      /*!< CAN0 full remapping(only for GD32F30X_CL devices) */
 #define GPIO_ENET_REMAP                  ((uint32_t)0x00200000U | (AFIO_PCF0_ENET_REMAP >> 16))           /*!< ENET remapping(only for GD32F30X_CL devices) */
 #define GPIO_CAN1_REMAP                  ((uint32_t)0x00200000U | (AFIO_PCF0_CAN1_REMAP >> 16))           /*!< CAN1 remapping(only for GD32F30X_CL devices) */
-#define GPIO_TIMER1ITR0_REMAP            ((uint32_t)0x00200000U | (AFIO_PCF0_TIMER1ITR0_REMAP >> 16))     /*!< TIMER1 internal trigger 0 remapping(only for GD32F30X_CL devices) */
+#define GPIO_TIMER1ITI1_REMAP            ((uint32_t)0x00200000U | (AFIO_PCF0_TIMER1ITI1_REMAP >> 16))     /*!< TIMER1 internal trigger 1 remapping(only for GD32F30X_CL devices) */
 #define GPIO_PTP_PPS_REMAP               ((uint32_t)0x00200000U | (AFIO_PCF0_PTP_PPS_REMAP >> 16))        /*!< ethernet PTP PPS remapping(only for GD32F30X_CL devices) */
 #endif /* GD32F30X_CL */
 #define GPIO_TIMER8_REMAP                ((uint32_t)0x80000000U | AFIO_PCF1_TIMER8_REMAP)                 /*!< TIMER8 remapping */

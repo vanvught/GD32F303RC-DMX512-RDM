@@ -2,15 +2,11 @@
     \file    gd32f30x_enet.h
     \brief   definitions for the ENET
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-04-02, V2.0.1, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2026, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -62,9 +58,13 @@ OF SUCH DAMAGE.
 #define ENET_TXBUF_SIZE                  ENET_MAX_FRAME_SIZE                    /*!< ethernet transmit buffer size */
 #endif
 
-/* #define SELECT_DESCRIPTORS_ENHANCED_MODE */
+#ifndef SELECT_DESCRIPTORS_ENHANCED_MODE
+#define SELECT_DESCRIPTORS_ENHANCED_MODE      0
+#endif /* SELECT_DESCRIPTORS_ENHANCED_MODE */
 
-/* #define USE_DELAY */
+#ifndef USE_DELAY
+#define USE_DELAY           0
+#endif /* USE_DELAY */
 
 #ifndef _PHY_H_
 #define DP83848                          0
@@ -550,7 +550,7 @@ OF SUCH DAMAGE.
 /* ENET DMA Tx descriptor TDES3 */
 #define ENET_TDES3_TB2AP                 BITS(0,31)                             /*!< transmit buffer 2 address pointer (or next descriptor address) / transmit frame timestamp high 32-bit value */
 
-#ifdef SELECT_DESCRIPTORS_ENHANCED_MODE
+#if SELECT_DESCRIPTORS_ENHANCED_MODE
 /* ENET DMA Tx descriptor TDES6 */
 #define ENET_TDES6_TTSL                  BITS(0,31)                             /*!< transmit frame timestamp low 32-bit value */
 
@@ -594,7 +594,7 @@ OF SUCH DAMAGE.
 /* ENET DMA Rx descriptor RDES3 */
 #define ENET_RDES3_RB2AP                 BITS(0,31)                             /*!< receive buffer 2 address pointer (next descriptor address)/receive frame timestamp high 32-bit value */
 
-#ifdef SELECT_DESCRIPTORS_ENHANCED_MODE
+#if SELECT_DESCRIPTORS_ENHANCED_MODE
 /* ENET DMA Rx descriptor RDES4 */
 #define ENET_RDES4_IPPLDT                BITS(0,2)                              /*!< IP frame payload type */
 #define ENET_RDES4_IPHERR                BIT(3)                                 /*!< IP frame header error */
@@ -974,7 +974,7 @@ typedef struct
     uint32_t buffer1_addr;                                                          /*!< buffer1 address pointer/timestamp low */
     uint32_t buffer2_next_desc_addr;                                                /*!< buffer2 or next descriptor address pointer/timestamp high */
 
-#ifdef SELECT_DESCRIPTORS_ENHANCED_MODE
+#if SELECT_DESCRIPTORS_ENHANCED_MODE
     uint32_t extended_status;                                                       /*!< extended status */
     uint32_t reserved;                                                              /*!< reserved */
     uint32_t timestamp_low;                                                         /*!< timestamp low */
@@ -1231,7 +1231,7 @@ typedef struct
 #define PTP_TSUL_TMSUSS(regval)                   (BITS(0,30) & ((uint32_t)(regval) << 0))      /*!< write value to ENET_PTP_TSUL_TMSUSS bit field */
 
 #define ENET_PTP_ADD_TO_TIME                      ((uint32_t)0x00000000)                        /*!< timestamp update value is added to system time */
-#define ENET_PTP_SUBSTRACT_FROM_TIME              ENET_PTP_TSUL_TMSUPNS                         /*!< timestamp update value is subtracted from system time */
+#define ENET_PTP_SUBSTRACT_FROM_TIME              ENET_PTP_TSUL_TMSUPNS                         /*!< timestamp update value is substracted from system time */
 
 /* ptp_ppsctl register value */
 #define PTP_PPSCTL_PPSOFC(regval)                 (BITS(0,3) & ((uint32_t)(regval) << 0))       /*!< write value to ENET_PTP_PPSCTL_PPSOFC bit field */
@@ -1419,7 +1419,7 @@ typedef struct
 #define DMA_BCTL_MASK                             ((uint32_t)0xF800007DU)                       /*!< ENET_DMA_BCTL register mask */
 #define ENET_MSC_PRESET_MASK                      (~(ENET_MSC_CTL_PMC | ENET_MSC_CTL_AFHPM))    /*!< ENET_MSC_CTL preset mask */
 
-#ifdef SELECT_DESCRIPTORS_ENHANCED_MODE
+#if SELECT_DESCRIPTORS_ENHANCED_MODE
 #define ETH_DMATXDESC_SIZE                        0x20U                                         /*!< TxDMA enhanced descriptor size */
 #define ETH_DMARXDESC_SIZE                        0x20U                                         /*!< RxDMA enhanced descriptor size */
 #else
@@ -1540,10 +1540,10 @@ ErrStatus enet_phyloopback_disable(void);
 void enet_forward_feature_enable(uint32_t feature);
 /* disable ENET forward feature */
 void enet_forward_feature_disable(uint32_t feature);
-/* enable ENET fliter feature */
-void enet_fliter_feature_enable(uint32_t feature);
-/* disable ENET fliter feature */
-void enet_fliter_feature_disable(uint32_t feature);
+/* enable ENET filter feature */
+void enet_filter_feature_enable(uint32_t feature);
+/* disable ENET filter feature */
+void enet_filter_feature_disable(uint32_t feature);
 
 /* flow control function */
 /* generate the pause frame, ENET will send pause frame after enable transmit flow control */
@@ -1595,7 +1595,7 @@ void enet_dma_feature_disable(uint32_t feature);
 
 
 /* special enhanced mode function */
-#ifdef SELECT_DESCRIPTORS_ENHANCED_MODE
+#if SELECT_DESCRIPTORS_ENHANCED_MODE
 /* get the bit of extended status flag in ENET DMA descriptor */
 uint32_t enet_rx_desc_enhanced_status_get(enet_descriptors_struct *desc, uint32_t desc_status);
 /* configure descriptor to work in enhanced mode */
@@ -1691,7 +1691,7 @@ FlagStatus enet_ptp_flag_get(uint32_t flag);
 /* internal function */
 /* reset the ENET initpara struct, call it before using enet_initpara_config() */
 void enet_initpara_reset(void);
-#ifdef USE_DELAY
+#if USE_DELAY
 /* user can provide more timing precise _ENET_DELAY_ function */
 #define _ENET_DELAY_                              delay_ms 
 #else

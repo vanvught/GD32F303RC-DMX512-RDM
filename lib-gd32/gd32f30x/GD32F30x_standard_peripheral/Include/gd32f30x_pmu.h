@@ -2,14 +2,11 @@
     \file    gd32f30x_pmu.h
     \brief   definitions for the PMU
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2026, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -148,6 +145,8 @@ void pmu_lvd_select(uint32_t lvdt_n);
 void pmu_ldo_output_select(uint32_t ldo_output);
 /* disable PMU lvd */
 void pmu_lvd_disable(void);
+/* enable PMU lvd */
+void pmu_lvd_enable(void);
 
 /* functions of low-driver mode and high-driver mode in deep-sleep mode */
 /* switch high-driver mode */

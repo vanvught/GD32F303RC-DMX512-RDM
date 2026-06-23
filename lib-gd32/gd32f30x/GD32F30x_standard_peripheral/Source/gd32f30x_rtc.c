@@ -2,14 +2,11 @@
     \file    gd32f30x_rtc.c
     \brief   RTC driver
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2025, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -205,11 +202,13 @@ uint32_t rtc_divider_get(void)
 */
 FlagStatus rtc_flag_get(uint32_t flag)
 {
+    FlagStatus status = RESET;
     if(RESET != (RTC_CTL & flag)){
-        return SET;
+        status = SET;
     }else{
-        return RESET;
+        status = RESET;
     }
+    return status;
 }
 
 /*!

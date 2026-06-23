@@ -2,14 +2,11 @@
     \file    gd32f30x_wwdgt.c
     \brief   WWDGT driver
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2025, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
@@ -98,11 +95,12 @@ void wwdgt_config(uint16_t counter, uint16_t window, uint32_t prescaler)
 */
 FlagStatus wwdgt_flag_get(void)
 {
-    if(WWDGT_STAT & WWDGT_STAT_EWIF) {
-        return SET;
-    }
+    FlagStatus ret = RESET;
 
-    return RESET;
+    if(WWDGT_STAT & WWDGT_STAT_EWIF) {
+        ret = SET;
+    }
+    return ret;
 }
 
 /*!

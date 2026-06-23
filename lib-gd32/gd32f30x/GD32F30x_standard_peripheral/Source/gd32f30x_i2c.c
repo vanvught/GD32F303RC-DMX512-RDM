@@ -2,15 +2,11 @@
     \file    gd32f30x_i2c.c
     \brief   I2C driver
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2019-04-16, V2.0.1, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2026, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -473,7 +469,7 @@ void i2c_software_reset_config(uint32_t i2c_periph, uint32_t sreset)
 /*!
     \brief      configure I2C PEC calculation
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  pecpara:
+    \param[in]  pecstate:
                 only one parameter can be selected which is shown as below:
       \arg        I2C_PEC_ENABLE: PEC calculation on 
       \arg        I2C_PEC_DISABLE: PEC calculation off 
@@ -547,7 +543,7 @@ void i2c_smbus_alert_config(uint32_t i2c_periph, uint32_t smbuspara)
 /*!
     \brief      configure I2C ARP protocol in SMBus
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  smbuspara:
+    \param[in]  arpstate:
                 only one parameter can be selected which is shown as below:
       \arg        I2C_ARP_ENABLE: enable ARP
       \arg        I2C_ARP_DISABLE: disable ARP
@@ -596,11 +592,14 @@ void i2c_smbus_arp_config(uint32_t i2c_periph, uint32_t arpstate)
 */
 FlagStatus i2c_flag_get(uint32_t i2c_periph, i2c_flag_enum flag)
 {
+    FlagStatus ret;
+
     if(RESET != (I2C_REG_VAL(i2c_periph, flag) & BIT(I2C_BIT_POS(flag)))){
-        return SET;
+        ret = SET;
     }else{
-        return RESET;
+        ret = RESET;
     }
+    return ret;
 }
 
 /*!
@@ -687,6 +686,7 @@ void i2c_interrupt_disable(uint32_t i2c_periph, i2c_interrupt_enum interrupt)
 FlagStatus i2c_interrupt_flag_get(uint32_t i2c_periph, i2c_interrupt_flag_enum int_flag)
 {
     uint32_t intenable = 0U, flagstatus = 0U, bufie;
+    FlagStatus ret;
     
     /* check BUFIE */
     bufie = I2C_CTL1(i2c_periph)&I2C_CTL1_BUFIE;
@@ -704,16 +704,17 @@ FlagStatus i2c_interrupt_flag_get(uint32_t i2c_periph, i2c_interrupt_flag_enum i
         }
     }
     if((0U != flagstatus) && (0U != intenable)){
-        return SET;
+        ret = SET;
     }else{
-        return RESET; 
+        ret = RESET; 
     }
+    return ret;
 }
 
 /*!
     \brief      clear I2C interrupt flag status 
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  intflag: I2C interrupt flags, refer to i2c_interrupt_flag_enum
+    \param[in]  int_flag: I2C interrupt flags, refer to i2c_interrupt_flag_enum
                 only one parameter can be selected which is shown as below:
       \arg        I2C_INT_FLAG_ADDSEND: address is sent in master mode or received and matches in slave mode interrupt flag
       \arg        I2C_INT_FLAG_BERR: a bus error occurs indication a unexpected start or stop condition on I2C bus interrupt flag

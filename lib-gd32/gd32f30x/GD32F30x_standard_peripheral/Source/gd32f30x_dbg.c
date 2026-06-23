@@ -2,14 +2,11 @@
     \file    gd32f30x_dbg.c
     \brief   DBG driver
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2026, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -80,9 +77,9 @@ void dbg_low_power_enable(uint32_t dbg_low_power)
     \brief      disable low power behavior when the mcu is in debug mode
     \param[in]  dbg_low_power:
                 this parameter can be any combination of the following values:
-      \arg        DBG_LOW_POWER_SLEEP: donot keep debugger connection during sleep mode
-      \arg        DBG_LOW_POWER_DEEPSLEEP: donot keep debugger connection during deepsleep mode
-      \arg        DBG_LOW_POWER_STANDBY: donot keep debugger connection during standby mode
+      \arg        DBG_LOW_POWER_SLEEP: do not keep debugger connection during sleep mode
+      \arg        DBG_LOW_POWER_DEEPSLEEP: do not keep debugger connection during deepsleep mode
+      \arg        DBG_LOW_POWER_STANDBY: do not keep debugger connection during standby mode
     \param[out] none
     \retval     none
 */

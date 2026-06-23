@@ -2,14 +2,11 @@
     \file    gd32f30x_pmu.c
     \brief   PMU driver
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2025, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
@@ -103,6 +100,17 @@ void pmu_lvd_disable(void)
 {
     /* disable LVD */
     PMU_CTL &= ~PMU_CTL_LVDEN;
+}
+
+/*!
+    \brief      enable PMU lvd
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void pmu_lvd_enable(void)
+{
+    PMU_CTL |= PMU_CTL_LVDEN;
 }
 
 /*!
@@ -213,6 +221,8 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
     if(WFI_CMD == sleepmodecmd) {
         __WFI();
     } else {
+        __SEV();
+        __WFE();
         __WFE();
     }
 }
@@ -368,11 +378,13 @@ void pmu_wakeup_pin_disable(void)
 */
 FlagStatus pmu_flag_get(uint32_t flag)
 {
+    FlagStatus reval = RESET;  
     if(PMU_CS & flag) {
-        return  SET;
+        reval = SET;
     } else {
-        return  RESET;
+        reval = RESET;
     }
+    return reval;
 }
 
 /*!

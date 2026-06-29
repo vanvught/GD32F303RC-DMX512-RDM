@@ -5,6 +5,7 @@
 */
 
 /* Copyright (c) 2012 ARM LIMITED
+   Copyright (c) 2026, GigaDevice Semiconductor Inc.
 
    All rights reserved.
    Redistribution and use in source and binary forms, with or without
@@ -30,6 +31,7 @@
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
    POSSIBILITY OF SUCH DAMAGE.
    ---------------------------------------------------------------------------*/
+
 /* This file refers the CMSIS standard, some adjustments are made according to GigaDevice chips */
 
 #ifndef SYSTEM_GD32F30X_H
@@ -43,12 +45,18 @@ extern "C" {
 
 /* system clock frequency (core clock) */
 extern uint32_t SystemCoreClock;
+/* firmware version can be aquired by uncommenting the macro */
+#define __FIRMWARE_VERSION_DEFINE
 
 /* function declarations */
 /* initialize the system and update the SystemCoreClock variable */
 extern void SystemInit (void);
 /* update the SystemCoreClock with current core clock retrieved from cpu registers */
 extern void SystemCoreClockUpdate (void);
+#ifdef __FIRMWARE_VERSION_DEFINE
+/* get firmware version */
+extern uint32_t gd32f30x_firmware_version_get(void);
+#endif /* __FIRMWARE_VERSION_DEFINE */
 
 #ifdef __cplusplus
 }

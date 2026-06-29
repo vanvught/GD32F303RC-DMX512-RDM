@@ -2,49 +2,41 @@
     \file    gd32f30x.h
     \brief   general definitions for GD32F30x
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
-/*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+/* Copyright (c) 2012 ARM LIMITED
+   Copyright (c) 2026, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
+   All rights reserved.
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions are met:
+   - Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+   - Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+   - Neither the name of ARM nor the names of its contributors may be used
+     to endorse or promote products derived from this software without
+     specific prior written permission.
+   *
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
+   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+   POSSIBILITY OF SUCH DAMAGE.
+   ---------------------------------------------------------------------------*/
 
-    1. Redistributions of source code must retain the above copyright notice, this
-       list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice,
-       this list of conditions and the following disclaimer in the documentation
-       and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors
-       may be used to endorse or promote products derived from this software without
-       specific prior written permission.
-
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
-OF SUCH DAMAGE.
-*/
+/* This file refers the CMSIS standard, some adjustments are made according to GigaDevice chips */
 
 #ifndef GD32F30X_H
 #define GD32F30X_H
-
-/* AvV BEGIN */
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-function"
-#pragma GCC diagnostic ignored "-Wconversion"
-#pragma GCC diagnostic ignored "-Wsign-conversion"
-#pragma GCC diagnostic ignored "-Wduplicated-cond"
-/* AvV END */
 
 #ifdef __cplusplus
  extern "C" {
@@ -100,10 +92,10 @@ OF SUCH DAMAGE.
 #define LXTAL_VALUE  ((uint32_t)32768)
 #endif /* low speed crystal oscillator value */
 
-/* GD32F30x firmware library version number V1.0 */
-#define __GD32F30x_STDPERIPH_VERSION_MAIN   (0x01) /*!< [31:24] main version     */
+/* GD32F30x firmware library version number V3.0.3 */
+#define __GD32F30x_STDPERIPH_VERSION_MAIN   (0x03) /*!< [31:24] main version     */
 #define __GD32F30x_STDPERIPH_VERSION_SUB1   (0x00) /*!< [23:16] sub1 version     */
-#define __GD32F30x_STDPERIPH_VERSION_SUB2   (0x00) /*!< [15:8]  sub2 version     */
+#define __GD32F30x_STDPERIPH_VERSION_SUB2   (0x03) /*!< [15:8]  sub2 version     */
 #define __GD32F30x_STDPERIPH_VERSION_RC     (0x00) /*!< [7:0]  release candidate */
 #define __GD32F30x_STDPERIPH_VERSION        ((__GD32F30x_STDPERIPH_VERSION_MAIN << 24)\
                                             |(__GD32F30x_STDPERIPH_VERSION_SUB1 << 16)\
@@ -120,7 +112,8 @@ OF SUCH DAMAGE.
 typedef enum IRQn
 {
     /* Cortex-M4 processor exceptions numbers */
-    NonMaskableInt_IRQn          = -14,    /*!< 2 non maskable interrupt                                 */
+    NonMaskableInt_IRQn          = -14,    /*!< non maskable interrupt                                   */
+    HardFault_IRQn               = -13,    /*!< hard-fault interrupt                                     */
     MemoryManagement_IRQn        = -12,    /*!< 4 Cortex-M4 memory management interrupt                  */
     BusFault_IRQn                = -11,    /*!< 5 Cortex-M4 bus fault interrupt                          */
     UsageFault_IRQn              = -10,    /*!< 6 Cortex-M4 usage fault interrupt                        */

@@ -5,6 +5,7 @@
 */
 
 /* Copyright (c) 2012 ARM LIMITED
+   Copyright (c) 2026, GigaDevice Semiconductor Inc.
 
    All rights reserved.
    Redistribution and use in source and binary forms, with or without
@@ -30,6 +31,7 @@
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
    POSSIBILITY OF SUCH DAMAGE.
    ---------------------------------------------------------------------------*/
+
 /* This file refers the CMSIS standard, some adjustments are made according to GigaDevice chips */
 
 #include "gd32f30x.h"
@@ -54,14 +56,45 @@
 //#define __SYSTEM_CLOCK_108M_PLL_HXTAL           (uint32_t)(108000000)
 #define __SYSTEM_CLOCK_120M_PLL_HXTAL           (uint32_t)(120000000)
 
-#define RCU_MODIFY(__delay)     do{                                     \
-                                    volatile uint32_t i;                \
-                                    if(0 != __delay){                   \
-                                        RCU_CFG0 |= RCU_AHB_CKSYS_DIV2; \
-                                        for(i=0; i<__delay; i++){       \
+/* The following is to prevent Vcore fluctuations caused by frequency switching. 
+   It is strongly recommended to include it to avoid issues caused by self-removal. */
+#define RCU_MODIFY_4(__delay)   do{                                     \
+                                    volatile uint32_t i, reg;           \
+                                    if(0U != (__delay)){                \
+                                        /* Insert a software delay */   \
+                                        for(i=0U; i<(__delay); i++){    \
                                         }                               \
-                                        RCU_CFG0 |= RCU_AHB_CKSYS_DIV4; \
-                                        for(i=0; i<__delay; i++){       \
+                                        reg = RCU_CFG0;                 \
+                                        reg &= ~(RCU_CFG0_AHBPSC);      \
+                                        reg |= RCU_AHB_CKSYS_DIV2;      \
+                                        /* AHB = SYSCLK/2 */            \
+                                        RCU_CFG0 = reg;                 \
+                                        /* Insert a software delay */   \
+                                        for(i=0U; i<(__delay); i++){    \
+                                        }                               \
+                                        reg = RCU_CFG0;                 \
+                                        reg &= ~(RCU_CFG0_AHBPSC);      \
+                                        reg |= RCU_AHB_CKSYS_DIV4;      \
+                                        /* AHB = SYSCLK/4 */            \
+                                        RCU_CFG0 = reg;                 \
+                                        /* Insert a software delay */   \
+                                        for(i=0U; i<(__delay); i++){    \
+                                        }                               \
+                                        reg = RCU_CFG0;                 \
+                                        reg &= ~(RCU_CFG0_AHBPSC);      \
+                                        reg |= RCU_AHB_CKSYS_DIV8;      \
+                                        /* AHB = SYSCLK/8 */            \
+                                        RCU_CFG0 = reg;                 \
+                                        /* Insert a software delay */   \
+                                        for(i=0U; i<(__delay); i++){    \
+                                        }                               \
+                                        reg = RCU_CFG0;                 \
+                                        reg &= ~(RCU_CFG0_AHBPSC);      \
+                                        reg |= RCU_AHB_CKSYS_DIV16;     \
+                                        /* AHB = SYSCLK/16 */           \
+                                        RCU_CFG0 = reg;                 \
+                                        /* Insert a software delay */   \
+                                        for(i=0U; i<(__delay); i++){    \
                                         }                               \
                                     }                                   \
                                 }while(0)
@@ -106,6 +139,16 @@ static void system_clock_120m_hxtal(void);
 
 /* configure the system clock */
 static void system_clock_config(void);
+static void _soft_delay_(uint32_t time);
+
+/* software delay to prevent the impact of Vcore fluctuations.
+   It is strongly recommended to include it to avoid issues caused by self-removal. */
+static void _soft_delay_(uint32_t time)
+{
+    __IO uint32_t i;
+    for(i=0U; i<time*10U; i++){
+    }
+}
 
 /*!
     \brief      setup the microcontroller system, initialize the system
@@ -124,9 +167,12 @@ void SystemInit (void)
     RCU_CTL |= RCU_CTL_IRC8MEN;
     while(0U == (RCU_CTL & RCU_CTL_IRC8MSTB)){
     }
-    RCU_MODIFY(0x50);
-    
+    if(((RCU_CFG0 & RCU_CFG0_SCSS) == RCU_SCSS_PLL)){
+        RCU_MODIFY_4(0x50U);
+    }
+
     RCU_CFG0 &= ~RCU_CFG0_SCS;
+    _soft_delay_(200U);
 
 #if (defined(GD32F30X_HD) || defined(GD32F30X_XD))
     /* reset HXTALEN, CKMEN and PLLEN bits */
@@ -193,6 +239,7 @@ static void system_clock_8m_irc8m(void)
 {
     uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
+    __IO uint32_t reg_temp;
     
     /* enable IRC8M */
     RCU_CTL |= RCU_CTL_IRC8MEN;
@@ -216,10 +263,12 @@ static void system_clock_8m_irc8m(void)
     RCU_CFG0 |= RCU_APB2_CKAHB_DIV1;
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
-    
+
+    reg_temp = RCU_CFG0;
     /* select IRC8M as system clock */
-    RCU_CFG0 &= ~RCU_CFG0_SCS;
-    RCU_CFG0 |= RCU_CKSYSSRC_IRC8M;
+    reg_temp &= ~RCU_CFG0_SCS;
+    reg_temp |= RCU_CKSYSSRC_IRC8M;
+    RCU_CFG0 = reg_temp;
     
     /* wait until IRC8M is selected as system clock */
     while(0U != (RCU_CFG0 & RCU_SCSS_IRC8M)){
@@ -237,7 +286,8 @@ static void system_clock_48m_irc8m(void)
 {
     uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
-    
+    __IO uint32_t reg_temp;
+
     /* enable IRC8M */
     RCU_CTL |= RCU_CTL_IRC8MEN;
 
@@ -286,10 +336,12 @@ static void system_clock_48m_irc8m(void)
     PMU_CTL |= PMU_CTL_HDS;
     while(0U == (PMU_CS & PMU_CS_HDSRF)){
     } 
-    
+
+    reg_temp = RCU_CFG0;
     /* select PLL as system clock */
-    RCU_CFG0 &= ~RCU_CFG0_SCS;
-    RCU_CFG0 |= RCU_CKSYSSRC_PLL;
+    reg_temp &= ~RCU_CFG0_SCS;
+    reg_temp |= RCU_CKSYSSRC_PLL;
+    RCU_CFG0 = reg_temp;
 
     /* wait until PLL is selected as system clock */
     while(0U == (RCU_CFG0 & RCU_SCSS_PLL)){
@@ -307,7 +359,8 @@ static void system_clock_72m_irc8m(void)
 {
     uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
-    
+    __IO uint32_t reg_temp;
+
     /* enable IRC8M */
     RCU_CTL |= RCU_CTL_IRC8MEN;
 
@@ -355,10 +408,12 @@ static void system_clock_72m_irc8m(void)
     PMU_CTL |= PMU_CTL_HDS;
     while(0U == (PMU_CS & PMU_CS_HDSRF)){
     }
-    
+
+    reg_temp = RCU_CFG0;
     /* select PLL as system clock */
-    RCU_CFG0 &= ~RCU_CFG0_SCS;
-    RCU_CFG0 |= RCU_CKSYSSRC_PLL;
+    reg_temp &= ~RCU_CFG0_SCS;
+    reg_temp |= RCU_CKSYSSRC_PLL;
+    RCU_CFG0 = reg_temp;
 
     /* wait until PLL is selected as system clock */
     while(0U == (RCU_CFG0 & RCU_SCSS_PLL)){
@@ -376,7 +431,8 @@ static void system_clock_108m_irc8m(void)
 {
     uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
-    
+    __IO uint32_t reg_temp;
+
     /* enable IRC8M */
     RCU_CTL |= RCU_CTL_IRC8MEN;
 
@@ -424,10 +480,12 @@ static void system_clock_108m_irc8m(void)
     PMU_CTL |= PMU_CTL_HDS;
     while(0U == (PMU_CS & PMU_CS_HDSRF)){
     }
-    
+
+    reg_temp = RCU_CFG0;
     /* select PLL as system clock */
-    RCU_CFG0 &= ~RCU_CFG0_SCS;
-    RCU_CFG0 |= RCU_CKSYSSRC_PLL;
+    reg_temp &= ~RCU_CFG0_SCS;
+    reg_temp |= RCU_CKSYSSRC_PLL;
+    RCU_CFG0 = reg_temp;
 
     /* wait until PLL is selected as system clock */
     while(0U == (RCU_CFG0 & RCU_SCSS_PLL)){
@@ -445,7 +503,8 @@ static void system_clock_120m_irc8m(void)
 {
     uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
-    
+    __IO uint32_t reg_temp;
+
     /* enable IRC8M */
     RCU_CTL |= RCU_CTL_IRC8MEN;
 
@@ -493,10 +552,12 @@ static void system_clock_120m_irc8m(void)
     PMU_CTL |= PMU_CTL_HDS;
     while(0U == (PMU_CS & PMU_CS_HDSRF)){
     }
-    
+
+    reg_temp = RCU_CFG0;
     /* select PLL as system clock */
-    RCU_CFG0 &= ~RCU_CFG0_SCS;
-    RCU_CFG0 |= RCU_CKSYSSRC_PLL;
+    reg_temp &= ~RCU_CFG0_SCS;
+    reg_temp |= RCU_CKSYSSRC_PLL;
+    RCU_CFG0 = reg_temp;
 
     /* wait until PLL is selected as system clock */
     while(0U == (RCU_CFG0 & RCU_SCSS_PLL)){
@@ -514,7 +575,8 @@ static void system_clock_hxtal(void)
 {
     uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
-    
+    __IO uint32_t reg_temp;
+
     /* enable HXTAL */
     RCU_CTL |= RCU_CTL_HXTALEN;
     
@@ -536,11 +598,13 @@ static void system_clock_hxtal(void)
     RCU_CFG0 |= RCU_APB2_CKAHB_DIV1;
     /* APB1 = AHB/2 */
     RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
-    
+
+    reg_temp = RCU_CFG0;
     /* select HXTAL as system clock */
-    RCU_CFG0 &= ~RCU_CFG0_SCS;
-    RCU_CFG0 |= RCU_CKSYSSRC_HXTAL;
-    
+    reg_temp &= ~RCU_CFG0_SCS;
+    reg_temp |= RCU_CKSYSSRC_HXTAL;
+    RCU_CFG0 = reg_temp;
+
     /* wait until HXTAL is selected as system clock */
     while(0 == (RCU_CFG0 & RCU_SCSS_HXTAL)){
     }
@@ -557,6 +621,7 @@ static void system_clock_48m_hxtal(void)
 {
     uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
+    __IO uint32_t reg_temp;
 
     /* enable HXTAL */
     RCU_CTL |= RCU_CTL_HXTALEN;
@@ -626,9 +691,11 @@ static void system_clock_48m_hxtal(void)
     while(0U == (PMU_CS & PMU_CS_HDSRF)){
     }
 
+    reg_temp = RCU_CFG0;
     /* select PLL as system clock */
-    RCU_CFG0 &= ~RCU_CFG0_SCS;
-    RCU_CFG0 |= RCU_CKSYSSRC_PLL;
+    reg_temp &= ~RCU_CFG0_SCS;
+    reg_temp |= RCU_CKSYSSRC_PLL;
+    RCU_CFG0 = reg_temp;
 
     /* wait until PLL is selected as system clock */
     while(0U == (RCU_CFG0 & RCU_SCSS_PLL)){
@@ -645,6 +712,7 @@ static void system_clock_72m_hxtal(void)
 {
     uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
+    __IO uint32_t reg_temp;
 
     /* enable HXTAL */
     RCU_CTL |= RCU_CTL_HXTALEN;
@@ -714,9 +782,11 @@ static void system_clock_72m_hxtal(void)
     while(0U == (PMU_CS & PMU_CS_HDSRF)){
     }
 
+    reg_temp = RCU_CFG0;
     /* select PLL as system clock */
-    RCU_CFG0 &= ~RCU_CFG0_SCS;
-    RCU_CFG0 |= RCU_CKSYSSRC_PLL;
+    reg_temp &= ~RCU_CFG0_SCS;
+    reg_temp |= RCU_CKSYSSRC_PLL;
+    RCU_CFG0 = reg_temp;
 
     /* wait until PLL is selected as system clock */
     while(0U == (RCU_CFG0 & RCU_SCSS_PLL)){
@@ -734,6 +804,7 @@ static void system_clock_108m_hxtal(void)
 {
     uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
+    __IO uint32_t reg_temp;
 
     /* enable HXTAL */
     RCU_CTL |= RCU_CTL_HXTALEN;
@@ -803,9 +874,11 @@ static void system_clock_108m_hxtal(void)
     while(0U == (PMU_CS & PMU_CS_HDSRF)){
     }
 
+    reg_temp = RCU_CFG0;
     /* select PLL as system clock */
-    RCU_CFG0 &= ~RCU_CFG0_SCS;
-    RCU_CFG0 |= RCU_CKSYSSRC_PLL;
+    reg_temp &= ~RCU_CFG0_SCS;
+    reg_temp |= RCU_CKSYSSRC_PLL;
+    RCU_CFG0 = reg_temp;
 
     /* wait until PLL is selected as system clock */
     while(0U == (RCU_CFG0 & RCU_SCSS_PLL)){
@@ -823,6 +896,7 @@ static void system_clock_120m_hxtal(void)
 {
     uint32_t timeout = 0U;
     uint32_t stab_flag = 0U;
+    __IO uint32_t reg_temp;
 
     /* enable HXTAL */
     RCU_CTL |= RCU_CTL_HXTALEN;
@@ -860,11 +934,11 @@ static void system_clock_120m_hxtal(void)
     RCU_CFG0 |= RCU_PLL_MUL30;
 
 #elif defined(GD32F30X_CL)
-    /* CK_PLL = (CK_PREDIV0) * 30 = 120 MHz */ 
+    /* CK_PLL = (CK_PREDIV0) * 30 = 120 MHz */
     RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4 | RCU_CFG0_PLLMF_5);
     RCU_CFG0 |= (RCU_PLLSRC_HXTAL_IRC48M | RCU_PLL_MUL30);
 
-    /* CK_PREDIV0 = (CK_HXTAL)/5 *8 /10 = 4 MHz */ 
+    /* CK_PREDIV0 = (CK_HXTAL)/5 *8 /10 = 4 MHz */
     RCU_CFG1 &= ~(RCU_CFG1_PLLPRESEL | RCU_CFG1_PREDV0SEL | RCU_CFG1_PLL1MF | RCU_CFG1_PREDV1 | RCU_CFG1_PREDV0);
     RCU_CFG1 |= (RCU_PLLPRESRC_HXTAL | RCU_PREDV0SRC_CKPLL1 | RCU_PLL1_MUL8 | RCU_PREDV1_DIV5 | RCU_PREDV0_DIV10);
 
@@ -892,9 +966,11 @@ static void system_clock_120m_hxtal(void)
     while(0U == (PMU_CS & PMU_CS_HDSRF)){
     }
 
+    reg_temp = RCU_CFG0;
     /* select PLL as system clock */
-    RCU_CFG0 &= ~RCU_CFG0_SCS;
-    RCU_CFG0 |= RCU_CKSYSSRC_PLL;
+    reg_temp &= ~RCU_CFG0_SCS;
+    reg_temp |= RCU_CKSYSSRC_PLL;
+    RCU_CFG0 = reg_temp;
 
     /* wait until PLL is selected as system clock */
     while(0U == (RCU_CFG0 & RCU_SCSS_PLL)){
@@ -1006,3 +1082,16 @@ void SystemCoreClockUpdate(void)
     clk_exp = ahb_exp[idx];
     SystemCoreClock = SystemCoreClock >> clk_exp;
 }
+
+#ifdef __FIRMWARE_VERSION_DEFINE
+/*!
+    \brief      get firmware version
+    \param[in]  none
+    \param[out] none
+    \retval     firmware version
+*/
+uint32_t gd32f30x_firmware_version_get(void)
+{
+    return (uint32_t)__GD32F30x_STDPERIPH_VERSION;
+}
+#endif /* __FIRMWARE_VERSION_DEFINE */

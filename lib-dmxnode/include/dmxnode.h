@@ -80,7 +80,7 @@ inline static constexpr const char kLtpUpper[] = "LTP";
 
 enum class Direction { kInput, kOutput, kDisable };
 
-enum class FailSafe { kHold, kOff, kOn, kPlayback, kRecord };
+enum class FailSafe : uint8_t { kHold, kOff, kOn, kPlayback, kRecord };
 
 namespace failsafe {
 inline static constexpr const char kHold[] = "hold";
@@ -269,7 +269,7 @@ class DmxNode {
         assert(port_index < dmxnode::kMaxPorts);
         auto& port = port_[port_index];
 
-        snprintf(port.label, dmxnode::kPortNameLength - 1, "Port %u", (1U + port_index));
+        snprintf(port.label, dmxnode::kPortNameLength - 1, "Port %u", static_cast<unsigned>((1U + port_index)));
         port.label[dmxnode::kPortNameLength - 1] = '\0';
     }
 

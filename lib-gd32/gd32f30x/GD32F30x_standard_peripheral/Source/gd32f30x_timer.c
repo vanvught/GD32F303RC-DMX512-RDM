@@ -2,14 +2,11 @@
     \file    gd32f30x_timer.c
     \brief   TIMER driver
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2025, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -474,13 +471,16 @@ void timer_interrupt_disable(uint32_t timer_periph, uint32_t interrupt)
 */
 FlagStatus timer_interrupt_flag_get(uint32_t timer_periph, uint32_t interrupt)
 {
+    FlagStatus timer_interrupt_flag = RESET;
     uint32_t val;
     val = (TIMER_DMAINTEN(timer_periph) & interrupt);
     if((RESET != (TIMER_INTF(timer_periph) & interrupt) ) && (RESET != val)){
-        return SET;
+        timer_interrupt_flag =  SET;
     }else{
-        return RESET;
+        timer_interrupt_flag =  RESET;
     }
+    
+    return timer_interrupt_flag;
 }
 
 /*!
@@ -526,11 +526,14 @@ void timer_interrupt_flag_clear(uint32_t timer_periph, uint32_t interrupt)
 */
 FlagStatus timer_flag_get(uint32_t timer_periph, uint32_t flag)
 {
+    FlagStatus timer_flag = RESET;
     if(RESET != (TIMER_INTF(timer_periph) & flag)){
-        return SET;
+        timer_flag =  SET;
     }else{
-        return RESET;
+        timer_flag =  RESET;
     }
+    
+    return timer_flag;
 }
 
 /*!
@@ -562,7 +565,7 @@ void timer_flag_clear(uint32_t timer_periph, uint32_t flag)
     \brief      enable the TIMER DMA
     \param[in]  timer_periph: please refer to the following parameters
     \param[in]  dma: specify which DMA to enable
-                only one parameter can be selected which is shown as below:
+                one or more parameters can be selected which is shown as below:
       \arg        TIMER_DMA_UPD:  update DMA enable,TIMERx(x=0..7)
       \arg        TIMER_DMA_CH0D: channel 0 DMA enable,TIMERx(x=0..4,7)
       \arg        TIMER_DMA_CH1D: channel 1 DMA enable,TIMERx(x=0..4,7)
@@ -1743,13 +1746,13 @@ void timer_master_output_trigger_source_select(uint32_t timer_periph, uint32_t o
     \param[in]  timer_periph: TIMERx(x=0..4,7,8,11)
     \param[in]  slavemode:
                 only one parameter can be selected which is shown as below:
-      \arg        TIMER_SLAVE_MODE_DISABLE: slave mode disable
-      \arg        TIMER_ENCODER_MODE0: encoder mode 0
-      \arg        TIMER_ENCODER_MODE1: encoder mode 1
-      \arg        TIMER_ENCODER_MODE2: encoder mode 2
-      \arg        TIMER_SLAVE_MODE_RESTART: restart mode
-      \arg        TIMER_SLAVE_MODE_PAUSE: pause mode
-      \arg        TIMER_SLAVE_MODE_EVENT: event mode
+      \arg        TIMER_SLAVE_MODE_DISABLE: slave mode disable(TIMERx(x=0..4,7,8,11))
+      \arg        TIMER_ENCODER_MODE0: encoder mode 0(TIMERx(x=0..4,7))
+      \arg        TIMER_ENCODER_MODE1: encoder mode 1(TIMERx(x=0..4,7))
+      \arg        TIMER_ENCODER_MODE2: encoder mode 2(TIMERx(x=0..4,7))
+      \arg        TIMER_SLAVE_MODE_RESTART: restart mode(TIMERx(x=0..4,7,8,11))
+      \arg        TIMER_SLAVE_MODE_PAUSE: pause mode(TIMERx(x=0..4,7,8,11))
+      \arg        TIMER_SLAVE_MODE_EVENT: event mode(TIMERx(x=0..4,7,8,11))
       \arg        TIMER_SLAVE_MODE_EXTERNAL0: external clock mode 0.
     \param[out] none
     \retval     none

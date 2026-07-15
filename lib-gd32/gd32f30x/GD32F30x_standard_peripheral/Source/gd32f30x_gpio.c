@@ -2,14 +2,11 @@
     \file    gd32f30x_gpio.c
     \brief   GPIO driver
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2026, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -277,11 +274,15 @@ void gpio_port_write(uint32_t gpio_periph,uint16_t data)
 */
 FlagStatus gpio_input_bit_get(uint32_t gpio_periph,uint32_t pin)
 {
+    FlagStatus reval;
+  
     if((uint32_t)RESET != (GPIO_ISTAT(gpio_periph)&(pin))){
-        return SET; 
+        reval = SET; 
     }else{
-        return RESET;
+        reval = RESET;
     }
+    
+    return reval;
 }
 
 /*!
@@ -306,11 +307,15 @@ uint16_t gpio_input_port_get(uint32_t gpio_periph)
 */
 FlagStatus gpio_output_bit_get(uint32_t gpio_periph,uint32_t pin)
 {
+    FlagStatus reval;
+ 
     if((uint32_t)RESET !=(GPIO_OCTL(gpio_periph)&(pin))){
-        return SET;
+        reval = SET;
     }else{
-        return RESET;
+        reval = RESET;
     }
+    
+    return reval;
 }
 
 /*!
@@ -349,16 +354,16 @@ uint16_t gpio_output_port_get(uint32_t gpio_periph)
       \arg        GPIO_PD01_REMAP: PD01 remapping
       \arg        GPIO_TIMER4CH3_IREMAP: TIMER4 channel3 internal remapping
       \arg        GPIO_ADC0_ETRGINS_REMAP: ADC0 external trigger inserted conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices)
-      \arg        GPIO_ADC0_ETRGREG_REMAP: ADC0 external trigger regular conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices)
+      \arg        GPIO_ADC0_ETRGROU_REMAP: ADC0 external trigger routine conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices)
       \arg        GPIO_ADC1_ETRGINS_REMAP: ADC1 external trigger inserted conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices)
-      \arg        GPIO_ADC1_ETRGREG_REMAP: ADC1 external trigger regular conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices)
+      \arg        GPIO_ADC1_ETRGROU_REMAP: ADC1 external trigger routine conversion remapping(only for GD32F30X_HD devices and GD32F30X_XD devices)
       \arg        GPIO_ENET_REMAP: ENET remapping(only for GD32F30X_CL devices) 
       \arg        GPIO_CAN1_REMAP: CAN1 remapping(only for GD32F30X_CL devices)
       \arg        GPIO_SWJ_NONJTRST_REMAP: full SWJ(JTAG-DP + SW-DP),but without NJTRST
       \arg        GPIO_SWJ_SWDPENABLE_REMAP: JTAG-DP disabled and SW-DP enabled
       \arg        GPIO_SWJ_DISABLE_REMAP: JTAG-DP disabled and SW-DP disabled
       \arg        GPIO_SPI2_REMAP: SPI2 remapping 
-      \arg        GPIO_TIMER1ITR0_REMAP: TIMER1 internal trigger 0 remapping(only for GD32F30X_CL devices)
+      \arg        GPIO_TIMER1ITI1_REMAP: TIMER1 internal trigger 1 remapping(only for GD32F30X_CL devices)
       \arg        GPIO_PTP_PPS_REMAP: ethernet PTP PPS remapping(only for GD32F30X_CL devices) 
       \arg        GPIO_TIMER8_REMAP: TIMER8 remapping
       \arg        GPIO_TIMER9_REMAP: TIMER9 remapping
@@ -575,9 +580,13 @@ void gpio_compensation_config(uint32_t compensation)
   */
 FlagStatus gpio_compensation_flag_get(void)
 {
+    FlagStatus reval;
+ 
     if(((uint32_t)RESET) != (AFIO_CPSCTL & AFIO_CPSCTL_CPS_RDY)){
-        return SET;
+        reval = SET;
     }else{
-        return RESET;
+        reval = RESET;
     }
+
+    return reval;
 }

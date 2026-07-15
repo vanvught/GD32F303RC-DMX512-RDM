@@ -2,14 +2,11 @@
     \file    gd32f30x_rcu.c
     \brief   RCU driver
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2025, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -1225,12 +1222,16 @@ uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock)
 */
 FlagStatus rcu_flag_get(rcu_flag_enum flag)
 {
+    FlagStatus r_rcu_flag = RESET;
+
     /* get the rcu flag */
     if(RESET != (RCU_REG_VAL(flag) & BIT(RCU_BIT_POS(flag)))){
-        return SET;
+        r_rcu_flag = SET;
     }else{
-        return RESET;
+        r_rcu_flag = RESET;
     }
+
+    return r_rcu_flag;
 }
 
 /*!
@@ -1262,12 +1263,16 @@ void rcu_all_reset_flag_clear(void)
 */
 FlagStatus rcu_interrupt_flag_get(rcu_int_flag_enum int_flag)
 {
+    FlagStatus r_rcu_int_flag = RESET;
+
     /* get the rcu interrupt flag */
     if(RESET != (RCU_REG_VAL(int_flag) & BIT(RCU_BIT_POS(int_flag)))){
-        return SET;
+        r_rcu_int_flag = SET;
     }else{
-        return RESET;
+        r_rcu_int_flag = RESET;
     }
+
+    return r_rcu_int_flag;
 }
 
 /*!

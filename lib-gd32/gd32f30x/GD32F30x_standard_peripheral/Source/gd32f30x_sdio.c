@@ -2,14 +2,11 @@
     \file    gd32f30x_sdio.c
     \brief   SDIO driver
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2025, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -195,6 +192,9 @@ void sdio_clock_disable(void)
 void sdio_command_response_config(uint32_t cmd_index, uint32_t cmd_argument, uint32_t response_type)
 {
     uint32_t cmd_config = 0U;
+
+    /* disable the CSM */
+    SDIO_CMDCTL &= ~SDIO_CMDCTL_CSMEN;
     /* reset the command index, command argument and response type */
     SDIO_CMDAGMT &= ~SDIO_CMDAGMT_CMDAGMT;
     SDIO_CMDAGMT = cmd_argument;
@@ -469,10 +469,13 @@ void sdio_dma_disable(void)
 */
 FlagStatus sdio_flag_get(uint32_t flag)
 {
+    FlagStatus status;
     if(RESET != (SDIO_STAT & flag)){
-        return SET;
+        status =  SET;
+    }else{
+        status =  RESET;
     }
-    return RESET;
+    return status;
 }
 
 /*!
@@ -605,10 +608,13 @@ void sdio_interrupt_disable(uint32_t int_flag)
 */
 FlagStatus sdio_interrupt_flag_get(uint32_t int_flag)
 {
+    FlagStatus status;
     if(RESET != (SDIO_STAT & int_flag)){
-        return SET;
+        status =  SET;
+    }else{
+        status =  RESET;
     }
-    return RESET;
+    return status;
 }
 
 /*!

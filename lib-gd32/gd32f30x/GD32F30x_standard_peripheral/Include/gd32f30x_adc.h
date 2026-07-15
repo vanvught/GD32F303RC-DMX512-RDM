@@ -2,14 +2,11 @@
     \file    gd32f30x_adc.h
     \brief   definitions for the ADC
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2026, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -59,24 +56,24 @@ OF SUCH DAMAGE.
 #define ADC_IOFF3(adcx)                 REG32((adcx) + 0x20U)            /*!< ADC inserted channel data offset register 3 */
 #define ADC_WDHT(adcx)                  REG32((adcx) + 0x24U)            /*!< ADC watchdog high threshold register */
 #define ADC_WDLT(adcx)                  REG32((adcx) + 0x28U)            /*!< ADC watchdog low threshold register */
-#define ADC_RSQ0(adcx)                  REG32((adcx) + 0x2CU)            /*!< ADC regular sequence register 0 */
-#define ADC_RSQ1(adcx)                  REG32((adcx) + 0x30U)            /*!< ADC regular sequence register 1 */
-#define ADC_RSQ2(adcx)                  REG32((adcx) + 0x34U)            /*!< ADC regular sequence register 2 */
+#define ADC_RSQ0(adcx)                  REG32((adcx) + 0x2CU)            /*!< ADC routine sequence register 0 */
+#define ADC_RSQ1(adcx)                  REG32((adcx) + 0x30U)            /*!< ADC routine sequence register 1 */
+#define ADC_RSQ2(adcx)                  REG32((adcx) + 0x34U)            /*!< ADC routine sequence register 2 */
 #define ADC_ISQ(adcx)                   REG32((adcx) + 0x38U)            /*!< ADC inserted sequence register */
 #define ADC_IDATA0(adcx)                REG32((adcx) + 0x3CU)            /*!< ADC inserted data register 0 */
 #define ADC_IDATA1(adcx)                REG32((adcx) + 0x40U)            /*!< ADC inserted data register 1 */
 #define ADC_IDATA2(adcx)                REG32((adcx) + 0x44U)            /*!< ADC inserted data register 2 */
 #define ADC_IDATA3(adcx)                REG32((adcx) + 0x48U)            /*!< ADC inserted data register 3 */
-#define ADC_RDATA(adcx)                 REG32((adcx) + 0x4CU)            /*!< ADC regular data register */
+#define ADC_RDATA(adcx)                 REG32((adcx) + 0x4CU)            /*!< ADC routine data register */
 #define ADC_OVSAMPCTL(adcx)             REG32((adcx) + 0x80U)            /*!< ADC oversampling control register */
 
 /* bits definitions */
 /* ADC_STAT */
 #define ADC_STAT_WDE                    BIT(0)                           /*!< analog watchdog event flag */
-#define ADC_STAT_EOC                    BIT(1)                           /*!< end of conversion */
-#define ADC_STAT_EOIC                   BIT(2)                           /*!< inserted channel end of conversion */
-#define ADC_STAT_STIC                   BIT(3)                           /*!< inserted channel start flag */
-#define ADC_STAT_STRC                   BIT(4)                           /*!< regular channel start flag */
+#define ADC_STAT_EOC                    BIT(1)                           /*!< end of sequence conversion */
+#define ADC_STAT_EOIC                   BIT(2)                           /*!< end of inserted sequence conversion */
+#define ADC_STAT_STIC                   BIT(3)                           /*!< inserted sequence start flag */
+#define ADC_STAT_STRC                   BIT(4)                           /*!< routine sequence start flag */
 
 /* ADC_CTL0 */
 #define ADC_CTL0_WDCHSEL                BITS(0,4)                        /*!< analog watchdog channel select bits */
@@ -85,13 +82,13 @@ OF SUCH DAMAGE.
 #define ADC_CTL0_EOICIE                 BIT(7)                           /*!< interrupt enable for inserted channels */
 #define ADC_CTL0_SM                     BIT(8)                           /*!< scan mode */
 #define ADC_CTL0_WDSC                   BIT(9)                           /*!< when in scan mode, analog watchdog is effective on a single channel */
-#define ADC_CTL0_ICA                    BIT(10)                          /*!< automatic inserted group conversion */
-#define ADC_CTL0_DISRC                  BIT(11)                          /*!< discontinuous mode on regular channels */
+#define ADC_CTL0_ICA                    BIT(10)                          /*!< automatic inserted sequence conversion */
+#define ADC_CTL0_DISRC                  BIT(11)                          /*!< discontinuous mode on routine channels */
 #define ADC_CTL0_DISIC                  BIT(12)                          /*!< discontinuous mode on inserted channels */
 #define ADC_CTL0_DISNUM                 BITS(13,15)                      /*!< discontinuous mode channel count */
 #define ADC_CTL0_SYNCM                  BITS(16,19)                      /*!< sync mode selection */
 #define ADC_CTL0_IWDEN                  BIT(22)                          /*!< analog watchdog enable on inserted channels */
-#define ADC_CTL0_RWDEN                  BIT(23)                          /*!< analog watchdog enable on regular channels */
+#define ADC_CTL0_RWDEN                  BIT(23)                          /*!< analog watchdog enable on routine channels */
 #define ADC_CTL0_DRES                   BITS(24,25)                      /*!< ADC data resolution */
 
 /* ADC_CTL1 */
@@ -103,10 +100,10 @@ OF SUCH DAMAGE.
 #define ADC_CTL1_DAL                    BIT(11)                          /*!< data alignment */
 #define ADC_CTL1_ETSIC                  BITS(12,14)                      /*!< external trigger select for inserted channel */
 #define ADC_CTL1_ETEIC                  BIT(15)                          /*!< external trigger enable for inserted channel */
-#define ADC_CTL1_ETSRC                  BITS(17,19)                      /*!< external trigger select for regular channel */
+#define ADC_CTL1_ETSRC                  BITS(17,19)                      /*!< external trigger select for routine channel */
 #define ADC_CTL1_ETERC                  BIT(20)                          /*!< external trigger conversion mode for inserted channels */
 #define ADC_CTL1_SWICST                 BIT(21)                          /*!< start on inserted channel */
-#define ADC_CTL1_SWRCST                 BIT(22)                          /*!< start on regular channel */
+#define ADC_CTL1_SWRCST                 BIT(22)                          /*!< start on routine channel */
 #define ADC_CTL1_TSVREN                 BIT(23)                          /*!< channel 16 and 17 enable of ADC0 */
 
 /* ADC_SAMPTx x=0..1 */
@@ -122,19 +119,19 @@ OF SUCH DAMAGE.
 #define ADC_WDLT_WDLT                   BITS(0,11)                       /*!< analog watchdog low threshold */
 
 /* ADC_RSQx */
-#define ADC_RSQX_RSQN                   BITS(0,4)                        /*!< x conversion in regular sequence */
-#define ADC_RSQ0_RL                     BITS(20,23)                      /*!< regular channel sequence length */
+#define ADC_RSQX_RSQN                   BITS(0,4)                        /*!< x conversion in routine sequence */
+#define ADC_RSQ0_RL                     BITS(20,23)                      /*!< routine sequence length */
 
 /* ADC_ISQ */
-#define ADC_ISQ_ISQN                    BITS(0,4)                        /*!< x conversion in regular sequence */
+#define ADC_ISQ_ISQN                    BITS(0,4)                        /*!< x conversion in inserted sequence */
 #define ADC_ISQ_IL                      BITS(20,21)                      /*!< inserted sequence length */
 
 /* ADC_IDATAx x=0..3*/
 #define ADC_IDATAX_IDATAN               BITS(0,15)                       /*!< inserted data x */
 
 /* ADC_RDATA */
-#define ADC_RDATA_RDATA                 BITS(0,15)                       /*!< regular data */
-#define ADC_RDATA_ADC1RDTR              BITS(16,31)                      /*!< ADC1 regular channel data */
+#define ADC_RDATA_RDATA                 BITS(0,15)                       /*!< routine data */
+#define ADC_RDATA_ADC1RDTR              BITS(16,31)                      /*!< ADC1 routine channel data */
 
 /* ADC_OVSAMPCTL */
 #define ADC_OVSAMPCTL_OVSEN             BIT(0)                           /*!< oversampling enable */
@@ -147,57 +144,57 @@ OF SUCH DAMAGE.
 /* constants definitions */
 /* ADC status flag */
 #define ADC_FLAG_WDE                    ADC_STAT_WDE                     /*!< analog watchdog event flag */
-#define ADC_FLAG_EOC                    ADC_STAT_EOC                     /*!< end of conversion */
-#define ADC_FLAG_EOIC                   ADC_STAT_EOIC                    /*!< inserted channel end of conversion */
-#define ADC_FLAG_STIC                   ADC_STAT_STIC                    /*!< inserted channel start flag */
-#define ADC_FLAG_STRC                   ADC_STAT_STRC                    /*!< regular channel start flag */
+#define ADC_FLAG_EOC                    ADC_STAT_EOC                     /*!< end of sequence conversion */
+#define ADC_FLAG_EOIC                   ADC_STAT_EOIC                    /*!< end of inserted sequence conversion */
+#define ADC_FLAG_STIC                   ADC_STAT_STIC                    /*!< inserted sequence start flag */
+#define ADC_FLAG_STRC                   ADC_STAT_STRC                    /*!< routine sequence start flag */
 
 /* adc_ctl0 register value */
 #define CTL0_DISNUM(regval)             (BITS(13,15) & ((uint32_t)(regval) << 13))   /*!< write value to ADC_CTL0_DISNUM bit field */
 
 /* ADC special function definitions */
 #define ADC_SCAN_MODE                   ADC_CTL0_SM                                  /*!< scan mode */
-#define ADC_INSERTED_CHANNEL_AUTO       ADC_CTL0_ICA                                 /*!< inserted channel group convert automatically */
+#define ADC_INSERTED_CHANNEL_AUTO       ADC_CTL0_ICA                                 /*!< inserted sequence convert automatically */
 #define ADC_CONTINUOUS_MODE             ADC_CTL1_CTN                                 /*!< continuous mode */
 
 /* ADC synchronization mode */
 #define CTL0_SYNCM(regval)              (BITS(16,19) & ((uint32_t)(regval) << 16))   /*!< write value to ADC_CTL0_SYNCM bit field */
 #define ADC_MODE_FREE                                        CTL0_SYNCM(0)           /*!< all the ADCs work independently */
-#define ADC_DAUL_REGULAL_PARALLEL_INSERTED_PARALLEL          CTL0_SYNCM(1)           /*!< ADC0 and ADC1 work in combined regular parallel + inserted parallel mode */
-#define ADC_DAUL_REGULAL_PARALLEL_INSERTED_ROTATION          CTL0_SYNCM(2)           /*!< ADC0 and ADC1 work in combined regular parallel + trigger rotation mode */
-#define ADC_DAUL_INSERTED_PARALLEL_REGULAL_FOLLOWUP_FAST     CTL0_SYNCM(3)           /*!< ADC0 and ADC1 work in combined inserted parallel + follow-up fast mode */
-#define ADC_DAUL_INSERTED_PARALLEL_REGULAL_FOLLOWUP_SLOW     CTL0_SYNCM(4)           /*!< ADC0 and ADC1 work in combined inserted parallel + follow-up slow mode */
+#define ADC_DAUL_ROUTINE_PARALLEL_INSERTED_PARALLEL          CTL0_SYNCM(1)           /*!< ADC0 and ADC1 work in combined routine parallel + inserted parallel mode */
+#define ADC_DAUL_ROUTINE_PARALLEL_INSERTED_ROTATION          CTL0_SYNCM(2)           /*!< ADC0 and ADC1 work in combined routine parallel + trigger rotation mode */
+#define ADC_DAUL_INSERTED_PARALLEL_ROUTINE_FOLLOWUP_FAST     CTL0_SYNCM(3)           /*!< ADC0 and ADC1 work in combined inserted parallel + follow-up fast mode */
+#define ADC_DAUL_INSERTED_PARALLEL_ROUTINE_FOLLOWUP_SLOW     CTL0_SYNCM(4)           /*!< ADC0 and ADC1 work in combined inserted parallel + follow-up slow mode */
 #define ADC_DAUL_INSERTED_PARALLEL                           CTL0_SYNCM(5)           /*!< ADC0 and ADC1 work in inserted parallel mode only */
-#define ADC_DAUL_REGULAL_PARALLEL                            CTL0_SYNCM(6)           /*!< ADC0 and ADC1 work in regular parallel mode only */
-#define ADC_DAUL_REGULAL_FOLLOWUP_FAST                       CTL0_SYNCM(7)           /*!< ADC0 and ADC1 work in follow-up fast mode only */
-#define ADC_DAUL_REGULAL_FOLLOWUP_SLOW                       CTL0_SYNCM(8)           /*!< ADC0 and ADC1 work in follow-up slow mode only */
-#define ADC_DAUL_INSERTED_TRRIGGER_ROTATION                  CTL0_SYNCM(9)           /*!< ADC0 and ADC1 work in trigger rotation mode only */
+#define ADC_DAUL_ROUTINE_PARALLEL                            CTL0_SYNCM(6)           /*!< ADC0 and ADC1 work in routine parallel mode only */
+#define ADC_DAUL_ROUTINE_FOLLOWUP_FAST                       CTL0_SYNCM(7)           /*!< ADC0 and ADC1 work in follow-up fast mode only */
+#define ADC_DAUL_ROUTINE_FOLLOWUP_SLOW                       CTL0_SYNCM(8)           /*!< ADC0 and ADC1 work in follow-up slow mode only */
+#define ADC_DAUL_INSERTED_TRIGGER_ROTATION                   CTL0_SYNCM(9)           /*!< ADC0 and ADC1 work in trigger rotation mode only */
 
 /* ADC data alignment */
 #define ADC_DATAALIGN_RIGHT              ((uint32_t)0x00000000U)                     /*!< LSB alignment */
 #define ADC_DATAALIGN_LEFT               ADC_CTL1_DAL                                /*!< MSB alignment */
 
-/* ADC external trigger select for regular channel */
+/* ADC external trigger select for routine sequence */
 #define CTL1_ETSRC(regval)               (BITS(17,19) & ((uint32_t)(regval) << 17))  /*!< write value to ADC_CTL1_ETSRC bit field */
-#define ADC0_1_EXTTRIG_REGULAR_T0_CH0    CTL1_ETSRC(0)                               /*!< timer 0 CC0 event select */
-#define ADC0_1_EXTTRIG_REGULAR_T0_CH1    CTL1_ETSRC(1)                               /*!< timer 0 CC1 event select */
-#define ADC0_1_EXTTRIG_REGULAR_T0_CH2    CTL1_ETSRC(2)                               /*!< timer 0 CC2 event select */
-#define ADC0_1_EXTTRIG_REGULAR_T1_CH1    CTL1_ETSRC(3)                               /*!< timer 1 CC1 event select */
-#define ADC0_1_EXTTRIG_REGULAR_T2_TRGO   CTL1_ETSRC(4)                               /*!< timer 2 TRGO event select */
-#define ADC0_1_EXTTRIG_REGULAR_T3_CH3    CTL1_ETSRC(5)                               /*!< timer 3 CC3 event select */
-#define ADC0_1_EXTTRIG_REGULAR_T7_TRGO   CTL1_ETSRC(6)                               /*!< timer 7 TRGO event select */
-#define ADC0_1_EXTTRIG_REGULAR_EXTI_11   CTL1_ETSRC(6)                               /*!< external interrupt line 11 */
-#define ADC0_1_2_EXTTRIG_REGULAR_NONE    CTL1_ETSRC(7)                               /*!< software trigger */
+#define ADC0_1_EXTTRIG_ROUTINE_T0_CH0    CTL1_ETSRC(0)                               /*!< timer 0 CC0 event select */
+#define ADC0_1_EXTTRIG_ROUTINE_T0_CH1    CTL1_ETSRC(1)                               /*!< timer 0 CC1 event select */
+#define ADC0_1_EXTTRIG_ROUTINE_T0_CH2    CTL1_ETSRC(2)                               /*!< timer 0 CC2 event select */
+#define ADC0_1_EXTTRIG_ROUTINE_T1_CH1    CTL1_ETSRC(3)                               /*!< timer 1 CC1 event select */
+#define ADC0_1_EXTTRIG_ROUTINE_T2_TRGO   CTL1_ETSRC(4)                               /*!< timer 2 TRGO event select */
+#define ADC0_1_EXTTRIG_ROUTINE_T3_CH3    CTL1_ETSRC(5)                               /*!< timer 3 CC3 event select */
+#define ADC0_1_EXTTRIG_ROUTINE_T7_TRGO   CTL1_ETSRC(6)                               /*!< timer 7 TRGO event select */
+#define ADC0_1_EXTTRIG_ROUTINE_EXTI_11   CTL1_ETSRC(6)                               /*!< external interrupt line 11 */
+#define ADC0_1_2_EXTTRIG_ROUTINE_NONE    CTL1_ETSRC(7)                               /*!< software trigger */
 
-#define ADC2_EXTTRIG_REGULAR_T2_CH0      CTL1_ETSRC(0)                               /*!< timer 2 CC0 event select */
-#define ADC2_EXTTRIG_REGULAR_T1_CH2      CTL1_ETSRC(1)                               /*!< timer 1 CC2 event select */
-#define ADC2_EXTTRIG_REGULAR_T0_CH2      CTL1_ETSRC(2)                               /*!< timer 0 CC2 event select */
-#define ADC2_EXTTRIG_REGULAR_T7_CH0      CTL1_ETSRC(3)                               /*!< timer 7 CC0 event select */
-#define ADC2_EXTTRIG_REGULAR_T7_TRGO     CTL1_ETSRC(4)                               /*!< timer 7 TRGO event select */
-#define ADC2_EXTTRIG_REGULAR_T4_CH0      CTL1_ETSRC(5)                               /*!< timer 4 CC0 event select */
-#define ADC2_EXTTRIG_REGULAR_T4_CH2      CTL1_ETSRC(6)                               /*!< timer 4 CC2 event select */
+#define ADC2_EXTTRIG_ROUTINE_T2_CH0      CTL1_ETSRC(0)                               /*!< timer 2 CC0 event select */
+#define ADC2_EXTTRIG_ROUTINE_T1_CH2      CTL1_ETSRC(1)                               /*!< timer 1 CC2 event select */
+#define ADC2_EXTTRIG_ROUTINE_T0_CH2      CTL1_ETSRC(2)                               /*!< timer 0 CC2 event select */
+#define ADC2_EXTTRIG_ROUTINE_T7_CH0      CTL1_ETSRC(3)                               /*!< timer 7 CC0 event select */
+#define ADC2_EXTTRIG_ROUTINE_T7_TRGO     CTL1_ETSRC(4)                               /*!< timer 7 TRGO event select */
+#define ADC2_EXTTRIG_ROUTINE_T4_CH0      CTL1_ETSRC(5)                               /*!< timer 4 CC0 event select */
+#define ADC2_EXTTRIG_ROUTINE_T4_CH2      CTL1_ETSRC(6)                               /*!< timer 4 CC2 event select */
 
-/* ADC external trigger select for inserted channel */
+/* ADC external trigger select for inserted sequence */
 #define CTL1_ETSIC(regval)               (BITS(12,14) & ((uint32_t)(regval) << 12))  /*!< write value to ADC_CTL1_ETSIC bit field */
 #define ADC0_1_EXTTRIG_INSERTED_T0_TRGO  CTL1_ETSIC(0)                               /*!< timer 0 TRGO event select */
 #define ADC0_1_EXTTRIG_INSERTED_T0_CH3   CTL1_ETSIC(1)                               /*!< timer 0 CC3 event select */
@@ -278,12 +275,11 @@ OF SUCH DAMAGE.
 #define ADC_OVERSAMPLING_ALL_CONVERT     ((uint32_t)0x00000000U)                     /*!< all oversampled conversions for a channel are done consecutively after a trigger */
 #define ADC_OVERSAMPLING_ONE_CONVERT     ADC_OVSAMPCTL_TOVS                          /*!< each oversampled conversion for a channel needs a trigger */
 
-/* ADC channel group definitions */
-#define ADC_REGULAR_CHANNEL              ((uint8_t)0x01U)                            /*!< adc regular channel group */
-#define ADC_INSERTED_CHANNEL             ((uint8_t)0x02U)                            /*!< adc inserted channel group */
-#define ADC_REGULAR_INSERTED_CHANNEL     ((uint8_t)0x03U)                            /*!< both regular and inserted channel group */
-
-#define ADC_CHANNEL_DISCON_DISABLE       ((uint8_t)0x04U)                            /*!< disable discontinuous mode of regular & inserted channel */
+/* ADC channel sequence definitions */
+#define ADC_ROUTINE_CHANNEL              ((uint8_t)0x01U)                            /*!< adc routine sequence */
+#define ADC_INSERTED_CHANNEL             ((uint8_t)0x02U)                            /*!< adc inserted sequence */
+#define ADC_ROUTINE_INSERTED_CHANNEL     ((uint8_t)0x03U)                            /*!< both routine and inserted sequence */
+#define ADC_CHANNEL_DISCON_DISABLE       ((uint8_t)0x04U)                            /*!< disable discontinuous mode of routine & inserted sequence */
 
 /* ADC inserted channel definitions */
 #define ADC_INSERTED_CHANNEL_0           ((uint8_t)0x00U)                            /*!< adc inserted channel 0 */
@@ -313,13 +309,13 @@ OF SUCH DAMAGE.
 
 /* ADC interrupt */
 #define ADC_INT_WDE                      ADC_STAT_WDE                                /*!< analog watchdog event interrupt */
-#define ADC_INT_EOC                      ADC_STAT_EOC                                /*!< end of group conversion interrupt */
-#define ADC_INT_EOIC                     ADC_STAT_EOIC                               /*!< end of inserted group conversion interrupt */
+#define ADC_INT_EOC                      ADC_STAT_EOC                                /*!< end of sequence conversion interrupt */
+#define ADC_INT_EOIC                     ADC_STAT_EOIC                               /*!< end of inserted sequence conversion interrupt */
 
 /* ADC interrupt flag */
 #define ADC_INT_FLAG_WDE                 ADC_STAT_WDE                                /*!< analog watchdog event interrupt flag */
-#define ADC_INT_FLAG_EOC                 ADC_STAT_EOC                                /*!< end of group conversion interrupt flag */
-#define ADC_INT_FLAG_EOIC                ADC_STAT_EOIC                               /*!< end of inserted group conversion interrupt flag */
+#define ADC_INT_FLAG_EOC                 ADC_STAT_EOC                                /*!< end of sequence conversion interrupt flag */
+#define ADC_INT_FLAG_EOIC                ADC_STAT_EOIC                               /*!< end of inserted sequence conversion interrupt flag */
 
 /* function declarations */
 /* reset ADC */
@@ -342,7 +338,7 @@ void adc_tempsensor_vrefint_disable(void);
 /* configure ADC resolution */
 void adc_resolution_config(uint32_t adc_periph , uint32_t resolution);
 /* configure ADC discontinuous mode */
-void adc_discontinuous_mode_config(uint32_t adc_periph , uint8_t adc_channel_group , uint8_t length);
+void adc_discontinuous_mode_config(uint32_t adc_periph , uint8_t adc_sequence , uint8_t length);
 
 /* configure the ADC mode */
 void adc_mode_config(uint32_t mode);
@@ -350,24 +346,24 @@ void adc_mode_config(uint32_t mode);
 void adc_special_function_config(uint32_t adc_periph , uint32_t function , ControlStatus newvalue);
 /* configure ADC data alignment */
 void adc_data_alignment_config(uint32_t adc_periph , uint32_t data_alignment);
-/* configure the length of regular channel group or inserted channel group */
-void adc_channel_length_config(uint32_t adc_periph , uint8_t adc_channel_group , uint32_t length);
-/* configure ADC regular channel */
-void adc_regular_channel_config(uint32_t adc_periph , uint8_t rank , uint8_t adc_channel , uint32_t sample_time);
+/* configure the length of routine sequence or inserted sequence */
+void adc_channel_length_config(uint32_t adc_periph , uint8_t adc_sequence , uint32_t length);
+/* configure ADC routine channel */
+void adc_routine_channel_config(uint32_t adc_periph , uint8_t rank , uint8_t adc_channel , uint32_t sample_time);
 /* configure ADC inserted channel */
 void adc_inserted_channel_config(uint32_t adc_periph , uint8_t rank , uint8_t adc_channel , uint32_t sample_time);
 /* configure ADC inserted channel offset */
 void adc_inserted_channel_offset_config(uint32_t adc_periph , uint8_t inserted_channel , uint16_t offset);
 /* enable ADC external trigger */
-void adc_external_trigger_config(uint32_t adc_periph, uint8_t adc_channel_group, ControlStatus newvalue);
+void adc_external_trigger_config(uint32_t adc_periph, uint8_t adc_sequence, ControlStatus newvalue);
 /* configure ADC external trigger source */
-void adc_external_trigger_source_config(uint32_t adc_periph, uint8_t adc_channel_group, uint32_t external_trigger_source);
+void adc_external_trigger_source_config(uint32_t adc_periph, uint8_t adc_sequence, uint32_t external_trigger_source);
 /* enable ADC software trigger */
-void adc_software_trigger_enable(uint32_t adc_periph , uint8_t adc_channel_group);
+void adc_software_trigger_enable(uint32_t adc_periph , uint8_t adc_sequence);
 
-/* read ADC regular group data register */
-uint16_t adc_regular_data_read(uint32_t adc_periph);
-/* read ADC inserted group data register */
+/* read ADC routine sequence data register */
+uint16_t adc_routine_data_read(uint32_t adc_periph);
+/* read ADC inserted sequence data register */
 uint16_t adc_inserted_data_read(uint32_t adc_periph , uint8_t inserted_channel);
 /* read the last ADC0 and ADC1 conversion result data in sync mode */
 uint32_t adc_sync_mode_convert_value_read(void);
@@ -387,8 +383,8 @@ void adc_interrupt_disable(uint32_t adc_periph , uint32_t adc_interrupt);
 
 /* configure ADC analog watchdog single channel */
 void adc_watchdog_single_channel_enable(uint32_t adc_periph, uint8_t adc_channel);
-/* configure ADC analog watchdog group channel */
-void adc_watchdog_group_channel_enable(uint32_t adc_periph, uint8_t adc_channel_group);
+/* configure ADC analog watchdog sequence channel */
+void adc_watchdog_sequence_channel_enable(uint32_t adc_periph, uint8_t adc_sequence);
 /* disable ADC analog watchdog */
 void adc_watchdog_disable(uint32_t adc_periph);
 /* configure ADC analog watchdog threshold */

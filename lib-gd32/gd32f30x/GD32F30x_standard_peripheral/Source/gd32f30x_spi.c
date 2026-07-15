@@ -2,14 +2,11 @@
     \file    gd32f30x_spi.c
     \brief   SPI driver
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2025, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -84,7 +81,7 @@ void spi_i2s_deinit(uint32_t spi_periph)
 /*!
     \brief      initialize the parameters of SPI struct with default values
     \param[in]  none
-    \param[out] spi_parameter_struct: the initialized struct spi_parameter_struct pointer
+    \param[out] spi_struct: the initialized struct spi_parameter_struct pointer
     \retval     none
 */
 void spi_struct_para_init(spi_parameter_struct *spi_struct)
@@ -176,7 +173,7 @@ void spi_disable(uint32_t spi_periph)
       \arg        I2S_MODE_MASTERRX: I2S master receive mode
     \param[in]  i2s_standard: I2S standard
                 only one parameter can be selected which is shown as below:
-      \arg        I2S_STD_PHILLIPS: I2S phillips standard
+      \arg        I2S_STD_PHILIPS: I2S philips standard
       \arg        I2S_STD_MSB: I2S MSB standard
       \arg        I2S_STD_LSB: I2S LSB standard
       \arg        I2S_STD_PCMSHORT: I2S PCM short standard
@@ -486,6 +483,7 @@ uint16_t spi_i2s_data_receive(uint32_t spi_periph)
                 only one parameter can be selected which is shown as below:
       \arg        SPI_BIDIRECTIONAL_TRANSMIT: SPI work in transmit-only mode
       \arg        SPI_BIDIRECTIONAL_RECEIVE: SPI work in receive-only mode
+    \param[out] none
     \retval     none
 */
 void spi_bidirectional_transfer_config(uint32_t spi_periph, uint32_t transfer_direction)
@@ -582,11 +580,14 @@ void spi_crc_next(uint32_t spi_periph)
 */
 uint16_t spi_crc_get(uint32_t spi_periph,uint8_t crc)
 {
+    uint16_t val;
+
     if(SPI_CRC_TX == crc){
-        return ((uint16_t)(SPI_TCRC(spi_periph)));
+        val = ((uint16_t)(SPI_TCRC(spi_periph)));
     }else{
-        return ((uint16_t)(SPI_RCRC(spi_periph)));
+        val = ((uint16_t)(SPI_RCRC(spi_periph)));
     }
+    return val;
 }
 
 /*!
@@ -793,6 +794,7 @@ FlagStatus spi_i2s_interrupt_flag_get(uint32_t spi_periph, uint8_t interrupt)
 {
     uint32_t reg1 = SPI_STAT(spi_periph);
     uint32_t reg2 = SPI_CTL1(spi_periph);
+    FlagStatus ret;
 
     switch(interrupt){
     /* SPI/I2S transmit buffer empty interrupt */
@@ -835,10 +837,11 @@ FlagStatus spi_i2s_interrupt_flag_get(uint32_t spi_periph, uint8_t interrupt)
     }
     /*get SPI/I2S interrupt flag status */
     if(reg1 && reg2){
-        return SET;
+        ret = SET;
     }else{
-        return RESET;
+        ret = RESET;
     }
+    return ret;
 }
 
 /*!
@@ -865,9 +868,12 @@ FlagStatus spi_i2s_interrupt_flag_get(uint32_t spi_periph, uint8_t interrupt)
 */
 FlagStatus spi_i2s_flag_get(uint32_t spi_periph, uint32_t flag)
 {
+    FlagStatus ret;
+
     if(SPI_STAT(spi_periph) & flag){
-        return SET;
+        ret = SET;
     }else{
-        return RESET;
+        ret = RESET;
     }
+    return ret;
 }

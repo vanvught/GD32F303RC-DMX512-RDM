@@ -26,7 +26,7 @@
 #ifndef MCU_GD32F30X_MCU_H_
 #define MCU_GD32F30X_MCU_H_
 
-#if !defined(GD32F30X_HD)
+#if !defined(GD32F30X)
 # error This file should not be included
 #endif
 

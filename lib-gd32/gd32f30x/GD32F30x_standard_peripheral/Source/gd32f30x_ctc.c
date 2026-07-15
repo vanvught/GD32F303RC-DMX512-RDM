@@ -2,14 +2,11 @@
     \file    gd32f30x_ctc.c
     \brief   CTC driver
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2026, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -220,11 +217,14 @@ uint16_t ctc_counter_capture_value_read(void)
 */
 FlagStatus ctc_counter_direction_read(void)
 {
+    FlagStatus status;
+
     if(RESET != (CTC_STAT & CTC_STAT_REFDIR)){
-        return SET;
+        status = SET;
     }else{
-        return RESET;
+        status = RESET;
     }
+    return status;
 }
 
 /*!
@@ -269,11 +269,14 @@ uint8_t ctc_irc48m_trim_value_read(void)
 */
 FlagStatus ctc_flag_get(uint32_t flag)
 {
+    FlagStatus status;
+
     if(RESET != (CTC_STAT & flag)){
-        return SET;
+        status = SET;
     }else{
-        return RESET;
+        status = RESET;
     }
+    return status;
 }
 
 /*!
@@ -348,7 +351,8 @@ void ctc_interrupt_disable(uint32_t interrupt)
 FlagStatus ctc_interrupt_flag_get(uint32_t int_flag)
 {
     uint32_t interrupt_flag = 0U, intenable = 0U;
-    
+    FlagStatus status;
+
     /* check whether the interrupt is enabled */
     if(RESET != (int_flag & CTC_FLAG_MASK)){
         intenable = CTC_CTL0 & CTC_CTL0_ERRIE;
@@ -360,10 +364,12 @@ FlagStatus ctc_interrupt_flag_get(uint32_t int_flag)
     interrupt_flag = CTC_STAT & int_flag;
 
     if(interrupt_flag && intenable){
-        return SET;
+        status = SET;
     }else{
-        return RESET;
+        status = RESET;
     }
+
+    return status;
 }
 
 /*!

@@ -28,6 +28,7 @@
 
 #include <cstdint>
 #include <cstdio>
+#include <cstdarg>
 
 #include "gd32_uart.h"
 #if defined(CONFIG_USART0_ENABLE_TX_DMA) || defined(CONFIG_USART0_ENABLE_RX_DMA)
@@ -56,7 +57,7 @@ extern "C" void USART0_IRQHandler() {
     if (RESET != usart_interrupt_flag_get(USART0, USART_INT_FLAG_IDLE)) {
         usart_data_receive(USART0);
 
-        sv_rx_count.rx = kSizeRxBuffer - (dma_transfer_number_get(USART0_DMAx, USART0_RX_DMA_CHx));
+        sv_rx_count.rx = static_cast<uint16_t>(kSizeRxBuffer - (dma_transfer_number_get(USART0_DMAx, USART0_RX_DMA_CHx)));
         sv_receive_flag = 1;
 
         auto chtl = DMA_CHCTL(USART0_DMAx, USART0_RX_DMA_CHx);

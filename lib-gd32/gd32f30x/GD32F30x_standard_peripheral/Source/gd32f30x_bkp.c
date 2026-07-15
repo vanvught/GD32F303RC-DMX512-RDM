@@ -2,14 +2,11 @@
     \file    gd32f30x_bkp.c
     \brief   BKP driver
 
-    \version 2017-02-10, V1.0.0, firmware for GD32F30x
-    \version 2018-10-10, V1.1.0, firmware for GD32F30x
-    \version 2018-12-25, V2.0.0, firmware for GD32F30x
-    \version 2020-09-30, V2.1.0, firmware for GD32F30x
+    \version 2026-2-6, V3.0.3, firmware for GD32F30x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2026, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -203,7 +200,7 @@ void bkp_rtc_calibration_value_set(uint8_t value)
     uint16_t ctl;
     
     ctl = BKP_OCTL;
-    ctl &= ~(uint16_t)BKP_OCTL_RCCV;
+    ctl &= (uint16_t)~BKP_OCTL_RCCV;
     ctl |= (uint16_t)OCTL_RCCV(value);
     BKP_OCTL = ctl;
 }
@@ -279,11 +276,13 @@ void bkp_tamper_interrupt_disable(void)
 */
 FlagStatus bkp_flag_get(uint16_t flag)
 {
+    FlagStatus ret;
     if(RESET != (BKP_TPCS & flag)){
-        return SET;
+        ret = SET;
     }else{
-        return RESET;
+        ret = RESET;
     }
+    return ret;
 }
 
 /*!
@@ -307,11 +306,13 @@ void bkp_flag_clear(uint16_t flag)
 */
 FlagStatus bkp_interrupt_flag_get(uint16_t flag)
 {
+    FlagStatus ret;
     if(RESET != (BKP_TPCS & flag)){
-        return SET;
+        ret =  SET;
     }else{
-        return RESET;
+        ret =  RESET;
     }
+    return ret;
 }
 
 /*!

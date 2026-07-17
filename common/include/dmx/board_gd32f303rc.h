@@ -29,6 +29,7 @@
 #include <cstdint>
 
 #include "gd32.h" // IWYU pragma: keep
+#include "gd32/dmx_port.h"
 
 #define DMX_MAX_PORTS 1
 
@@ -39,9 +40,6 @@ inline constexpr uint32_t kPorts = DMX_MAX_PORTS;
 
 #define DMX_USE_USART2
 
-inline constexpr auto kUsart2Port = 0;
-
-inline constexpr auto kDirPort0GpioPort = GPIOB;
-inline constexpr auto kDirPort0GpioPin = GPIO_PIN_10;
+inline constexpr port::Info kPort0 = {.uart = gd32::Uart::kUart2, .port = GPIOB, .pin = GPIO_PIN_10, .usage = port::Usage::kTxRx};
 } // namespace dmx::config
 #endif // DMX_BOARD_GD32F303RC_H_

@@ -55,7 +55,7 @@
 #if defined(LOGIC_ANALYZER)
 #include "logic_analyzer.h" // IWYU pragma: keep
 #endif
-#include "firmware/debug/debug_debug.h"
+#include "dmx_debug.h"
 
 static_assert(dmx::buffer::kSize % 4 == 0); // multiple of uint32_t
 
@@ -1555,7 +1555,7 @@ template <uint32_t kPortIndex, dmx::Direction kPortDirection, bool kEnableData> 
 }
 
 void Dmx::DataEnable(uint32_t port_index) {
-    DEBUG_PRINTF("port_index=%u", port_index);
+    DMX_DEBUG_PRINTF("port_index=%u", port_index);
     DMX_CHECK_PORT_INDEX_VOID(port_index);
     assert(sv_port_state[port_index] == dmx::PortState::kIdle);
 
@@ -1639,7 +1639,7 @@ volatile dmx::TotalStatistics& Dmx::GetTotalStatistics(uint32_t port_index) {
 #endif
 
 void Dmx::Blackout() {
-    DEBUG_ENTRY();
+    DMX_DEBUG_ENTRY();
 
     for (uint32_t port_index = 0; port_index < dmx::config::max::kPorts; port_index++) {
         if (port_direction_[port_index] == dmx::Direction::kOutput) {
@@ -1649,11 +1649,11 @@ void Dmx::Blackout() {
         }
     }
 
-    DEBUG_EXIT();
+    DMX_DEBUG_EXIT();
 }
 
 void Dmx::FullOn() {
-    DEBUG_ENTRY();
+    DMX_DEBUG_ENTRY();
 
     for (uint32_t port_index = 0; port_index < dmx::config::max::kPorts; port_index++) {
         if (port_direction_[port_index] == dmx::Direction::kOutput) {
@@ -1673,7 +1673,7 @@ void Dmx::FullOn() {
         }
     }
 
-    DEBUG_EXIT();
+    DMX_DEBUG_EXIT();
 }
 
 // DMX Send
@@ -1944,7 +1944,7 @@ template <uint32_t kPortIndex> void StartRdmOutput() {
 
     constexpr auto kUsartPeripheral = std::to_underlying(kDirGpio[kPortIndex].uart);
 
-    DEBUG_PRINTF("port_index=%u, uart=%p", kPortIndex, reinterpret_cast<void*>(kUsartPeripheral));
+    DMX_DEBUG_PRINTF("port_index=%u, uart=%p", kPortIndex, reinterpret_cast<void*>(kUsartPeripheral));
     // USART_FLAG_TC is set after power on.
     // The flag is cleared by DMA interrupt when maximum slots - 1 are transmitted.
     // TODO(a): Do we need a timeout just to be safe?
@@ -2451,7 +2451,7 @@ void Dmx::SetTransmitPeriodTime(uint32_t period) {
 
     s_dmx_transmit.inter_time = transmit_period_ - package_length_micro_seconds;
 
-    DEBUG_PRINTF("period=%u, nLengthMax=%u, m_nDmxTransmitPeriod=%u, nPackageLengthMicroSeconds=%u -> s_dmx_transmit.inter_time=%u", period, length_max, transmit_period_, package_length_micro_seconds, s_dmx_transmit.inter_time);
+    DMX_DEBUG_PRINTF("period=%u, nLengthMax=%u, m_nDmxTransmitPeriod=%u, nPackageLengthMicroSeconds=%u -> s_dmx_transmit.inter_time=%u", period, length_max, transmit_period_, package_length_micro_seconds, s_dmx_transmit.inter_time);
 }
 
 [[gnu::noinline]]
@@ -2908,7 +2908,7 @@ static void Timer4Config() {
 #endif
 
 Dmx::Dmx() {
-    DEBUG_ENTRY();
+    DMX_DEBUG_ENTRY();
     assert(s_this == nullptr);
     s_this = this;
 
@@ -2984,7 +2984,7 @@ Dmx::Dmx() {
     NVIC_EnableIRQ(UART7_IRQn);
 #endif
 
-    DEBUG_EXIT();
+    DMX_DEBUG_EXIT();
 }
 
 #pragma GCC pop_options

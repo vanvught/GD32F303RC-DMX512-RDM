@@ -34,7 +34,6 @@
 #include <cstdint>
 #include <cstddef>
 #include <cstring>
-#include <algorithm>
 #include <utility>
 #include <cassert>
 
@@ -56,6 +55,7 @@
 #include "logic_analyzer.h" // IWYU pragma: keep
 #endif
 #include "dmx_debug.h"
+#include "common/utils/utils_math.h"
 
 static_assert(dmx::buffer::kSize % 4 == 0); // multiple of uint32_t
 
@@ -2394,7 +2394,7 @@ template void Dmx::SetSendDataInternal<7, false, dmx::SendStyle::kSync>(const ui
 // Configuration
 [[gnu::noinline]]
 void Dmx::SetTransmitBreakTime(uint32_t break_time) {
-    s_dmx_transmit.break_time = std::max(dmx::transmit::kBreakTimeMin, break_time);
+    s_dmx_transmit.break_time = common::Max(dmx::transmit::kBreakTimeMin, break_time);
     SetTransmitPeriodTime(transmit_period_requested_);
 }
 
@@ -2405,7 +2405,7 @@ uint32_t Dmx::TransmitBreakTime() const {
 
 [[gnu::noinline]]
 void Dmx::SetTransmitMabTime(uint32_t mab_time) {
-    s_dmx_transmit.mab_time = std::max(dmx::transmit::kMabTimeMin, mab_time);
+    s_dmx_transmit.mab_time = common::Max(dmx::transmit::kMabTimeMin, mab_time);
     SetTransmitPeriodTime(transmit_period_requested_);
 }
 
@@ -2433,7 +2433,7 @@ void Dmx::SetTransmitPeriodTime(uint32_t period) {
 #if defined(GD32F4XX) || defined(GD32H7XX)
 #else
     if (package_length_micro_seconds > (UINT16_MAX - dmx::kSlotTime)) {
-        s_dmx_transmit.break_time = std::min(dmx::transmit::kBreakTimeTypical, s_dmx_transmit.break_time);
+        s_dmx_transmit.break_time = common::Min(dmx::transmit::kBreakTimeTypical, s_dmx_transmit.break_time);
         s_dmx_transmit.mab_time = dmx::transmit::kMabTimeMin;
         package_length_micro_seconds = s_dmx_transmit.break_time + s_dmx_transmit.mab_time + (length_max * dmx::kSlotTime);
     }
@@ -2441,12 +2441,12 @@ void Dmx::SetTransmitPeriodTime(uint32_t period) {
 
     if (period != 0) {
         if (period < package_length_micro_seconds) {
-            transmit_period_ = std::max(dmx::transmit::kBreakToBreakTimeMin, package_length_micro_seconds + dmx::kSlotTime);
+            transmit_period_ = common::Max(dmx::transmit::kBreakToBreakTimeMin, package_length_micro_seconds + dmx::kSlotTime);
         } else {
             transmit_period_ = period;
         }
     } else {
-        transmit_period_ = std::max(dmx::transmit::kBreakToBreakTimeMin, package_length_micro_seconds + dmx::kSlotTime);
+        transmit_period_ = common::Max(dmx::transmit::kBreakToBreakTimeMin, package_length_micro_seconds + dmx::kSlotTime);
     }
 
     s_dmx_transmit.inter_time = transmit_period_ - package_length_micro_seconds;

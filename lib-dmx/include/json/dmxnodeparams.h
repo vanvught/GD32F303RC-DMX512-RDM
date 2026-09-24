@@ -65,21 +65,21 @@ class DmxNodeParams : public JsonParamsBase<DmxNodeParams>
         MakeKey(SetDirectionPort, DmxNodeParamsConst::kDirectionPort[1]),
         MakeKey(SetMergeModePort, DmxNodeParamsConst::kMergeModePort[1]),
         MakeKey(SetOutputStylePort, DmxNodeParamsConst::kOutputStylePort[1]),
-#endif
+#endif // (DMXNODE_PORTS > 1)
 #if (DMXNODE_PORTS > 2)
         MakeKey(SetLabelPort, DmxNodeParamsConst::kLabelPort[2]),
         MakeKey(SetUniversePort, DmxNodeParamsConst::kUniversePort[2]),
         MakeKey(SetDirectionPort, DmxNodeParamsConst::kDirectionPort[2]),
         MakeKey(SetMergeModePort, DmxNodeParamsConst::kMergeModePort[2]),
         MakeKey(SetOutputStylePort, DmxNodeParamsConst::kOutputStylePort[2]),
-#endif
+#endif // (DMXNODE_PORTS > 2)
 #if (DMXNODE_PORTS > 3)
         MakeKey(SetLabelPort, DmxNodeParamsConst::kLabelPort[3]),
         MakeKey(SetUniversePort, DmxNodeParamsConst::kUniversePort[3]),
         MakeKey(SetDirectionPort, DmxNodeParamsConst::kDirectionPort[3]),
         MakeKey(SetMergeModePort, DmxNodeParamsConst::kMergeModePort[3]),
         MakeKey(SetOutputStylePort, DmxNodeParamsConst::kOutputStylePort[3]),
-#endif
+#endif // (DMXNODE_PORTS > 3)
 #if (DMXNODE_PORTS == 8)
         MakeKey(SetLabelPort, DmxNodeParamsConst::kLabelPort[4]),
         MakeKey(SetUniversePort, DmxNodeParamsConst::kUniversePort[4]),
@@ -101,7 +101,7 @@ class DmxNodeParams : public JsonParamsBase<DmxNodeParams>
         MakeKey(SetDirectionPort, DmxNodeParamsConst::kDirectionPort[7]),
         MakeKey(SetMergeModePort, DmxNodeParamsConst::kMergeModePort[7]),
         MakeKey(SetOutputStylePort, DmxNodeParamsConst::kOutputStylePort[7])
-#endif
+#endif // (DMXNODE_PORTS == 8)
     };
    
     inline static common::store::DmxNode store_dmxnode_;
@@ -110,4 +110,4 @@ class DmxNodeParams : public JsonParamsBase<DmxNodeParams>
 };
 } // namespace json
 
-#endif  // JSON_DMXNODEPARAMS_H_
+#endif // JSON_DMXNODEPARAMS_H_

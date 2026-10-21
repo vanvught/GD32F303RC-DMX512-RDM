@@ -38,20 +38,22 @@
 #include <algorithm>
 #include <cassert>
 
-#include "gd32/dmx.h" // IWYU pragma: keep
+#include "dmx_internal.h"
 #include "dmx/dmx_config.h"
+#include "gd32.h"     // IWYU pragma: keep
+#include "gd32/dmx.h" // IWYU pragma: keep
 #include "gd32/dmx_assert.h"
 #include "gd32/dmx_port.h"
+#include "gd32/dmx_validate.h" // IWYU pragma: keep
+#include "gd32_dma.h"
+#include "gd32_uart.h"
+#include "gd32_gpio.h"
 #include "dmxconst.h"
 #include "e120.h"
 #include "rdmconst.h"
 #include "rdm_e120.h"
 #include "timing.h"
-#include "gd32.h"
-#include "gd32_dma.h"
-#include "gd32_uart.h"
-#include "gd32_gpio.h"
-#include "dmx_internal.h"
+
 #ifdef LOGIC_ANALYZER
 #include "logic_analyzer.h" // IWYU pragma: keep
 #endif // LOGIC_ANALYZER

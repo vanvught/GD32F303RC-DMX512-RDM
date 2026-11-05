@@ -2232,7 +2232,7 @@ void Dmx::RdmTransmitDiscoveryRespondMessage(uint32_t port_index, const uint8_t*
     assert(length != 0);
 
     // 3.2.2 Responder Packet spacing
-    timing::DelayUs(rdm::responder::kPacketSpacing, gsv_rdm_data_receive_end[port_index]);
+    timing::DelayUs(rdm::responder::kPacketSpacing, timing::CpuTicks{gsv_rdm_data_receive_end[port_index]});
 
     SetPortDirection(port_index, dmx::Direction::kOutput, false);
 

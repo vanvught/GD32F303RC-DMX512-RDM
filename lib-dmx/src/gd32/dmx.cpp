@@ -56,7 +56,7 @@
 
 #ifdef LOGIC_ANALYZER
 #include "logic_analyzer.h" // IWYU pragma: keep
-#endif // LOGIC_ANALYZER
+#endif                      // LOGIC_ANALYZER
 #include "dmx_debug.h"
 
 static_assert(dmx::buffer::kSize % 4 == 0); // multiple of uint32_t
@@ -235,7 +235,8 @@ void SwapActiveDmxDataBuffer(uint32_t port_index) {
 }
 #endif // CONFIG_DMX_DOUBLE_INPUT_BUFFER
 
-template <uint32_t kUsartPeripheral> void IrqHandlerDmxRdmInput() {
+template <uint32_t kUsartPeripheral>
+void IrqHandlerDmxRdmInput() {
     constexpr auto kPortIndex = GetPortByUart(kUsartPeripheral);
     auto& rx_buffer = sv_rx_buffer[kPortIndex];
 #ifdef CONFIG_DMX_DOUBLE_INPUT_BUFFER
@@ -449,7 +450,8 @@ template <uint32_t kUsartPeripheral> void IrqHandlerDmxRdmInput() {
     }
 }
 
-template <uint32_t kUsartPeripheral, uint32_t kDmaController, dma_channel_enum kDmaChannel> void DmaStartTx(const uint8_t* data, uint32_t length) {
+template <uint32_t kUsartPeripheral, uint32_t kDmaController, dma_channel_enum kDmaChannel>
+void DmaStartTx(const uint8_t* data, uint32_t length) {
     auto dma_chctl = DMA_CHCTL(kDmaController, kDmaChannel);
     // Disable channel
     dma_chctl &= ~DMA_CHXCTL_CHEN;
@@ -466,7 +468,8 @@ template <uint32_t kUsartPeripheral, uint32_t kDmaController, dma_channel_enum k
     USART_CTL2(kUsartPeripheral) |= USART_TRANSMIT_DMA_ENABLE;
 }
 
-template <uint32_t kUsartPeripheral, uint32_t kDmaController, dma_channel_enum kDmaChannel, typename TxBufferType> void DmaRestartDmxTx(TxBufferType& tx_buffer) {
+template <uint32_t kUsartPeripheral, uint32_t kDmaController, dma_channel_enum kDmaChannel, typename TxBufferType>
+void DmaRestartDmxTx(TxBufferType& tx_buffer) {
     auto& dmx = tx_buffer.dmx;
 
     if (dmx.read_index != dmx.write_index) {
@@ -480,7 +483,8 @@ template <uint32_t kUsartPeripheral, uint32_t kDmaController, dma_channel_enum k
 
 #define DMA_RESTART_DMX_TX(PORT_INDEX, USARTx, DMAx, CHx) DmaRestartDmxTx<USARTx, DMAx, CHx>(s_DmxTxBuffer[PORT_INDEX])
 
-template <uint32_t kUsartPeripheral, uint32_t kDmaController, dma_channel_enum kDmaChannel, typename TxBufferType> void DmaStartRdmTx(TxBufferType& tx_buffer) {
+template <uint32_t kUsartPeripheral, uint32_t kDmaController, dma_channel_enum kDmaChannel, typename TxBufferType>
+void DmaStartRdmTx(TxBufferType& tx_buffer) {
     const auto& packet = tx_buffer.rdm.data;
 
     DmaStartTx<kUsartPeripheral, kDmaController, kDmaChannel>(packet.data, packet.length);
@@ -1526,7 +1530,8 @@ void Dmx::SetPortDirection(uint32_t port_index, dmx::Direction port_direction, b
     }
 }
 
-template <uint32_t kPortIndex, dmx::Direction kPortDirection, bool kEnableData> void Dmx::SetPortDirection() {
+template <uint32_t kPortIndex, dmx::Direction kPortDirection, bool kEnableData>
+void Dmx::SetPortDirection() {
     static_assert(kPortIndex < dmx::config::max::kPorts);
 
     if constexpr ((kDirGpio[kPortIndex].port == 0) && (kDirGpio[kPortIndex].pin == 0)) {
@@ -1679,7 +1684,8 @@ void Dmx::FullOn() {
 }
 
 // DMX Send
-template <uint32_t kPortIndex, bool kHasStartCode, dmx::SendStyle kSendStyle> void Dmx::SetSendDataInternal(const uint8_t* data, uint32_t length) {
+template <uint32_t kPortIndex, bool kHasStartCode, dmx::SendStyle kSendStyle>
+void Dmx::SetSendDataInternal(const uint8_t* data, uint32_t length) {
     static_assert(kPortIndex < dmx::config::max::kPorts);
 
     if constexpr (kDirGpio[kPortIndex].usage == dmx::port::Usage::kRxOnly) {
@@ -1728,7 +1734,8 @@ void Dmx::StartSendStyleDirect(uint32_t port_index) {
     }
 }
 
-template <uint32_t kPortIndex> void StartDmxOutputBreak() {
+template <uint32_t kPortIndex>
+void StartDmxOutputBreak() {
     if constexpr ((kDirGpio[kPortIndex].port == 0) && (kDirGpio[kPortIndex].pin == 0)) {
         return;
     }
@@ -1824,7 +1831,8 @@ template <uint32_t kPortIndex> void StartDmxOutputBreak() {
     assert(false && "Not reachable");
 }
 
-template <uint32_t kPortIndex> void StartDmxOutputPort() {
+template <uint32_t kPortIndex>
+void StartDmxOutputPort() {
     if constexpr (kPortIndex < dmx::config::max::kPorts) {
         if constexpr (kDirGpio[kPortIndex].usage != dmx::port::Usage::kRxOnly) {
             StartDmxOutputBreak<kPortIndex>();
@@ -1914,7 +1922,8 @@ void Dmx::RdmTransmit(uint32_t port_index, const uint8_t* data, uint32_t length)
     }
 }
 
-template <uint32_t kPortIndex> void Dmx::RdmSendDataInternal(const uint8_t* data, uint32_t length) {
+template <uint32_t kPortIndex>
+void Dmx::RdmSendDataInternal(const uint8_t* data, uint32_t length) {
     static_assert(kPortIndex < dmx::config::max::kPorts);
 
     if constexpr (kDirGpio[kPortIndex].usage == dmx::port::Usage::kRxOnly) {
@@ -1937,7 +1946,8 @@ template <uint32_t kPortIndex> void Dmx::RdmSendDataInternal(const uint8_t* data
     StartRdmOutput(kPortIndex);
 }
 
-template <uint32_t kPortIndex> void StartRdmOutput() {
+template <uint32_t kPortIndex>
+void StartRdmOutput() {
     static_assert(kPortIndex < dmx::config::max::kPorts);
 
     if constexpr (kDirGpio[kPortIndex].usage == dmx::port::Usage::kRxOnly) {
@@ -2043,7 +2053,8 @@ template <uint32_t kPortIndex> void StartRdmOutput() {
     assert(false && "Not reachable");
 }
 
-template <uint32_t kPortIndex> void StartRdmOutputPort() {
+template <uint32_t kPortIndex>
+void StartRdmOutputPort() {
     if constexpr (kPortIndex < dmx::config::max::kPorts) {
         if constexpr (kDirGpio[kPortIndex].usage != dmx::port::Usage::kRxOnly) {
             StartRdmOutput<kPortIndex>();
@@ -2115,6 +2126,11 @@ void Dmx::Sync() {
             }
         }
     }
+}
+
+bool Dmx::IsReceiveOngoing(uint32_t port_index) {
+    const auto& rx_buffer = sv_rx_buffer[port_index];
+    return (rx_buffer.state != dmx::TxRxState::kIdle) || ((rx_buffer.rdm.index & dmx::kRdmSlotsCompleteFlag) != 0U);
 }
 
 // DMX Receive
@@ -2940,10 +2956,10 @@ Dmx::Dmx() {
     UsartDmaConfig(); // DMX Transmit
 #if defined(DMX_USE_USART0) || defined(DMX_USE_USART1) || defined(DMX_USE_USART2) || defined(DMX_USE_UART3)
     Timer1Config(); // DMX Transmit -> USART0, USART1, USART2, UART3
-#endif // defined(DMX_USE_USART0) || defined(DMX_USE_USART1) || defined(DMX_USE_USART2) || defined(DMX_USE_UART3)
+#endif              // defined(DMX_USE_USART0) || defined(DMX_USE_USART1) || defined(DMX_USE_USART2) || defined(DMX_USE_UART3)
 #if defined(DMX_USE_UART4) || defined(DMX_USE_USART5) || defined(DMX_USE_UART6) || defined(DMX_USE_UART7)
     Timer4Config(); // DMX Transmit -> UART4, USART5, UART6, UART7
-#endif // defined(DMX_USE_UART4) || defined(DMX_USE_USART5) || defined(DMX_USE_UART6) || defined(DMX_USE_UART7)
+#endif              // defined(DMX_USE_UART4) || defined(DMX_USE_USART5) || defined(DMX_USE_UART6) || defined(DMX_USE_UART7)
 
 #if defined(DMX_USE_USART0) || defined(DMX_USE_USART0_RX)
     UartDmxConfig(USART0);

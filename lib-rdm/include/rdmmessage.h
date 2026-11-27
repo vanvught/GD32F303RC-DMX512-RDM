@@ -2,7 +2,7 @@
  * @file rdmmessage.h
  *
  */
-/* Copyright (C) 2017-2025 by Arjan van Vught mailto:info@gd32-dmx.org
+/* Copyright (C) 2017-2026 by Arjan van Vught mailto:info@gd32-dmx.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,12 +33,11 @@
 #include "rdm.h"
 #include "e120.h"
 #include "rdm_e120.h"
-#ifndef NDEBUG
+#include "rdm_debug.h"
 #include "rdm_message_print.h"
-#endif // NDEBUG
 #include "timing.h"
 
-class RdmMessage final : public Rdm {
+class RdmMessage final {
    public:
     RdmMessage() {
         message_.start_code = E120_SC_RDM;
@@ -84,10 +83,12 @@ class RdmMessage final : public Rdm {
     }
 
     void Transmit(uint32_t port_index) {
-#ifndef NDEBUG
-        rdm::message::Print(reinterpret_cast<const uint8_t*>(&message_));
-#endif // NDEBUG
-        Rdm::Transmit(port_index, &message_);
+        if constexpr (kDebugRdmEnabled) {
+            rdm::message::Print({reinterpret_cast<const uint8_t*>(&message_), message_.message_length});
+        }
+
+        Rdm::Transmit(port_index, message_);
+
         transmit_micros_ = timing::Micros();
     }
 
